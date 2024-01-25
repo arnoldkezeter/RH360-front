@@ -13,6 +13,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { FaRegCopyright } from "react-icons/fa6";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../_redux/store';
+import { GiTeacher } from "react-icons/gi";
 
 
 interface SidebarProps {
@@ -161,7 +162,7 @@ const SidebarStudent = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                                 }`} >
                                             <div className='-ml-.75 w-6'>
                                                 <div className='text-[18px]'>
-                                                    <PiStudentFill />
+                                                    <GiTeacher />
                                                 </div>
                                             </div>
                                             Disciplines enseignants
