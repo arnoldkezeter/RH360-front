@@ -1,8 +1,10 @@
 import DisciplineEtudiants from '../pages/Admin/DisciplineEtudiant';
+import ListeDesMatieres from '../pages/Admin/ListeMatieres';
+import ProgressionMatiere from '../pages/Admin/ProgressionMatiere';
 import Abscences from '../pages/CommonPage/Abscences';
 import CalendrierAcademique from '../pages/CommonPage/CalendrierAcademique';
 import EmploiDeTemp from '../pages/CommonPage/EmploiDeTemp';
-import Matieres from '../pages/CommonPage/Matieres';
+//import Matieres from '../pages/CommonPage/Matieres';
 import Parametres from '../pages/CommonPage/Parametres';
 import MonProfil from '../pages/CommonPage/Profil';
 
@@ -22,13 +24,24 @@ const coreRoutes = [
     component: Abscences,
   },
 
-  // emploi de temps
+  // // emploi de temps
+  // {
+  //   path: '/teacher/subjects',
+  //   title: 'Matières',
+  //   component: Matieres,
+  // },
+  //Matière
   {
-    path: '/teacher/subjects',
-    title: 'Matières',
-    component: Matieres,
+    path: '/subjects/subject-list',
+    title: 'Liste des matières',
+    component: ListeDesMatieres,
   },
 
+  {
+    path: '/subjects/progressions',
+    title: 'Progréssion',
+    component: ProgressionMatiere,
+  },
 
   // emploi de temps
   {

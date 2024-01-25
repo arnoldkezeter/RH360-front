@@ -1,8 +1,9 @@
 import DisciplineEtudiants from '../pages/Admin/DisciplineEtudiant';
+import ProgressionMatiere from '../pages/Admin/ProgressionMatiere';
 import Abscences from '../pages/CommonPage/Abscences';
 import CalendrierAcademique from '../pages/CommonPage/CalendrierAcademique';
 import EmploiDeTemp from '../pages/CommonPage/EmploiDeTemp';
-import Matieres from '../pages/CommonPage/Matieres';
+// import Matieres from '../pages/CommonPage/Matieres';
 import Parametres from '../pages/CommonPage/Parametres';
 import MonProfil from '../pages/CommonPage/Profil';
 
@@ -26,7 +27,7 @@ const coreRoutes = [
   {
     path: '/student/subjects',
     title: 'Matières',
-    component: Matieres,
+    component: ProgressionMatiere,
   },
 
 

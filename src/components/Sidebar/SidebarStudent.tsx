@@ -129,22 +129,26 @@ const SidebarStudent = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/* TABLEAU DE BORD */}
 
                             {/* Discipline etudiant */}
-                            <li>
-                                <NavLink
-                                    to="/student/disciplines"
-                                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/student/discipline' ||
-                                        pathname.includes('student/discipline')) &&
-                                        'bg-graydark dark:bg-meta-4 text-secondary'
-                                        }`}
-                                >
-                                    <div className='-ml-.75 w-6'>
-                                        <div className='text-[18px]'>
-                                            <PiStudentFill />
-                                        </div>
-                                    </div>
-                                    Disciplines
-                                </NavLink>
-                            </li>
+                            {
+                                roles.delegate === userRole && (
+                                    <li>
+                                        <NavLink
+                                            to="/student/disciplines"
+                                            className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/student/discipline' ||
+                                                pathname.includes('student/discipline')) &&
+                                                'bg-graydark dark:bg-meta-4 text-secondary'
+                                                }`}
+                                        >
+                                            <div className='-ml-.75 w-6'>
+                                                <div className='text-[18px]'>
+                                                    <PiStudentFill />
+                                                </div>
+                                            </div>
+                                            Disciplines étudiants
+                                        </NavLink>
+                                    </li>
+                                )
+                            }
 
                             {
                                 roles.delegate === userRole && (
