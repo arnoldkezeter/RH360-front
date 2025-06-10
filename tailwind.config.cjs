@@ -1,7 +1,8 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+module.exports = ({
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
@@ -9,6 +10,7 @@ module.exports = {
       satoshi: ['Satoshi', 'sans-serif'],
     },
     colors: {
+      orange:'#FF7F00',
       current: 'currentColor',
       transparent: 'transparent',
       white: '#FFFFFF',
@@ -251,4 +253,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+})

@@ -1,60 +1,73 @@
 import axios, { AxiosError } from 'axios';
 import { storeTokenInLocalStorage } from '../../middlewares/auth_middleware.js';
-import createToast from '../../hooks/toastify.js';
-import { config } from './../../config.js'
-const api = `${config.apiUrl}/api/v1`;
+import { apiUrl } from './../../config.js'
+
+const api = `${apiUrl}`;
 
 interface ApiResponse<T> {
     success: boolean;
-    data?: T;
-    message: string;
+    data?: any;
+    message?: string | null;
+    token?: string;
 }
 
 interface SignInApiResponse {
+    success: boolean;
+    message: any;
     token?: string;
+    utilisateur?: any; // Adapter cette interface en fonction de la structure de données de l'utilisateur
 }
 
 interface SignInApiProps {
     email: string;
-    password: string;
+    motDePasse: string;
+    lang:string;
 }
 
-export async function signinApi({ email, password }: SignInApiProps): Promise<ApiResponse<string>> {
+export async function signInApi({ email, motDePasse, lang }: SignInApiProps): Promise<ApiResponse<string>> {
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        return { success: true, message: 'Connexion réussie' };
+        const response = await axios.post<SignInApiResponse>(
+            `${api}/auth/login`,
+            { email, motDePasse },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'lang':lang,
+                },
+            },
+        );
+
+        const data = response.data;        
+        if (data.utilisateur.role) {
+            if (data.token) {
+                storeTokenInLocalStorage(data.token);
+                return {
+                    success: data.success,
+                    message: data.message,
+                    token: data.token,
+                    data: data.utilisateur,
+                };
+            }
+
+        }
+        return {
+            success: data.success,
+            data: data.utilisateur,
+            message: undefined,
+
+        };
 
 
-        // const response = await axios.post<SignInApiResponse>(
-        //     `${api}/auth/signin`,
-        //     { email, password },
-        //     {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //     },
-        // );
 
-        // const data = response.data;
-
-        // if (data.token) {
-        //     storeTokenInLocalStorage(data.token);
-        // } else {
-        //     createToast("Une erreur est survenue, réessayer", "", 2)
-        // }
-
-        // return { success: true, message: 'Connexion réuissi' };
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const axiosError: AxiosError<ApiResponse<string>> = error;
 
-            // Vérifiez que axiosError.response n'est pas undefined avant d'y accéder
             if (axiosError.response && axiosError.response.status >= 400 && axiosError.response.status < 500) {
                 return { success: false, message: axiosError.response.data?.message || 'Erreur inconnue' };
             }
         }
 
-        // Autre erreur
         throw error;
     }
 }

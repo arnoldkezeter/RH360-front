@@ -5,25 +5,29 @@ import ImageAdmin from './../../images/user/admin.png';
 import ImageTeacher from './../../images/user/teacher.png';
 import ImageDelegate from './../../images/user/delegate.png';
 import ImageStudent from './../../images/user/student.png';
-import { logoutFunction } from '../../api/logout';
-import { useSelector } from 'react-redux';
+import { logoutFunction } from '../../api/auth/logout';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "./../../_redux/store";
-import { config } from '../../config';
-import { formatRoleName } from '../../fonctions/fonction';
+import { config, serveurUrl } from '../../config';
 import { BiLogOutCircle } from "react-icons/bi";
-import { IoSettingsOutline } from "react-icons/io5";
+// import { IoSettingsOutline } from "react-icons/io5";
 import { RxPerson } from "react-icons/rx";
+import { useTranslation } from 'react-i18next';
+import Loading from '../ui/loading';
+import { setSelectedUserPermission, setSelectedUserRole } from '../../_redux/features/setting';
+import { FaUserShield } from 'react-icons/fa6';
 
 
 const DropdownUser = () => {
   // const pageIsLoading = useSelector((state: RootState) => state.setting.pageIsLoading);
   const pageIsLoading = false;
-
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   const roles = config.roles;
 
   const userState = useSelector((state: RootState) => state.user);
 
-  const user = { username: userState.username, role: userState.role };
+  const user = { nom_et_prenom: `${userState.nom + ' ' + userState.prenom}`, role: userState.role };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -58,6 +62,7 @@ const DropdownUser = () => {
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
+
   return (
     <div className="relative">
       <Link
@@ -68,29 +73,31 @@ const DropdownUser = () => {
       >
         {
           pageIsLoading ?
-            <div className={`flex items-center justify-center  bg-transparent'}`}>
-              <div className="h-6 w-6 mx-10 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
-            </div>
+            <Loading />
 
             : <span className="hidden text-right lg:block">
-              <span className="block text-sm font-medium text-black dark:text-white">
-                {user.username}
+              <span className="block text-sm font-medium text-white dark:text-white ">
+                {user.nom_et_prenom}
               </span>
-              <span className="block text-xs">{formatRoleName(user.role)}</span>
+              <span className="block text-xs text-white">{t(user.role)}</span>
             </span>
         }
 
-        <span className={`rounded-full ${user.role === roles.teacher ? 'h-11 w-11' : 'h-12 w-12 '}`}>
-          <img src={
-            user.role === roles.admin ? ImageAdmin :
-              user.role === roles.teacher ? ImageTeacher :
-                user.role === roles.delegate ? ImageDelegate :
-                  ImageStudent
-          } alt="User" />
-        </span>
+        <div className="h-10 w-10 rounded-full overflow-hidden">
+          {
+            userState.photo_profil !== null && userState.photo_profil !== '' ?
+              <img className="w-full h-full object-cover" src={serveurUrl + userState.photo_profil} alt={userState.nom} />
+              :
+              <img src={
+                user.role === roles.superAdmin ? ImageAdmin :
+                  user.role === roles.admin ? ImageAdmin :
+                    ImageStudent
+              } alt="User" />
+          }
+        </div>
 
         <svg
-          className={`hidden fill-current sm:block ${dropdownOpen ? 'rotate-180' : ''
+          className={`hidden fill-current text-white sm:block ${dropdownOpen ? 'rotate-180' : ''
             }`}
           width="12"
           height="8"
@@ -118,7 +125,7 @@ const DropdownUser = () => {
 
         <ul className="flex flex-col  border-b border-stroke   dark:border-strokedark">
           <NavLink
-            to="/profile"
+            to="/parametres/profile"
             onClick={() => { setDropdownOpen(false) }}
             className="flex items-center gap-3.5 py-3 pt-3 px-5 text-sm font-medium duration-300 ease-in-out lg:text-base hover:bg-gray dark:hover:bg-black"
           >
@@ -126,20 +133,26 @@ const DropdownUser = () => {
               <RxPerson />
 
             </div>
-            Mon profil
+            {t('header.profil')}
           </NavLink>
 
 
+        </ul>
+
+        <ul className="flex flex-col  border-b border-stroke   dark:border-strokedark">
           <NavLink
-            to="/settings"
-            onClick={() => { setDropdownOpen(false) }}
-            className=" flex items-center gap-3.5 py-3 px-5 text-sm font-medium duration-300 ease-in-out  lg:text-base hover:bg-gray dark:hover:bg-black">
+            to="/user/permissions"
+            onClick={() => {dispatch(setSelectedUserPermission(undefined)); dispatch(setSelectedUserRole("")); setDropdownOpen(false) }}
+            className="flex items-center gap-3.5 py-3 pt-3 px-5 text-sm font-medium duration-300 ease-in-out lg:text-base hover:bg-gray dark:hover:bg-black"
+          >
             <div className='text-lg text-[23px]'>
-              <IoSettingsOutline />
+              <FaUserShield />
 
             </div>
-            Paramètres
+            { t('header.permission')}
           </NavLink>
+
+
         </ul>
 
 
@@ -152,7 +165,7 @@ const DropdownUser = () => {
             <BiLogOutCircle />
 
           </div>
-          Se déconnecter
+          {t('header.deconnexion')}
         </button>
 
 

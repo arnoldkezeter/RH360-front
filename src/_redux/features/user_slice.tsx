@@ -1,44 +1,73 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface UserState {
-    id: string,
-    email: string;
-    role: string;
-    username: string;
-}
-
-export interface PropsUserState {
-    id: string,
-    email: string;
-    role: string;
-    username: string;
-}
-
+// État initial de l'utilisateur
 const initialState: UserState = {
-    id: '',
-    email: "",
-    role: "",
-    username: '',
+    _id: '',
+    roles: [],
+    role: '',
+    genre: '',
+    date_creation: null,
+    nom: '',
+    prenom: '',
+    grade: '',
+    email: '',
+    niveaux: [],
+    absences: [],
+    categorie: '',
+    fonction: '',
+    service: '',
+    commune: '',
+    matricule: '',
+    date_naiss: null,
+    date_entree: null,
+    lieu_naiss: '',
+    contact: '',
+    photo_profil: '',
+    status: '',
+    abscence: null,
+    historique_connexion: [],
+    nationalite: null,
+    diplomeEntre: null,
+    specialite: null
 };
 
+// Création du Slice pour l'utilisateur
 export const userSlice = createSlice({
     name: "userSlice",
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<PropsUserState>) => {
-            state.email = action.payload.email;
-            state.role = action.payload.role;
-            state.username = action.payload.username;
-            state.id = action.payload.id;
+        // Définir l'utilisateur complet
+        setUser: (state, action: PayloadAction<UserState>) => {
+            return { ...state, ...action.payload };
         },
 
+        setRole: (state, action: PayloadAction<string>) => {
+            state.role = action.payload;
+        },
+        // Définir l'utilisateur avec des propriétés minimales
+        setMinimumUser: (state, action: PayloadAction<MinUserState>) => {
+            return { ...state, ...action.payload };
+        },
 
+        // Mettre à jour l'utilisateur avec de nouvelles propriétés
+        updateUser: (state, action: PayloadAction<Partial<UpdateUserPayload>>) => {
+            return { ...state, ...action.payload };
+        },
 
+        // Mettre à jour uniquement la liste des niveaux de l'utilisateur
+        updateUserNiveaux: (state, action: PayloadAction<InscriptionType[]>) => {
+            state.niveaux = action.payload;
+        },
+
+        //Mettre à jour uniquement la liste des absences
+        updateUserAbsences: (state, action: PayloadAction<AbsenceType[]>) => {
+            state.absences = action.payload;
+        },
     },
 });
 
-export const {
-    setUser,
-} = userSlice.actions;
+// Exporter les actions
+export const { setUser, setMinimumUser, updateUserNiveaux, updateUserAbsences, updateUser, setRole } = userSlice.actions;
 
+// Exporter le reducer
 export default userSlice.reducer;

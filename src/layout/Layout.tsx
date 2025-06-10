@@ -6,14 +6,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../_redux/store';
 import { config } from '../config';
 import SidebarTeacher from '../components/Sidebar/SidebarTeacher';
-import Sidebar from '../components/Sidebar';
 import SidebarStudent from '../components/Sidebar/SidebarStudent';
+import Sidebar from '../components/Sidebar/Sidebar';
 
-const Layout = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+interface LayoutProps {
+    isMobileOrTablet: boolean;
+    userPermissions? : string[];
+}
+const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
+    const [sidebarOpen, setSidebarOpen] = useState(isMobileOrTablet);
 
     const userRole = useSelector((state: RootState) => state.user.role);
     const roles = config.roles;
+
 
     return (
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
@@ -21,11 +26,8 @@ const Layout = () => {
             <div className="flex h-screen overflow-hidden">
                 {/* <!-- ===== Sidebar Start ===== --> */}
                 {
-                    roles.admin === userRole ?
-                        <SidebarAdmin sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> :
-                        roles.teacher === userRole ?
-                            <SidebarTeacher sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> :
-                            <SidebarStudent sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                   
+                    <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
                 }
                 {/* <!-- ===== Sidebar End ===== --> */}

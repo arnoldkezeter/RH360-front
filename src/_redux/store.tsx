@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user_slice.tsx";
+import settingReducer from "./features/setting.tsx";
+import dataSettingReducer from "./features/data_setting_slice.tsx";
+
 
 const store = configureStore({
   reducer: {
     user: userReducer,
-
-  },
-  preloadedState: {
-  },
+    setting: settingReducer,
+    dataSetting: dataSettingReducer,
+  }
 });
 
 export type RootState = ReturnType<typeof store.getState>;
