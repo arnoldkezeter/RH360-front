@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ErrorInput, LabelInput } from "./Label"
 import { useEffect, useState } from 'react';
-import { signInApi } from "../../../api/auth/api_signin";
+import { signInApi } from "../../../services/auth/api_signin";
 import Input from "../../../components/ui/input";
 import ButtonCustom from "../../../components/ui/button";
 import createToast from "../../../hooks/toastify";

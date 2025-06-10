@@ -5,7 +5,7 @@ import { RootState } from '../../_redux/store';
 import { useTranslation } from 'react-i18next';
 
 // import { removeNotifications, removeNotification, setNewNotification } from '../../_redux/features/notification_slice';
-import { markAllNotificationAsRead, markNotificationAsRead } from '../../api/api_notification';
+import { markAllNotificationAsRead, markNotificationAsRead } from '../../services/api_notification';
 import { config } from '../../config';
 
 

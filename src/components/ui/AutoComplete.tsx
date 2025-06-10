@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { apiSearchEnseignant } from "../../api/other_users/api_enseignant";
+import { apiSearchEnseignant } from "../../services/other_users/api_enseignant";
 
 const AutoCompleteSearch = () => {
     const [searchString, setSearchString] = useState('');

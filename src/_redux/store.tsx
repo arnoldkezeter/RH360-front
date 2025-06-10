@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user_slice.tsx";
 import settingReducer from "./features/setting.tsx";
 import dataSettingReducer from "./features/data_setting_slice.tsx";
+import strucutureReducer from "./features/strucutureSlice.tsx";
 
 
 const store = configureStore({
@@ -9,6 +10,7 @@ const store = configureStore({
     user: userReducer,
     setting: settingReducer,
     dataSetting: dataSettingReducer,
+    structureSlice:strucutureReducer,
   }
 });
 

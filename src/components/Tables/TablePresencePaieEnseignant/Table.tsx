@@ -17,8 +17,8 @@ import InputSearch from "../common/SearchTable";
 import BodyTable from "./BodyTable";
 import HeaderTable from "./HeaderTable";
 import { semestres } from "../../../pages/CommonPage/EmploiDeTemp";
-import { apiGetPresencesWithTotalHoraire, apiSearchPresenceEnseignant, generateListPresenceByNiveau } from "../../../api/api_presence_paie";
-import { apiUpdateTauxHoraire } from "../../../api/settings/api_data_setting";
+import { apiGetPresencesWithTotalHoraire, apiSearchPresenceEnseignant, generateListPresenceByNiveau } from "../../../services/api_presence_paie";
+import { apiUpdateTauxHoraire } from "../../../services/settings/api_data_setting";
 import { setTauxHoraire } from "../../../_redux/features/data_setting_slice";
 
 

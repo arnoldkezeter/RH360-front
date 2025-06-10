@@ -16,7 +16,7 @@ import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
 import { setPeriodeEnseignementLoading, setPeriodeEnseignements, setErrorPagePeriodeEnseignement } from "../../../_redux/features/periode_enseignement_slice";
 import { createPDF, extractYear, formatYear, generateYearRange } from "../../../fonctions/fonction";
-import { generateListPeriodeEnseignement, getPeriodesEnseignementWithPagination } from "../../../api/api_periode_enseignement";
+import { generateListPeriodeEnseignement, getPeriodesEnseignementWithPagination } from "../../../services/api_periode_enseignement";
 import Download from "../common/Download";
 
 interface TablePeriodeEnseignementProps {

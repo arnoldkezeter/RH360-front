@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../_redux/store';
-import { logoutFunction } from '../../api/auth/logout';
+import { logoutFunction } from '../../services/auth/logout';
 import ButtonCustom from '../../components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { setUser, updateUser } from '../../_redux/features/user_slice';
 import createToast from '../../hooks/toastify';
-import { signInApi } from '../../api/auth/api_signin';
-import { reJwtApi } from '../../api/auth/api_re_jwt';
+import { signInApi } from '../../services/auth/api_signin';
+import { reJwtApi } from '../../services/auth/api_re_jwt';
 import LoaderCircular from '../../components/Loader/LoaderCircular';
 import Loading from '../../components/ui/loading';
 import LanguageToogle from '../../components/ui/language_toggle';

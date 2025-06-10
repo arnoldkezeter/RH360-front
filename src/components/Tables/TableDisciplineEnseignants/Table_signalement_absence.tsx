@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../_redux/store";
 import { extractYear, generateYearRange, nbTotalAbsences } from "../../../fonctions/fonction";
 import { setAnneeDisciplineEns, setSemestreDisciplineEns } from "../../../_redux/features/absence/discipline_enseignant_slice";
-import { apiGetAllAbsencesWithEnseignantsByFilter } from "../../../api/discipline/api_discipline";
+import { apiGetAllAbsencesWithEnseignantsByFilter } from "../../../services/discipline/api_discipline";
 import LoadingOnTable from "../common/LoadingOnTable";
 import { setErrorPageEtudiant, setEtudiantsLoading } from "../../../_redux/features/etudiant_slice";
 import createToast from "../../../hooks/toastify";

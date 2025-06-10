@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import { setDataSetting, setErrorDataSetting, setLoadingDataSetting } from "../../_redux/features/data_setting_slice";
-import { apiGetAllSettings } from "../../api/settings/api_data_setting";
+import { apiGetAllSettings } from "../../services/settings/api_data_setting";
 import { PageNoData } from "../../components/_Global/PageNoData";
 import { PageErreur } from "../../components/_Global/PageErreur";
 import LoadingTable from "../../components/Tables/common/LoadingTable";

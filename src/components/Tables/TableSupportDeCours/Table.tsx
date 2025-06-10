@@ -15,7 +15,7 @@ import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
 import { extractYear, formatYear, generateYearRange } from "../../../fonctions/fonction";
 import { setErrorPageSupportDeCours, setSupportDeCours, setSupportDeCoursLoading } from "../../../_redux/features/support_cours_slice";
-import { apiGetSupportDeCours, apiSearchSupportDeCours } from "../../../api/api_support_cours";
+import { apiGetSupportDeCours, apiSearchSupportDeCours } from "../../../services/api_support_cours";
 import HeaderTable from "./HeaderTable";
 import BodyTable from "./BodyTable";
 

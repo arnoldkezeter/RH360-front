@@ -1,5 +1,5 @@
 export const config = {
-    roles: { superAdmin: "super-admin", admin: "admin", responsable: 'responsable-formation', utilisateur: 'utilisateur', formateur: 'formateur', stagiaire:'stagiaire', chercheur:'chercheur' },
+    roles: { superAdmin: "SUPER-ADMIN", admin: "ADMIN", responsable: 'RESPONSABLE-FORMATION', utilisateur: 'UTILISATEUR', formateur: 'FORMATEUR', stagiaire:'STAGIAIRE', chercheur:'CHERCHEUR' },
     nameApp: "RH360",
     copyRight: '2025',
     version: "0.0.1",

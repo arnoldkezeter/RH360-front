@@ -14,7 +14,7 @@ import { config } from "../../../config"
 import CustomDropDown2 from "../../DropDown/CustomDropDown2";
 import { useTranslation } from "react-i18next";
 import { setErrorPageMatiere, setMatiereLoading, setMatieres } from "../../../_redux/features/matiere_slice";
-import { apiSearchMatiere, apiSearchMatiereByEnseignant, generateListMatByEnseignantNiveau, generateListMatByNiveau, getMatieresByEnseignantNiveau, getMatieresByNiveau, getMatieresByNiveauWithPagination } from "../../../api/api_matiere";
+import { apiSearchMatiere, apiSearchMatiereByEnseignant, generateListMatByEnseignantNiveau, generateListMatByNiveau, getMatieresByEnseignantNiveau, getMatieresByNiveau, getMatieresByNiveauWithPagination } from "../../../services/api_matiere";
 import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
 import Download from "../common/Download";

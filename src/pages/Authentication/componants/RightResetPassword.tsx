@@ -8,7 +8,7 @@ import { MdArrowBack } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../_redux/store";
-import { apiSendVerificationCodeByEmail } from "../../../api/auth/api_send_verification_code";
+import { apiSendVerificationCodeByEmail } from "../../../services/auth/api_send_verification_code";
 import createToast from "../../../hooks/toastify";
 
 

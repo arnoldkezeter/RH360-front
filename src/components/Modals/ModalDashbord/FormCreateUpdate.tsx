@@ -8,7 +8,7 @@ import createToast from '../../../hooks/toastify';
 import { setAnneeCourante, setSemestreCourant } from '../../../_redux/features/data_setting_slice';
 import { extractYear, formatYear, generateYearRange2 } from '../../../fonctions/fonction';
 import { semestres } from '../../../pages/CommonPage/EmploiDeTemp';
-import { apiUpdateAnneeCourante, apiUpdateSemestreCourant } from '../../../api/settings/api_data_setting';
+import { apiUpdateAnneeCourante, apiUpdateSemestreCourant } from '../../../services/settings/api_data_setting';
 
 
 function ModalCreateUpdate() {

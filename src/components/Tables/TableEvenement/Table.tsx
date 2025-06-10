@@ -14,7 +14,7 @@ import CustomDropDown2 from "../../DropDown/CustomDropDown2";
 import { useTranslation } from "react-i18next";
 import Pagination from "../../Pagination/Pagination";
 import { setEvenementLoading, setEvenements, setErrorPageEvenement } from "../../../_redux/features/evenement_slice";
-import { apiSearchEvenement, generateListEvent, getEvenementsByYear } from "../../../api/api_evenement";
+import { apiSearchEvenement, generateListEvent, getEvenementsByYear } from "../../../services/api_evenement";
 import createToast from "../../../hooks/toastify";
 import { createPDF, extractYear, formatYear, generateYearRange } from "../../../fonctions/fonction";
 import { PageErreur } from "../../_Global/PageErreur";

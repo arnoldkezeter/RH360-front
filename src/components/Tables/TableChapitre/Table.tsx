@@ -10,7 +10,7 @@ import BodyTable from "./BodyTable";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../_redux/store";
 import { setChapitreLoading, setChapitres, setErrorPageChapitre } from "../../../_redux/features/chapitre_slice";
-import { apiSearchChapitre, getChapitreByMatiereWithPagination } from "../../../api/api_chapitre";
+import { apiSearchChapitre, getChapitreByMatiereWithPagination } from "../../../services/api_chapitre";
 import createToast from "../../../hooks/toastify";
 import { extractYear, formatYear, generateYearRange } from "../../../fonctions/fonction";
 import { FaFilter, FaSort } from "react-icons/fa";

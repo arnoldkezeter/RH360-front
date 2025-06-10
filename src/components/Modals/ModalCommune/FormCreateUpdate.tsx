@@ -5,7 +5,7 @@ import CustomDialogModal from '../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createSettingItem, updateSettingItem } from '../../../_redux/features/data_setting_slice';
-import { apiCreateCommune, apiUpdateCommune } from '../../../api/settings/api_commune';
+import { apiCreateCommune, apiUpdateCommune } from '../../../services/settings/api_commune';
 import createToast from '../../../hooks/toastify';
 
 

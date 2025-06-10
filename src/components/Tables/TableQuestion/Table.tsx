@@ -10,7 +10,7 @@ import BodyTable from "./BodyTable";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../_redux/store";
 import { setQuestionLoading, setQuestions, setErrorPageQuestion } from "../../../_redux/features/question_slice";
-import { apiSearchQuestion, obtenirQuestionsDevoirAvecPagination } from "../../../api/api_question";
+import { apiSearchQuestion, obtenirQuestionsDevoirAvecPagination } from "../../../services/api_question";
 import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
 

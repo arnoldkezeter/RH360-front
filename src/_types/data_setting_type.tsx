@@ -1,6 +1,8 @@
 
 // Interface des propriétés communes
 interface CommonSettingProps {
+    nomFr: string | number | readonly string[] | undefined;
+    nomEn: string | number | readonly string[] | undefined;
     date_creation?: string;
     code: string;
     libelleFr: string;

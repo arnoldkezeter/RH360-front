@@ -3,7 +3,7 @@ import { RootState } from "../../../_redux/store";
 import { config } from "../../../config";
 import { addUserPemission, removeUserPemission } from "../../../_redux/features/setting";
 import createToast from "../../../hooks/toastify";
-import { apiGrantedPermission } from "../../../api/api_permission";
+import { apiGrantedPermission } from "../../../services/api_permission";
 
 const BodyTable = ({ data}: { data: PermissionType[]}) => {
     const dispatch = useDispatch();

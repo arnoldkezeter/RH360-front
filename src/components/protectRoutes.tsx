@@ -19,4 +19,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ component, requiredPerm
   return component ;
 };
 
+
+
 export default ProtectedRoute;

@@ -12,7 +12,7 @@ import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
 import { setDevoirLoading } from "../../../_redux/features/devoir_slice";
 import { setDevoirStats } from "../../../_redux/features/devoir_stats_slice";
-import { apiSearchStudentStatsByName, generateDevoirStats, getDevoirStats } from "../../../api/api_devoir";
+import { apiSearchStudentStatsByName, generateDevoirStats, getDevoirStats } from "../../../services/api_devoir";
 import Download from "../common/Download";
 import CustomButtonDownload from "../common/CustomButtomDownload";
 import { createPDF } from "../../../fonctions/fonction";

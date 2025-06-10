@@ -9,6 +9,7 @@ import Communes from '../pages/Admin/Communes';
 import Permissions from '../pages/Admin/Permissions';
 import UserPermissions from '../pages/CommonPage/UserPermissions';
 import { Departements } from '../pages/Admin/Departements';
+import Structures from '../pages/Admin/Structures';
 
 
 
@@ -238,6 +239,12 @@ const coreRoutes = [
     path: '/parametres/besoins-formation/manage',
     title: 'Mon Enregistrer des besoins de formation',
     component: undefined,
+  },
+
+  {
+    path: '/parametres/structures',
+    title: 'Structure',
+    component: Structures,
   },
 
   {

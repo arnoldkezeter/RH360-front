@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { setErrorPageEnseignant, setEnseignant, setEnseignantsLoading, setEnseignantsLoadingOnTable, setSelectedEnseignant, resetSelectedEnseignant } from "../../../_redux/features/enseignant_slice";
 import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
-import { apiGetEnseignantsWithPagination, apiSearchEnseignant, generateListEnseignant } from "../../../api/other_users/api_enseignant";
+import { apiGetEnseignantsWithPagination, apiSearchEnseignant, generateListEnseignant } from "../../../services/other_users/api_enseignant";
 import Bouton from "../../ui/Bouton";
 import { createPDF } from "../../../fonctions/fonction";
 import Download from "../common/Download";

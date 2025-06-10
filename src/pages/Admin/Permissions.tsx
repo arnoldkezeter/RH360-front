@@ -8,7 +8,7 @@ import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import FormCreateUpdate from "../../components/Modals/ModalPermission/FormCreateUpdate";
 import FormDelete from "../../components/Modals/ModalPermission/FormDelete";
-import Table from "../../components/Tables/TablePermission/Table";
+import Table from "../../components/Tables/TableStructure/Table";
 
 
 

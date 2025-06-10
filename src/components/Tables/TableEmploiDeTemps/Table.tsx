@@ -14,7 +14,7 @@ import CustomDropDown2 from "../../DropDown/CustomDropDown2";
 import { useTranslation } from "react-i18next";
 import { createPDF, extractYear, formatYear, generateYearRange, premierElement } from "../../../fonctions/fonction";
 import { setPeriodeLoading, setPeriodes, setErrorPagePeriode } from "../../../_redux/features/periode_slice";
-import { generateEmploisDuTemps, getPeriodesByNiveau } from "../../../api/api_periode";
+import { generateEmploisDuTemps, getPeriodesByNiveau } from "../../../services/api_periode";
 import createToast from "../../../hooks/toastify";
 import Download from "../common/Download";
 

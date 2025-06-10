@@ -4,7 +4,7 @@ import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../hooks/toastify';
-import { apiDeletePermission } from '../../../api/api_permission';
+import { apiDeletePermission } from '../../../services/api_permission';
 import { deletePermission } from '../../../_redux/features/permission_slice';
 
 

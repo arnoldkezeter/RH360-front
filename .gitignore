@@ -24,3 +24,4 @@ coverage/
 
 # Production
 dist/
+node_modules

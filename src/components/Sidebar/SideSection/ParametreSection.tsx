@@ -43,6 +43,7 @@ const ParametreSidebarLink = ({
     const menuItems = [
         { permission: hasProfilePermission, path: '/parametres/profile', label: t('sub_menu.profil') },
         { permission: hasServicePermission, path: '/parametres/besoins-formation/manage', label: t('sub_menu.cree_besoin_formation') },
+        { permission: hasServicePermission, path: '/parametres/structures', label: t('sub_menu.structures') },
         { permission: hasServicePermission, path: '/parametres/services', label: t('sub_menu.services') },
         { permission: hasFunctionPermission, path: '/parametres/categories-professionnelles', label: t('sub_menu.categories_professionnelles') },
         { permission: hasGradePermission, path: '/parametres/grades', label: t('sub_menu.grades') },

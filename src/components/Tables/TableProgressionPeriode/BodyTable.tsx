@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import React from "react"
 import { useTranslation } from "react-i18next"
-import { getPeriodesByNiveau } from "../../../api/api_periode"
+import { getPeriodesByNiveau } from "../../../services/api_periode"
 
 interface BodyPeriodeEnseignementProps {
     data: PeriodeEnseignementType | undefined;

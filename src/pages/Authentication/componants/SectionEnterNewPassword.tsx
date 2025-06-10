@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { ErrorInput, LabelInput } from "./Label";
 import Input from "../../../components/ui/input";
 import { validatePassword } from "../../../fonctions/fonction";
-import { apiUpdatePassword } from "../../../api/auth/api_reset_password";
+import { apiUpdatePassword } from "../../../services/auth/api_reset_password";
 import createToast from "../../../hooks/toastify";
 
 interface SectionEnterNewPasswordProps {

@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../_redux/store";
 import Pagination from "../../Pagination/Pagination";
 import { setAdmin, setAdminsLoading, setErrorPageAdmin } from "../../../_redux/features/admin_slice";
-import { apiGetAdministrateurs } from "../../../api/other_users/api_administrateur";
+import { apiGetAdministrateurs } from "../../../services/other_users/api_administrateur";
 
 interface TableAdministrateurProps {
     data: AdminType[];

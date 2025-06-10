@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../hooks/toastify';
-import { apiCreatePermission, apiUpdatePermission } from '../../../api/api_permission';
+import { apiCreatePermission, apiUpdatePermission } from '../../../services/api_permission';
 import { createPermission, updatePermission } from '../../../_redux/features/permission_slice';
 
 

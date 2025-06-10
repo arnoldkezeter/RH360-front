@@ -3,12 +3,12 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import { useState } from "react";
-import { apiUpdatePassword } from "../../api/auth/api_reset_password";
+import { apiUpdatePassword } from "../../services/auth/api_reset_password";
 import createToast from "../../hooks/toastify";
 import { validatePassword } from "../../fonctions/fonction";
 import { ErrorInput, LabelInput } from "../../pages/Authentication/componants/Label";
 import Input from "../ui/input";
-import { apiVerifierMotDePasse } from "../../api/auth/api_verifier-password";
+import { apiVerifierMotDePasse } from "../../services/auth/api_verifier-password";
 import ButtonLoading from "../ui/ButtonLoading";
 import ButtonOutline from "../ui/ButtonOutline";
 

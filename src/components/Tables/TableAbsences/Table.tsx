@@ -7,7 +7,7 @@ import { config } from "../../../config"
 import CustomDropDown2 from "../../DropDown/CustomDropDown2";
 import { useTranslation } from "react-i18next";
 import { calculAbsence, extractYear, formatYear, generateYearRange, nbTotalAbsences, nbTotalAbsencesJustifier, nbTotalAbsencesNonJustifier } from "../../../fonctions/fonction";
-import { apiGetAbsencesByUserAndFilter } from "../../../api/discipline/api_discipline";
+import { apiGetAbsencesByUserAndFilter } from "../../../services/discipline/api_discipline";
 import { updateUserAbsences } from "../../../_redux/features/user_slice";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";

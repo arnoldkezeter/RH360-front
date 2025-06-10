@@ -13,7 +13,7 @@ import { config } from "../../../config"
 import CustomDropDown2 from "../../DropDown/CustomDropDown2";
 import { useTranslation } from "react-i18next";
 import { setErrorPageDevoir, setDevoirLoading, setDevoirs } from "../../../_redux/features/devoir_slice";
-import { apiSearchDevoir, apiSearchDevoirByEnseignant, getDevoirsByEnseignantPaginated, getDevoirsByNiveauPaginated } from "../../../api/api_devoir";
+import { apiSearchDevoir, apiSearchDevoirByEnseignant, getDevoirsByEnseignantPaginated, getDevoirsByNiveauPaginated } from "../../../services/api_devoir";
 import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
 import { extractYear, formatYear, generateYearRange } from "../../../fonctions/fonction";

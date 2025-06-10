@@ -4,7 +4,7 @@ import { setShowModal, setShowModalDelete, setShowModalDetails } from "../../../
 import { SelectButton } from "../common/composants/SelectButton"
 import { useTranslation } from "react-i18next"
 import { RootState } from "../../../_redux/store"
-import { apiDownloadSupportDeCours } from "../../../api/api_support_cours"
+import { apiDownloadSupportDeCours } from "../../../services/api_support_cours"
 import { formatDate } from "../../../fonctions/fonction"
 
 const BodyTable = ({ data, onEdit}: { data:SupportDeCoursType[], onEdit: (etudiant: SupportDeCoursType) => void}) => {

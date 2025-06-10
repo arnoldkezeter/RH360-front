@@ -14,7 +14,7 @@ import { extractYear, formatYear, generateYearRange } from "../../../fonctions/f
 import CustomDropDown2 from "../../DropDown/CustomDropDown2";
 import { setErrorPageObjectif, setObjectifLoading, setObjectifs } from "../../../_redux/features/objectif_slice";
 import createToast from "../../../hooks/toastify";
-import { apiSearchObjectif, getObjectifByMatiereWithPagination } from "../../../api/api_objectif";
+import { apiSearchObjectif, getObjectifByMatiereWithPagination } from "../../../services/api_objectif";
 import Pagination from "../../Pagination/Pagination";
 import { config } from "../../../config";
 

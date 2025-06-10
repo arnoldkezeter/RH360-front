@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Input from '../../ui/input';
 import { ErrorMessage, Label } from '../../ui/Label';
-import { apiCreateFonction, apiUpdateFonction } from '../../../api/settings/api_fonction';
+import { apiCreateFonction, apiUpdateFonction } from '../../../services/settings/api_fonction';
 import createToast from '../../../hooks/toastify';
 import { createSettingItem, updateSettingItem } from '../../../_redux/features/data_setting_slice';
 import { setShowModal } from '../../../_redux/features/setting';

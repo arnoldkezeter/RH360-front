@@ -12,7 +12,7 @@ import Download from "../common/Download";
 import NoDataTable from "../common/NoDataTable";
 import Pagination from "../../Pagination/Pagination";
 import { setErrorPagePermission, setPermissionLoading, setPermissions } from "../../../_redux/features/permission_slice";
-import { apiGetUserPermissions, getPermissionsWithPagination } from "../../../api/api_permission";
+import { apiGetUserPermissions, getPermissionsWithPagination } from "../../../services/api_permission";
 import { setUserPermission } from "../../../_redux/features/setting";
 import { createFinalPermissionList } from "../../../fonctions/fonction";
 

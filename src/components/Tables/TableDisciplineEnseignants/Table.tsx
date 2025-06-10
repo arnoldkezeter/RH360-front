@@ -11,7 +11,7 @@ import { RootState } from "../../../_redux/store";
 import { createPDF, extractYear, generateYearRange } from "../../../fonctions/fonction";
 import Pagination from "../../Pagination/Pagination";
 import { setAnneeDisciplineEns, setEnseignantDiscipline, setEnseignantsDisciplineLoadingOnTable, setErrorPageEnseignantDiscipline, setSemestreDisciplineEns } from "../../../_redux/features/absence/discipline_enseignant_slice";
-import { apiGetAbsencesWithEnseignantsByFilter, apiSearchUserDiscipline, generateListAbsenceEnseignant } from "../../../api/discipline/api_discipline";
+import { apiGetAbsencesWithEnseignantsByFilter, apiSearchUserDiscipline, generateListAbsenceEnseignant } from "../../../services/discipline/api_discipline";
 import LoadingOnTable from "../common/LoadingOnTable";
 import createToast from "../../../hooks/toastify";
 import Download from "../common/Download";

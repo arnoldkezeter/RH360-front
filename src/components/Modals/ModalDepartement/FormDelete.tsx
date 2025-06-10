@@ -3,7 +3,7 @@ import { setShowModalDelete } from '../../../_redux/features/setting';
 import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
-import { apiDeleteDepartement } from '../../../api/settings/api_departement';
+import { apiDeleteDepartement } from '../../../services/settings/api_departement';
 import { deleteSettingItem } from '../../../_redux/features/data_setting_slice';
 import createToast from '../../../hooks/toastify';
 

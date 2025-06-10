@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { setShowModal } from '../../../_redux/features/setting';
 import Input from '../../ui/input';
 import { ErrorMessage, Label } from '../../ui/Label';
-import { apiCreateGrade, apiUpdateGrade } from '../../../api/settings/api_grade';
+import { apiCreateGrade, apiUpdateGrade } from '../../../services/settings/api_grade';
 import createToast from '../../../hooks/toastify';
 import { createSettingItem, updateSettingItem } from '../../../_redux/features/data_setting_slice';
 

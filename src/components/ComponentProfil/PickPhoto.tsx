@@ -8,11 +8,11 @@ import { RootState } from "../../_redux/store";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import createToast from '../../hooks/toastify';
-import { apiSavePhotoProfil } from '../../api/other_users/photo_profile/api_save_profile_image';
+import { apiSavePhotoProfil } from '../../services/other_users/photo_profile/api_save_profile_image';
 import { setUser } from '../../_redux/features/user_slice';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import CustomModal from '../Modals/CustomDialogModal';
-import { apiDeletePhotoProfil } from '../../api/other_users/photo_profile/api_delete_profile_image';
+import { apiDeletePhotoProfil } from '../../services/other_users/photo_profile/api_delete_profile_image';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 

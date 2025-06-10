@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../_redux/store";
 import createToast from "../../../hooks/toastify";
-import { apiUpdateEtatObjectif } from "../../../api/api_objectif";
+import { apiUpdateEtatObjectif } from "../../../services/api_objectif";
 import { updateObjectif } from "../../../_redux/features/objectif_slice";
 
 const BodyTable = ({ data }: { data: ObjectifType[]}) => {

@@ -8,7 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../_redux/store";
-import { apiVerifyCodeSendByEmail } from "../../../api/auth/api_verify_code_email";
+import { apiVerifyCodeSendByEmail } from "../../../services/auth/api_verify_code_email";
 import SectionEnterNewPassword from "./SectionEnterNewPassword";
 
 export function RightSectionVerificationCode() {

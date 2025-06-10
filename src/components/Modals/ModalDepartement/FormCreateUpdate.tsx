@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage, Label } from '../../ui/Label';
 import Input from '../../ui/input';
-import { apiCreateDepartement, apiUpdateDepartement } from '../../../api/settings/api_departement';
+import { apiCreateDepartement, apiUpdateDepartement } from '../../../services/settings/api_departement';
 import { createSettingItem, updateSettingItem } from '../../../_redux/features/data_setting_slice';
 import createToast from '../../../hooks/toastify';
 

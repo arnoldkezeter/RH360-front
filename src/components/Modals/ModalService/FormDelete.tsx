@@ -4,7 +4,7 @@ import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import { deleteSettingItem } from '../../../_redux/features/data_setting_slice';
-import { apiDeleteService } from '../../../api/settings/api_service';
+import { apiDeleteService } from '../../../services/settings/api_service';
 import createToast from '../../../hooks/toastify';
 
 

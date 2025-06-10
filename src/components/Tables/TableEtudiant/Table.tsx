@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import { setErrorPageEtudiant, setEtudiant, setEtudiantsLoading } from "../../../_redux/features/etudiant_slice";
 import createToast from "../../../hooks/toastify";
 import Pagination from "../../Pagination/Pagination";
-import { apiGetEtudiantsWithPagination, apiSearchEtudiant, generateListEtudiant } from "../../../api/other_users/api_etudiant";
+import { apiGetEtudiantsWithPagination, apiSearchEtudiant, generateListEtudiant } from "../../../services/other_users/api_etudiant";
 import { createPDF, extractYear, formatYear, generateYearRange } from "../../../fonctions/fonction";
 import Download from "../common/Download";
 

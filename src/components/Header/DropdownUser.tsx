@@ -5,7 +5,7 @@ import ImageAdmin from './../../images/user/admin.png';
 import ImageTeacher from './../../images/user/teacher.png';
 import ImageDelegate from './../../images/user/delegate.png';
 import ImageStudent from './../../images/user/student.png';
-import { logoutFunction } from '../../api/auth/logout';
+import { logoutFunction } from '../../services/auth/logout';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "./../../_redux/store";
 import { config, serveurUrl } from '../../config';

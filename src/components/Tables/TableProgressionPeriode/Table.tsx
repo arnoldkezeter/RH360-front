@@ -10,7 +10,7 @@ import CustomDropDown2 from "../../DropDown/CustomDropDown2";
 import { useTranslation } from "react-i18next";
 import createToast from "../../../hooks/toastify";
 import { createPDF, extractYear, formatYear, generateYearRange } from "../../../fonctions/fonction";
-import { generateProgressionPeriodeEnseignement, getPeriodesEnseignement } from "../../../api/api_periode_enseignement";
+import { generateProgressionPeriodeEnseignement, getPeriodesEnseignement } from "../../../services/api_periode_enseignement";
 import { setErrorPagePeriodeEnseignement, setPeriodeEnseignementLoading, setPeriodeEnseignements } from "../../../_redux/features/progession_periode_slice";
 import Download from "../common/Download";
 
