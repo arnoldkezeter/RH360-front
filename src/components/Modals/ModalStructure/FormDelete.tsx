@@ -5,7 +5,7 @@ import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../hooks/toastify';
 import { deleteStructure } from '../../../services/settings/structureAPI';
-import { deleteStructureSlice } from '../../../_redux/features/strucutureSlice';
+import { deleteStructureSlice } from '../../../_redux/features/settings/strucutureSlice';
 
 
 function FormDelete({ structure }: { structure: Structure | null }) {

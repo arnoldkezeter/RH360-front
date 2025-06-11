@@ -1,83 +1,170 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
-import FormCreateUpdate from "../../components/Modals/ModalCommune/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalCommune/FormDelete";
-import Table from "../../components/Tables/TableCommune/Table";
-// import { Commune } from "./Communes";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import LoadingTable from "../../components/Tables/common/LoadingTable";
-import { PageErreur } from "../../components/_Global/PageErreur";
-import { PageNoData } from "../../components/_Global/PageNoData";
-import { setDataSetting, setErrorDataSetting, setLoadingDataSetting } from "../../_redux/features/data_setting_slice";
-import { apiGetAllSettings } from "../../services/settings/api_data_setting";
-import { setShowModal } from "../../_redux/features/setting";
-import Loading from "../../components/ui/loading";
+import createToast from "../../hooks/toastify";
+import {getCommunesByDepartement } from "../../services/settings/communeAPI";
+import FormCreateUpdate from "../../components/Modals/ModalCommune/FormCreateUpdate";
+import FormDelete from "../../components/Modals/ModalCommune/FormDelete";
+import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/settings/regionSlice";
+import { getRegionsForDropDown } from "../../services/settings/regionAPI";
+import { setCommuneLoading, setCommunes, setErrorPageCommune } from "../../_redux/features/settings/communeSlice";
+import { setDepartementLoading, setDepartements, setErrorPageDepartement } from "../../_redux/features/settings/departementSlice";
+import { getDepartementsForDropDown } from "../../services/settings/departementAPI";
+import Table from "../../components/Tables/TableCommune/Table";
 
-export interface Commune {
-    id?: number;
-    code: string;
-    libelle: string;
-    commune: Commune;
-}
+
+
+
 const Communes = () => {
+    const [selectedCommune, setSelectedCommune] = useState<Commune | null>(null);
+
+    const { data: { communes } } = useSelector((state: RootState) => state.communeSlice);
+    const { data: { regions } } = useSelector((state: RootState) => state.regionSlice);
+    const { data: { departements } } = useSelector((state: RootState) => state.departementSlice);
+    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [currentRegion, setCurrentRegion] = useState<Region>(regions[0]);
+    const [currentDepartement, setCurrentDepartement] = useState<Departement>(departements[0]);
+
+
+   
+    const {t}=useTranslation();
     const dispatch = useDispatch();
+   
+    useEffect(() => {
+        const fetchRegions = async () => {
+            dispatch(setRegionLoading(true));
+            try {
+                
+                const fetchedRegions = await getRegionsForDropDown({ lang });
+                if (fetchedRegions) {
+                    dispatch(setRegions(fetchedRegions));
+                    // Initialiser la région courante avec la première région récupérée
+                    setCurrentRegion(fetchedRegions.regions[0] || null);
+                } else {
+                    dispatch(setRegions({
+                        regions: [],
+                        currentPage: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                        pageSize: 0,
+                    }));
+                }
+            } catch (error) {
+                dispatch(setErrorPageRegion(t('message.erreur')));
+                createToast(t('message.erreur'), "", 2);
+            } finally {
+                dispatch(setRegionLoading(false));
+            }
+        };
+        fetchRegions();
+    }, [lang]);
 
-    const { t } = useTranslation();
-    const communes = useSelector((state: RootState) => state.dataSetting.dataSetting.communes);
+    useEffect(() => {
+        const fetchDepartements = async () => {
+            if (!currentRegion || regions.length === 0) return;
 
-    const [selectedCommune, setSelectedCommune] = useState<CommuneProps | null>(null);
+            dispatch(setDepartementLoading(true));
+            try {
+                const fetchedDepartements = await getDepartementsForDropDown({
+                    regionId: currentRegion?._id || "",
+                    lang,
+                });
+                if (fetchedDepartements) {
+                    dispatch(setDepartements(fetchedDepartements));
+                    setCurrentDepartement(fetchedDepartements.departements[0] || null);
+                } else {
+                    dispatch(setDepartements({
+                        departements: [],
+                        currentPage: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                        pageSize: 0,
+                    }));
+                }
+            } catch (error) {
+                dispatch(setErrorPageDepartement(t("message.erreur")));
+                createToast(t("message.erreur"), "", 2);
+            } finally {
+                dispatch(setDepartementLoading(false));
+            }
+        };
 
-    const handleCreate = () => {
-        handleAddCommune();
-        dispatch(setShowModal())
-    }
-    const handleEditCommune = (commune: CommuneProps) => { setSelectedCommune(commune) }
-    const handleAddCommune = () => { setSelectedCommune(null) }
+        fetchDepartements();
+    }, [currentRegion, lang, dispatch, t]);
 
-    const pageIsLoading = useSelector((state: RootState) => state.dataSetting.loading);
-    const pageError = useSelector((state: RootState) => state.dataSetting.error);
+    
+    const fetchCommunes = async () => {
+        if (!currentDepartement || departements.length === 0) return;
 
-    const handleRefresh = async () => {
-        dispatch(setLoadingDataSetting(true));
+        dispatch(setCommuneLoading(true));
         try {
-            const settingsData = await apiGetAllSettings();
-            dispatch(setDataSetting(settingsData));
-            dispatch(setErrorDataSetting(null))
+            const fetchedCommunes = await getCommunesByDepartement({
+                page: currentPage,
+                departementId: currentDepartement._id || "",
+                lang,
+            });
+            if (fetchedCommunes) {
+                dispatch(setCommunes(fetchedCommunes));
+            } else {
+                dispatch(setCommunes({
+                    communes: [],
+                    currentPage: 0,
+                    totalItems: 0,
+                    totalPages: 0,
+                    pageSize: 0,
+                }));
+            }
+        } catch (error) {
+            dispatch(setErrorPageCommune(t('message.erreur')));
+            createToast(t('message.erreur'), "", 2);
+        } finally {
+            dispatch(setCommuneLoading(false));
+        }
+    };
+    
+    useEffect(() => {
+        fetchCommunes();
+    }, [currentPage, currentDepartement, lang]);
+    
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
-        } catch (error) { dispatch(setErrorDataSetting('une erreur est survenue')) }
-        finally { dispatch(setLoadingDataSetting(false)); }
-    }
+    const handleRegionChange = (region: Region) => {
+        setCurrentRegion(region);
+    };
 
+    const handleDepartementChange = (departement: Departement) => {
+        setCurrentDepartement(departement);
+    };
+    
     return (
         <>
-            <Breadcrumb pageName={t('sub_menu.communes')} />
+            
+            <Breadcrumb pageName={t('sub_menu.communes')}/>
+            <Table
+                data={communes}
+                regions={regions}
+                departements={departements}
+                currentRegion={currentRegion}
+                currentDepartement={currentDepartement}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                onRegionChange={handleRegionChange}
+                onDepartementChange={handleDepartementChange}
+                onCreate={() => setSelectedCommune(null)}
+                onEdit={setSelectedCommune}
+            />
 
-            {
-                pageIsLoading ?
-                    <Loading /> :
-                    pageError ?
-                        <PageErreur onRefresh={handleRefresh} /> :
-                        communes.length === 0 ?
-                            <PageNoData
-                                titrePage={t('aucun.commune')}
-                                titreBouton={t('ajouter_votre_premier.commune')}
-                                showModalCreate={handleCreate}
-                                refreshFunction={handleRefresh} />
-
-                            : <Table
-                                data={communes}
-                                onCreate={handleAddCommune}
-                                onEdit={handleEditCommune} />
-
-            }
-            <FormCreateUpdate commune={selectedCommune} />
+            <FormCreateUpdate commune={selectedCommune} onCommuneUpdated={fetchCommunes}/>
             <FormDelete commune={selectedCommune} />
 
         </>
     );
 };
 
-export default Communes;
 
+export default Communes;

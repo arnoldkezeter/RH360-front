@@ -4,8 +4,8 @@ interface Structure {
     _id?: string;
     nomFr: string;
     nomEn: string;
-    descriptionFr:string;
-    descriptionEn:string;
+    descriptionFr?:string;
+    descriptionEn?:string;
 }
 
 interface StructureInitialData {

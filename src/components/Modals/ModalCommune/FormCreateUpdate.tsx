@@ -4,26 +4,27 @@ import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createSettingItem, updateSettingItem } from '../../../_redux/features/data_setting_slice';
-import { apiCreateCommune, apiUpdateCommune } from '../../../services/settings/api_commune';
 import createToast from '../../../hooks/toastify';
+import { setDepartementLoading, setDepartements, setErrorPageDepartement } from '../../../_redux/features/settings/departementSlice';
+import { getDepartementsForDropDown } from '../../../services/settings/departementAPI';
+import { createCommune, updateCommune } from '../../../services/settings/communeAPI';
+import { createCommuneSlice, updateCommuneSlice } from '../../../_redux/features/settings/communeSlice';
 
 
-function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
-    const departements: DepartementProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.departements) ?? [];
-    const regions: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.regions) ?? [];
+function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | null, onCommuneUpdated: () => void; }) {
+    const { data: { regions } } = useSelector((state: RootState) => state.regionSlice) ?? [];
+    const { data: { departements } } = useSelector((state: RootState) => state.departementSlice) ?? [];
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [code, setCode] = useState("");
-    const [libelleFr, setLibelleFr] = useState("");
-    const [libelleEn, setLibelleEn] = useState("");
-    const [region, setRegion] = useState<CommonSettingProps>();
-    const [departement, setDepartement] = useState<DepartementProps>();
+    const [nomFr, setNomFr] = useState("");
+    const [nomEn, setNomEn] = useState("");
+    const [region, setRegion] = useState<Region>();
+    const [departement, setDepartement] = useState<Departement>();
 
-    const [errorCode, setErrorCode] = useState("");
-    const [errorLibelleFr, setErrorLibelleFr] = useState("");
-    const [errorLibelleEn, setErrorLibelleEn] = useState("");
+    const [errorNomFr, setErrorNomFr] = useState("");
+    const [errorNomEn, setErrorNomEn] = useState("");
     const [errorRegion, setErrorRegion] = useState("");
     const [errorDepartement, setErrorDepartement] = useState("");
     const [isFirstRender, setIsFirstRender] = useState(true);
@@ -33,35 +34,31 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
     const [modalTitle, setModalTitle] = useState(""); // Ajout du titre du modal
     const lang = useSelector((state: RootState) => state.setting.language);
     // fournira les donnees a la page
-    const [filteredDepartement, setFilteredDepartement] = useState<DepartementProps[] | undefined>([]);
+    const [filteredDepartement, setFilteredDepartement] = useState<Departement[] | undefined>([]);
     useEffect(() => {
         if (commune) {
             setModalTitle(t('form_update.enregistrer') + t('form_update.commune'));
-            const currentDepartement = departements.find(departement => departement._id === ""+commune.departement);
-            const currentRegion = currentDepartement && regions.find(region => region._id === ""+currentDepartement.region);
-            currentRegion && filterDepartementByRegion(currentRegion._id);
-            setCode(commune.code);
-            setLibelleFr(commune.libelleFr);
-            setLibelleEn(commune.libelleEn);
-            setRegion(currentRegion);
-            setDepartement(currentDepartement);
+           
+            setCode(commune?.code || "");
+            setNomFr(commune.nomFr);
+            setNomEn(commune.nomEn);
+            setRegion(commune.departement.region);
+            setDepartement(commune.departement);
 
 
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.commune'));
             setCode("");
-            setLibelleFr("");
-            setLibelleEn("");
+            setNomFr("");
+            setNomEn("");
             setRegion(undefined);
             setDepartement(undefined);
-            setFilteredDepartement(undefined);
         }
 
 
         if (isFirstRender) {
-            setErrorCode("");
-            setErrorLibelleFr("");
-            setErrorLibelleEn("");
+            setErrorNomFr("");
+            setErrorNomEn("");
             setErrorRegion("");
             setErrorDepartement("");
             setIsFirstRender(false);
@@ -69,9 +66,8 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
     }, [commune, isFirstRender, t]);
     
     const closeModal = () => {
-        setErrorCode("");
-        setErrorLibelleFr("");
-        setErrorLibelleEn("");
+        setErrorNomFr("");
+        setErrorNomEn("");
         setErrorRegion("");
         setErrorDepartement("");
         setIsFirstRender(true);
@@ -79,49 +75,56 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
     };
     
     // filtrer les donnee a partir de l'id de la region selectionner
-    const filterDepartementByRegion = (regionId: string | undefined) => {
-        if (regionId && regionId !== '') {
-            // Filtrer les départements en fonction de l'ID de la région
-            const result: DepartementProps[] = departements.filter(depart => ""+depart.region === regionId);
 
-            setFilteredDepartement(result);
+    const fetchDepartements = async (id: string | undefined) => {
+        dispatch(setDepartementLoading(true));
+        try {
+            const fetchedDepartements = id && await getDepartementsForDropDown({regionId:id, lang });
+            if (fetchedDepartements) {
+                setFilteredDepartement(fetchedDepartements.departements)
+            } else {
+                dispatch(setDepartements({
+                    departements: [],
+                    currentPage: 0,
+                    totalItems: 0,
+                    totalPages: 0,
+                    pageSize: 0,
+                }));
+            }
+        } catch (error) {
+            dispatch(setErrorPageDepartement(t('message.erreur')));
+            createToast(t('message.erreur'), "", 2);
+        } finally {
+            dispatch(setDepartementLoading(false));
         }
     };
 
     
     const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedRegionLibelle = e.target.value;
+        const selectedRegionNom = e.target.value;
         var selectedRegion = null;
 
         if (lang === 'fr') {
-            selectedRegion = regions.find(region => region.libelleFr === selectedRegionLibelle);
-
+            selectedRegion = regions.find(region => region.nomFr === selectedRegionNom);
+        }else {
+            selectedRegion = regions.find(region => region.nomEn === selectedRegionNom);
         }
-        else {
-            selectedRegion = regions.find(region => region.libelleEn === selectedRegionLibelle);
-
-        }
-
 
         if (selectedRegion) {
             setRegion(selectedRegion);
-            filterDepartementByRegion(selectedRegion._id);
+            fetchDepartements(selectedRegion._id);
             setErrorRegion("");
         }
     };
     const handleDepartementChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedDepartementLibelle = e.target.value;
+        const selectedDepartementNom = e.target.value;
         var selectedDepartement = null;
 
         if (lang === 'fr') {
-            selectedDepartement = filteredDepartement && filteredDepartement.find(departement => departement.libelleFr === selectedDepartementLibelle);
-
+            selectedDepartement = filteredDepartement && filteredDepartement.find(departement => departement.nomFr === selectedDepartementNom);
+        }else {
+            selectedDepartement = filteredDepartement && filteredDepartement.find(departement => departement.nomEn === selectedDepartementNom);
         }
-        else {
-            selectedDepartement = filteredDepartement && filteredDepartement.find(departement => departement.libelleEn === selectedDepartementLibelle);
-
-        }
-
 
         if (selectedDepartement) {
             setDepartement(selectedDepartement);
@@ -133,15 +136,12 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
 
 
     const handleCreateUpdate = async () => {
-        if (!libelleFr || !libelleEn || !region || !departement) {
-            // if (!code) {
-            //     setErrorCode(t('error.code'));
-            // }
-            if (!libelleFr) {
-                setErrorLibelleFr(t('error.libelle'));
+        if (!nomFr || !nomEn || !region || !departement) {
+            if (!nomFr) {
+                setErrorNomFr(t('error.nom'));
             }
-            if (!libelleEn) {
-                setErrorLibelleEn(t('error.libelle'));
+            if (!nomEn) {
+                setErrorNomEn(t('error.nom'));
             }
             if (!region) {
                 setErrorRegion(t('error.region'));
@@ -153,23 +153,22 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
         }
         if (!commune){
             if (departement._id) {
-                await apiCreateCommune(
+                await createCommune(
                     {
                         code,
-                        libelleFr,
-                        libelleEn,
-                        departement: departement._id,
-                    }
+                        nomFr,
+                        nomEn,
+                        departement,
+                    }, lang
                 ).then((e: ReponseApiPros) => {
                     if (e.success) {
-                        createToast(e.message[lang as keyof typeof e.message], '', 0);
-                        dispatch(createSettingItem({
-                            tableName: 'communes', newItem: {
+                        createToast(e.message, '', 0);
+                        dispatch(createCommuneSlice({
+                            commune: {
                                 code: e.data.code,
-                                libelleFr: e.data.libelleFr,
-                                libelleEn: e.data.libelleEn,
-                                date_creation: e.data.date_creation,
-                                departement: e.data.departement,
+                                nomFr: e.data.nomFr,
+                                nomEn: e.data.nomEn,
+                                departement: departement,
                                 _id: e.data._id,
                             }
                         }));
@@ -177,7 +176,7 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
                         closeModal();
     
                     } else {
-                        createToast(e.message[lang as keyof typeof e.message], '', 2);
+                        createToast(e.message, '', 2);
     
                     }
                 }).catch((e) => {
@@ -186,34 +185,33 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
             }
         }else{
             if (departement._id) {
-                await apiUpdateCommune(
+                await updateCommune(
                     {
                         code,
-                        libelleFr,
-                        libelleEn,
-                        departement: departement._id,
+                        nomFr,
+                        nomEn,
+                        departement,
                         _id: commune._id,
-                    }
+                    }, lang
                 ).then((e: ReponseApiPros) => {
                     if (e.success) {
-                        createToast(e.message[lang as keyof typeof e.message], '', 0);
-                        dispatch(updateSettingItem({
-                            tableName: 'communes',
-                            updatedItem: {
+                        createToast(e.message, '', 0);
+                        dispatch(updateCommuneSlice({
+                            id: e.data._id,
+                            communeData: {
                                 code: e.data.code,
-                                libelleFr: e.data.libelleFr,
-                                libelleEn: e.data.libelleEn,
-                                date_creation: e.data.date_creation,
-                                departement: e.data.departement,
+                                nomFr: e.data.nomFr,
+                                nomEn: e.data.nomEn,
+                                departement: departement,
                                 _id: e.data._id,
                             }
                         }));
 
                         closeModal();
-
+                        onCommuneUpdated(); // Appeler pour rafraîchir la liste
 
                     } else {
-                        createToast(e.message[lang as keyof typeof e.message], '', 2);
+                        createToast(e.message, '', 2);
 
                     }
                 }).catch((e) => {
@@ -240,46 +238,46 @@ function ModalCreateUpdate({ commune }: { commune: CommuneProps | null }) {
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     type="text"
                     value={code}
-                    onChange={(e) => { setCode(e.target.value); setErrorCode("") }}
+                    onChange={(e) => { setCode(e.target.value);}}
                 />
                 {/* {errorCode && <p className="text-red-500" >{errorCode}</p>} */}
-                <label>{t('label.libelle_fr')}</label><label className="text-red-500"> *</label>
+                <label>{t('label.nom_chose_fr')}</label><label className="text-red-500"> *</label>
                 <input
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     type="text"
-                    value={libelleFr}
-                    onChange={(e) => { setLibelleFr(e.target.value); setErrorLibelleFr("") }}
+                    value={nomFr}
+                    onChange={(e) => { setNomFr(e.target.value); setErrorNomFr("") }}
                 />
-                {errorLibelleFr && <p className="text-red-500">{errorLibelleFr}</p>}
-                <label>{t('label.libelle_en')}</label><label className="text-red-500"> *</label>
+                {errorNomFr && <p className="text-red-500">{errorNomFr}</p>}
+                <label>{t('label.nom_chose_en')}</label><label className="text-red-500"> *</label>
                 <input
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     type="text"
-                    value={libelleEn}
-                    onChange={(e) => { setLibelleEn(e.target.value); setErrorLibelleFr("") }}
+                    value={nomEn}
+                    onChange={(e) => { setNomEn(e.target.value); setErrorNomFr("") }}
                 />
-                {errorLibelleEn && <p className="text-red-500">{errorLibelleEn}</p>}
+                {errorNomEn && <p className="text-red-500">{errorNomEn}</p>}
                 <label>{t('label.region')}</label><label className="text-red-500"> *</label>
                 <select
-                    value={region ? (lang === 'fr' ? region.libelleFr : region.libelleEn) : 'Sélectionnez une region'}
+                    value={region ? (lang === 'fr' ? region.nomFr : region.nomEn) : 'Sélectionnez une region'}
                     onChange={handleRegionChange}
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 >
                     <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}</option>
                     {regions.map(region => (
-                        <option key={region._id} value={lang === 'fr' ? region.libelleFr : region.libelleEn}>{lang === 'fr' ? region.libelleFr : region.libelleEn}</option>
+                        <option key={region._id} value={lang === 'fr' ? region.nomFr : region.nomEn}>{lang === 'fr' ? region.nomFr : region.nomEn}</option>
                     ))}
                 </select>
                 {errorRegion && <p className="text-red-500">{errorRegion}</p>}
                 <label>{t('label.departement')}</label><label className="text-red-500"> *</label>
                 <select
-                    value={departement ? (lang === 'fr' ? departement.libelleFr : departement.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.departement')}
+                    value={departement ? (lang === 'fr' ? departement.nomFr : departement.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.departement')}
                     onChange={handleDepartementChange}
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 >
                     <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.departement')}</option>
                     {filteredDepartement && filteredDepartement.map(departement => (
-                        <option key={departement._id} value={lang === 'fr' ? departement.libelleFr : departement.libelleEn}>{lang === 'fr' ? departement.libelleFr : departement.libelleEn}</option>
+                        <option key={departement._id} value={lang === 'fr' ? departement.nomFr : departement.nomEn}>{lang === 'fr' ? departement.nomFr : departement.nomEn}</option>
                     ))}
                 </select>
                 {errorDepartement && <p className="text-red-500">{errorDepartement}</p>}

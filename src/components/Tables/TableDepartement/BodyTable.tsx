@@ -3,7 +3,7 @@ import ButtonCrudTable from "../common/ButtonActionTable"
 import { setShowModal, setShowModalDelete } from "../../../_redux/features/setting"
 import { RootState } from "../../../_redux/store";
 
-const BodyTable = ({ data, onEdit }: { data: DepartementProps[], onEdit: (departement: DepartementProps) => void }) => {
+const BodyTable = ({ data, onEdit }: { data: Departement[], onEdit: (departement: Departement) => void }) => {
 
     const dispatch = useDispatch();
 
@@ -24,7 +24,7 @@ const BodyTable = ({ data, onEdit }: { data: DepartementProps[], onEdit: (depart
 
                 {/* libelle */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
-                    <h5> {lang === 'fr' ? item.libelleFr : item.libelleEn}</h5>
+                    <h5> {lang === 'fr' ? item.nomFr : item.nomEn}</h5>
                 </td>
 
                 {/* Action  bouton pour edit*/}

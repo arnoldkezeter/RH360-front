@@ -1,10 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import ButtonCrudTable from "../common/ButtonActionTable"
-import { setShowModal, setShowModalDelete, setShowModalUpdate } from "../../../_redux/features/setting"
-import { Commune } from "../../../pages/Admin/Communes";
+import { setShowModal, setShowModalDelete } from "../../../_redux/features/setting"
 import { RootState } from "../../../_redux/store";
 
-const BodyTable = ({ data, onEdit }: { data: CommuneProps[], onEdit: (commune: CommuneProps) => void }) => {
+const BodyTable = ({ data, onEdit }: { data: Commune[], onEdit: (commune: Commune) => void }) => {
 
     const dispatch = useDispatch();
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
@@ -19,12 +18,12 @@ const BodyTable = ({ data, onEdit }: { data: CommuneProps[], onEdit: (commune: C
 
                 {/* matricule */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark hidden md:table-cell">
-                    <h5>{item.code}</h5>
+                    <h5>{item?.code || ""}</h5>
                 </td>
 
-                {/* libelle */}
+                {/* nom */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
-                    <h5> {lang === 'fr' ? item.libelleFr : item.libelleEn}</h5>
+                    <h5> {lang === 'fr' ? item.nomFr : item.nomEn}</h5>
                 </td>
 
                 {/* Action  bouton pour edit*/}

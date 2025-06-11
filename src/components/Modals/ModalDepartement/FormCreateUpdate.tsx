@@ -6,25 +6,22 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage, Label } from '../../ui/Label';
 import Input from '../../ui/input';
-import { apiCreateDepartement, apiUpdateDepartement } from '../../../services/settings/api_departement';
-import { createSettingItem, updateSettingItem } from '../../../_redux/features/data_setting_slice';
 import createToast from '../../../hooks/toastify';
+import { createDepartement, updateDepartement } from '../../../services/settings/departementAPI';
+import { createDepartementSlice, updateDepartementSlice } from '../../../_redux/features/settings/departementSlice';
 
 
-function ModalCreateUpdate({ departement }: { departement: DepartementProps | null }) {
-    const regions = useSelector((state: RootState) => state.dataSetting.dataSetting.regions) ?? [];
-
+function ModalCreateUpdate({ departement, onDepartmentUpdated }: { departement: Departement | null, onDepartmentUpdated: () => void; }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const [code, setCode] = useState("");
-    const [libelleFr, setLibelleFr] = useState("");
-    const [libelleEn, setLibelleEn] = useState("");
-    const [region, setRegion] = useState<CommonSettingProps>();
+    const [nomFr, setNomFr] = useState("");
+    const [nomEn, setNomEn] = useState("");
+    const [region, setRegion] = useState<Region>();
 
-    const [errorCode, setErrorCode] = useState("");
-    const [errorLibelleFr, setErrorLibelleFr] = useState("");
-    const [errorLibelleEn, setErrorLibelleEn] = useState("");
+    const [errorNomFr, setErrorNomFr] = useState("");
+    const [errorNomEn, setErrorNomEn] = useState("");
     const [errorRegion, setErrorRegion] = useState("");
 
     const [isFirstRender, setIsFirstRender] = useState(true);
@@ -35,58 +32,47 @@ function ModalCreateUpdate({ departement }: { departement: DepartementProps | nu
 
     const lang = useSelector((state: RootState) => state.setting.language);
 
+    const { data: { regions } } = useSelector((state: RootState) => state.regionSlice) ?? [];
     useEffect(() => {
         if (departement) {
             setModalTitle(t('form_update.enregistrer') + t('form_update.departement'));
-            const regionId = "" + departement.region;
-            const currentRegion = regions.find(region => region._id === regionId);
-
-            setCode(departement.code);
-            setLibelleFr(departement.libelleFr);
-            setLibelleEn(departement.libelleEn);
-            setRegion(currentRegion);
-
+            
+            console.log("open")
+            setCode(departement?.code || "");
+            setNomFr(departement.nomFr);
+            setNomEn(departement.nomEn);
+            setRegion(departement.region);
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.departement'));
             setCode("");
-            setLibelleFr("");
-            setLibelleEn("");
+            setNomFr("");
+            setNomEn("");
             setRegion(undefined);
         }
-
-
         if (isFirstRender) {
-            setErrorCode("");
-            setErrorLibelleEn("");
-            setErrorLibelleFr("");
+            setErrorNomEn("");
+            setErrorNomFr("");
             setErrorRegion("");
             setIsFirstRender(false);
         }
     }, [departement, isFirstRender, t]);
 
     const closeModal = () => {
-        setErrorCode("");
-        setErrorLibelleFr("");
-        setErrorLibelleEn("");
+        setErrorNomFr("");
+        setErrorNomEn("");
         setErrorRegion("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
 
     const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedRegionLibelle = e.target.value;
+        const selectedRegionNom = e.target.value;
         var selectedRegion = null;
-
         if (lang === 'fr') {
-            selectedRegion = regions.find(region => region.libelleFr === selectedRegionLibelle);
-
+            selectedRegion = regions.find(region => region.nomFr === selectedRegionNom);
+        }else {
+            selectedRegion = regions.find(region => region.nomEn === selectedRegionNom);
         }
-        else {
-            selectedRegion = regions.find(region => region.libelleEn === selectedRegionLibelle);
-
-        }
-
-
         if (selectedRegion) {
             setRegion(selectedRegion);
             setErrorRegion("");
@@ -97,122 +83,82 @@ function ModalCreateUpdate({ departement }: { departement: DepartementProps | nu
 
 
     const handleCreateUpdate = async () => {
+        if (!nomFr || !nomEn || !region) {
+            if (!nomFr) {
+                setErrorNomFr(t('error.nom'));
+            }
+            if (!nomEn) {
+                setErrorNomEn(t('error.nom'));
+            }
+            if (!region) {
+                setErrorRegion(t('error.region'));
+            }
+            return;
+        } 
         // create
         if (!departement) {
-            // if (!code || !libelleFr || !libelleEn || !region) {
-            if (!libelleFr || !libelleEn || !region) {
-                // if (!code) {
-                //     setErrorCode(t('error.code'));
-                // }
-                if (!libelleFr) {
-                    setErrorLibelleFr(t('error.libelle'));
-                }
-                if (!libelleEn) {
-                    setErrorLibelleEn(t('error.libelle'));
-                }
-                if (!region) {
-                    setErrorRegion(t('error.region'));
-                }
-
-            } else {
-                // creation
-
-                if (region._id) {
-                    await apiCreateDepartement(
-                        {
-                            code,
-                            libelleFr,
-                            libelleEn,
-                            region: region._id,
-                        }
-                    ).then((e: ReponseApiPros) => {
-                        if (e.success) {
-                            createToast(e.message[lang as keyof typeof e.message], '', 0);
-                            dispatch(createSettingItem({
-                                tableName: 'departements', newItem: {
-                                    code: e.data.code,
-                                    libelleFr: e.data.libelleFr,
-                                    libelleEn: e.data.libelleEn,
-                                    date_creation: e.data.date_creation,
-                                    region: e.data.region,
-                                    _id: e.data._id,
-                                }
-                            }));
-
-                            closeModal();
-
-                        } else {
-                            createToast(e.message[lang as keyof typeof e.message], '', 2);
-
-                        }
-                    }).catch((e) => {
-                        createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
-                    })
-                }
-
+            if (region._id) {
+                await createDepartement(
+                    {
+                        code,
+                        nomFr,
+                        nomEn,
+                        region: region,
+                    },lang
+                ).then((e: ReponseApiPros) => {
+                    if (e.success) {
+                        createToast(e.message, '', 0);
+                        dispatch(createDepartementSlice({
+                            departement:{
+                                code: e.data.code,
+                                nomFr: e.data.nomFr,
+                                nomEn: e.data.nomEn,
+                                region: region,
+                                _id: e.data._id,
+                            }
+                        }));
+                        closeModal();
+                    } else {
+                        createToast(e.message, '', 2);
+                    }
+                }).catch((e) => {
+                    createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                })
+            }
+        }else {
+            if (region._id) {
+                await updateDepartement(
+                    {
+                        code,
+                        nomFr,
+                        nomEn,
+                        region: region,
+                        _id: departement._id,
+                    }, lang
+                ).then((e: ReponseApiPros) => {
+                    if (e.success) {
+                        createToast(e.message, '', 0);
+                        dispatch(updateDepartementSlice({
+                            id:e.data._id,
+                            departementData:{
+                                code: e.data.code,
+                                nomFr: e.data.nomFr,
+                                nomEn: e.data.nomEn,
+                                region: region,
+                                _id: e.data._id,
+                            }
+                        }));
+                        
+                        closeModal();
+                        onDepartmentUpdated(); // Appeler pour rafraîchir la liste
+                    } else {
+                        createToast(e.message, '', 2);
+                    }
+                }).catch((e) => {
+                    createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                })
             }
         }
-
-        //update
-        else {
-
-            if (!libelleFr || !libelleEn || !region) {
-                // if (!code) {
-                //     setErrorCode(t('error.code'));
-                // }
-                if (!libelleFr) {
-                    setErrorLibelleFr(t('error.libelle'));
-                }
-                if (!libelleEn) {
-                    setErrorLibelleEn(t('error.libelle'));
-                }
-                if (!region) {
-                    setErrorRegion(t('error.region'));
-                }
-            } else {
-
-
-                //
-                //  mise a jour
-                if (region._id) {
-                    await apiUpdateDepartement(
-                        {
-                            code,
-                            libelleFr,
-                            libelleEn,
-                            region: region._id,
-                            _id: departement._id,
-                        }
-                    ).then((e: ReponseApiPros) => {
-                        if (e.success) {
-                            createToast(e.message[lang as keyof typeof e.message], '', 0);
-                            dispatch(updateSettingItem({
-                                tableName: 'departements',
-                                updatedItem: {
-                                    code: e.data.code,
-                                    libelleFr: e.data.libelleFr,
-                                    libelleEn: e.data.libelleEn,
-                                    date_creation: e.data.date_creation,
-                                    region: e.data.region,
-                                    _id: e.data._id,
-                                }
-                            }));
-
-                            closeModal();
-
-
-                        } else {
-                            createToast(e.message[lang as keyof typeof e.message], '', 2);
-
-                        }
-                    }).catch((e) => {
-                        createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
-                    })
-                }
-            }
-        }
-
-
     }
 
 
@@ -231,45 +177,41 @@ function ModalCreateUpdate({ departement }: { departement: DepartementProps | nu
                 <Input
                     value={code}
                     type='text'
-                    setValue={(value) => { setCode(value); setErrorCode("") }}
+                    setValue={(value) => { setCode(value);}}
                     hasBackground={true}
                 />
-                {/* <ErrorMessage message={errorCode} /> */}
-
 
                 {/* input 2 */}
-                <Label text={t('label.libelle_fr')} required />
+                <Label text={t('label.nom_chose_fr')} required />
                 <Input
-                    value={libelleFr}
+                    value={nomFr}
                     type='text'
-                    setValue={(value) => { setLibelleFr(value); setErrorLibelleFr(""); }}
+                    setValue={(value) => { setNomFr(value); setErrorNomFr(""); }}
                     hasBackground={true}
                 />
-                <ErrorMessage message={errorLibelleFr} />
+                <ErrorMessage message={errorNomFr} />
 
                 {/* input 3 */}
-                <Label text={t('label.libelle_en')} required />
+                <Label text={t('label.nom_chose_en')} required />
                 <Input
-                    value={libelleEn}
+                    value={nomEn}
                     type='text'
-                    setValue={(value) => { setLibelleEn(value); setErrorLibelleEn(""); }}
+                    setValue={(value) => { setNomEn(value); setErrorNomEn(""); }}
                     hasBackground={true}
                 />
-                <ErrorMessage message={errorLibelleEn} />
+                <ErrorMessage message={errorNomEn} />
 
                 {/* input 4 */}
 
                 <Label text={t('label.region')} required />
-
-
                 <select
-                    value={region ? (lang === 'fr' ? region.libelleFr : region.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}
+                    value={region ? (lang === 'fr' ? region.nomFr : region.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}
                     onChange={handleRegionChange}
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 >
                     <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}</option>
                     {regions.map(region => (
-                        <option key={region._id} value={lang === 'fr' ? region.libelleFr : region.libelleEn}>{lang === 'fr' ? region.libelleFr : region.libelleEn}</option>
+                        <option key={region._id} value={lang === 'fr' ? region.nomFr : region.nomEn}>{lang === 'fr' ? region.nomFr : region.nomEn}</option>
                     ))}
                 </select>
                 <ErrorMessage message={errorRegion} />

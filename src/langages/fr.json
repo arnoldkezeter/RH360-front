@@ -86,6 +86,8 @@
     "services": "Services",
     "grades": "Grades",
     "categories_professionnelles": "Catégories professionnelles",
+    "postes_de_travail": "Postes de travail",
+    "taxes":"Taxes",
     "regions": "Regions",
     "departements": "Departments",
     "communes": "Communes"
@@ -113,6 +115,14 @@
     "liste_alerte": "Liste des alertes recentes"
   },
   "label": {
+    "famille_metier":"Famille de metier",
+    "nature_taxe":"Nature de la taxe",
+    "nature_taxe_fr":"Nature de la taxe en français",
+    "nature_taxe_en":"Nature de la taxe en anglais",
+    "taux":"Taux",
+    "structure":"Structure",
+    "nb_place_stage":"Nombre de place pour les stages",
+
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
     "termine":"Terminé",
@@ -356,33 +366,21 @@
   "recherche": {
     "rechercher": "Rechercher ",
 
+    "famille_metier":"une famille de metier",
+    "axe_strategique":"un axe stratégique",
+    "competence":"une compétence",
+
     "structure":"une structure",
-    "devoir": "un devoir",
-    "question":"une question",
-    "support_de_cours":"un support de cours",
-    "permission":"une permission",
-    "etudiant": "un étudiant",
-    "enseignant": "un enseignant",
-    "matiere": "une matière",
-    "chapitre": "un chapitre",
-    "salle": "une salle de cours",
-    "section": "une section",
-    "departementAcademique": "un département académique",
-    "cycle": "un cycle",
-    "niveau": "un niveau",
-    "evenement": "un évènement",
-    "administrateur": "un administrateur par matricule, nom ou prénom",
+    "categorie_professionnelle":"une catégorie professionnelle",
+    "poste_de_travail":"un poste de travail",
     "grade": "un grade",
     "service": "un service",
-    "categorie": "une catégorie",
-    "fonction": "une fonction",
+    "taxe": "une taxe",
     "region": "une région",
     "promotion": "une promotion",
     "departement": "un département",
-    "commune": "une commune",
-    "objectif": "un objectif",
-    "periodes_enseignement": "une période d'enseignement",
-    "enseignement": "un enseignement"
+    "commune": "une commune"
+    
   },
   "boutton": {
     "cap_visage":"Capturer mon visage",
@@ -439,65 +437,79 @@
   },
   "select_par_defaut": {
     "selectionnez": "Sélectionnez ",
-    "type":"un type",
-    "statut":"un statut",
-    "section": "une section",
-    "departementAcademique": "un département académique",
-    "cycle": "un cylce",
-    "niveau": "un niveau",
     "grade": "un grade",
     "etat": "un état",
-    "categorie": "une catégorie",
+    "categorie_professionnelle": "une catégorie professionnelle",
     "fonction": "une fonction",
     "service": "un service",
-    "specialite": "une spécialité",
     "region": "une région",
-    "promotion": "une promotion",
     "departement": "un département",
     "commune": "une commune",
-    "matiere": "une matière",
-    "semestre": "un semestre",
-    "jour": "un jour de la semaine",
-    "enseignant": "un enseignant",
-    "enseignant_sup": "un enseignant suppléant",
-    "salle": "une salle de cours",
-    "type_ens": "une activité pédagogique"
+    "famille_metier":"une famille de metier",
+    "structure":"une structure"
   },
   "filtre": {
     "filtrer": "Filtrer",
-    "devoir": "Filtrer la liste des devoirs suivant :",
-    "objectif": "Filtrer la liste des objectifs de la matière suivant :",
-    "chapitre": "Filtrer la liste des chapitres de la matière suivant :",
-    "etudiant": "Filtrer la liste des étudiants suivant :",
-    "enseignant": "Filtrer la liste des enseignants suivant:",
-    "matiere": "Filtrer la liste des matières suivant:",
-    "progression": "Afficher la progression dans les matières suivant :",
-    "cycle": "Filtrer la liste des cycles suivant :",
-    "niveau": "Filtrer la liste des niveaux suivant :",
-    "emploie_temps": "Afficher l'emploie de temps suivant :",
-    "evenement": "Afficher la liste des évènements suivant :",
-    "promotion": "Afficher la liste des promotion suivant :",
     "departement": "Filtrer la liste des départements suivant :",
     "commune": "Filtrer la liste des communes suivant :",
-    "categorie": "Filtrer la liste des catégories suivant :",
-    "absence": "Filtrer mes absences suivant : ",
-    "periodes_enseignement": "Filtrer les périodes d'enseignement",
-    "support_de_cours":"Filtrer la liste des supports de cours suivant :"
+    "categorie_professionnelle": "Filtrer la liste des catégories professionnelles suivant :",
+    "poste_de_travail": "Filtrer la liste des postes de travail suivant :", 
+    "competence": "Filtrer la liste des compétences suivant :",
+    "service": "Filtrer la liste des services suivant :"
+    
+    
   },
   "form_save": {
     "ajouter":"Ajouter ",
     "enregistrer": "Enregistrer ",
-    "structure":"une structure"
+
+    "structure":"une structure",
+    "departement":"un département",
+    "commune":"une commune",
+    "grade":"un grade",
+    "categorie_professionnelle":"une catégorie professionnelle",
+    "poste_de_travail":"un poste de travail",
+    "service":"un service",
+    "taxe":"une taxe",
+
+    "famille_metier":"une famille de metier",
+    "axes_strategique":"un axe stratégique",
+    "competence":"une compétence"
+
   },
+
   "form_update": {
     "enregistrer": "Mettre à jour les informations ",
-    "structure":"de la structure"
+    "structure":"de la structure",
+    "departement":"du département",
+    "commune":"d'une commune",
+    "grade":"du grade",
+    "categorie_professionnelle":"de la catégorie professionnelle",
+    "poste_de_travail":"du poste de travail",
+    "service":"du service",
+    "taxe":"de la taxe",
+
+    "famille_metier":"de la famille de metier",
+    "axes_strategique":"de l'axe stratégique",
+    "competence":"d'une compétence"
     
   },
   "form_delete": {
     "supprimer": "Supprimer",
     "suppression": "Suppression ",
-    "structure":"de la structure"
+
+    "structure":"de la structure",
+    "departement":"du département",
+    "commune":"d'une commune",
+    "grade":"du grade",
+    "categorie_professionnelle":"de la catégorie professionnelle",
+    "poste_de_travail":"du poste de travail",
+    "service":"du service",
+    "taxe":"de la taxe",
+
+    "famille_metier":"de la famille de metier",
+    "axes_strategique":"de l'axe stratégique",
+    "competence":"d'une compétence"
   },
   "error": {
     "somme_pourcentage_positif": "La somme des pourcentages positifs doit être égale à 100%.",

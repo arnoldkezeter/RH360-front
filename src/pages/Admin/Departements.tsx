@@ -1,73 +1,119 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
-import Table from "../../components/Tables/TableDepartement/Table";
-import FormCreateUpdate from "../../components/Modals/ModalDepartement/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalDepartement/FormDelete";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import { setDataSetting, setErrorDataSetting, setLoadingDataSetting } from "../../_redux/features/data_setting_slice.tsx";
-import { apiGetAllSettings } from "../../services/settings/api_data_setting.tsx";
-import { PageNoData } from "../../components/_Global/PageNoData";
-import { PageErreur } from "../../components/_Global/PageErreur";
-import LoadingTable from "../../components/Tables/common/LoadingTable";
-import { setShowModal } from "../../_redux/features/setting";
-import Loading from "../../components/ui/loading";
+import createToast from "../../hooks/toastify";
+import { getDepartements, getDepartementsByRegion } from "../../services/settings/departementAPI";
+import Table from "../../components/Tables/TableDepartement/Table";
+import FormCreateUpdate from "../../components/Modals/ModalDepartement/FormCreateUpdate";
+import FormDelete from "../../components/Modals/ModalDepartement/FormDelete";
+import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/settings/regionSlice";
+import { getRegions, getRegionsForDropDown } from "../../services/settings/regionAPI";
+import { setDepartementLoading, setDepartements, setErrorPageDepartement } from "../../_redux/features/settings/departementSlice";
 
 
-export const Departements = () => {
+
+
+const Departements = () => {
+    const [selectedDepartement, setSelectedDepartement] = useState<Departement | null>(null);
+
+    const { data: { departements } } = useSelector((state: RootState) => state.departementSlice);
+    const { data: { regions } } = useSelector((state: RootState) => state.regionSlice);
+    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [currentRegion, setCurrentRegion] = useState<Region>(regions[0]);
+
+   
+    const {t}=useTranslation();
     const dispatch = useDispatch();
+   
+    useEffect(() => {
+        const fetchRegions = async () => {
+            dispatch(setRegionLoading(true));
+            try {
+                const fetchedRegions = await getRegionsForDropDown({ lang });
+                if (fetchedRegions) {
+                    dispatch(setRegions(fetchedRegions));
+                    // Initialiser la région courante avec la première région récupérée
+                    setCurrentRegion(fetchedRegions.regions[0] || null);
+                } else {
+                    dispatch(setRegions({
+                        regions: [],
+                        currentPage: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                        pageSize: 0,
+                    }));
+                }
+            } catch (error) {
+                dispatch(setErrorPageRegion(t('message.erreur')));
+                createToast(t('message.erreur'), "", 2);
+            } finally {
+                dispatch(setRegionLoading(false));
+            }
+        };
+        fetchRegions();
+    }, [lang, dispatch, t]);
 
-    const { t } = useTranslation();
-    const departements = useSelector((state: RootState) => state.dataSetting.dataSetting.departements);
+    
+    const fetchDepartements = async () => {
+        if (!currentRegion || regions.length === 0) return;
 
-    const [selectedDepartement, setSelectedDepartement] = useState<DepartementProps | null>(null);
-
-    const handleCreate = () => {
-        handleAddDepartement();
-        dispatch(setShowModal())
-    }
-
-    const handleEditDepartement = (departement: DepartementProps) => { setSelectedDepartement(departement) }
-    const handleAddDepartement = () => { setSelectedDepartement(null) }
-
-
-    // LOADING AND ERROR
-    const pageIsLoading = useSelector((state: RootState) => state.dataSetting.loading);
-    const pageError = useSelector((state: RootState) => state.dataSetting.error);
-
-    const handleRefresh = async () => {
-        dispatch(setLoadingDataSetting(true));
+        dispatch(setDepartementLoading(true));
         try {
-            const settingsData = await apiGetAllSettings();
-            dispatch(setDataSetting(settingsData));
-            dispatch(setErrorDataSetting(null))
+            const fetchedDepartements = await getDepartementsByRegion({
+                page: currentPage,
+                regionId: currentRegion._id || "",
+                lang,
+            });
+            if (fetchedDepartements) {
+                dispatch(setDepartements(fetchedDepartements));
+            } else {
+                dispatch(setDepartements({
+                    departements: [],
+                    currentPage: 0,
+                    totalItems: 0,
+                    totalPages: 0,
+                    pageSize: 0,
+                }));
+            }
+        } catch (error) {
+            dispatch(setErrorPageDepartement(t('message.erreur')));
+            createToast(t('message.erreur'), "", 2);
+        } finally {
+            dispatch(setDepartementLoading(false));
+        }
+    };
+    
+    useEffect(() => {
+        fetchDepartements();
+    }, [currentPage, currentRegion, lang]);
+    
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
-        } catch (error) { dispatch(setErrorDataSetting('une erreur est survenue')) }
-        finally { dispatch(setLoadingDataSetting(false)); }
-    }
+    const handleRegionChange = (region: Region) => {
+        setCurrentRegion(region);
+    };
+    
     return (
         <>
-            <Breadcrumb pageName={t('sub_menu.departements')} />
+            
+            <Breadcrumb pageName={t('sub_menu.departements')}/>
+            <Table
+                data={departements}
+                regions={regions}
+                currentRegion={currentRegion}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                onRegionChange={handleRegionChange}
+                onCreate={() => setSelectedDepartement(null)}
+                onEdit={setSelectedDepartement}
+            />
 
-            {
-                pageIsLoading ?
-                    <Loading /> :
-                    pageError ?
-                        <PageErreur onRefresh={handleRefresh} /> :
-                        departements.length === 0 ?
-                        <PageNoData
-                            titrePage={t('aucun.departement')}
-                            titreBouton={t('ajouter_votre_premier.departement')}
-                            showModalCreate={handleCreate}
-                            refreshFunction={handleRefresh} />
-                        : <Table
-                            data={departements}
-                            onCreate={handleAddDepartement}
-                            onEdit={handleEditDepartement} />
-
-            }
-            <FormCreateUpdate departement={selectedDepartement} />
+            <FormCreateUpdate departement={selectedDepartement} onDepartmentUpdated={fetchDepartements}/>
             <FormDelete departement={selectedDepartement} />
 
         </>
@@ -75,3 +121,4 @@ export const Departements = () => {
 };
 
 
+export default Departements;

@@ -1,77 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
-import Table from "../../components/Tables/TableGrade/Table";
-import FormCreateUpdate from "../../components/Modals/ModalGrade/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalGrade/FormDelete";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import { setDataSetting, setErrorDataSetting, setLoadingDataSetting } from "../../_redux/features/data_setting_slice";
-import { apiGetAllSettings } from "../../services/settings/api_data_setting";
-import LoadingTable from "../../components/Tables/common/LoadingTable";
-import { PageErreur } from "../../components/_Global/PageErreur";
-import { PageNoData } from "../../components/_Global/PageNoData";
-import { setShowModal } from "../../_redux/features/setting";
-import Loading from "../../components/ui/loading";
+import createToast from "../../hooks/toastify";
+import { getGrades } from "../../services/settings/gradeAPI";
+import FormCreateUpdate from "../../components/Modals/ModalGrade/FormCreateUpdate";
+import FormDelete from "../../components/Modals/ModalGrade/FormDelete";
+import { setErrorPageGrade, setGradeLoading, setGrades } from "../../_redux/features/settings/gradeSlice";
+import Table from "../../components/Tables/TableGrade/Table";
 
-export interface Grade {
-    id?: number;
-    code: string;
-    libelle: string;
-}
+
+
 
 const Grades = () => {
+    const [selectedGrade, setSelectedGrade] = useState<Grade | null>(null);
+
+    const { data: { grades } } = useSelector((state: RootState) => state.gradeSlice);
+    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
+    const [currentPage, setCurrentPage] = useState<number>(1);
+
+   
+    const {t}=useTranslation();
+    
+    
     const dispatch = useDispatch();
-
-    const { t } = useTranslation();
-    const [selectedGrade, setSelectedGrade] = useState<CommonSettingProps | null>(null);
-    const handleEditGrade = (grade: CommonSettingProps | null) => {
-        setSelectedGrade(grade);
-    }
-    const handleCreate = () => {
-        handleAddGrade();
-        dispatch(setShowModal())
-    }
-
-    const handleAddGrade = () => {
-        setSelectedGrade(null);
-    }
-    const grades = useSelector((state: RootState) => state.dataSetting.dataSetting.grades);
-
-
-    const pageIsLoading = useSelector((state: RootState) => state.dataSetting.loading);
-    const pageError = useSelector((state: RootState) => state.dataSetting.error);
-
-    const handleRefresh = async () => {
-        dispatch(setLoadingDataSetting(true));
-        try {
-            const settingsData = await apiGetAllSettings();
-            dispatch(setDataSetting(settingsData));
-            dispatch(setErrorDataSetting(null))
-        } catch (error) { dispatch(setErrorDataSetting('une erreur est survenue')) }
-        finally { dispatch(setLoadingDataSetting(false)); }
-    }
-
+    useEffect(() => {
+        const fetchGrades = async () => {
+            dispatch(setGradeLoading(true));
+            try {
+                const fetchedGrades = await getGrades({ page: currentPage, lang });
+                if (fetchedGrades) {
+                    dispatch(setGrades(fetchedGrades));
+                } else {
+                    dispatch(setGrades({
+                        grades: [],
+                        currentPage: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                        pageSize: 0,
+                    }));
+                }
+            } catch (error) {
+                dispatch(setErrorPageGrade(t('message.erreur')));
+                createToast(t('message.erreur'), "", 2);
+            } finally {
+                dispatch(setGradeLoading(false));
+            }
+        };
+        fetchGrades();
+    }, [currentPage, lang, dispatch, t]); // Déclencher l'effet lorsque currentPage change
+    
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+    
     return (
         <>
-            <Breadcrumb pageName={t('sub_menu.grades')} />
-
-            {
-                pageIsLoading ?
-                    <Loading /> :
-                    pageError ?
-                        <PageErreur onRefresh={handleRefresh} /> :
-                        grades.length === 0 ?
-                            <PageNoData
-                                titrePage={t('aucun.grade')}
-                                titreBouton={t('ajouter_votre_premier.grade')}
-                                showModalCreate={handleCreate}
-                                refreshFunction={handleRefresh} />
-                            : <Table data={grades} onCreate={handleAddGrade} onEdit={handleEditGrade} />
-
-
-
-            }
+            
+            <Breadcrumb pageName={t('sub_menu.grades')}/>
+            <Table
+                data={grades}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                onCreate={() => setSelectedGrade(null)}
+                onEdit={setSelectedGrade}
+            />
 
             <FormCreateUpdate grade={selectedGrade} />
             <FormDelete grade={selectedGrade} />
@@ -79,5 +73,6 @@ const Grades = () => {
         </>
     );
 };
+
 
 export default Grades;

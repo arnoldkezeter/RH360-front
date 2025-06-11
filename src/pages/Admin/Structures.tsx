@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
-import { setErrorPageStructure, setStructureLoading, setStructures } from "../../_redux/features/strucutureSlice";
+import { setErrorPageStructure, setStructureLoading, setStructures } from "../../_redux/features/settings/strucutureSlice";
 import { getStructures } from "../../services/settings/structureAPI";
 import Table from "../../components/Tables/TableStructure/Table";
 import FormCreateUpdate from "../../components/Modals/ModalStructure/FormCreateUpdate";

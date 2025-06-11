@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../_redux/store";
 import Pagination from "../../Pagination/Pagination";
 import { config } from "../../../config";
-import { setErrorPageStructure, setStructureLoading} from "../../../_redux/features/strucutureSlice";
+import { setErrorPageStructure, setStructureLoading} from "../../../_redux/features/settings/strucutureSlice";
 import { searchStructure } from "../../../services/settings/structureAPI";
 
 interface TableStructureProps {

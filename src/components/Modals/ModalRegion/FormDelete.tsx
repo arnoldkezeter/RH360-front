@@ -2,13 +2,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
-import { deleteSettingItem } from '../../../_redux/features/data_setting_slice';
-import { apiDeleteRegion } from '../../../services/settings/api_region';
 import createToast from '../../../hooks/toastify';
 import { setShowModalDelete } from '../../../_redux/features/setting';
+import { deleteRegion } from '../../../services/settings/regionAPI';
+import { deleteRegionSlice } from '../../../_redux/features/settings/regionSlice';
 
 
-function ModalDelete({ region }: { region: CommonSettingProps | null }) {
+function ModalDelete({ region }: { region: Region | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -22,17 +22,17 @@ function ModalDelete({ region }: { region: CommonSettingProps | null }) {
     const handleDelete = async () => {
 
         if (region?._id != undefined) {
-            await apiDeleteRegion(region._id).then((e: ReponseApiPros) => {
+            await deleteRegion(region._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
-                    createToast(e.message[lang as keyof typeof e.message], '', 0);
+                    createToast(e.message, '', 0);
 
                     if (region._id) {
-                        dispatch(deleteSettingItem({ tableName: 'regions', itemId: region._id }));
+                        dispatch(deleteRegionSlice({ id: region._id }));
                     }
 
                     closeModal();
                 } else {
-                    createToast(e.message[lang as keyof typeof e.message], '', 2);
+                    createToast(e.message, '', 2);
                 }
             }).catch((e) => {
                 createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
@@ -51,7 +51,7 @@ function ModalDelete({ region }: { region: CommonSettingProps | null }) {
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression') + t('form_delete.region')} : {region ? (lang == "fr" ? region.libelleFr : region.libelleEn) : ""}</h1>
+                <h1>{t('form_delete.suppression') + t('form_delete.region')} : {region ? (lang == "fr" ? region.nomFr : region.nomEn) : ""}</h1>
             </CustomDialogModal>
         </>
     );

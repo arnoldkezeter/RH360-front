@@ -3,29 +3,33 @@ import ButtonCrudTable from "../common/ButtonActionTable"
 import { setShowModal, setShowModalDelete } from "../../../_redux/features/setting"
 import { RootState } from "../../../_redux/store";
 
-
-const BodyTable = ({ data, onEdit }: { data: CommonSettingProps[], onEdit: (service: CommonSettingProps) => void }) => {
-    const lang = useSelector((state: RootState) => state.setting.language);
+const BodyTable = ({ data, onEdit }: { data: Service[], onEdit: (service: Service) => void }) => {
 
     const dispatch = useDispatch();
 
+    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
 
     return <tbody>
         {data.map((item, index) => (
-            <tr key={item._id} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">
+            <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">
                 {/* index */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 pl-4 md:pl-5 lg:pl-6 xl:pl-5 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell">
                     <h5 className="">{index + 1}</h5>
                 </td>
 
-                {/* matricule */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark hidden md:table-cell">
-                    <h5>{item.code}</h5>
+                {/* nom */}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
+                    <h5> {lang === 'fr' ? item.nomFr : item.nomEn}</h5>
                 </td>
 
-                {/* libelle */}
+                {/* description */}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark hidden md:table-cell">
+                    <h5> {lang === 'fr' ? item.descriptionFr : item.descriptionEn}</h5>
+                </td>
+
+                {/* nombre de place */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
-                    <h5>{lang == 'fr' ? item.libelleFr : item.libelleEn}</h5>
+                    <h5> {item.nbPlaceStage}</h5>
                 </td>
 
                 {/* Action  bouton pour edit*/}
@@ -35,10 +39,9 @@ const BodyTable = ({ data, onEdit }: { data: CommonSettingProps[], onEdit: (serv
                             onEdit(item);
                             dispatch(setShowModal())
                         }}
-                        onClickDelete={async () => {
+                        onClickDelete={() => {
                             onEdit(item);
                             dispatch(setShowModalDelete())
-
                         }}
                     />
                 </td>

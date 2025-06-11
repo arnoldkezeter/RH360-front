@@ -3,43 +3,40 @@ import { setShowModalDelete } from '../../../_redux/features/setting';
 import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
-import { deleteSettingItem } from '../../../_redux/features/data_setting_slice';
-import { apiDeleteService } from '../../../services/settings/api_service';
 import createToast from '../../../hooks/toastify';
+import { deleteService } from '../../../services/settings/serviceAPI';
+import { deleteServiceSlice } from '../../../_redux/features/settings/serviceSlice';
 
 
-function ModalDelete({ service }: { service: CommonSettingProps | null }) {
-    const { t } = useTranslation();
+
+function ModalDelete({ service }: { service: Service | null }) {
     const dispatch = useDispatch();
-
+    const { t } = useTranslation();
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
-    const closeModal = () => { dispatch(setShowModalDelete()); };
-
     const lang = useSelector((state: RootState) => state.setting.language);
 
+    const closeModal = () => { dispatch(setShowModalDelete()); };
 
     const handleDelete = async () => {
-
         if (service?._id != undefined) {
-            await apiDeleteService(service._id).then((e: ReponseApiPros) => {
+            await deleteService(service._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
-                    createToast(e.message[lang as keyof typeof e.message], '', 0);
+                    createToast(e.message, '', 0);
 
                     if (service._id) {
-                        dispatch(deleteSettingItem({ tableName: 'services', itemId: service._id }));
+                        dispatch(deleteServiceSlice({ id: service._id }));
                     }
 
                     closeModal();
                 } else {
-                    createToast(e.message[lang as keyof typeof e.message], '', 2);
+                    createToast(e.message, '', 2);
                 }
             }).catch((e) => {
                 createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
 
             })
         }
-
     }
 
     return (
@@ -51,7 +48,7 @@ function ModalDelete({ service }: { service: CommonSettingProps | null }) {
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression') + t('form_delete.service')} : {service ? (lang == "fr" ? service.libelleFr : service.libelleEn) : ""}</h1>
+                <h1>{t('form_delete.suppression') + t('form_delete.service')} : {service ? (lang === 'fr' ? service.nomFr : service.nomEn) : ""}</h1>
             </CustomDialogModal>
         </>
     );

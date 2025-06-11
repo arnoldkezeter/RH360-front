@@ -8,7 +8,7 @@ import { ErrorMessage, Label } from '../../ui/Label';
 import Input from '../../ui/input';
 import createToast from '../../../hooks/toastify';
 import { createStructure, updateStructure } from '../../../services/settings/structureAPI';
-import { createStructureSlice, updateStructureSlice } from '../../../_redux/features/strucutureSlice';
+import { createStructureSlice, updateStructureSlice } from '../../../_redux/features/settings/strucutureSlice';
 
 
 function FormCreateUpdate({ structure }: { structure: Structure | null }) {

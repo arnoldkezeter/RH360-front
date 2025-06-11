@@ -3,13 +3,13 @@ import { setShowModalDelete } from '../../../_redux/features/setting';
 import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
-import { apiDeleteDepartement } from '../../../services/settings/api_departement';
-import { deleteSettingItem } from '../../../_redux/features/data_setting_slice';
 import createToast from '../../../hooks/toastify';
+import { deleteDepartement } from '../../../services/settings/departementAPI';
+import { deleteDepartementSlice } from '../../../_redux/features/settings/departementSlice';
 
 
 
-function ModalDelete({ departement }: { departement: DepartementProps | null }) {
+function ModalDelete({ departement }: { departement: Departement | null }) {
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -20,17 +20,17 @@ function ModalDelete({ departement }: { departement: DepartementProps | null }) 
 
     const handleDelete = async () => {
         if (departement?._id != undefined) {
-            await apiDeleteDepartement(departement._id).then((e: ReponseApiPros) => {
+            await deleteDepartement(departement._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
-                    createToast(e.message[lang as keyof typeof e.message], '', 0);
+                    createToast(e.message, '', 0);
 
                     if (departement._id) {
-                        dispatch(deleteSettingItem({ tableName: 'departements', itemId: departement._id }));
+                        dispatch(deleteDepartementSlice({ id: departement._id }));
                     }
 
                     closeModal();
                 } else {
-                    createToast(e.message[lang as keyof typeof e.message], '', 2);
+                    createToast(e.message, '', 2);
                 }
             }).catch((e) => {
                 createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
@@ -48,7 +48,7 @@ function ModalDelete({ departement }: { departement: DepartementProps | null }) 
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression') + t('form_delete.departement')} : {departement ? (lang === 'fr' ? departement.libelleFr : departement.libelleEn) : ""}</h1>
+                <h1>{t('form_delete.suppression') + t('form_delete.departement')} : {departement ? (lang === 'fr' ? departement.nomFr : departement.nomEn) : ""}</h1>
             </CustomDialogModal>
         </>
     );

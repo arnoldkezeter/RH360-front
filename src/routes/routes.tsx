@@ -1,15 +1,20 @@
 
 import MonProfil from '../pages/CommonPage/Profil';
-import Services from '../pages/Admin/Services';
-import CategorieProfessionnelle from '../pages/Admin/Fonctions';
-import Grades from '../pages/Admin/Grades';
 import Regions from '../pages/Admin/Regions';
-import Communes from '../pages/Admin/Communes';
 
 import Permissions from '../pages/Admin/Permissions';
 import UserPermissions from '../pages/CommonPage/UserPermissions';
-import { Departements } from '../pages/Admin/Departements';
 import Structures from '../pages/Admin/Structures';
+import Departements from '../pages/Admin/Departements';
+import Communes from '../pages/Admin/Communes';
+import Grades from '../pages/Admin/Grades';
+import CategorieProfessionnelles from '../pages/Admin/CategorieProfessionnelle';
+import Services from '../pages/Admin/Service';
+import Taxes from '../pages/Admin/Taxe';
+import AxeStrategiques from '../pages/Admin/AxeStrategique';
+import Competences from '../pages/Admin/Competence';
+import FamilleMetiers from '../pages/Admin/FamilleMetier';
+import PosteDeTravails from '../pages/Admin/PosteDeTravail';
 
 
 
@@ -19,19 +24,19 @@ const coreRoutes = [
   {
     path: '/elaboration-programme/axes-strategique',
     title: 'Liste des compétences',
-    component: undefined,
+    component: AxeStrategiques,
   },
 
   {
     path: '/elaboration-programme/competences',
     title: 'Liste des compétences',
-    component: undefined,
+    component: Competences,
   },
 
   {
     path: '/elaboration-programme/familles-metier',
     title: 'Liste des famille de metier',
-    component: undefined,
+    component: FamilleMetiers,
   },
 
   {
@@ -242,6 +247,12 @@ const coreRoutes = [
   },
 
   {
+    path: '/parametres/taxes',
+    title: 'Taxes',
+    component: Taxes,
+  },
+
+  {
     path: '/parametres/structures',
     title: 'Structure',
     component: Structures,
@@ -253,16 +264,23 @@ const coreRoutes = [
     component: Services,
   },
 
+
   {
     path: '/parametres/categories-professionnelles',
     title: 'Categorie professionnellle',
-    component: CategorieProfessionnelle,
+    component: CategorieProfessionnelles,
   },
 
   {
     path: '/parametres/grades',
     title: 'Grades',
     component: Grades,
+  },
+
+  {
+    path: '/parametres/postes-de-travail',
+    title: 'Postes de travail',
+    component: PosteDeTravails,
   },
 
 

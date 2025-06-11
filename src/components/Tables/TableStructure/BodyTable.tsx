@@ -14,7 +14,11 @@ const BodyTable = ({ data, onEdit }: { data?: Structure[], onEdit: (structure: S
     return <tbody>
         {data?.map((item, index) => (
             <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">
-               
+                {/* index */}
+                <td className="border-b border-[#eee] py-0 lg:py-4 pl-4 md:pl-5 lg:pl-6 xl:pl-5 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell">
+                    <h5 className="">{index + 1}</h5>
+                </td>
+                
                 {/* nom */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
                     <h5>{lang === 'fr' ? item.nomFr : item.nomEn}</h5>

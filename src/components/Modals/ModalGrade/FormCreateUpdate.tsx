@@ -1,158 +1,160 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { setShowModal } from '../../../_redux/features/setting';
 import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { setShowModal } from '../../../_redux/features/setting';
-import Input from '../../ui/input';
 import { ErrorMessage, Label } from '../../ui/Label';
-import { apiCreateGrade, apiUpdateGrade } from '../../../services/settings/api_grade';
+import Input from '../../ui/input';
 import createToast from '../../../hooks/toastify';
-import { createSettingItem, updateSettingItem } from '../../../_redux/features/data_setting_slice';
+import { createGrade, updateGrade } from '../../../services/settings/gradeAPI';
+import { createGradeSlice, updateGradeSlice } from '../../../_redux/features/settings/gradeSlice';
 
 
-function ModalCreateUpdate({ grade }: { grade: CommonSettingProps | null }) {
+function FormCreateUpdate({ grade }: { grade: Grade | null }) {
+
     const { t } = useTranslation();
-
     const dispatch = useDispatch();
-    const [code, setCode] = useState("");
-    const [libelleFr, setLibelleFr] = useState("");
-    const [libelleEn, setLibelleEn] = useState("");
 
-    const [errorCode, setErrorCode] = useState("");
-    const [errorLibelleFr, setErrorLibelleFr] = useState("");
-    const [errorLibelleEn, setErrorLibelleEn] = useState("");
+    const [nomFr, setNomFr] = useState("");
+    const [nomEn, setNomEn] = useState("");
+    const [descriptionFr, setDescriptionFr] = useState("");
+    const [descriptionEn, setDescriptionEn] = useState("");
+    
+
+    const [errorNomFr, setErrorNomFr] = useState("");
+    const [errorNomEn, setErrorNomEn] = useState("");
 
     const [isFirstRender, setIsFirstRender] = useState(true);
 
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.open);
     const [modalTitle, setModalTitle] = useState(""); // Ajout du titre du modal
+
     const lang = useSelector((state: RootState) => state.setting.language);
 
     useEffect(() => {
         if (grade) {
             setModalTitle(t('form_update.enregistrer') + t('form_update.grade'));
-            setCode(grade.code);
-            setLibelleFr(grade.libelleFr);
-            setLibelleEn(grade.libelleEn);
+            
+            setNomFr(grade.nomFr);
+            setNomEn(grade.nomEn);
+            setDescriptionFr(grade?.descriptionFr || "");
+            setDescriptionEn(grade?.descriptionEn || "");
 
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.grade'));
-            setCode("");
-            setLibelleFr("");
-            setLibelleEn("");
+            setNomFr("");
+            setNomEn("");
+            setDescriptionFr("");
+            setDescriptionEn("");
         }
 
+
         if (isFirstRender) {
-            setErrorCode("");
-            setErrorLibelleEn("");
-            setErrorLibelleFr("");
+            setErrorNomEn("");
+            setErrorNomFr("");
             setIsFirstRender(false);
         }
     }, [grade, isFirstRender, t]);
 
     const closeModal = () => {
-        setErrorCode("");
-        setErrorLibelleFr("");
-        setErrorLibelleEn("");
+        setErrorNomFr("");
+        setErrorNomEn("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
 
 
     const handleCreateUpdate = async () => {
+        if(!nomFr || !nomEn){
+            if (!nomFr) {
+                setErrorNomFr(t('error.nom'));
+            }
+            if (!nomEn) {
+                setErrorNomEn(t('error.nom'));
+            }
+            return;
+        }
         // create
         if (!grade) {
-            if ( !libelleFr || !libelleEn) {
-                // if (!code) {
-                //     setErrorCode(t('error.code'));
-                // }
-                if (!libelleFr) {
-                    setErrorLibelleFr(t('error.libelle'));
+            
+            await createGrade(
+                {
+                    nomFr,
+                    nomEn,
+                    descriptionFr,
+                    descriptionEn,
+                },
+                lang
+            ).then((e: ReponseApiPros) => {
+                if (e.success) {
+                    createToast(e.message, '', 0);
+                    dispatch(createGradeSlice({
+                        grade:{
+                            _id:e.data._id,
+                            nomFr:e.data.nomFr,
+                            nomEn:e.data.nomEn,
+                            descriptionFr:e.data.descriptionFr,
+                            descriptionEn:e.data.descriptionEn
+                        }
+                    }));
+
+                    closeModal();
+
+                } else {
+                    createToast(e.message, '', 2);
+
                 }
-                if (!libelleEn) {
-                    setErrorLibelleEn(t('error.libelle'));
+            }).catch((e) => {
+                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+            })
+                
+
+            
+        }else {
+
+        
+            await updateGrade(
+                {
+                    _id: grade._id,
+                    nomFr,
+                    nomEn,
+                    descriptionFr:descriptionFr,
+                    descriptionEn:descriptionEn,
+                    
+                },
+                lang
+            ).then((e: ReponseApiPros) => {
+                if (e.success) {
+                    createToast(e.message, '', 0);
+                    dispatch(updateGradeSlice({
+                        id: e.data._id,
+                        gradeData : {
+                            _id: e.data._id,
+                            nomFr: e.data.nomFr,
+                            nomEn: e.data.nomEn,
+                            descriptionFr:e.data.descriptionFr,
+                            descriptionEn:e.data.descriptionEn
+                            
+                        }
+                    }));
+
+                    closeModal();
+
+                } else {
+                    createToast(e.message, '', 2);
                 }
-
-            } else {
-                // creation
-                await apiCreateGrade(
-                    { code, libelleFr, libelleEn }
-                ).then((e: ReponseApiPros) => {
-                    if (e.success) {
-                        createToast(e.message[lang as keyof typeof e.message], '', 0);
-                        dispatch(createSettingItem({
-                            tableName: 'grades', newItem: {
-                                code: e.data.code,
-                                libelleFr: e.data.libelleFr,
-                                libelleEn: e.data.libelleEn,
-                                date_creation: e.data.date_creation,
-                                _id: e.data._id,
-                            }
-                        }));
-
-                        closeModal();
-
-
-                    } else {
-                        createToast(e.message[lang as keyof typeof e.message], '', 2);
-
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
-                })
-            }
-        }
-
-        //update
-        else {
-
-            if ( !libelleFr || !libelleEn) {
-                // if (!code) {
-                //     setErrorCode(t('error.code'));
-                // }
-                if (!libelleFr) {
-                    setErrorLibelleFr(t('error.libelle'));
-                }
-                if (!libelleEn) {
-                    setErrorLibelleEn(t('error.libelle'));
-                }
-
-            } else {
-                //
-                //
-                // mise a jour
-                await apiUpdateGrade(
-                    { _id: grade._id, code, libelleFr, libelleEn }
-                ).then((e: ReponseApiPros) => {
-                    if (e.success) {
-                        createToast(e.message[lang as keyof typeof e.message], '', 0);
-                        dispatch(updateSettingItem({
-                            tableName: 'grades',
-                            updatedItem: {
-                                code: e.data.code,
-                                libelleFr: e.data.libelleFr,
-                                libelleEn: e.data.libelleEn,
-                                date_creation: e.data.date_creation,
-                                _id: e.data._id,
-                            }
-                        }));
-
-                        closeModal();
-
-
-                    } else {
-                        createToast(e.message[lang as keyof typeof e.message], '', 2);
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
-                })
-            }
+            }).catch((e) => {
+                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+            })
+                
+            
         }
 
 
     }
+
 
     return (
         <>
@@ -164,43 +166,43 @@ function ModalCreateUpdate({ grade }: { grade: CommonSettingProps | null }) {
                 handleConfirm={handleCreateUpdate}
             >
 
-                {/* input 1 */}
-                <Label text={t('label.code')} />
+                <Label text={t('label.nom_chose_fr')} required />
                 <Input
-                    value={code}
+                    value={nomFr}
                     type='text'
-                    setValue={(value) => { setCode(value); setErrorCode("") }}
+                    setValue={(value) => { setNomFr(value); setErrorNomFr(""); }}
                     hasBackground={true}
                 />
-                {/* <ErrorMessage message={errorCode} /> */}
+                <ErrorMessage message={errorNomFr} />
 
-
-                {/* input 2 */}
-                <Label text={t('label.libelle_fr')} required />
+                <Label text={t('label.nom_chose_en')} required />
                 <Input
-                    value={libelleFr}
+                    value={nomEn}
                     type='text'
-                    setValue={(value) => { setLibelleFr(value); setErrorLibelleFr(""); }}
+                    setValue={(value) => { setNomEn(value); setErrorNomEn(""); }}
                     hasBackground={true}
                 />
-                <ErrorMessage message={errorLibelleFr} />
+                <ErrorMessage message={errorNomEn} />
 
-
-                {/* input 3 */}
-                <Label text={t('label.libelle_en')} required />
+                <Label text={t('label.description_fr')} />
                 <Input
-                    value={libelleEn}
+                    value={descriptionFr}
                     type='text'
-                    setValue={(value) => { setLibelleEn(value); setErrorLibelleEn(""); }}
+                    setValue={(value) => { setDescriptionFr(value); }}
                     hasBackground={true}
                 />
-                <ErrorMessage message={errorLibelleEn} />
 
+                <Label text={t('label.description_en')} />
+                <Input
+                    value={descriptionEn}
+                    type='text'
+                    setValue={(value) => { setDescriptionEn(value); }}
+                    hasBackground={true}
+                />
             </CustomDialogModal>
 
         </>
     );
 }
 
-export default ModalCreateUpdate;
-
+export default FormCreateUpdate;
