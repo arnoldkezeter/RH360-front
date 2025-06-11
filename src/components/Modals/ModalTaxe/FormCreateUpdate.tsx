@@ -69,14 +69,14 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
     const handleCreateUpdate = async () => {
         if(!natureFr || !natureEn){
             if (!natureFr) {
-                setErrorNatureFr(t('error.nature'));
+                setErrorNatureFr(t('error.nature_fr'));
             }
             if (!natureEn) {
-                setErrorNatureEn(t('error.nature'));
+                setErrorNatureEn(t('error.nature_en'));
             }
 
             if (!taux) {
-                setErrorNatureEn(t('error.taux'));
+                setErrorTaux(t('error.taux'));
             }
             return;
         }

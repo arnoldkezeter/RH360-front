@@ -7,19 +7,17 @@ import { useTranslation } from 'react-i18next';
 import { ErrorMessage, Label } from '../../ui/Label';
 import Input from '../../ui/input';
 import createToast from '../../../hooks/toastify';
-import { createFamilleMetierSlice, updateFamilleMetierSlice } from '../../../_redux/features/familleMetierSlice';
-import { createFamilleMetier, updateFamilleMetier } from '../../../services/familleMetierAPI';
+import { createEtablissement, updateEtablissement } from '../../../services/settings/etablissementAPI';
+import { createEtablissementSlice, updateEtablissementSlice } from '../../../_redux/features/settings/etablissementSlice';
 
 
-function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | null }) {
+function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | null }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
-    const [descriptionFr, setDescriptionFr] = useState("");
-    const [descriptionEn, setDescriptionEn] = useState("");
     
 
     const [errorNomFr, setErrorNomFr] = useState("");
@@ -34,20 +32,16 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
     const lang = useSelector((state: RootState) => state.setting.language);
 
     useEffect(() => {
-        if (familleMetier) {
-            setModalTitle(t('form_update.enregistrer') + t('form_update.famille_metier'));
+        if (etablissement) {
+            setModalTitle(t('form_update.enregistrer') + t('form_update.etablissement'));
             
-            setNomFr(familleMetier.nomFr);
-            setNomEn(familleMetier.nomEn);
-            setDescriptionFr(familleMetier?.descriptionFr || "");
-            setDescriptionEn(familleMetier?.descriptionEn || "");
+            setNomFr(etablissement.nomFr);
+            setNomEn(etablissement.nomEn);
 
         } else {
-            setModalTitle(t('form_save.enregistrer') + t('form_save.famille_metier'));
+            setModalTitle(t('form_save.enregistrer') + t('form_save.etablissement'));
             setNomFr("");
             setNomEn("");
-            setDescriptionFr("");
-            setDescriptionEn("");
         }
 
 
@@ -56,7 +50,7 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
             setErrorNomFr("");
             setIsFirstRender(false);
         }
-    }, [familleMetier, isFirstRender, t]);
+    }, [etablissement, isFirstRender, t]);
 
     const closeModal = () => {
         setErrorNomFr("");
@@ -77,26 +71,22 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
             return;
         }
         // create
-        if (!familleMetier) {
+        if (!etablissement) {
             
-            await createFamilleMetier(
+            await createEtablissement(
                 {
                     nomFr,
                     nomEn,
-                    descriptionFr,
-                    descriptionEn,
                 },
                 lang
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
-                    dispatch(createFamilleMetierSlice({
-                        familleMetier:{
+                    dispatch(createEtablissementSlice({
+                        etablissement:{
                             _id:e.data._id,
                             nomFr:e.data.nomFr,
                             nomEn:e.data.nomEn,
-                            descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn
                         }
                     }));
 
@@ -115,28 +105,23 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
         }else {
 
         
-            await updateFamilleMetier(
+            await updateEtablissement(
                 {
-                    _id: familleMetier._id,
+                    _id: etablissement._id,
                     nomFr,
-                    nomEn,
-                    descriptionFr:descriptionFr,
-                    descriptionEn:descriptionEn,
+                    nomEn
                     
                 },
                 lang
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
-                    dispatch(updateFamilleMetierSlice({
+                    dispatch(updateEtablissementSlice({
                         id: e.data._id,
-                        familleMetierData : {
+                        etablissementData : {
                             _id: e.data._id,
                             nomFr: e.data.nomFr,
-                            nomEn: e.data.nomEn,
-                            descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn
-                            
+                            nomEn: e.data.nomEn
                         }
                     }));
 
@@ -184,21 +169,7 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
                 />
                 <ErrorMessage message={errorNomEn} />
 
-                <Label text={t('label.description_fr')} />
-                <Input
-                    value={descriptionFr}
-                    type='text'
-                    setValue={(value) => { setDescriptionFr(value); }}
-                    hasBackground={true}
-                />
-
-                <Label text={t('label.description_en')} />
-                <Input
-                    value={descriptionEn}
-                    type='text'
-                    setValue={(value) => { setDescriptionEn(value); }}
-                    hasBackground={true}
-                />
+                
             </CustomDialogModal>
 
         </>

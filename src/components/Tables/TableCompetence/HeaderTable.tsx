@@ -12,7 +12,7 @@ const HeaderTable = () => {
                 </th>
 
                 {/* code */}
-                <th className="min-w-[60px] py-2 px-4 font-medium text-gray-2 dark:text-white xl:pl-4  border-r border-gray-3 dark:border-black hidden md:table-cell">
+                <th className="min-w-[60px] py-2 px-4 font-medium text-gray-2 dark:text-white xl:pl-4  border-r border-gray-3 dark:border-black">
                     {t('label.code')}
                 </th>
 

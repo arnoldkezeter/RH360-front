@@ -69,10 +69,10 @@ function FormCreateUpdate({ structure }: { structure: Structure | null }) {
     const handleCreateUpdate = async () => {
         if(!nomFr || !nomEn){
             if (!nomFr) {
-                setErrorNomFr(t('error.nom'));
+                setErrorNomFr(t('error.nom_fr'));
             }
             if (!nomEn) {
-                setErrorNomEn(t('error.nom'));
+                setErrorNomEn(t('error.nom_en'));
             }
             return;
         }

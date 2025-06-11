@@ -7,23 +7,23 @@ import { useTranslation } from 'react-i18next';
 import { ErrorMessage, Label } from '../../ui/Label';
 import Input from '../../ui/input';
 import createToast from '../../../hooks/toastify';
-import { createFamilleMetierSlice, updateFamilleMetierSlice } from '../../../_redux/features/familleMetierSlice';
-import { createFamilleMetier, updateFamilleMetier } from '../../../services/familleMetierAPI';
+import { createBesoinFormationPredefini, updateBesoinFormationPredefini } from '../../../services/settings/besoinFormationPredefiniAPI';
+import { createBesoinFormationPredefiniSlice, updateBesoinFormationPredefiniSlice } from '../../../_redux/features/settings/besoinFormationPredefini';
 
 
-function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | null }) {
+function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefini: BesoinFormationPredefini | null }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const [nomFr, setNomFr] = useState("");
-    const [nomEn, setNomEn] = useState("");
+    const [titreFr, setTitreFr] = useState("");
+    const [titreEn, setTitreEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
     
 
-    const [errorNomFr, setErrorNomFr] = useState("");
-    const [errorNomEn, setErrorNomEn] = useState("");
+    const [errorTitreFr, setErrorTitreFr] = useState("");
+    const [errorTitreEn, setErrorTitreEn] = useState("");
 
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -34,55 +34,55 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
     const lang = useSelector((state: RootState) => state.setting.language);
 
     useEffect(() => {
-        if (familleMetier) {
-            setModalTitle(t('form_update.enregistrer') + t('form_update.famille_metier'));
+        if (besoinFormationPredefini) {
+            setModalTitle(t('form_update.enregistrer') + t('form_update.besoin_formation_predefini'));
             
-            setNomFr(familleMetier.nomFr);
-            setNomEn(familleMetier.nomEn);
-            setDescriptionFr(familleMetier?.descriptionFr || "");
-            setDescriptionEn(familleMetier?.descriptionEn || "");
+            setTitreFr(besoinFormationPredefini.titreFr);
+            setTitreEn(besoinFormationPredefini.titreEn);
+            setDescriptionFr(besoinFormationPredefini?.descriptionFr || "");
+            setDescriptionEn(besoinFormationPredefini?.descriptionEn || "");
 
         } else {
-            setModalTitle(t('form_save.enregistrer') + t('form_save.famille_metier'));
-            setNomFr("");
-            setNomEn("");
+            setModalTitle(t('form_save.enregistrer') + t('form_save.besoin_formation_predefini'));
+            setTitreFr("");
+            setTitreEn("");
             setDescriptionFr("");
             setDescriptionEn("");
         }
 
 
         if (isFirstRender) {
-            setErrorNomEn("");
-            setErrorNomFr("");
+            setErrorTitreEn("");
+            setErrorTitreFr("");
             setIsFirstRender(false);
         }
-    }, [familleMetier, isFirstRender, t]);
+    }, [besoinFormationPredefini, isFirstRender, t]);
 
     const closeModal = () => {
-        setErrorNomFr("");
-        setErrorNomEn("");
+        setErrorTitreFr("");
+        setErrorTitreEn("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
 
 
     const handleCreateUpdate = async () => {
-        if(!nomFr || !nomEn){
-            if (!nomFr) {
-                setErrorNomFr(t('error.nom_fr'));
+        if(!titreFr || !titreEn){
+            if (!titreFr) {
+                setErrorTitreFr(t('error.titre_fr'));
             }
-            if (!nomEn) {
-                setErrorNomEn(t('error.nom_en'));
+            if (!titreEn) {
+                setErrorTitreEn(t('error.titre_en'));
             }
             return;
         }
         // create
-        if (!familleMetier) {
+        if (!besoinFormationPredefini) {
             
-            await createFamilleMetier(
+            await createBesoinFormationPredefini(
                 {
-                    nomFr,
-                    nomEn,
+                    titreFr,
+                    titreEn,
                     descriptionFr,
                     descriptionEn,
                 },
@@ -90,11 +90,11 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
-                    dispatch(createFamilleMetierSlice({
-                        familleMetier:{
+                    dispatch(createBesoinFormationPredefiniSlice({
+                        besoinFormationPredefini:{
                             _id:e.data._id,
-                            nomFr:e.data.nomFr,
-                            nomEn:e.data.nomEn,
+                            titreFr:e.data.titreFr,
+                            titreEn:e.data.titreEn,
                             descriptionFr:e.data.descriptionFr,
                             descriptionEn:e.data.descriptionEn
                         }
@@ -115,11 +115,11 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
         }else {
 
         
-            await updateFamilleMetier(
+            await updateBesoinFormationPredefini(
                 {
-                    _id: familleMetier._id,
-                    nomFr,
-                    nomEn,
+                    _id: besoinFormationPredefini._id,
+                    titreFr,
+                    titreEn,
                     descriptionFr:descriptionFr,
                     descriptionEn:descriptionEn,
                     
@@ -128,12 +128,12 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
-                    dispatch(updateFamilleMetierSlice({
+                    dispatch(updateBesoinFormationPredefiniSlice({
                         id: e.data._id,
-                        familleMetierData : {
+                        besoinFormationPredefiniData : {
                             _id: e.data._id,
-                            nomFr: e.data.nomFr,
-                            nomEn: e.data.nomEn,
+                            titreFr: e.data.titreFr,
+                            titreEn: e.data.titreEn,
                             descriptionFr:e.data.descriptionFr,
                             descriptionEn:e.data.descriptionEn
                             
@@ -166,23 +166,23 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
                 handleConfirm={handleCreateUpdate}
             >
 
-                <Label text={t('label.nom_chose_fr')} required />
+                <Label text={t('label.titre_fr')} required />
                 <Input
-                    value={nomFr}
+                    value={titreFr}
                     type='text'
-                    setValue={(value) => { setNomFr(value); setErrorNomFr(""); }}
+                    setValue={(value) => { setTitreFr(value); setErrorTitreFr(""); }}
                     hasBackground={true}
                 />
-                <ErrorMessage message={errorNomFr} />
+                <ErrorMessage message={errorTitreFr} />
 
-                <Label text={t('label.nom_chose_en')} required />
+                <Label text={t('label.titre_en')} required />
                 <Input
-                    value={nomEn}
+                    value={titreEn}
                     type='text'
-                    setValue={(value) => { setNomEn(value); setErrorNomEn(""); }}
+                    setValue={(value) => { setTitreEn(value); setErrorTitreEn(""); }}
                     hasBackground={true}
                 />
-                <ErrorMessage message={errorNomEn} />
+                <ErrorMessage message={errorTitreEn} />
 
                 <Label text={t('label.description_fr')} />
                 <Input

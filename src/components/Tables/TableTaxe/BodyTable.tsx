@@ -16,7 +16,7 @@ const BodyTable = ({ data, onEdit }: { data?: Taxe[], onEdit: (taxe: Taxe) => vo
                 </td>
                 
                 {/* nature */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark">
                     <h5>{lang === 'fr' ? item.natureFr : item.natureEn}</h5>
                 </td>
 

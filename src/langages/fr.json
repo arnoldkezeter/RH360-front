@@ -46,7 +46,7 @@
   "sub_menu": {
     "axes_strategique":"Axes stratégiques",
     "competences":"Competences",
-    "familles_metier":"Familles de metier",
+    "familles_metier":"Familles de métier",
     "formations":"Formation",
     "programmes_formation":"Programme de formation",
     "besoins_formation_exprimer":"Exprimez vos besoins de formation",
@@ -90,7 +90,8 @@
     "taxes":"Taxes",
     "regions": "Regions",
     "departements": "Departments",
-    "communes": "Communes"
+    "communes": "Communes",
+    "etablissements":"Etablissements"
 
   },
   "tableau_de_bord": {
@@ -115,13 +116,16 @@
     "liste_alerte": "Liste des alertes recentes"
   },
   "label": {
-    "famille_metier":"Famille de metier",
+    "famille_metier":"Famille de métier",
     "nature_taxe":"Nature de la taxe",
     "nature_taxe_fr":"Nature de la taxe en français",
     "nature_taxe_en":"Nature de la taxe en anglais",
     "taux":"Taux",
     "structure":"Structure",
     "nb_place_stage":"Nombre de place pour les stages",
+    "titre":"Titre",
+    "titre_fr":"Titre en français",
+    "titre_en":"Titre en anglais",
 
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
@@ -178,9 +182,7 @@
     "telecharger":"Télécharger",
     "details":"Détails",
     "etudiant":"Etudiant",
-    "titre":"Titre",
-    "titre_fr":"Titre en français",
-    "titre_en":"Titre en anglais",
+    
     "type":"Type",
     "date_ajout":"Date d'ajout",
     "publier_par":"Publié par",
@@ -366,7 +368,7 @@
   "recherche": {
     "rechercher": "Rechercher ",
 
-    "famille_metier":"une famille de metier",
+    "famille_metier":"une famille de métier",
     "axe_strategique":"un axe stratégique",
     "competence":"une compétence",
 
@@ -379,7 +381,9 @@
     "region": "une région",
     "promotion": "une promotion",
     "departement": "un département",
-    "commune": "une commune"
+    "commune": "une commune",
+    "besoin_formation_predefini":"un besoin de formation",
+    "etablissement":"un établissement"
     
   },
   "boutton": {
@@ -445,8 +449,10 @@
     "region": "une région",
     "departement": "un département",
     "commune": "une commune",
-    "famille_metier":"une famille de metier",
-    "structure":"une structure"
+    "famille_metier":"une famille de métier",
+    "structure":"une structure",
+    "besoin_de_formation":"un besoin de formation"
+
   },
   "filtre": {
     "filtrer": "Filtrer",
@@ -471,8 +477,10 @@
     "poste_de_travail":"un poste de travail",
     "service":"un service",
     "taxe":"une taxe",
+    "besoin_formation_predefini":"un besoin de formation",
+    "etablissement":"un établissement",
 
-    "famille_metier":"une famille de metier",
+    "famille_metier":"une famille de métier",
     "axes_strategique":"un axe stratégique",
     "competence":"une compétence"
 
@@ -488,8 +496,10 @@
     "poste_de_travail":"du poste de travail",
     "service":"du service",
     "taxe":"de la taxe",
+    "besoin_formation_predefini":"du besoin de formation",
+    "etablissement":"de l'établissement",
 
-    "famille_metier":"de la famille de metier",
+    "famille_metier":"de la famille de métier",
     "axes_strategique":"de l'axe stratégique",
     "competence":"d'une compétence"
     
@@ -506,51 +516,31 @@
     "poste_de_travail":"du poste de travail",
     "service":"du service",
     "taxe":"de la taxe",
+    "besoin_formation_predefini":"du besoin de formation",
+    "etablissement":"de l'établissement",
 
-    "famille_metier":"de la famille de metier",
+    "famille_metier":"de la famille de métier",
     "axes_strategique":"de l'axe stratégique",
     "competence":"d'une compétence"
   },
   "error": {
-    "somme_pourcentage_positif": "La somme des pourcentages positifs doit être égale à 100%.",
-    "somme_pourcentage_negatif":"La somme des pourcentages négatifs doit être supérieure ou égale à -100%.",
     "text_fr":"Le champ texte en français est obligatoire.",
     "text_en":"Le champ texte en anglais est obligatoire.",
-    "nombre_point":"Le champ nombre de point est obligatoire.",
-    "reponse_correct_fr":"Le champ réponse correcte en français est obligatoire.",
-    "reponse_correct_en":"Le champ réponse correcte en anglais est obligatoire.",
-    "options":"Au moins 2 options de réponse sont obligatoire.",
-    "note_sur":"Le champ nombre total de points est obligatoire.",
-    "deadline":"Le champ délai est obligatoire.",
-    "tentatives_max":"Le champ nombre de tentatives maximales est obligatoire.",
-    "ordre_aleatoire":"Veuillez sélectionner si l'ordre des questions doit être aléatoire.",
-    "note_apres_soumission":"Veuillez sélectionner s'il faut afficher la note après soumission du devoir.",
-    "correction_apres_soumission":"Veuillez sélectionner s'il faut afficher la correction après soumission du devoir.",
-    "note_apres_deadline":"Veuillez sélectionner s'il faut afficher la note après délai d'envoi du devoir.",
-    "correction_apres_deadline":"Veuillez sélectionner s'il faut afficher la correction après délai d'envoi du devoir.",
-    "telecharger_doc":"Le fichier est trop grand. La taille maximale est de 2MB.",
+    "famille_metier":"Le champ famille de métier est obligatoire.",
+    "grade":"Le champ grade est obligatoire.",
     "code": "Le champ code est obligatoire.",
     "libelle": "Le champ libellé est obligatoire.",
     "libelle_fr": "Le champ libellé en français est obligatoire.",
     "libelle_en": "Le champ libellé en anglais est obligatoire.",
+    "nature_fr": "Le champ nature en français est obligatoire.",
+    "nature_en": "Le champ nature en anglais est obligatoire.",
+    "taux": "Le champ taux est obligatoire.",
     "titre_fr": "Le champ titre en français est obligatoire.",
     "titre_en": "Le champ titre en anglais est obligatoire.",
-    "fichier": "Veuillez sélectionner un fichier.",
     "type": "Le champ type est obligatoire.",
-    "phase_activite":"Le champ phase d'activités est obligatoire.",
-    "phase_activite_fr":"Le champ phase d'activités en français est obligatoire.",
-    "phase_activite_en":"Le champ phase d'activités en anglais est obligatoire.",
-    "type_ens": "Au moins une activité pédagogique doit être défini.",
-    "enseignement": "Au moins un enseignement doit être défini.",
-    "enseignant": "Le champ enseignant est obligatoire.",
-    "objectif": "Au moins un objectif doit être défini.",
-    "competence": "Au moins une compétence doit être défini.",
-    "region": "Le champ région est obligatoire.",
-    "promotion": "Le champ promotion est obligatoire",
+    "structure":"Le champ structure est obligatoire.",
     "departement": "Le champ département est obligatoire.",
-    "section": "Le champ section est obligatoire.",
-    "departementAcademique": "Le champ département académique est obligatoire.",
-    "semestre": "Le champ semestre est obligatoire.",
+    "region": "Le champ région est obligatoire.",
     "date": "Le champ date est obligatoire.",
     "heure_debut": "Le champ heure de début est obligatoire.",
     "heure_fin": "Le champ heure de fin est obligatoire.",

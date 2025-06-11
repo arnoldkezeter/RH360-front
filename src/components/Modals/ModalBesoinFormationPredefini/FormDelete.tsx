@@ -4,11 +4,11 @@ import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../hooks/toastify';
-import { deleteAxeStrategique } from '../../../services/axeStrategiqueAPI';
-import { deleteAxeStrategiqueSlice } from '../../../_redux/features/axeStrategiqueSlice';
+import { deleteBesoinFormationPredefini } from '../../../services/settings/besoinFormationPredefiniAPI';
+import { deleteBesoinFormationPredefiniSlice } from '../../../_redux/features/settings/besoinFormationPredefini';
 
 
-function FormDelete({ axeStrategique }: { axeStrategique: AxeStrategique | null }) {
+function FormDelete({ besoinFormationPredefini }: { besoinFormationPredefini: BesoinFormationPredefini | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -21,13 +21,13 @@ function FormDelete({ axeStrategique }: { axeStrategique: AxeStrategique | null 
 
     const handleDelete = async () => {
 
-        if (axeStrategique?._id != undefined) {
-            await deleteAxeStrategique(axeStrategique._id, lang).then((e: ReponseApiPros) => {
+        if (besoinFormationPredefini?._id != undefined) {
+            await deleteBesoinFormationPredefini(besoinFormationPredefini._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
 
-                    if (axeStrategique._id) {
-                        dispatch(deleteAxeStrategiqueSlice({ id: axeStrategique._id }));
+                    if (besoinFormationPredefini._id) {
+                        dispatch(deleteBesoinFormationPredefiniSlice({ id: besoinFormationPredefini._id }));
                     }
 
                     closeModal();
@@ -51,7 +51,7 @@ function FormDelete({ axeStrategique }: { axeStrategique: AxeStrategique | null 
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression') + t('form_delete.axestrategique')} : {axeStrategique ? (lang == "fr" ? axeStrategique.nomFr : axeStrategique.nomEn) : ""}</h1>
+                <h1>{t('form_delete.suppression') + t('form_delete.besoin_formation_predefini')} : {besoinFormationPredefini ? (lang == "fr" ? besoinFormationPredefini.titreFr : besoinFormationPredefini.titreEn) : ""}</h1>
             </CustomDialogModal>
         </>
     );

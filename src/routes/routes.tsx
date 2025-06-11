@@ -15,6 +15,8 @@ import AxeStrategiques from '../pages/Admin/AxeStrategique';
 import Competences from '../pages/Admin/Competence';
 import FamilleMetiers from '../pages/Admin/FamilleMetier';
 import PosteDeTravails from '../pages/Admin/PosteDeTravail';
+import BesoinFormationPredefinis from '../pages/Admin/BesoinFormationPredefinis';
+import Etablissements from '../pages/Admin/Etablissements';
 
 
 
@@ -243,7 +245,13 @@ const coreRoutes = [
   {
     path: '/parametres/besoins-formation/manage',
     title: 'Mon Enregistrer des besoins de formation',
-    component: undefined,
+    component: BesoinFormationPredefinis,
+  },
+
+  {
+    path: '/parametres/etablissements',
+    title: 'Etablissements',
+    component: Etablissements,
   },
 
   {

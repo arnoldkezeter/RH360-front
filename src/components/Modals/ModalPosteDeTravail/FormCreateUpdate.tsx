@@ -89,10 +89,10 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
     const handleCreateUpdate = async () => {
         if (!nomFr || !nomEn || !familleMetier) {
             if (!nomFr) {
-                setErrorNomFr(t('error.nom'));
+                setErrorNomFr(t('error.nom_fr'));
             }
             if (!nomEn) {
-                setErrorNomEn(t('error.nom'));
+                setErrorNomEn(t('error.nom_en'));
             }
             if (!familleMetier) {
                 setErrorFamilleMetier(t('error.famille_metier'));

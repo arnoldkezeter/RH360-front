@@ -4,6 +4,8 @@ import settingReducer from "./features/setting.tsx";
 import structureReducer from "./features/settings/strucutureSlice.tsx";
 import serviceReducer from "./features/settings/serviceSlice.tsx";
 import categorieProfessionnelleReducer from "./features/settings/categorieProfessionnelleSlice.tsx";
+import besoinFormationPredefiniReducer from "./features/settings/besoinFormationPredefini.tsx";
+import etablissementReducer from "./features/settings/etablissementSlice.tsx";
 import gradeReducer from "./features/settings/gradeSlice.tsx";
 import posteDeTravailReducer from "./features/settings/posteDeTravailSlice.tsx";
 import regionReducer from "./features/settings/regionSlice.tsx";
@@ -28,6 +30,8 @@ const store = configureStore({
     communeSlice:communeeReducer,
     departementSlice:departementReducer,
     taxeSlice:taxeReducer,
+    etablissementSlice:etablissementReducer,
+    besoinFormationPredefiniSlice:besoinFormationPredefiniReducer,
     familleMetierSlice:familleMetierReducer,
     competenceSlice:competenceReducer,
     axeStrategiqueSlice:axeStrategiqueReducer

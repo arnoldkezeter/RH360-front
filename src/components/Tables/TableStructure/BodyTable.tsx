@@ -20,7 +20,7 @@ const BodyTable = ({ data, onEdit }: { data?: Structure[], onEdit: (structure: S
                 </td>
                 
                 {/* nom */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark">
                     <h5>{lang === 'fr' ? item.nomFr : item.nomEn}</h5>
                 </td>
 

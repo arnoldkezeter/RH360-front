@@ -18,12 +18,12 @@ const BodyTable = ({ data, onEdit }: { data: PosteDeTravail[], onEdit: (posteDeT
                 </td>
 
                 {/* nom */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark">
                     <h5> {lang === 'fr' ? item.nomFr : item.nomEn}</h5>
                 </td>
 
                 {/* description */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark hidden md:table-cell">
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell">
                     <h5> {lang === 'fr' ? item.descriptionFr : item.descriptionEn}</h5>
                 </td>
 

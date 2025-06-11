@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { setShowModalDelete } from '../../../_redux/features/setting';
 import { RootState } from '../../../_redux/store';
 import CustomDialogModal from '../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
-import { deleteSettingItem } from '../../../_redux/features/data_setting_slice';
-import { apiDeleteFonction } from '../../../services/settings/api_fonction';
 import createToast from '../../../hooks/toastify';
-import { setShowModalDelete } from '../../../_redux/features/setting';
+import { deleteEtablissement } from '../../../services/settings/etablissementAPI';
+import { deleteEtablissementSlice } from '../../../_redux/features/settings/etablissementSlice';
 
 
-function ModalDelete({ fonction }: { fonction: CommonSettingProps | null }) {
+function FormDelete({ etablissement }: { etablissement: Etablissement | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -21,18 +21,18 @@ function ModalDelete({ fonction }: { fonction: CommonSettingProps | null }) {
 
     const handleDelete = async () => {
 
-        if (fonction?._id != undefined) {
-            await apiDeleteFonction(fonction._id).then((e: ReponseApiPros) => {
+        if (etablissement?._id != undefined) {
+            await deleteEtablissement(etablissement._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
-                    createToast(e.message[lang as keyof typeof e.message], '', 0);
+                    createToast(e.message, '', 0);
 
-                    if (fonction._id) {
-                        dispatch(deleteSettingItem({ tableName: 'fonctions', itemId: fonction._id }));
+                    if (etablissement._id) {
+                        dispatch(deleteEtablissementSlice({ id: etablissement._id }));
                     }
 
                     closeModal();
                 } else {
-                    createToast(e.message[lang as keyof typeof e.message], '', 2);
+                    createToast(e.message, '', 2);
                 }
             }).catch((e) => {
                 createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
@@ -51,13 +51,13 @@ function ModalDelete({ fonction }: { fonction: CommonSettingProps | null }) {
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression') + t('form_delete.fonction')} : {fonction ? (lang == "fr" ? fonction.libelleFr : fonction.libelleEn) : ""}</h1>
+                <h1>{t('form_delete.suppression') + t('form_delete.etablissement')} : {etablissement ? (lang == "fr" ? etablissement.nomFr : etablissement.nomEn) : ""}</h1>
             </CustomDialogModal>
         </>
     );
 }
 
-export default ModalDelete
+export default FormDelete
 
 
 

@@ -1,13 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
 import ButtonCrudTable from "../common/ButtonActionTable"
-import { setShowModal, setShowModalDelete } from "../../../_redux/features/setting"
+import { setShowModal, setShowModalDelete} from "../../../_redux/features/setting"
 import { RootState } from "../../../_redux/store";
 
-const BodyTable = ({ data, onEdit }: { data: CategorieProfessionnelle[], onEdit: (categorieprofessionnelle: CategorieProfessionnelle) => void }) => {
-
+const BodyTable = ({ data, onEdit }: { data: Etablissement[], onEdit: (etablissement: Etablissement) => void }) => {
+    const lang = useSelector((state: RootState) => state.setting.language);
     const dispatch = useDispatch();
-
-    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
 
     return <tbody>
         {data.map((item, index) => (
@@ -17,14 +15,10 @@ const BodyTable = ({ data, onEdit }: { data: CategorieProfessionnelle[], onEdit:
                     <h5 className="">{index + 1}</h5>
                 </td>
 
-                {/* nom */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark ">
-                    <h5> {lang === 'fr' ? item.nomFr : item.nomEn}</h5>
-                </td>
 
-                {/* description */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell">
-                    <h5> {lang === 'fr' ? item.descriptionFr : item.descriptionEn}</h5>
+                {/* nom */}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark">
+                    <h5>{lang == 'fr' ? item.nomFr : item.nomEn}</h5>
                 </td>
 
                 {/* Action  bouton pour edit*/}

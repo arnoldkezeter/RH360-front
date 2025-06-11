@@ -89,10 +89,10 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
     const handleCreateUpdate = async () => {
         if (!nomFr || !nomEn || !grade) {
             if (!nomFr) {
-                setErrorNomFr(t('error.nom'));
+                setErrorNomFr(t('error.nom_fr'));
             }
             if (!nomEn) {
-                setErrorNomEn(t('error.nom'));
+                setErrorNomEn(t('error.nom_en'));
             }
             if (!grade) {
                 setErrorGrade(t('error.grade'));

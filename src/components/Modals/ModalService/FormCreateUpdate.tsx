@@ -91,10 +91,10 @@ function ModalCreateUpdate({ service, onDepartmentUpdated }: { service: Service 
     const handleCreateUpdate = async () => {
         if (!nomFr || !nomEn || !structure) {
             if (!nomFr) {
-                setErrorNomFr(t('error.nom'));
+                setErrorNomFr(t('error.nom_fr'));
             }
             if (!nomEn) {
-                setErrorNomEn(t('error.nom'));
+                setErrorNomEn(t('error.nom_en'));
             }
             if (!structure) {
                 setErrorStructure(t('error.structure'));
@@ -220,7 +220,7 @@ function ModalCreateUpdate({ service, onDepartmentUpdated }: { service: Service 
                     setValue={(value) => { setDescriptionEn(value)}}
                     hasBackground={true}
                 />
-                <Label text={t('label.nb_place_stage')} required />
+                <Label text={t('label.nb_place_stage')} />
                 <Input
                     value={""+nbPlaceStage}
                     type='number'

@@ -67,10 +67,10 @@ function ModalCreateUpdate({ region }: { region: Region | null }) {
                 setErrorCode(t('error.code'));
             }
             if (!nomFr) {
-                setErrorNomFr(t('error.nom'));
+                setErrorNomFr(t('error.nom_fr'));
             }
             if (!nomEn) {
-                setErrorNomEn(t('error.nom'));
+                setErrorNomEn(t('error.nom_en'));
             }
             return;
         }
