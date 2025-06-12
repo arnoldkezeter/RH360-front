@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 
 import route from './routes/routes.js';
 import { NotFound, NotFoundIsAuth } from './pages/NotFound/NotFound.js';
-import DashBoardAmin from './pages/Admin/Dashboard_admin.js';
+import DashBoardAmin from './pages/TableauDeBord/DashboardAdmin.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { config } from './config.js';
 import InitialPage from './pages/InitialPage/InitialPage.js';
@@ -22,6 +22,7 @@ import createToast from './hooks/toastify.js';
 import { useTranslation } from 'react-i18next';
 import ProtectedRoute from './components/protectRoutes.js';
 import AccessDenied from './pages/CommonPage/AccesRefuse.js';
+import { HeaderProvider } from './components/Context/HeaderConfig.js';
 
 function App() {
 
@@ -154,60 +155,63 @@ function App() {
     <InitialPage />
   ) : (
     <>
-      <ToastContainer />
-
-      {
-        isAuth.value !== 'default' && <Routes>
-          {/* Redirect to /auth/signup if not authenticated */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/choose-account" element={<ChoisirCompte />} />
-          <Route path="/verification-code/:id" element={<VerificationCode />} />
-          <Route path="/unauthorized" element={<AccessDenied />} />
-
-
-          {/* Menu de gauche pour les differents roles  */}
-          <Route element={isAuth.value !== null && isAuth.status ?
-            <Layout isMobileOrTablet={isMobileOrTablet} userPermissions={userPermissions}/> : <Navigate to={'/signin'} />} >
-
-            {/*  Page de droites   */}
-            {/* page dashboard est celle selectionner par defaut */}
-            <Route index element={
-              (roles.superAdmin === userRole || roles.admin === userRole) ? <DashBoardAmin /> :
-                <NotFoundIsAuth />
-
-            } />
-            {/* autres pagges pour chaque type de compte */}
-            { (true)?
-              (
-                route.map((route, index) => {
-                  const { path, component: Component } = route;
-                  return (
-                    <Route
-                      key={index}
-                      path={path}
-                      element={
-                        <Suspense fallback={<Loading />}>
-                          <ProtectedRoute
-                            component={<Component/>}
-                            userPermissions={userPermissions}
-                          />
-                        </Suspense>
-                      }
-                    />
-                  );
-                })
-              )
-                : <Route element={<NotFoundIsAuth />} />
-
-            }
-          </Route>
+        
+        <ToastContainer />
+        <HeaderProvider>
+          {
+            isAuth.value !== 'default' && <Routes>
+              {/* Redirect to /auth/signup if not authenticated */}
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/choose-account" element={<ChoisirCompte />} />
+              <Route path="/verification-code/:id" element={<VerificationCode />} />
+              <Route path="/unauthorized" element={<AccessDenied />} />
 
 
-          {/* si mauvaises url est rechercher */}
-          <Route path='*' element={isAuth.status ? <div className='h-screen w-screen flex  items-center justify-center ml-[150px]'><Loading /></div> : <NotFound />} />
-        </Routes >
-      }
+              {/* Menu de gauche pour les differents roles  */}
+              <Route element={isAuth.value !== null && isAuth.status ?
+                <Layout isMobileOrTablet={isMobileOrTablet} userPermissions={userPermissions}/> : <Navigate to={'/signin'} />} >
+
+                {/*  Page de droites   */}
+                {/* page dashboard est celle selectionner par defaut */}
+                <Route index element={
+                  (roles.superAdmin === userRole || roles.admin === userRole) ? <DashBoardAmin /> :
+                    <NotFoundIsAuth />
+
+                } />
+                {/* autres pagges pour chaque type de compte */}
+                { (true)?
+                  (
+                    route.map((route, index) => {
+                      const { path, component: Component } = route;
+                      return (
+                        <Route
+                          key={index}
+                          path={path}
+                          element={
+                            <Suspense fallback={<Loading />}>
+                              <ProtectedRoute
+                                component={<Component/>}
+                                userPermissions={userPermissions}
+                              />
+                            </Suspense>
+                          }
+                        />
+                      );
+                    })
+                  )
+                    : <Route element={<NotFoundIsAuth />} />
+
+                }
+              </Route>
+
+
+              {/* si mauvaises url est rechercher */}
+              <Route path='*' element={isAuth.status ? <div className='h-screen w-screen flex  items-center justify-center ml-[150px]'><Loading /></div> : <NotFound />} />
+            </Routes >
+        
+        }
+        </HeaderProvider>
     </>
   );
 }

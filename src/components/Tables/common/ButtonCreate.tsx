@@ -15,7 +15,7 @@ const ButtonCreate = ({ isAbsence, onClick }: ButtonNewProps) => {
         <button
             onClick={onClick}
             className="  
-            w-[50px] h-[35px] lg:h-[41.5px]  lg:min-w-[210px]  lg:w-auto  text-[11.5px] lg:text-sm md:text-md gap-2 my-2   
+            w-[30px] h-[35px] lg:h-[41.5px]  lg:min-w-[210px]  lg:w-auto  text-[11.5px] lg:text-sm md:text-md gap-2 my-2   
             inline-flex items-center justify-center  bg-primary  text-center font-medium text-white 
             hover:bg-opacity-90 lg:py-4 lg:px-4 xl:px-6 rounded  "
         >

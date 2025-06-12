@@ -14,7 +14,7 @@ import ButtonOutline from "../ui/ButtonOutline";
 
 export function ChangePassword() {
     const { t } = useTranslation();
-    const userState: UserState = useSelector((state: RootState) => state.user);
+    const userState: Utilisateur = useSelector((state: RootState) => state.user);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const [currentPassword, setCurrentPassord] = useState('');
     const [newPassword, setNewPassord] = useState('');

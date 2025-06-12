@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // État initial de l'utilisateur
-const initialState: UserState = {
+const initialState: Utilisateur = {
     _id: '',
     roles: [],
     role: '',
@@ -37,7 +37,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         // Définir l'utilisateur complet
-        setUser: (state, action: PayloadAction<UserState>) => {
+        setUser: (state, action: PayloadAction<Utilisateur>) => {
             return { ...state, ...action.payload };
         },
 

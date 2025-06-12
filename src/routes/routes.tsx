@@ -1,22 +1,23 @@
 
 import MonProfil from '../pages/CommonPage/Profil';
-import Regions from '../pages/Admin/Regions';
+import Regions from '../pages/Parametres/Regions';
 
-import Permissions from '../pages/Admin/Permissions';
+import Permissions from '../pages/Parametres/Permissions';
 import UserPermissions from '../pages/CommonPage/UserPermissions';
-import Structures from '../pages/Admin/Structures';
-import Departements from '../pages/Admin/Departements';
-import Communes from '../pages/Admin/Communes';
-import Grades from '../pages/Admin/Grades';
-import CategorieProfessionnelles from '../pages/Admin/CategorieProfessionnelle';
-import Services from '../pages/Admin/Service';
-import Taxes from '../pages/Admin/Taxe';
-import AxeStrategiques from '../pages/Admin/AxeStrategique';
-import Competences from '../pages/Admin/Competence';
-import FamilleMetiers from '../pages/Admin/FamilleMetier';
-import PosteDeTravails from '../pages/Admin/PosteDeTravail';
-import BesoinFormationPredefinis from '../pages/Admin/BesoinFormationPredefinis';
-import Etablissements from '../pages/Admin/Etablissements';
+import Structures from '../pages/Parametres/Structures';
+import Departements from '../pages/Parametres/Departements';
+import Communes from '../pages/Parametres/Communes';
+import Grades from '../pages/Parametres/Grades';
+import CategorieProfessionnelles from '../pages/Parametres/CategorieProfessionnelle';
+import Services from '../pages/Parametres/Service';
+import Taxes from '../pages/Parametres/Taxe';
+import AxeStrategiques from '../pages/Elaboration/AxeStrategique';
+import Competences from '../pages/Elaboration/Competence';
+import FamilleMetiers from '../pages/Elaboration/FamilleMetier';
+import PosteDeTravails from '../pages/Parametres/PosteDeTravail';
+import BesoinFormationPredefinis from '../pages/Parametres/BesoinFormationPredefinis';
+import Etablissements from '../pages/Parametres/Etablissements';
+import Utilisateurs from '../pages/Utilisateurs/Utilisateurs';
 
 
 
@@ -210,7 +211,7 @@ const coreRoutes = [
   {
     path: '/utilisateurs/gestion-utilisateur',
     title: 'Gestion des utilisateurs (Enregistrement, Modification, Suppression , Liste)',
-    component: undefined,
+    component: Utilisateurs,
   },
 
   {

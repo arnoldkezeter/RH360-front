@@ -100,7 +100,7 @@ function ChoisirCompte() {
                                         }
 
                                         if (signUpResult?.success === true) {
-                                            const userData = signUpResult.data as UserState;
+                                            const userData = signUpResult.data as Utilisateur;
 
                                             dispatch(setUser(userData))
 

@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { GoPerson } from "react-icons/go";
-import { Commune } from "../../pages/Admin/Communes";
+import { Commune } from "../../pages/Parametres/Communes";
 import { MdOutlinePhone } from "react-icons/md";
 import { MdOutlineMail } from "react-icons/md";
 import { RiMapPin2Fill } from "react-icons/ri";
@@ -58,7 +58,7 @@ function ProfileInformation() {
     const [haveChanged, setHaveChanged] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [openModalConfirm, setOpenModalConfirm] = useState<boolean>(false);
-    const userState: UserState = useSelector((state: RootState) => state.user);
+    const userState: Utilisateur = useSelector((state: RootState) => state.user);
 
 
     const regions: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.regions) ?? [];

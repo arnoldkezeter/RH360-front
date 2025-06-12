@@ -30,7 +30,7 @@ function ModalCreateUpdate({ permission  }: { permission: PermissionType | null 
     const [isFirstRender, setIsFirstRender] = useState(true);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.open);
     const [modalTitle, setModalTitle] = useState("");
-    const currentUser: UserState = useSelector((state: RootState) => state.user);
+    const currentUser: Utilisateur = useSelector((state: RootState) => state.user);
 
     
    
