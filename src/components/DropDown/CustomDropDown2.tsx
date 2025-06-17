@@ -5,6 +5,7 @@ interface CustomDropDownProps<T> {
     title: string;
     items: T[];
     defaultValue?: T | null;
+    length?:string;
     selectedItem?: T;
     textColor?: string;
     placeholder?:string;
@@ -18,6 +19,7 @@ function CustomDropDown2<T>({
     items,
     defaultValue,
     textColor,
+    length = "200",
     selectedItem,
     searchItem = true,
     placeholder,
@@ -75,7 +77,7 @@ function CustomDropDown2<T>({
     };
 
     return (
-        <div ref={dropdownRef} className="relative w-full lg:w-[200px]">
+        <div ref={dropdownRef} className={`relative w-full `}>
             <label className="block text-sm lg:text-md mb-1 text-gray-700 dark:text-gray-300">
                 {title}
             </label>

@@ -16,6 +16,8 @@ import familleMetierReducer from "./features/familleMetierSlice.tsx";
 import competenceReducer from "./features/competenceSlice.tsx";
 import axeStrategiqueReducer from "./features/axeStrategiqueSlice.tsx";
 import utilisateurReducer from "./features/utilisateurs/utilisateurSlice.tsx";
+import stagiaireReducer from "./features/stagiaireSlice.tsx";
+import chercheurRededucer from "./features/chercheurSlice.tsx";
 
 
 const store = configureStore({
@@ -36,7 +38,9 @@ const store = configureStore({
     familleMetierSlice:familleMetierReducer,
     competenceSlice:competenceReducer,
     axeStrategiqueSlice:axeStrategiqueReducer,
-    utilisateurSlice:utilisateurReducer
+    utilisateurSlice:utilisateurReducer,
+    stagiaireSlice:stagiaireReducer,
+    chercheurSlice:chercheurRededucer
   }
 });
 

@@ -14,7 +14,6 @@ import {
 } from "../../_redux/features/utilisateurs/utilisateurSlice";
 import { setErrorPageService, setServices } from "../../_redux/features/parametres/serviceSlice";
 import { setErrorPageStructure, setStructures } from "../../_redux/features/parametres/strucutureSlice";
-import { roles } from "../../config";
 import FormDelete from "../../components/Modals/Utilisateur/ModalUtilisateur/FormDelete";
 import { setShowModal } from "../../_redux/features/setting";
 import { useFetchData } from "../../hooks/fechDataOptions";
@@ -22,11 +21,13 @@ import { getUtilisateursByFiltres } from "../../services/utilisateurs/utilisateu
 import { getStructuresForDropDown } from "../../services/settings/structureAPI";
 import { getServicesForDropDownByStructure } from "../../services/settings/serviceAPI";
 import FormCreateUpdate from "../../components/Modals/Utilisateur/ModalUtilisateur/FormCreateUpdate";
+import { ROLES } from "../../config";
 
 const Utilisateurs = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const fetchData = useFetchData();
+    const roles = Object.values(ROLES)
 
     const lang = useSelector((state: RootState) => state.setting.language);
     const { data: { utilisateurs } } = useSelector((state: RootState) => state.utilisateurSlice);
@@ -36,7 +37,7 @@ const Utilisateurs = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [currentStructure, setCurrentStructure] = useState<Structure | undefined>();
     const [currentService, setCurrentService] = useState<Service | undefined>();
-    const [currentRole, setCurrentRole] = useState<string | undefined>();
+    const [currentRole, setCurrentRole] = useState<Role | undefined>();
     const [resetFilters, setResetFilters] = useState<boolean>(true);
     const [selectedUtilisateur, setSelectedUtilisateur] = useState<Utilisateur | null>(null);
 
@@ -121,7 +122,7 @@ const Utilisateurs = () => {
         params: {
             page: currentPage,
             service: currentService?._id,
-            role: currentRole,
+            role: currentRole?.key,
             lang,
         },
         onSuccess: (data) => {
@@ -140,7 +141,7 @@ const Utilisateurs = () => {
             dispatch(setUtilisateursLoading(isLoading));
         },
     });
-    }, [currentPage, currentService, currentRole, resetFilters, lang, dispatch, services, roles, fetchData, t]);
+    }, [currentPage, currentService, currentRole, resetFilters, lang, dispatch, fetchData]);
 
 
 
@@ -160,7 +161,7 @@ const Utilisateurs = () => {
         setResetFilters(false);
     };
 
-    const handleRoleChange = (role: string) => {
+    const handleRoleChange = (role: Role) => {
         setCurrentRole(role);
         setCurrentStructure(undefined);
         setCurrentService(undefined);

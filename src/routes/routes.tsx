@@ -18,6 +18,7 @@ import PosteDeTravails from '../pages/Parametres/PosteDeTravail';
 import BesoinFormationPredefinis from '../pages/Parametres/BesoinFormationPredefinis';
 import Etablissements from '../pages/Parametres/Etablissements';
 import Utilisateurs from '../pages/Utilisateurs/Utilisateurs';
+import Stagiaires from '../pages/Stagiaires/Stagiaires';
 
 
 
@@ -159,7 +160,7 @@ const coreRoutes = [
   {
     path: '/stagiaires/gestion-stagiaire',
     title: 'Gestion des stagiaires (Enregistrement, Modification, Suppression , Liste)',
-    component: undefined,
+    component: Stagiaires,
   },
 
   {

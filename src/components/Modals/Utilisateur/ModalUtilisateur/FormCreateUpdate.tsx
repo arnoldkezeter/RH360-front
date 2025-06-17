@@ -7,24 +7,20 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { useUserFormData } from '../../../../hooks/useFormData';
 import { getServicesForDropDownByStructure } from '../../../../services/settings/serviceAPI';
-import { setServices } from '../../../../_redux/features/parametres/serviceSlice';
 import { getDepartementsForDropDown } from '../../../../services/settings/departementAPI';
-import { setDepartements } from '../../../../_redux/features/parametres/departementSlice';
 import { getCommunesForDropDown } from '../../../../services/settings/communeAPI';
-import { setCommunes } from '../../../../_redux/features/parametres/communeSlice';
 import { getCategorieProfessionnellesForDropDown } from '../../../../services/settings/categorieProfessionnelleAPI';
-import { setCategorieProfessionnelles } from '../../../../_redux/features/parametres/categorieProfessionnelleSlice';
 import { getPosteDeTravailForDropDown } from '../../../../services/settings/posteDeTravailAPI';
-import { setPosteDeTravails } from '../../../../_redux/features/parametres/posteDeTravailSlice';
 import { createUtilisateur, updateUtilisateur } from '../../../../services/utilisateurs/utilisateurAPI';
 import { createUtilisateurSlice, updateUtilisateurSlice } from '../../../../_redux/features/utilisateurs/utilisateurSlice';
-import { roles } from '../../../../config';
-import { formatDateForInput, formatDateTimeForInput, formatDateWithLang } from '../../../../fonctions/fonction';
+import { formatDateForInput } from '../../../../fonctions/fonction';
+import { ROLES } from '../../../../config';
 
 
 function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { loading, error, regions, structures, grades, familleMetiers } = useUserFormData(lang);
+    const roles = Object.values(ROLES)
     // const structures:Structure[] =[];
     // const regions:Region[] =[];
     // const grades:Grade[] =[];
@@ -49,7 +45,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
     const [lieuNaissance, setLieuNaissance] = useState("");
     const [email, setEmail] = useState("");
     const [matricule, setMatricule] = useState("");
-    const [role, setRole] = useState(""); 
+    const [role, setRole] = useState<Role>(); 
     const [telephone, setTelephone] = useState("");
     const [grade, setGrade] = useState<Grade>();
     const [categorie, setCategorie] = useState<CategorieProfessionnelle>();
@@ -80,7 +76,8 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
             setGenre(utilisateur.genre);
             setDateNaissance(formatDateForInput(utilisateur.dateNaissance) || "");
             setLieuNaissance(utilisateur.lieuNaissance || "");
-            setRole(utilisateur.role)
+            const role = roles.find(role=>role.key === utilisateur.role);
+            setRole(role)
             setEmail(utilisateur.email);
             setMatricule(utilisateur?.matricule || "");
             setTelephone(utilisateur?.telephone || "");
@@ -187,9 +184,19 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
 
 
     const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selected = e.target.value;
-        setRole(selected)
+        const selectedRoleNom = e.target.value;
+        var selected=null;
 
+        if (lang === 'fr') {
+            selected = roles.find(role => role.nomFr === selectedRoleNom);
+        }
+        else {
+            selected = roles.find(role => role.nomEn === selectedRoleNom);
+        }
+        
+        if(selected){
+            setRole(selected)
+        }
     }
         
     const handleGradeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -414,7 +421,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     prenom,
                     email,
                     genre,
-                    role,
+                    role:role?.key || "",
                     telephone,
                     dateNaissance,
                     lieuNaissance,
@@ -473,7 +480,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     prenom,
                     email,
                     genre,
-                    role,
+                    role:role?.key || "",
                     telephone,
                     dateNaissance,
                     lieuNaissance,
@@ -620,13 +627,13 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                 
                 <label>{t('label.role')}</label><label className="text-red-500"> *</label>
                 <select
-                    value={role? role : t('select_par_defaut.selectionnez') + t('select_par_defaut.role')}
+                    value={role? (lang === 'fr' ? role.nomFr : role.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.role')}
                     onChange={handleRoleChange}
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 >
                     <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.role')}</option>
-                    {roles.map((role, index) => (
-                        <option key={index} value={role}>{role}</option>
+                    {roles.map(role => (
+                        <option key={role.key} value={(lang === 'fr' ? role.nomFr : role.nomEn)}>{(lang === 'fr' ? role.nomFr : role.nomEn)}</option>
                     ))}
                 </select>
                 {errorRole && <p className="text-red-500">{errorRole}</p>}

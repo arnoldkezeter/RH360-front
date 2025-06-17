@@ -96,7 +96,9 @@
   },
 
   "page_description":{
-    "utilisateur":"Permet la gestion centralisée de tous les utilisateurs (Ajout, Modification, Suppression)"
+    "utilisateur":"Permet la gestion centralisée de tous les utilisateurs (Ajout, Modification, Suppression)",
+    "stagiaire":"Suivre les stagiaires avec une vue d'ensemble de leur affectation",
+    "chercheur":"Suivre les chercheurs avec une vue d'ensemble de leur affectation"
   },
 
   "tableau_de_bord": {
@@ -148,6 +150,9 @@
     "titre_en":"Titre en anglais",
 
     "role":"Rôle",
+
+    "etablissement":"Etablissement",
+    "filiere":"Filière",
 
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
@@ -521,7 +526,9 @@
     "axes_strategique":"un axe stratégique",
     "competence":"une compétence",
 
-    "utilisateur":"un utilisateur"
+    "utilisateur":"un utilisateur",
+    "stagiaire":"un stagiaire",
+    "chercheur":"un chercheur"
 
   },
 
@@ -542,7 +549,9 @@
     "axes_strategique":"de l'axe stratégique",
     "competence":"d'une compétence",
 
-    "utilisateur":"de l'utilisateur"
+    "utilisateur":"de l'utilisateur",
+    "stagiaire":"du stagiaire",
+    "chercheur":"du chercheur"
     
   },
   "form_delete": {
@@ -564,12 +573,18 @@
     "axes_strategique":"de l'axe stratégique",
     "competence":"d'une compétence",
 
-    "utilisateur":"de l'utilisateur"
+    "utilisateur":"de l'utilisateur",
+    "stagiaire":"du stagiaire",
+    "chercheur":"du chercheur"
   },
   "error": {
     "text_fr":"Le champ texte en français est obligatoire.",
     "text_en":"Le champ texte en anglais est obligatoire.",
     "famille_metier":"Le champ famille de métier est obligatoire.",
+    "etablissement":"Le champ établissement est obligatoire.",
+    "filiere":"Le champ filière est obligatoire.",
+    "telephone":"Le champ téléphone est obligatoire.",
+    "annee":"Le champ année est obligatoire.",
     "grade":"Le champ grade est obligatoire.",
     "code": "Le champ code est obligatoire.",
     "libelle": "Le champ libellé est obligatoire.",

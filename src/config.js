@@ -9,7 +9,24 @@ export const config = {
     twitter: "#",
 }
 
-export const roles = ['SUPER-ADMIN', 'ADMIN', 'RESPONSABLE-FORMATION', 'UTILISATEUR', 'FORMATEUR', 'STAGIAIRE', 'CHERCHEUR']
+export const ROLES = {
+    SUPER_ADMIN: { nomFr: "Super Administrateur", nomEn: "Super Administrator", key: "SUPER-ADMIN" },
+    ADMIN: { nomFr: "Administrateur", nomEn: "Administrator", key: "ADMIN" },
+    RESPONSABLE_FORMATION: { nomFr: "Responsable Formation", nomEn: "Training Manager", key: "RESPONSABLE-FORMATION" },
+    UTILISATEUR: { nomFr: "Utilisateur", nomEn: "User", key: "UTILISATEUR" },
+    FORMATEUR: { nomFr: "Formateur", nomEn: "Trainer", key: "FORMATEUR" },
+    STAGIAIRE: { nomFr: "Stagiaire", nomEn: "Trainee", key: "STAGIAIRE" },
+    CHERCHEUR: { nomFr: "Chercheur", nomEn: "Researcher", key: "CHERCHEUR" },
+};
+
+
+// frontnomEnd/constants/status.ts
+export const STATUTS = {
+    ACCEPTER: { nomFr: "Accepté", nomEn: "Accepted", key:"ACCEPTER" },
+    REFUSER: { nomFr: "Refusé", nomEn: "Refused", key:"REFUSER" },
+    EN_ATTENTE: { nomFr: "En attente", nomEn: "Pending", key:"EN_ATTENTE" },
+};
+
 
 
 export const apiUrl = import.meta.env.VITE_APP_API_URL || "non defini";

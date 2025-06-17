@@ -10,6 +10,8 @@ import { setStructures } from "../_redux/features/parametres/strucutureSlice";
 import { getGradesForDropDown } from "../services/settings/gradeAPI";
 import { getFamillesMetierForDropDown } from "../services/familleMetierAPI";
 import { useFetchData } from "./fechDataOptions";
+import { getEtablissementsForDropDown } from "../services/settings/etablissementAPI";
+import { setEtablissements } from "../_redux/features/parametres/etablissementSlice";
 
 const resources = [
   {
@@ -32,6 +34,11 @@ const resources = [
     setData: setFamilleMetiers,
     selector: (state: RootState) => state.familleMetierSlice.data.familleMetiers,
   },
+  {
+    apiFunction: getEtablissementsForDropDown,
+    setData: setEtablissements,
+    selector: (state: RootState) => state.etablissementSlice.data.etablissements,
+  },
 ];
 
 export const useUserFormData = (lang: string) => {
@@ -44,6 +51,7 @@ export const useUserFormData = (lang: string) => {
     structures: useSelector((state: RootState) => state.structureSlice.data.structures),
     grades: useSelector((state: RootState) => state.gradeSlice.data.grades),
     familleMetiers: useSelector((state: RootState) => state.familleMetierSlice.data.familleMetiers),
+    etablissements:useSelector((state: RootState) => state.etablissementSlice.data.etablissements),
   };
 
   const fetchData = useFetchData();

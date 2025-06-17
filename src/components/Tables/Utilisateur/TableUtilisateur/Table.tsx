@@ -13,7 +13,7 @@ import { setErrorPageUtilisateur, setUtilisateursLoading } from "../../../../_re
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import Pagination from "../../../Pagination/Pagination";
 import { searchUtilisateur } from "../../../../services/utilisateurs/utilisateurAPI";
-import { roles } from "../../../../config";
+import { ROLES } from "../../../../config";
 
 
 interface TableUtilisateurProps {
@@ -23,11 +23,11 @@ interface TableUtilisateurProps {
     currentPage: number;
     currentStructure?:Structure;
     currentService?:Service;
-    currentRole?:string;
+    currentRole?:Role;
     onPageChange: (page: number) => void;
     onServiceChange:(service:Service)=>void;
     onStructureChange:(structure:Structure)=>void;
-    onRoleChange:(role:string)=>void;
+    onRoleChange:(role:Role)=>void;
     onResetFilters:(value:boolean)=>void;
     onEdit: (utilisateur : Utilisateur) => void;
 }
@@ -35,7 +35,7 @@ interface TableUtilisateurProps {
 const Table = ({ data, structures, services, currentPage, currentService, currentStructure, currentRole, onPageChange, onServiceChange, onStructureChange, onRoleChange, onResetFilters, onEdit}: TableUtilisateurProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
-    
+    const roles = Object.values(ROLES)
     const userRole = useSelector((state: RootState) => state.user.role);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
@@ -64,7 +64,7 @@ const Table = ({ data, structures, services, currentPage, currentService, curren
         }
     };
 
-    const handleRoleSelect = (selected: string| undefined) => {
+    const handleRoleSelect = (selected: Role| undefined) => {
         if (selected) {
             onRoleChange(selected);
         }
@@ -184,11 +184,12 @@ const Table = ({ data, structures, services, currentPage, currentService, curren
                                 displayProperty={(service: Service) => `${lang === 'fr' ? service.nomFr : service.nomEn}`}
                                 onSelect={handleServiceSelect}
                             />
-                            <CustomDropDown2<string>
+                            <CustomDropDown2<Role>
                                 title={t('label.role')}
                                 selectedItem={currentRole}
                                 items={roles}
                                 defaultValue={undefined}
+                                displayProperty={(role: Role) => `${lang === 'fr' ? role.nomFr : role.nomEn}`}
                                 onSelect={handleRoleSelect}
                             />
                             
@@ -265,11 +266,12 @@ const Table = ({ data, structures, services, currentPage, currentService, curren
                                             {t('label.role')}
                                         </label>
                                     </div>
-                                    <CustomDropDown2<string>
+                                    <CustomDropDown2<Role>
                                         title={""}
                                         selectedItem={currentRole}
                                         items={roles}
                                         defaultValue={undefined}
+                                        displayProperty={(role: Role) => `${lang === 'fr' ? role.nomFr : role.nomEn}`}
                                         onSelect={handleRoleSelect}
                                         
                                     />
