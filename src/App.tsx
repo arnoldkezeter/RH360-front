@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import ProtectedRoute from './components/protectRoutes.js';
 import AccessDenied from './pages/CommonPage/AccesRefuse.js';
 import { HeaderProvider } from './components/Context/HeaderConfig.js';
+import { getCurrentUserData } from './services/utilisateurs/utilisateurAPI.js';
 
 function App() {
 
@@ -82,22 +83,24 @@ function App() {
         const localUser = isAuth.value;
 
         if (localUser) {
-          const { userId, roles, role } = localUser;
+          const { userId, role } = localUser;
 
           if (role !== "" && role !== null && role !== undefined) {
-            dispatch(setMinimumUser({ _id: userId, roles: roles, role: role }));
+            dispatch(setMinimumUser({
+              _id: userId, role: role,
+            }));
             setUserRole(role);
 
             // recuperer les data du user en bd
             try {
-              // await getCurrentUserData({ userId: userId }).then((e: UserState) => {
-              //   dispatch(setUser(e));
-              //   setUserLog(e);
-              //   dispatch(setRole(role));
-              //   setLoading(false);
-              // }).catch((e) => {
-              //   setLoading(false);
-              // })
+              await getCurrentUserData({ userId: userId }).then((e: Utilisateur) => {
+                dispatch(setUser(e));
+                // setUserLog(e);
+                dispatch(setRole(role));
+                setLoading(false);
+              }).catch((e) => {
+                setLoading(false);
+              })
 
               
             } catch (e) {

@@ -171,3 +171,26 @@ export async function getPosteDeTravailsByFamilleMetier({page, familleMetierId, 
     }
 }
 
+export async function getPosteDeTravailForDropDown({familleMetierId, lang }: {familleMetierId:string, lang:string }): Promise<PosteDeTravailReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown/famille-metier/${familleMetierId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const communes: PosteDeTravailReturnGetType = response.data.data;
+        
+        return communes;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+

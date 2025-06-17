@@ -5,14 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import {getCommunesByDepartement } from "../../services/settings/communeAPI";
-import FormCreateUpdate from "../../components/Modals/ModalCommune/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalCommune/FormDelete";
-import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/settings/regionSlice";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalCommune/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalCommune/FormDelete";
+import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/parametres/regionSlice";
 import { getRegionsForDropDown } from "../../services/settings/regionAPI";
-import { setCommuneLoading, setCommunes, setErrorPageCommune } from "../../_redux/features/settings/communeSlice";
-import { setDepartementLoading, setDepartements, setErrorPageDepartement } from "../../_redux/features/settings/departementSlice";
+import { setCommuneLoading, setCommunes, setErrorPageCommune } from "../../_redux/features/parametres/communeSlice";
+import { setDepartementLoading, setDepartements, setErrorPageDepartement } from "../../_redux/features/parametres/departementSlice";
 import { getDepartementsForDropDown } from "../../services/settings/departementAPI";
-import Table from "../../components/Tables/TableCommune/Table";
+import Table from "../../components/Tables/Parametres/TableCommune/Table";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -32,7 +33,15 @@ const Communes = () => {
    
     const {t}=useTranslation();
     const dispatch = useDispatch();
-   
+   const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
     useEffect(() => {
         const fetchRegions = async () => {
             dispatch(setRegionLoading(true));

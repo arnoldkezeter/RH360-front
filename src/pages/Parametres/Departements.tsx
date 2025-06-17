@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import { getDepartements, getDepartementsByRegion } from "../../services/settings/departementAPI";
-import Table from "../../components/Tables/TableDepartement/Table";
-import FormCreateUpdate from "../../components/Modals/ModalDepartement/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalDepartement/FormDelete";
-import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/settings/regionSlice";
+import Table from "../../components/Tables/Parametres/TableDepartement/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalDepartement/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalDepartement/FormDelete";
+import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/parametres/regionSlice";
 import { getRegions, getRegionsForDropDown } from "../../services/settings/regionAPI";
-import { setDepartementLoading, setDepartements, setErrorPageDepartement } from "../../_redux/features/settings/departementSlice";
+import { setDepartementLoading, setDepartements, setErrorPageDepartement } from "../../_redux/features/parametres/departementSlice";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -27,6 +28,16 @@ const Departements = () => {
    
     const {t}=useTranslation();
     const dispatch = useDispatch();
+
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
    
     useEffect(() => {
         const fetchRegions = async () => {

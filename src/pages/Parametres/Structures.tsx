@@ -4,11 +4,12 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
-import { setErrorPageStructure, setStructureLoading, setStructures } from "../../_redux/features/settings/strucutureSlice";
+import { setErrorPageStructure, setStructureLoading, setStructures } from "../../_redux/features/parametres/strucutureSlice";
 import { getStructures } from "../../services/settings/structureAPI";
-import Table from "../../components/Tables/TableStructure/Table";
-import FormCreateUpdate from "../../components/Modals/ModalStructure/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalStructure/FormDelete";
+import Table from "../../components/Tables/Parametres/TableStructure/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalStructure/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalStructure/FormDelete";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -22,7 +23,15 @@ const Structures = () => {
 
    
     const {t}=useTranslation();
-    
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
     
     const dispatch = useDispatch();
     useEffect(() => {

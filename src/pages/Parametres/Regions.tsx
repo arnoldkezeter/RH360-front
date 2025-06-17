@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import { getRegions } from "../../services/settings/regionAPI";
-import FormCreateUpdate from "../../components/Modals/ModalRegion/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalRegion/FormDelete";
-import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/settings/regionSlice";
-import Table from "../../components/Tables/TableRegion/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalRegion/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalRegion/FormDelete";
+import { setErrorPageRegion, setRegionLoading, setRegions } from "../../_redux/features/parametres/regionSlice";
+import Table from "../../components/Tables/Parametres/TableRegion/Table";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -22,7 +23,15 @@ const Regions = () => {
 
    
     const {t}=useTranslation();
-    
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
     
     const dispatch = useDispatch();
     useEffect(() => {

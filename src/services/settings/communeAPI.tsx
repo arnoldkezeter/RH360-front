@@ -171,3 +171,26 @@ export async function getCommunesByDepartement({page, departementId, lang }: {pa
     }
 }
 
+export async function getCommunesForDropDown({departementId, lang }: {departementId:string, lang:string }): Promise<CommuneReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown/all/${departementId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const communes: CommuneReturnGetType = response.data.data;
+        
+        return communes;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+

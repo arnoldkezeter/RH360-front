@@ -4,11 +4,12 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
-import { setErrorPageTaxe, setTaxeLoading, setTaxes } from "../../_redux/features/settings/taxeSlice";
+import { setErrorPageTaxe, setTaxeLoading, setTaxes } from "../../_redux/features/parametres/taxeSlice";
 import { getTaxes } from "../../services/settings/taxeAPI";
-import Table from "../../components/Tables/TableTaxe/Table";
-import FormCreateUpdate from "../../components/Modals/ModalTaxe/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalTaxe/FormDelete";
+import Table from "../../components/Tables/Parametres/TableTaxe/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalTaxe/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalTaxe/FormDelete";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -54,6 +55,16 @@ const Taxes = () => {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
+
     
     return (
         <>

@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import { getEtablissements } from "../../services/settings/etablissementAPI";
-import FormCreateUpdate from "../../components/Modals/ModalEtablissement/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalEtablissement/FormDelete";
-import { setErrorPageEtablissement, setEtablissementLoading, setEtablissements } from "../../_redux/features/settings/etablissementSlice";
-import Table from "../../components/Tables/TableEtablissement/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalEtablissement/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalEtablissement/FormDelete";
+import { setErrorPageEtablissement, setEtablissementLoading, setEtablissements } from "../../_redux/features/parametres/etablissementSlice";
+import Table from "../../components/Tables/Parametres/TableEtablissement/Table";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -22,7 +23,15 @@ const Etablissements = () => {
 
    
     const {t}=useTranslation();
-    
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
     
     const dispatch = useDispatch();
     useEffect(() => {

@@ -76,7 +76,8 @@ export function validatePassword(password: string) {
   return '';
 }
 
-export function formatDateForInput(dateString: string) {
+export function formatDateForInput(dateString: string | undefined) {
+  if(!dateString) return;
   const date = new Date(dateString);
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -85,7 +86,8 @@ export function formatDateForInput(dateString: string) {
   return formattedDate;
 }
 
-export function formatDateTimeForInput(dateString: string) {
+export function formatDateTimeForInput(dateString: string | undefined) {
+  if(!dateString) return;
   const date = new Date(dateString);
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -154,7 +156,8 @@ export function premierElement(value: String) {
 }
 
 
-export function formatDateWithLang(date:string, lang:string):string{
+export function formatDateWithLang(date:string | undefined, lang:string):string{
+  if(!date) return "";
   const dateStr = date;
   const dateObj = new Date(dateStr);
 

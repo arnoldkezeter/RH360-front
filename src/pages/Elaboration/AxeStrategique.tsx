@@ -6,9 +6,9 @@ import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import { setErrorPageAxeStrategique, setAxeStrategiqueLoading, setAxeStrategiques } from "../../_redux/features/axeStrategiqueSlice";
 import { getAxeStrategiques } from "../../services/axeStrategiqueAPI";
-import Table from "../../components/Tables/TableAxeStrategique/Table";
-import FormCreateUpdate from "../../components/Modals/ModalAxeStrategique/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalAxeStrategique/FormDelete";
+import Table from "../../components/Tables/Elaboration/TableAxeStrategique/Table";
+import FormCreateUpdate from "../../components/Modals/Elaboration/ModalAxeStrategique/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Elaboration/ModalAxeStrategique/FormDelete";
 
 
 

@@ -4,14 +4,15 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
-import Table from "../../components/Tables/TableService/Table";
-import FormCreateUpdate from "../../components/Modals/ModalService/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalService/FormDelete";
+import Table from "../../components/Tables/Parametres/TableService/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalService/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalService/FormDelete";
 
-import { setServiceLoading, setServices, setErrorPageService } from "../../_redux/features/settings/serviceSlice";
-import { setErrorPageStructure, setStructureLoading, setStructures } from "../../_redux/features/settings/strucutureSlice";
+import { setServiceLoading, setServices, setErrorPageService } from "../../_redux/features/parametres/serviceSlice";
+import { setErrorPageStructure, setStructureLoading, setStructures } from "../../_redux/features/parametres/strucutureSlice";
 import { getStructuresForDropDown } from "../../services/settings/structureAPI";
 import { getServicesBystructure } from "../../services/settings/serviceAPI";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -30,6 +31,15 @@ const Services = () => {
    
     const {t}=useTranslation();
     const dispatch = useDispatch();
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
    
     useEffect(() => {
         const fetchStructures = async () => {

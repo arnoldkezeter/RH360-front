@@ -94,6 +94,11 @@
     "etablissements":"Etablissements"
 
   },
+
+  "page_description":{
+    "utilisateur":"Permet la gestion centralisée de tous les utilisateurs (Ajout, Modification, Suppression)"
+  },
+
   "tableau_de_bord": {
     "title": "Tableau de bord",
     "semestre_courant": "Semestre courant",
@@ -115,6 +120,7 @@
     "aucune_alerte": "Aucune notification pour le moment",
     "liste_alerte": "Liste des alertes recentes"
   },
+  
   "label": {
     "famille_metier":"Famille de métier",
     "nature_taxe":"Nature de la taxe",
@@ -122,10 +128,26 @@
     "nature_taxe_en":"Nature de la taxe en anglais",
     "taux":"Taux",
     "structure":"Structure",
+    "grade":"Grade",
+    "service":"Service",
+    "categorie_professionnelle":"Catégorie professionnelle",
+    "poste_de_travail":"Poste de travail",
+    "region":"Région",
+    "departement": "Département",
+    "commune": "Commune",
+    "date_entree_service":"Date d'entrée en service",
+    "date_naissance": "Date de naissance",
+    "lieu_naissance": "Lieu de naissance",
+    "telephone": "Téléphone",
+    "email": "E-mail",
+    "mot_de_passe": "Mot de passe",
+
     "nb_place_stage":"Nombre de place pour les stages",
     "titre":"Titre",
     "titre_fr":"Titre en français",
     "titre_en":"Titre en anglais",
+
+    "role":"Rôle",
 
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
@@ -241,19 +263,9 @@
     "nationalite":"Nationalité",
     "specialite":"Spécialité",
     "diplome":"Diplome d'entrée",
-    "date_naiss": "Date de naissance",
-    "lieu_naiss": "Lieu de naissance",
-    "contact": "Contact",
-    "email": "E-mail",
-    "mot_de_passe": "Mot de passe",
-    "grade": "Grade",
-    "service": "Service",
-    "categorie": "Catégorie",
-    "fonction": "Fonction",
-    "region": "Région",
+    
+    
     "promotion": "Promotion",
-    "departement": "Département",
-    "commune": "Commune",
     "date_entree_admin": "Date d'entrée dans l'administration",
     "section": "Section",
     "departementAcademique": "Département académique",
@@ -365,6 +377,7 @@
     "gap": "Gap",
     "taux_presence": "Taux de présence relatif"
   },
+  
   "recherche": {
     "rechercher": "Rechercher ",
 
@@ -383,10 +396,29 @@
     "departement": "un département",
     "commune": "une commune",
     "besoin_formation_predefini":"un besoin de formation",
-    "etablissement":"un établissement"
+    "etablissement":"un établissement",
+
+    "utilisateur":"un utilisateur",
+    "stagiaire":"un stagiaire",
+    "chercheur":"un chercheur",
+
+    "pas_de_resultats":"Aucun résultat"
     
   },
+
+  "button":{
+    "ajouter_utilisateur":"Ajouter un utilisateur",
+    "ajouter_stagiaire":"Ajouter un stagiaire",
+    "ajouter_chercheur":"Ajouter un chercheur"
+  },
+
+  "actions":{
+    "exporter":"Exporter au format",
+    "importer":"Import au format"
+  },
+  
   "boutton": {
+    
     "cap_visage":"Capturer mon visage",
     "ree_capture":"Réessayer la capture",
     "val_en_cours":"Validation en cours...",
@@ -439,10 +471,12 @@
     "reinit_pass": "Réinitialiser le mot de passe",
     "generer_qr":"Générer le QR Code"
   },
+ 
   "select_par_defaut": {
     "selectionnez": "Sélectionnez ",
     "grade": "un grade",
     "etat": "un état",
+    "option":"une option",
     "categorie_professionnelle": "une catégorie professionnelle",
     "fonction": "une fonction",
     "service": "un service",
@@ -451,9 +485,11 @@
     "commune": "une commune",
     "famille_metier":"une famille de métier",
     "structure":"une structure",
-    "besoin_de_formation":"un besoin de formation"
+    "besoin_de_formation":"un besoin de formation",
+    "poste_de_travail":"un poste de travail"
 
   },
+  
   "filtre": {
     "filtrer": "Filtrer",
     "departement": "Filtrer la liste des départements suivant :",
@@ -465,6 +501,7 @@
     
     
   },
+ 
   "form_save": {
     "ajouter":"Ajouter ",
     "enregistrer": "Enregistrer ",
@@ -482,7 +519,9 @@
 
     "famille_metier":"une famille de métier",
     "axes_strategique":"un axe stratégique",
-    "competence":"une compétence"
+    "competence":"une compétence",
+
+    "utilisateur":"un utilisateur"
 
   },
 
@@ -501,7 +540,9 @@
 
     "famille_metier":"de la famille de métier",
     "axes_strategique":"de l'axe stratégique",
-    "competence":"d'une compétence"
+    "competence":"d'une compétence",
+
+    "utilisateur":"de l'utilisateur"
     
   },
   "form_delete": {
@@ -521,7 +562,9 @@
 
     "famille_metier":"de la famille de métier",
     "axes_strategique":"de l'axe stratégique",
-    "competence":"d'une compétence"
+    "competence":"d'une compétence",
+
+    "utilisateur":"de l'utilisateur"
   },
   "error": {
     "text_fr":"Le champ texte en français est obligatoire.",

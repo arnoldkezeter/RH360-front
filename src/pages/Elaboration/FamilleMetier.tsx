@@ -6,9 +6,9 @@ import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/familleMetierSlice";
 import { getFamilleMetiers } from "../../services/familleMetierAPI";
-import Table from "../../components/Tables/TableFamilleMetier/Table";
-import FormCreateUpdate from "../../components/Modals/ModalFamilleMetier/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalFamilleMetier/FormDelete";
+import Table from "../../components/Tables/Elaboration/TableFamilleMetier/Table";
+import FormCreateUpdate from "../../components/Modals/Elaboration/ModalFamilleMetier/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Elaboration/ModalFamilleMetier/FormDelete";
 
 
 

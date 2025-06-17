@@ -1,68 +1,205 @@
 import { useEffect, useState } from "react";
-import Breadcrumb from "../../components/Breadcrumb";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
-import HeaderPage from "../../components/HeaderPage";
 import { useHeader } from "../../components/Context/HeaderConfig";
 import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
+import Table from "../../components/Tables/Utilisateur/TableUtilisateur/Table";
 
-
-
+import { 
+    setErrorPageUtilisateur, 
+    setUtilisateurs, 
+    setUtilisateursLoading 
+} from "../../_redux/features/utilisateurs/utilisateurSlice";
+import { setErrorPageService, setServices } from "../../_redux/features/parametres/serviceSlice";
+import { setErrorPageStructure, setStructures } from "../../_redux/features/parametres/strucutureSlice";
+import { roles } from "../../config";
+import FormDelete from "../../components/Modals/Utilisateur/ModalUtilisateur/FormDelete";
+import { setShowModal } from "../../_redux/features/setting";
+import { useFetchData } from "../../hooks/fechDataOptions";
+import { getUtilisateursByFiltres } from "../../services/utilisateurs/utilisateurAPI";
+import { getStructuresForDropDown } from "../../services/settings/structureAPI";
+import { getServicesForDropDownByStructure } from "../../services/settings/serviceAPI";
+import FormCreateUpdate from "../../components/Modals/Utilisateur/ModalUtilisateur/FormCreateUpdate";
 
 const Utilisateurs = () => {
-    const [selectedUtilisateur, setSelectedUtilisateur] = useState<Utilisateur | null>(null);
-
-    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
-    const [currentPage, setCurrentPage] = useState<number>(1);   
-    const {t}=useTranslation();    
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+    const fetchData = useFetchData();
+
+    const lang = useSelector((state: RootState) => state.setting.language);
+    const { data: { utilisateurs } } = useSelector((state: RootState) => state.utilisateurSlice);
+    const { data: { structures } } = useSelector((state: RootState) => state.structureSlice);
+    const { data: { services } } = useSelector((state: RootState) => state.serviceSlice);
+
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [currentStructure, setCurrentStructure] = useState<Structure | undefined>();
+    const [currentService, setCurrentService] = useState<Service | undefined>();
+    const [currentRole, setCurrentRole] = useState<string | undefined>();
+    const [resetFilters, setResetFilters] = useState<boolean>(true);
+    const [selectedUtilisateur, setSelectedUtilisateur] = useState<Utilisateur | null>(null);
 
     const { setHeaderConfig } = useHeader();
 
-    // Fonctions spécifiques aux utilisateurs
-    const handleAddUser = () => {
-        console.log('Ajout d\'un nouvel utilisateur');
-        // Logique d'ajout d'utilisateur
-    };
+    // Configure le header
+    useEffect(() => {
+        setHeaderConfig({
+            title: t('sub_menu.utilisateurs'),
+            showAddButton: true,
+            exportOptions: ['PDF', 'Excel'],
+            onAdd: () => {setSelectedUtilisateur(null);dispatch(setShowModal())},
+            onExport: handleExportUsers,
+        });
+    }, [t]);
 
     const handleExportUsers = (format: string) => {
         console.log(`Export des utilisateurs en ${format}`);
-        // Logique d'export spécifique aux utilisateurs
-        switch(format) {
-        case 'CSV':
-            // Export CSV des utilisateurs
-            break;
-        case 'Excel':
-            // Export Excel des utilisateurs
-            break;
-        case 'PDF':
-            // Export PDF des utilisateurs
-            break;
-        }
+        // Implémentez ici la logique d'export
     };
 
-
+    // Charge les structures
     useEffect(() => {
-        setHeaderConfig({
-        title: 'Utilisations',
-        showAddButton: true,
-        exportOptions: ['PDF', 'Excel'],
-        onAdd: handleAddUser,
-        onExport: handleExportUsers,
+        fetchData({
+            apiFunction: getStructuresForDropDown,
+            params: { lang },
+            onSuccess: (data) => dispatch(setStructures(data)),
+            onError: () => {
+                dispatch(setErrorPageStructure(t('message.erreur')));
+            },
         });
+        
+    }, [fetchData, lang, dispatch]);
 
-       
-    }, []);
+    // Charge les services pour une structure spécifique
+    useEffect(() => {
+        if (!currentStructure || !currentStructure._id) return;
 
-    
+        fetchData({
+            apiFunction: getServicesForDropDownByStructure,
+            params: { lang, structureId: currentStructure._id },
+            onSuccess: (data) => {
+                dispatch(setServices(data));
+                // Définir le premier service comme service courant
+                if (data.services?.length > 0) {
+                    setCurrentService(data.services[0]);
+                } else {
+                    setCurrentService(undefined);
+                }
+                
+            },
+             onError: () => {
+                dispatch(setErrorPageService(t('message.erreur')));
+            },
+        });
+    }, [fetchData, currentStructure, lang, dispatch]);
+
+
+    // Charge les utilisateurs en fonction des filtres
+    useEffect(() => {
+    // Cas : filtre sur service demandé explicitement mais service = undefined
+    // => on vide la liste sans appel API
+    if (!resetFilters && !currentRole && currentService === undefined) {
+        dispatch(setUtilisateurs({
+            utilisateurs: [],
+            currentPage: 0,
+            totalItems: 0,
+            totalPages: 0,
+            pageSize: 0,
+        }));
+        return;
+    }
+
+    // Cas où on ne filtre pas (pas de service, pas de role, pas resetFilters)
+    if (
+        (!currentService && !currentRole && !resetFilters) ||
+        (services.length === 0 && roles.length === 0 && !resetFilters)
+    ) return;
+
+    fetchData({
+        apiFunction: getUtilisateursByFiltres,
+        params: {
+            page: currentPage,
+            service: currentService?._id,
+            role: currentRole,
+            lang,
+        },
+        onSuccess: (data) => {
+            dispatch(setUtilisateurs(data || {
+                utilisateurs: [],
+                currentPage: 0,
+                totalItems: 0,
+                totalPages: 0,
+                pageSize: 0,
+            }));
+        },
+        onError: () => {
+            dispatch(setErrorPageUtilisateur(t('message.erreur')));
+        },
+        onLoading: (isLoading) => {
+            dispatch(setUtilisateursLoading(isLoading));
+        },
+    });
+    }, [currentPage, currentService, currentRole, resetFilters, lang, dispatch, services, roles, fetchData, t]);
+
+
+
+    // Handlers pour les filtres
+    const handlePageChange = (page: number) => setCurrentPage(page);
+
+    const handleStructureChange = (structure: Structure) => {
+        setCurrentStructure(structure);
+        setCurrentService(undefined);
+        setCurrentRole(undefined);
+        setResetFilters(false);
+    };
+
+    const handleServiceChange = (service: Service) => {
+        setCurrentService(service);
+        setCurrentRole(undefined);
+        setResetFilters(false);
+    };
+
+    const handleRoleChange = (role: string) => {
+        setCurrentRole(role);
+        setCurrentStructure(undefined);
+        setCurrentService(undefined);
+        setResetFilters(false);
+    };
+
+    const handleResetFilters = () => {
+        setResetFilters(true);
+        setCurrentStructure(undefined);
+        setCurrentRole(undefined);
+        setCurrentService(undefined);
+    };
+
     return (
         <>
-            <BreadcrumbPageDescription pageDescription={t('description.utilisateur')} titleColor="text-gray-900" pageName={t('sub_menu.utilisateurs')}/>
+            <BreadcrumbPageDescription 
+                pageDescription={t('page_description.utilisateur')} 
+                titleColor="text-[#1e3a8a]" 
+                pageName={t('sub_menu.gerer_utilisateurs')} 
+            />
+            <Table
+                data={utilisateurs}
+                structures={structures}
+                services={services}
+                currentService={currentService}
+                currentStructure={currentStructure}
+                currentRole={currentRole}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                onServiceChange={handleServiceChange}
+                onStructureChange={handleStructureChange}
+                onRoleChange={handleRoleChange}
+                onResetFilters={handleResetFilters}
+                onEdit={setSelectedUtilisateur} 
+            />
+            <FormCreateUpdate utilisateur={selectedUtilisateur} />
+            <FormDelete utilisateur={selectedUtilisateur} />
         </>
     );
 };
-
 
 export default Utilisateurs;

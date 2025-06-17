@@ -1,20 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user_slice.tsx";
 import settingReducer from "./features/setting.tsx";
-import structureReducer from "./features/settings/strucutureSlice.tsx";
-import serviceReducer from "./features/settings/serviceSlice.tsx";
-import categorieProfessionnelleReducer from "./features/settings/categorieProfessionnelleSlice.tsx";
-import besoinFormationPredefiniReducer from "./features/settings/besoinFormationPredefini.tsx";
-import etablissementReducer from "./features/settings/etablissementSlice.tsx";
-import gradeReducer from "./features/settings/gradeSlice.tsx";
-import posteDeTravailReducer from "./features/settings/posteDeTravailSlice.tsx";
-import regionReducer from "./features/settings/regionSlice.tsx";
-import departementReducer from "./features/settings/departementSlice.tsx";
-import communeeReducer from "./features/settings/communeSlice.tsx";
-import taxeReducer from "./features/settings/taxeSlice.tsx";
+import structureReducer from "./features/parametres/strucutureSlice.tsx";
+import serviceReducer from "./features/parametres/serviceSlice.tsx";
+import categorieProfessionnelleReducer from "./features/parametres/categorieProfessionnelleSlice.tsx";
+import besoinFormationPredefiniReducer from "./features/parametres/besoinFormationPredefini.tsx";
+import etablissementReducer from "./features/parametres/etablissementSlice.tsx";
+import gradeReducer from "./features/parametres/gradeSlice.tsx";
+import posteDeTravailReducer from "./features/parametres/posteDeTravailSlice.tsx";
+import regionReducer from "./features/parametres/regionSlice.tsx";
+import departementReducer from "./features/parametres/departementSlice.tsx";
+import communeeReducer from "./features/parametres/communeSlice.tsx";
+import taxeReducer from "./features/parametres/taxeSlice.tsx";
 import familleMetierReducer from "./features/familleMetierSlice.tsx";
 import competenceReducer from "./features/competenceSlice.tsx";
 import axeStrategiqueReducer from "./features/axeStrategiqueSlice.tsx";
+import utilisateurReducer from "./features/utilisateurs/utilisateurSlice.tsx";
 
 
 const store = configureStore({
@@ -34,7 +35,8 @@ const store = configureStore({
     besoinFormationPredefiniSlice:besoinFormationPredefiniReducer,
     familleMetierSlice:familleMetierReducer,
     competenceSlice:competenceReducer,
-    axeStrategiqueSlice:axeStrategiqueReducer
+    axeStrategiqueSlice:axeStrategiqueReducer,
+    utilisateurSlice:utilisateurReducer
   }
 });
 

@@ -26,7 +26,7 @@ const DropdownUser = () => {
   const roles = config.roles;
 
   const userState = useSelector((state: RootState) => state.user);
-
+  console.log(userState)
   const user = { nom_et_prenom: `${userState.nom + ' ' + userState.prenom}`, role: userState.role };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -85,8 +85,8 @@ const DropdownUser = () => {
 
         <div className="h-10 w-10 rounded-full overflow-hidden">
           {
-            userState.photo_profil !== null && userState.photo_profil !== '' ?
-              <img className="w-full h-full object-cover" src={serveurUrl + userState.photo_profil} alt={userState.nom} />
+            userState.photoDeProfil !== null && userState.photoDeProfil !== '' ?
+              <img className="w-full h-full object-cover" src={serveurUrl + userState.photoDeProfil} alt={userState.nom} />
               :
               <img src={
                 user.role === roles.superAdmin ? ImageAdmin :

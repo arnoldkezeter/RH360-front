@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 
-import Table from "../../components/Tables/TableBesoinFormationPredefini/Table";
-import FormCreateUpdate from "../../components/Modals/ModalBesoinFormationPredefini/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalBesoinFormationPredefini/FormDelete";
-import { setBesoinFormationPredefiniLoading, setBesoinFormationPredefinis, setErrorPageBesoinFormationPredefini } from "../../_redux/features/settings/besoinFormationPredefini";
+import Table from "../../components/Tables/Parametres/TableBesoinFormationPredefini/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalBesoinFormationPredefini/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalBesoinFormationPredefini/FormDelete";
+import { setBesoinFormationPredefiniLoading, setBesoinFormationPredefinis, setErrorPageBesoinFormationPredefini } from "../../_redux/features/parametres/besoinFormationPredefini";
 import { getBesoinFormationPredefinis } from "../../services/settings/besoinFormationPredefiniAPI";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -23,7 +24,15 @@ const BesoinFormationPredefinis = () => {
 
    
     const {t}=useTranslation();
-    
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
     
     const dispatch = useDispatch();
     useEffect(() => {

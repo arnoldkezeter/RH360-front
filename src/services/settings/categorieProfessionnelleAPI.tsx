@@ -171,3 +171,26 @@ export async function getCategorieProfessionnellesByGrade({page, gradeId, lang }
     }
 }
 
+export async function getCategorieProfessionnellesForDropDown({gradeId, lang }: {gradeId:string, lang:string }): Promise<CategorieProfessionnelleReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown/grade/${gradeId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const communes: CategorieProfessionnelleReturnGetType = response.data.data;
+        
+        return communes;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+

@@ -171,3 +171,50 @@ export async function getServicesBystructure({page, structureId, lang }: {page:n
     }
 }
 
+export async function getServicesForDropDown({lang }: {lang:string }): Promise<ServiceReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown/all`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const services: ServiceReturnGetType = response.data.data;
+        
+        return services;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
+export async function getServicesForDropDownByStructure({structureId,lang }: {structureId:string, lang:string }): Promise<ServiceReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown/structure/${structureId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const services: ServiceReturnGetType = response.data.data;
+        
+        return services;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
+

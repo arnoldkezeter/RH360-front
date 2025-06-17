@@ -10,15 +10,15 @@ const DashBoardAmin = () => {
     
     const { setHeaderConfig } = useHeader();
     
-        useEffect(() => {
-            setHeaderConfig({
-            title: undefined,
-            showAddButton: false,
-            exportOptions: [],
-            importOptions: [],
-            });
-        }, []);
-    
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
+
     return (
         <>
             

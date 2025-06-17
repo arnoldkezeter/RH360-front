@@ -9,9 +9,9 @@ import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers }
 import { getFamillesMetierForDropDown } from "../../services/familleMetierAPI";
 import { setCompetenceLoading, setCompetences, setErrorPageCompetence } from "../../_redux/features/competenceSlice";
 import { getCompetencesByFamilleMetier } from "../../services/competenceAPI";
-import Table from "../../components/Tables/TableCompetence/Table";
-import FormCreateUpdate from "../../components/Modals/ModalCompetence/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalCompetence/FormDelete";
+import Table from "../../components/Tables/Elaboration/TableCompetence/Table";
+import FormCreateUpdate from "../../components/Modals/Elaboration/ModalCompetence/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Elaboration/ModalCompetence/FormDelete";
 
 
 

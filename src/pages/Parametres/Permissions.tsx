@@ -6,9 +6,9 @@ import { RootState } from "../../_redux/store";
 // import { setPermissionLoading, setPermissions, setErrorPagePermission } from "../../_redux/features/permission_slice";
 // import { getPermissionsWithPagination } from "../../api/api_permission";
 import createToast from "../../hooks/toastify";
-import FormCreateUpdate from "../../components/Modals/ModalPermission/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalPermission/FormDelete";
-import Table from "../../components/Tables/TableStructure/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalPermission/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalPermission/FormDelete";
+import Table from "../../components/Tables/Parametres/TableStructure/Table";
 
 
 

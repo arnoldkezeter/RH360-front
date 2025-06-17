@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import {getPosteDeTravailsByFamilleMetier } from "../../services/settings/posteDeTravailAPI";
-import Table from "../../components/Tables/TablePosteDeTravail/Table";
-import FormCreateUpdate from "../../components/Modals/ModalPosteDeTravail/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalPosteDeTravail/FormDelete";
-import { setPosteDeTravailLoading, setPosteDeTravails, setErrorPagePosteDeTravail } from "../../_redux/features/settings/posteDeTravailSlice";
+import Table from "../../components/Tables/Parametres/TablePosteDeTravail/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalPosteDeTravail/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalPosteDeTravail/FormDelete";
+import { setPosteDeTravailLoading, setPosteDeTravails, setErrorPagePosteDeTravail } from "../../_redux/features/parametres/posteDeTravailSlice";
 import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/familleMetierSlice";
 import { getFamillesMetierForDropDown } from "../../services/familleMetierAPI";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -27,6 +28,15 @@ const PosteDeTravails = () => {
    
     const {t}=useTranslation();
     const dispatch = useDispatch();
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
    
     useEffect(() => {
         const fetchFamilleMetiers = async () => {

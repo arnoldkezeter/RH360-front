@@ -4,6 +4,7 @@ import DropdownItem from './DropDown/DropdownItem';
 import { useHeader } from './Context/HeaderConfig';
 import Button from './Tables/common/Button';
 import { useTranslation } from 'react-i18next';
+import CustomDropDown2 from './DropDown/CustomDropDown2';
 
 const HeaderPage: React.FC = () => {
   const { t } = useTranslation();    
@@ -18,7 +19,8 @@ const HeaderPage: React.FC = () => {
     }
   };
 
-  const handleExport = (option: string) => {
+  const handleExport = (option: string | undefined) => {
+    if(!option)return;
     if (config.onExport) {
       config.onExport(option);
     } else {
@@ -26,7 +28,8 @@ const HeaderPage: React.FC = () => {
     }
   };
 
-  const handleImport = (option: string) => {
+  const handleImport = (option: string | undefined) => {
+    if(!option) return
     if (config.onImport) {
       config.onImport(option);
     } else {
@@ -65,23 +68,43 @@ const HeaderPage: React.FC = () => {
                 )}
 
                 {config.exportOptions && config.exportOptions.length > 0 && (
-                  <Dropdown defaultText={t('actions.exporter') || 'Exporter'}>
-                    {config.exportOptions.map((option) => (
-                      <DropdownItem key={option} onClick={() => handleExport(option)}>
-                        {option}
-                      </DropdownItem>
-                    ))}
-                  </Dropdown>
+                  // <Dropdown defaultText={t('actions.exporter') || 'Exporter'}>
+                  //   {config.exportOptions.map((option) => (
+                  //     <DropdownItem key={option} onClick={() => handleExport(option)}>
+                  //       {option}
+                  //     </DropdownItem>
+                  //   ))}
+                  // </Dropdown>
+                   <CustomDropDown2<string>
+                        title={""}
+                        selectedItem={undefined}
+                        items={config.exportOptions}
+                        defaultValue={undefined}
+                        displayProperty={(option: string) => option}
+                        onSelect={handleExport}
+                        placeholder={t('actions.exporter')}
+                        searchItem={false}
+                    />
                 )}
 
                 {config.importOptions && config.importOptions.length > 0 && (
-                  <Dropdown defaultText={t('actions.importer') || 'Importer'}>
-                    {config.importOptions.map((option) => (
-                      <DropdownItem key={option} onClick={() => handleImport(option)}>
-                        {option}
-                      </DropdownItem>
-                    ))}
-                  </Dropdown>
+                  // <Dropdown defaultText={t('actions.importer') || 'Importer'}>
+                  //   {config.importOptions.map((option) => (
+                  //     <DropdownItem key={option} onClick={() => handleImport(option)}>
+                  //       {option}
+                  //     </DropdownItem>
+                  //   ))}
+                  // </Dropdown>
+                  <CustomDropDown2<string>
+                        title={""}
+                        selectedItem={undefined}
+                        items={config.importOptions}
+                        defaultValue={undefined}
+                        displayProperty={(option: string) => option}
+                        onSelect={handleImport}
+                        placeholder={t('actions.importer')}
+                        searchItem={false}
+                    />
                 )}
               </div>
             )}

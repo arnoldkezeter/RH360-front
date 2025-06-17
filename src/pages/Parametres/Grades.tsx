@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import { getGrades } from "../../services/settings/gradeAPI";
-import FormCreateUpdate from "../../components/Modals/ModalGrade/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalGrade/FormDelete";
-import { setErrorPageGrade, setGradeLoading, setGrades } from "../../_redux/features/settings/gradeSlice";
-import Table from "../../components/Tables/TableGrade/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalGrade/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalGrade/FormDelete";
+import { setErrorPageGrade, setGradeLoading, setGrades } from "../../_redux/features/parametres/gradeSlice";
+import Table from "../../components/Tables/Parametres/TableGrade/Table";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -23,7 +24,15 @@ const Grades = () => {
    
     const {t}=useTranslation();
     
-    
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
     const dispatch = useDispatch();
     useEffect(() => {
         const fetchGrades = async () => {

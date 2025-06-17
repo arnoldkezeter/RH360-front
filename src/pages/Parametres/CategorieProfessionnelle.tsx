@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 import {getCategorieProfessionnellesByGrade } from "../../services/settings/categorieProfessionnelleAPI";
-import Table from "../../components/Tables/TableCategorieProfessionnelle/Table";
-import FormCreateUpdate from "../../components/Modals/ModalCategorieProfessionnelle/FormCreateUpdate";
-import FormDelete from "../../components/Modals/ModalCategorieProfessionnelle/FormDelete";
-import { setErrorPageGrade, setGradeLoading, setGrades } from "../../_redux/features/settings/gradeSlice";
+import Table from "../../components/Tables/Parametres/TableCategorieProfessionnelle/Table";
+import FormCreateUpdate from "../../components/Modals/Parametres/ModalCategorieProfessionnelle/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Parametres/ModalCategorieProfessionnelle/FormDelete";
+import { setErrorPageGrade, setGradeLoading, setGrades } from "../../_redux/features/parametres/gradeSlice";
 import {  getGradesForDropDown } from "../../services/settings/gradeAPI";
-import { setCategorieProfessionnelleLoading, setCategorieProfessionnelles, setErrorPageCategorieProfessionnelle } from "../../_redux/features/settings/categorieProfessionnelleSlice";
+import { setCategorieProfessionnelleLoading, setCategorieProfessionnelles, setErrorPageCategorieProfessionnelle } from "../../_redux/features/parametres/categorieProfessionnelleSlice";
+import { useHeader } from "../../components/Context/HeaderConfig";
 
 
 
@@ -27,6 +28,16 @@ const CategorieProfessionnelles = () => {
    
     const {t}=useTranslation();
     const dispatch = useDispatch();
+
+    const { setHeaderConfig } = useHeader();
+    useEffect(() => {
+        setHeaderConfig({
+        title: undefined,
+        showAddButton: false,
+        exportOptions: [],
+        importOptions: [],
+        });
+    }, []);
    
     useEffect(() => {
         const fetchGrades = async () => {
