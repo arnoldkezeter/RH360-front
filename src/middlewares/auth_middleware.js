@@ -53,7 +53,6 @@ const isUserAuthenticated = async () => {
     }
 
     const isExpired = decodedToken.value.exp < Date.now() / 1000;
-
     if (!isExpired) {
         return {
             value: decodedToken.value,

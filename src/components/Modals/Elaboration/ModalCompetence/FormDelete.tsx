@@ -4,8 +4,8 @@ import { RootState } from '../../../../_redux/store';
 import CustomDialogModal from '../../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { deleteCompetence } from '../../../../services/competenceAPI';
-import { deleteCompetenceSlice } from '../../../../_redux/features/competenceSlice';
+import { deleteCompetence } from '../../../../services/elaborations/competenceAPI';
+import { deleteCompetenceSlice } from '../../../../_redux/features/elaborations/competenceSlice';
 
 
 

@@ -9,7 +9,6 @@ const BodyTable = ({ data, onEdit }: { data?: AxeStrategique[], onEdit: (axeStra
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const dispatch = useDispatch();
     const {t}=useTranslation();
-    const userRole = useSelector((state: RootState) => state.user.role);
     const roles = config.roles;
     return <tbody>
         {data?.map((item, index) => (

@@ -1,12 +1,8 @@
 import { useState } from 'react';
 import Header from '../components/Header/Header';
 import { Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../_redux/store';
-import { config } from '../config';
 import Sidebar from '../components/Sidebar/Sidebar';
 import HeaderPage from '../components/HeaderPage';
-import { HeaderProvider } from '../components/Context/HeaderConfig';
 
 interface LayoutProps {
     isMobileOrTablet: boolean;
@@ -15,8 +11,7 @@ interface LayoutProps {
 const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
     const [sidebarOpen, setSidebarOpen] = useState(isMobileOrTablet);
 
-    const userRole = useSelector((state: RootState) => state.user.role);
-    const roles = config.roles;
+    
 
 
     return (

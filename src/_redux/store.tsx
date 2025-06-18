@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./features/user_slice.tsx";
 import settingReducer from "./features/setting.tsx";
 import structureReducer from "./features/parametres/strucutureSlice.tsx";
 import serviceReducer from "./features/parametres/serviceSlice.tsx";
@@ -12,17 +11,17 @@ import regionReducer from "./features/parametres/regionSlice.tsx";
 import departementReducer from "./features/parametres/departementSlice.tsx";
 import communeeReducer from "./features/parametres/communeSlice.tsx";
 import taxeReducer from "./features/parametres/taxeSlice.tsx";
-import familleMetierReducer from "./features/familleMetierSlice.tsx";
-import competenceReducer from "./features/competenceSlice.tsx";
-import axeStrategiqueReducer from "./features/axeStrategiqueSlice.tsx";
+import familleMetierReducer from "./features/elaborations/familleMetierSlice.tsx";
+import competenceReducer from "./features/elaborations/competenceSlice.tsx";
+import axeStrategiqueReducer from "./features/elaborations/axeStrategiqueSlice.tsx";
 import utilisateurReducer from "./features/utilisateurs/utilisateurSlice.tsx";
 import stagiaireReducer from "./features/stagiaireSlice.tsx";
 import chercheurRededucer from "./features/chercheurSlice.tsx";
+import programmeFormationReducer from "./features/elaborations/programmeFormationSlice.tsx";
 
 
 const store = configureStore({
   reducer: {
-    user: userReducer,
     setting: settingReducer,
     structureSlice:structureReducer,
     gradeSlice:gradeReducer,
@@ -40,7 +39,8 @@ const store = configureStore({
     axeStrategiqueSlice:axeStrategiqueReducer,
     utilisateurSlice:utilisateurReducer,
     stagiaireSlice:stagiaireReducer,
-    chercheurSlice:chercheurRededucer
+    chercheurSlice:chercheurRededucer,
+    programmeFormationSlice:programmeFormationReducer,
   }
 });
 

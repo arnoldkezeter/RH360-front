@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { apiUrl, wstjqer } from '../config.js';
+import { apiUrl, wstjqer } from '../../config.js';
 
 const api = `${apiUrl}/axes-strategiques`;
 

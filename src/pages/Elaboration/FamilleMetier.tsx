@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
-import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/familleMetierSlice";
-import { getFamilleMetiers } from "../../services/familleMetierAPI";
+import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/elaborations/familleMetierSlice";
+import { getFamilleMetiers } from "../../services/elaborations/familleMetierAPI";
 import Table from "../../components/Tables/Elaboration/TableFamilleMetier/Table";
 import FormCreateUpdate from "../../components/Modals/Elaboration/ModalFamilleMetier/FormCreateUpdate";
 import FormDelete from "../../components/Modals/Elaboration/ModalFamilleMetier/FormDelete";
@@ -30,7 +30,6 @@ const FamilleMetiers = () => {
             dispatch(setFamilleMetierLoading(true));
             try {
                 const fetchedFamilleMetiers = await getFamilleMetiers({ page: currentPage, lang });
-                console.log(fetchedFamilleMetiers)
                 if (fetchedFamilleMetiers) {
                     dispatch(setFamilleMetiers(fetchedFamilleMetiers));
                 } else {

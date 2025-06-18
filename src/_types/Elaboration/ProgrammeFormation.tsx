@@ -1,7 +1,18 @@
+
+interface RepartitionProgramme{
+    programmeId: string,
+    annee: number,
+    nombreFormationPrevue: number,
+    nombreFormationExecutee: number
+}
 interface ProgrammeFormation{
+    _id?:string
     annee: number;
     titreFr?: string;
     titreEn?: string;
+    nombreFormationPrevue?:number;
+    nombreFormationExecutee?:number;
+    etat?:string;
     creePar:Utilisateur;
 }
 
@@ -33,6 +44,7 @@ interface UpdateRolePayload {
     id: string; // ID de l'événement à mettre à jour
     programmeFormationData: Partial<ProgrammeFormation>; // Données mises à jour de l'événement
 }
+
 interface ProgrammeFormationReturnGetType {
     programmeFormations: ProgrammeFormation[];
     currentPage: number;

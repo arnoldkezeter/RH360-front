@@ -1,15 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
-import { apiUrl, wstjqer } from '../config.js';
+import { apiUrl, wstjqer } from '../../config.js';
 
-const api = `${apiUrl}/familles-de-metier`;
+const api = `${apiUrl}/programmes-de-formation`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createFamilleMetier({nomFr, nomEn, descriptionFr, descriptionEn }: FamilleMetier, lang:string): Promise<ReponseApiPros> {
+export async function createProgrammeFormation({annee, titreFr, titreEn, creePar}: ProgrammeFormation, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr, nomEn, descriptionFr, descriptionEn },
+            {annee, titreFr, titreEn, creePar},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,16 +21,16 @@ export async function createFamilleMetier({nomFr, nomEn, descriptionFr, descript
 
         return response.data;
     } catch (error) {
-        console.error('Error creating famillemetier:', error);
+        console.error('Error creating programmeformation:', error);
         throw error;
     }
 }
 
-export async function updateFamilleMetier({ _id, nomFr, nomEn, descriptionFr, descriptionEn }: FamilleMetier, lang:string): Promise<ReponseApiPros> {
+export async function updateProgrammeFormation({ _id, annee, titreFr, titreEn, creePar }: ProgrammeFormation, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {nomFr, nomEn,  descriptionFr, descriptionEn },
+            {annee, titreFr, titreEn, creePar},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,15 +42,15 @@ export async function updateFamilleMetier({ _id, nomFr, nomEn, descriptionFr, de
 
         return response.data;
     } catch (error) {
-        console.error('Error updating famillemetier:', error);
+        console.error('Error updating programmeformation:', error);
         throw error;
     }
 }
 
-export async function deleteFamilleMetier(famillemetierId: string, lang:string): Promise<ReponseApiPros> {
+export async function deleteProgrammeFormation(programmeformationId: string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.delete(
-            `${api}/${famillemetierId}`,
+            `${api}/${programmeformationId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,16 +62,16 @@ export async function deleteFamilleMetier(famillemetierId: string, lang:string):
 
         return response.data;
     } catch (error) {
-        console.error('Error deleting famillemetier:', error);
+        console.error('Error deleting programmeformation:', error);
         throw error;
     }
 }
 
-export async function getFamilleMetiers({page, lang }: {page: number, lang:string }): Promise<FamilleMetierReturnGetType> {
+export async function getProgrammeFormations({page, lang }: {page: number, lang:string }): Promise<ProgrammeFormationReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/`,
+            `${api}/programmes/stats`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,16 +86,16 @@ export async function getFamilleMetiers({page, lang }: {page: number, lang:strin
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const famillemetiers: FamilleMetierReturnGetType = response.data.data;
+        const programmeFormations: ProgrammeFormationReturnGetType = response.data.data;
         
-        return famillemetiers;
+        return programmeFormations;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;
     }
 }
 
-export async function getFamilleMetier({id, lang }: {id: string, lang:string }): Promise<FamilleMetierReturnGetType> {
+export async function getProgrammeFormation({id, lang }: {id: string, lang:string }): Promise<ProgrammeFormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/${id}`,
@@ -109,60 +109,74 @@ export async function getFamilleMetier({id, lang }: {id: string, lang:string }):
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const famillemetiers: FamilleMetierReturnGetType = response.data.data;
+        const programmeformations: ProgrammeFormationReturnGetType = response.data.data;
         
-        return famillemetiers;
+        return programmeformations;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;
     }
 }
 
-export async function searchFamilleMetier({ searchString, lang }: { lang:string, searchString: string}): Promise<FamilleMetierReturnGetType> {
-   
+
+export async function getRepartitionFormationsParProgramme(): Promise<RepartitionProgramme[]> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/search/by-name`,
+            `${api}/formations/repartition-par-programme`,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'accept-language':lang,
                     'authorization': token,
                 },
-                params:{
-                    nom:searchString
-                }
-            },
-        );
-        const famillemetiers: FamilleMetierReturnGetType = response.data.data;
-
-        return famillemetiers;
-    } catch (error) {
-        // console.error('Error getting all settings:', error);
-        throw error;
-    }
-}
-
-
-export async function getFamillesMetierForDropDown({lang }: {lang:string }): Promise<FamilleMetierReturnGetType> {
-    try {
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/dropdown/all`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language':lang,
-                    'authorization': token,
-                }
             },
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const famillesMetier: FamilleMetierReturnGetType = response.data.data;
-        
-        return famillesMetier;
+        return response.data.data;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;
     }
 }
+
+export async function getNombreProgrammesActifs (): Promise<number> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/programmes/actifs/total`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': token,
+                },
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        return response.data.data;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
+export async function getPourcentageExecutionProgrammes (): Promise<number> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/programmes/pourcentage-execution-global`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': token,
+                },
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        return response.data.data;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
+

@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ErrorMessage, Label } from '../../../ui/Label';
 import Input from '../../../ui/input';
 import createToast from '../../../../hooks/toastify';
-import { createAxeStrategique, updateAxeStrategique } from '../../../../services/axeStrategiqueAPI';
-import { createAxeStrategiqueSlice, updateAxeStrategiqueSlice } from '../../../../_redux/features/axeStrategiqueSlice';
+import { createAxeStrategique, updateAxeStrategique } from '../../../../services/elaborations/axeStrategiqueAPI';
+import { createAxeStrategiqueSlice, updateAxeStrategiqueSlice } from '../../../../_redux/features/elaborations/axeStrategiqueSlice';
 
 
 function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique | null }) {

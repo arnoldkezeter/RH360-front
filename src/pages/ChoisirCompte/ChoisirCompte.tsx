@@ -5,7 +5,6 @@ import { logoutFunction } from '../../services/auth/logout';
 import ButtonCustom from '../../components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { setUser, updateUser } from '../../_redux/features/user_slice';
 import createToast from '../../hooks/toastify';
 import { signInApi } from '../../services/auth/api_signin';
 import { reJwtApi } from '../../services/auth/api_re_jwt';
@@ -21,8 +20,8 @@ function ChoisirCompte() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const stateUser = useSelector((state: RootState) => state.user)
-    const userRoles = stateUser.roles.length > 0 ? stateUser.roles : []; //
+    const stateUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur)
+    // const userRoles = stateUser.roles.length > 0 ? stateUser.roles : []; //
 
     const [selectRole, setSelectRole] = useState<string>('');
 
@@ -65,14 +64,14 @@ function ChoisirCompte() {
                 <div>
                     <select id="role" value={selectRole} onChange={handleSelectRole} className="px-2 py-2 dark:bg-boxdark   lg:w-60 rounded border border-[#61708f88] text-lg lg:text-lg">
                         <option className='h-60' value="" disabled hidden>Entrez votre choix</option>
-                        {userRoles.map((role: string, index: number) => (
+                        {/* {userRoles.map((role: string, index: number) => (
                             <option className='text-sm lg:text-lg' key={index} value={role}>{t(role)}</option>
-                        ))}
+                        ))} */}
                     </select>
                 </div>
 
 
-                <div className='w-60'>
+                {/* <div className='w-60'>
 
                     {
                         pageIsLoading ? <Loading /> :
@@ -131,7 +130,7 @@ function ChoisirCompte() {
                             onClick={() => { logoutFunction() }}
                         />
                     </div>
-                </div>
+                </div> */}
             </div>
 
         </div>

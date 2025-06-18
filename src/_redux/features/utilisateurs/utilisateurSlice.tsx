@@ -10,6 +10,16 @@ const initialState: UtilisateurInitialData = {
         totalPages: 0,
         pageSize: 0,
     },
+    utilisateur:{
+        _id: "",
+        role: "",
+        nom: "",
+        prenom: "",
+        email: "",
+        photoDeProfil: "",
+        genre: "",
+        actif: false
+    },
     pageIsLoading: false,
     pageError: null,
 };
@@ -47,6 +57,14 @@ const utilisateurSlice = createSlice({
         },
 
         setUser: (state, action: PayloadAction<Utilisateur>) => {
+            state.utilisateur = action.payload
+        },
+
+        setRole: (state, action: PayloadAction<string>) => {
+            state.utilisateur.role = action.payload;
+        },
+        // Définir l'utilisateur avec des propriétés minimales
+        setMinimumUser: (state, action: PayloadAction<MinUtilisateurState>) => {
             return { ...state, ...action.payload };
         },
 
@@ -59,6 +77,9 @@ export const {
     setUtilisateursLoading,
     setErrorPageUtilisateur,
     setUtilisateurs,
+    setUser,
+    setMinimumUser,
+    setRole,
     createUtilisateurSlice,
     updateUtilisateurSlice,
     deleteUtilisateurSlice,

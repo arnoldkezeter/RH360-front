@@ -9,8 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../_redux/store";
 import { useTranslation } from 'react-i18next';
 import { validateEmail, validatePassword } from "../../../fonctions/fonction";
-import { setUser } from "../../../_redux/features/user_slice";
+// import { setUser } from "../../../_redux/features/user_slice";
 import { useNavigate } from 'react-router-dom';
+import { setUser } from "../../../_redux/features/utilisateurs/utilisateurSlice";
 
 function RightSectionSigin() {
 
@@ -50,7 +51,6 @@ function RightSectionSigin() {
             var signUpResult = null;
             try {
                 signUpResult = await signInApi({ email: email, motDePasse: password, lang:lang });
-                console.log(signUpResult);
                 if (signUpResult.success) {
                     if (signUpResult.message !== null && signUpResult.message !== undefined) {
                         createToast((signUpResult.message as any), '', 0)
@@ -64,8 +64,7 @@ function RightSectionSigin() {
                 if (signUpResult?.success === true) {
 
                     const userData = signUpResult.data as Utilisateur;
-
-                    dispatch(setUser(userData))
+                    
 
                     if (userData.role) {
                         window.location.href = '/';

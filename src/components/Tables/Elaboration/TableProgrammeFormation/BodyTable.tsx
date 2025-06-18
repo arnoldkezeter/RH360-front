@@ -5,7 +5,7 @@ import { RootState } from "../../../../_redux/store";
 import { useTranslation } from "react-i18next";
 import { config } from "../../../../config";
 
-const BodyTable = ({ data, onEdit }: { data?: FamilleMetier[], onEdit: (familleMetier: FamilleMetier) => void }) => {
+const BodyTable = ({ data, onEdit }: { data?: ProgrammeFormation[], onEdit: (programmeFormation: ProgrammeFormation) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const dispatch = useDispatch();
     const {t}=useTranslation();
@@ -13,17 +13,29 @@ const BodyTable = ({ data, onEdit }: { data?: FamilleMetier[], onEdit: (familleM
     return <tbody>
         {data?.map((item, index) => (
             <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">
+                {/* index */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 pl-4 md:pl-5 lg:pl-6 xl:pl-5 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell">
                     <h5 className="">{index + 1}</h5>
                 </td>
-                {/* nom */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark ">
-                    <h5>{lang === 'fr' ? item.nomFr : item.nomEn}</h5>
+
+                {/* annee */}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark">
+                    <h5>{item.annee}</h5>
                 </td>
 
-                {/*description*/}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell">
-                    <h5>{lang === 'fr' ? item.descriptionFr : item.descriptionEn}</h5>
+                {/*nombre formation prevu*/}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
+                    <h5>{item?.nombreFormationPrevue || 0}</h5>
+                </td>
+
+                {/* nombre formation exécuté */}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark">
+                    <h5>{item?.nombreFormationExecutee || 0}</h5>
+                </td>
+
+                 {/*etat*/}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
+                    <h5>{item?.etat || ""}</h5>
                 </td>
                 
 

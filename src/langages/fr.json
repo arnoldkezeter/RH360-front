@@ -98,7 +98,8 @@
   "page_description":{
     "utilisateur":"Permet la gestion centralisée de tous les utilisateurs (Ajout, Modification, Suppression)",
     "stagiaire":"Suivre les stagiaires avec une vue d'ensemble de leur affectation",
-    "chercheur":"Suivre les chercheurs avec une vue d'ensemble de leur affectation"
+    "chercheur":"Suivre les chercheurs avec une vue d'ensemble de leur affectation",
+    "programme_formation":"Permettre la création, la gestion et l'organisation des programmes de formation pour répondre aux besoins stratégiques et opérationnels."
   },
 
   "tableau_de_bord": {
@@ -154,6 +155,15 @@
     "etablissement":"Etablissement",
     "filiere":"Filière",
     "domaine_recherche":"Domaine de recherche",
+
+    "formation_prevu":"Formations prévues",
+    "formation_executee":"Formations exécutées",
+    "repartition_formation":"Répartition des formations par programme",
+    "liste_programme":"Liste des programmes de formation",
+    "programme_actif":"Nombre total de programme actif",
+    "taux_execution":"Pourcentage d'exécution global",
+    "formations_prevues":"Formations prévues",
+    "formations_executees":"Formations exécutées",
 
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
@@ -415,7 +425,8 @@
   "button":{
     "ajouter_utilisateur":"Ajouter un utilisateur",
     "ajouter_stagiaire":"Ajouter un stagiaire",
-    "ajouter_chercheur":"Ajouter un chercheur"
+    "ajouter_chercheur":"Ajouter un chercheur",
+    "ajouter_programme_formation":"Nouveau programme"
   },
 
   "actions":{
@@ -529,7 +540,9 @@
 
     "utilisateur":"un utilisateur",
     "stagiaire":"un stagiaire",
-    "chercheur":"un chercheur"
+    "chercheur":"un chercheur",
+
+    "programme_formation":"un programme de formation"
 
   },
 
@@ -552,7 +565,9 @@
 
     "utilisateur":"de l'utilisateur",
     "stagiaire":"du stagiaire",
-    "chercheur":"du chercheur"
+    "chercheur":"du chercheur",
+
+    "programme_formation":"du programme de formation"
     
   },
   "form_delete": {
@@ -576,7 +591,9 @@
 
     "utilisateur":"de l'utilisateur",
     "stagiaire":"du stagiaire",
-    "chercheur":"du chercheur"
+    "chercheur":"du chercheur",
+
+    "programme_formation":"du programme de formation"
   },
   "error": {
     "text_fr":"Le champ texte en français est obligatoire.",

@@ -11,8 +11,8 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../_redux/store";
 import Pagination from "../../../Pagination/Pagination";
 import { config } from "../../../../config";
-import { setErrorPageAxeStrategique, setAxeStrategiqueLoading} from "../../../../_redux/features/axeStrategiqueSlice";
-import { searchAxeStrategique } from "../../../../services/axeStrategiqueAPI";
+import { setErrorPageAxeStrategique, setAxeStrategiqueLoading} from "../../../../_redux/features/elaborations/axeStrategiqueSlice";
+import { searchAxeStrategique } from "../../../../services/elaborations/axeStrategiqueAPI";
 
 interface TableaxeStrategiqueProps {
     data: AxeStrategique[];
@@ -25,7 +25,7 @@ interface TableaxeStrategiqueProps {
 const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableaxeStrategiqueProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.axeStrategiqueSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
     
     const dispatch = useDispatch();

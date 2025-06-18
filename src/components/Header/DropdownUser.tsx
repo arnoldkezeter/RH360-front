@@ -25,8 +25,7 @@ const DropdownUser = () => {
   const dispatch = useDispatch();
   const roles = config.roles;
 
-  const userState = useSelector((state: RootState) => state.user);
-  console.log(userState)
+  const userState = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   const user = { nom_et_prenom: `${userState.nom + ' ' + userState.prenom}`, role: userState.role };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);

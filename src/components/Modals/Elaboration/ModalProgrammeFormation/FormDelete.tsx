@@ -4,11 +4,11 @@ import { RootState } from '../../../../_redux/store';
 import CustomDialogModal from '../../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { deleteAxeStrategique } from '../../../../services/elaborations/axeStrategiqueAPI';
-import { deleteAxeStrategiqueSlice } from '../../../../_redux/features/elaborations/axeStrategiqueSlice';
+import { deleteProgrammeFormationSlice } from '../../../../_redux/features/elaborations/programmeFormationSlice';
+import { deleteProgrammeFormation } from '../../../../services/elaborations/programmeFormationAPI';
 
 
-function FormDelete({ axeStrategique }: { axeStrategique: AxeStrategique | null }) {
+function FormDelete({ programmeFormation, onDelete}: { programmeFormation: ProgrammeFormation | null, onDelete: (programmeId: string) => void;  }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -21,13 +21,14 @@ function FormDelete({ axeStrategique }: { axeStrategique: AxeStrategique | null 
 
     const handleDelete = async () => {
 
-        if (axeStrategique?._id != undefined) {
-            await deleteAxeStrategique(axeStrategique._id, lang).then((e: ReponseApiPros) => {
+        if (programmeFormation?._id != undefined) {
+            await deleteProgrammeFormation(programmeFormation._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
 
-                    if (axeStrategique._id) {
-                        dispatch(deleteAxeStrategiqueSlice({ id: axeStrategique._id }));
+                    if (programmeFormation._id) {
+                        onDelete(programmeFormation._id);
+                        dispatch(deleteProgrammeFormationSlice({ id: programmeFormation._id }));
                     }
 
                     closeModal();
@@ -51,7 +52,7 @@ function FormDelete({ axeStrategique }: { axeStrategique: AxeStrategique | null 
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression') + t('form_delete.axe_strategique')} : {axeStrategique ? (lang == "fr" ? axeStrategique.nomFr : axeStrategique.nomEn) : ""}</h1>
+                <h1>{t('form_delete.suppression') + t('form_delete.programme_formation')} : {programmeFormation ? programmeFormation.annee : ""}</h1>
             </CustomDialogModal>
         </>
     );

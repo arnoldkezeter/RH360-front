@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ErrorMessage, Label } from '../../../ui/Label';
 import Input from '../../../ui/input';
 import createToast from '../../../../hooks/toastify';
-import { createCompetenceSlice, updateCompetenceSlice } from '../../../../_redux/features/competenceSlice';
-import { createCompetence, updateCompetence } from '../../../../services/competenceAPI';
+import { createCompetenceSlice, updateCompetenceSlice } from '../../../../_redux/features/elaborations/competenceSlice';
+import { createCompetence, updateCompetence } from '../../../../services/elaborations/competenceAPI';
 
 
 function ModalCreateUpdate({ competence, onCompetenceUpdated }: { competence: Competence | null, onCompetenceUpdated: () => void; }) {

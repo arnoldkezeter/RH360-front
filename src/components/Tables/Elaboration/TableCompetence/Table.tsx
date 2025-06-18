@@ -11,8 +11,8 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../_redux/store";
 import Pagination from "../../../Pagination/Pagination";
 import { config } from "../../../../config";
-import { searchCompetence } from "../../../../services/competenceAPI";
-import { setErrorPageCompetence, setCompetenceLoading } from "../../../../_redux/features/competenceSlice";
+import { searchCompetence } from "../../../../services/elaborations/competenceAPI";
+import { setErrorPageCompetence, setCompetenceLoading } from "../../../../_redux/features/elaborations/competenceSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import { FaFilter, FaSort } from "react-icons/fa";
 
@@ -30,7 +30,7 @@ interface TableCompetenceProps {
 const Table = ({data, familleMetiers, currentPage, currentFamilleMetier, onPageChange, onFamilleMetierChange, onCreate, onEdit}: TableCompetenceProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.posteDeTavailSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
      const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 

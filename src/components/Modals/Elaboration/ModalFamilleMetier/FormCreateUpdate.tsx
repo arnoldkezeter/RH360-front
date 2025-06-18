@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ErrorMessage, Label } from '../../../ui/Label';
 import Input from '../../../ui/input';
 import createToast from '../../../../hooks/toastify';
-import { createFamilleMetierSlice, updateFamilleMetierSlice } from '../../../../_redux/features/familleMetierSlice';
-import { createFamilleMetier, updateFamilleMetier } from '../../../../services/familleMetierAPI';
+import { createFamilleMetierSlice, updateFamilleMetierSlice } from '../../../../_redux/features/elaborations/familleMetierSlice';
+import { createFamilleMetier, updateFamilleMetier } from '../../../../services/elaborations/familleMetierAPI';
 
 
 function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | null }) {

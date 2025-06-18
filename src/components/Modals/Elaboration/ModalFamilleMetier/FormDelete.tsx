@@ -4,8 +4,8 @@ import { RootState } from '../../../../_redux/store';
 import CustomDialogModal from '../../CustomDialogModal';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { deleteFamilleMetierSlice } from '../../../../_redux/features/familleMetierSlice';
-import { deleteFamilleMetier } from '../../../../services/familleMetierAPI';
+import { deleteFamilleMetierSlice } from '../../../../_redux/features/elaborations/familleMetierSlice';
+import { deleteFamilleMetier } from '../../../../services/elaborations/familleMetierAPI';
 
 
 function FormDelete({ familleMetier }: { familleMetier: FamilleMetier | null }) {

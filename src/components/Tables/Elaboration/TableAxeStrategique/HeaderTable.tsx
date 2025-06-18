@@ -5,7 +5,6 @@ import { config } from "../../../../config";
 
 const HeaderTable = () => {
     const {t}=useTranslation();
-    const userRole = useSelector((state: RootState) => state.user.role);
     const roles = config.roles;
     return (
 

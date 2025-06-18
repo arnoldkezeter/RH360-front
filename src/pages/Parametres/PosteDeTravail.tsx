@@ -9,8 +9,8 @@ import Table from "../../components/Tables/Parametres/TablePosteDeTravail/Table"
 import FormCreateUpdate from "../../components/Modals/Parametres/ModalPosteDeTravail/FormCreateUpdate";
 import FormDelete from "../../components/Modals/Parametres/ModalPosteDeTravail/FormDelete";
 import { setPosteDeTravailLoading, setPosteDeTravails, setErrorPagePosteDeTravail } from "../../_redux/features/parametres/posteDeTravailSlice";
-import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/familleMetierSlice";
-import { getFamillesMetierForDropDown } from "../../services/familleMetierAPI";
+import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/elaborations/familleMetierSlice";
+import { getFamillesMetierForDropDown } from "../../services/elaborations/familleMetierAPI";
 import { useHeader } from "../../components/Context/HeaderConfig";
 
 

@@ -12,18 +12,16 @@ import InitialPage from './pages/InitialPage/InitialPage.js';
 import Layout from './layout/Layout.js';
 import ResetPassword from './pages/Authentication/ResetPassword.js';
 import { isUserAuthenticated } from './middlewares/auth_middleware.js';
-import { setMinimumUser, setRole, setUser } from './_redux/features/user_slice.js';
 import Loading from './components/ui/loading.js';
-import { setSaveDeviceType, setUserPermission } from './_redux/features/setting.js';
+import { setSaveDeviceType } from './_redux/features/setting.js';
 import ChoisirCompte from './pages/ChoisirCompte/ChoisirCompte.js';
 import { RootState } from './_redux/store.js';
 import VerificationCode from './pages/Authentication/verification_code.js';
-import createToast from './hooks/toastify.js';
 import { useTranslation } from 'react-i18next';
 import ProtectedRoute from './components/protectRoutes.js';
 import AccessDenied from './pages/CommonPage/AccesRefuse.js';
 import { HeaderProvider } from './components/Context/HeaderConfig.js';
-import { getCurrentUserData } from './services/utilisateurs/utilisateurAPI.js';
+import { setUser } from './_redux/features/utilisateurs/utilisateurSlice.js';
 
 function App() {
 
@@ -44,6 +42,7 @@ function App() {
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
 
   const lang:string = useSelector((state: RootState) => state.setting.language); // fr ou en
+  const user:MinUtilisateurState = useSelector((state: RootState) => state.utilisateurSlice.utilisateur); 
   
   const {t}=useTranslation();
 
@@ -83,42 +82,30 @@ function App() {
         const localUser = isAuth.value;
 
         if (localUser) {
-          const { userId, role } = localUser;
-
+          const { _id, role, nom, prenom, email, photoDeProfil, genre, actif  } = localUser;
           if (role !== "" && role !== null && role !== undefined) {
-            dispatch(setMinimumUser({
-              _id: userId, role: role,
-            }));
+            // dispatch(setMinimumUser({
+            //   _id: userId, role: role,
+            // }));
+            dispatch(setUser({
+              _id: _id,
+              role: role,
+              nom: nom,
+              prenom: prenom,
+              email: email,
+              photoDeProfil: photoDeProfil,
+              genre: genre,
+              actif: actif
+            }))
             setUserRole(role);
-
-            // recuperer les data du user en bd
-            try {
-              await getCurrentUserData({ userId: userId }).then((e: Utilisateur) => {
-                dispatch(setUser(e));
-                // setUserLog(e);
-                dispatch(setRole(role));
-                setLoading(false);
-              }).catch((e) => {
-                setLoading(false);
-              })
-
-              
-            } catch (e) {
-              setLoading(false);
-              createToast(t('message.erreur'), "", 2);
-            }
+            
           }
         }
 
       } else {
-        // console.log('isAuth.value  = null');
 
         setLoading(false);
-        // setIsAuth({ value: '', status: false });
       }
-
-      // if (isAuth.value != null)
-      //   createToast(isAuth.value, "", 1);
 
     }
 

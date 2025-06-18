@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import createToast from "../../hooks/toastify";
 
-import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/familleMetierSlice";
-import { getFamillesMetierForDropDown } from "../../services/familleMetierAPI";
-import { setCompetenceLoading, setCompetences, setErrorPageCompetence } from "../../_redux/features/competenceSlice";
-import { getCompetencesByFamilleMetier } from "../../services/competenceAPI";
+import { setErrorPageFamilleMetier, setFamilleMetierLoading, setFamilleMetiers } from "../../_redux/features/elaborations/familleMetierSlice";
+import { getFamillesMetierForDropDown } from "../../services/elaborations/familleMetierAPI";
+import { setCompetenceLoading, setCompetences, setErrorPageCompetence } from "../../_redux/features/elaborations/competenceSlice";
+import { getCompetencesByFamilleMetier } from "../../services/elaborations/competenceAPI";
 import Table from "../../components/Tables/Elaboration/TableCompetence/Table";
 import FormCreateUpdate from "../../components/Modals/Elaboration/ModalCompetence/FormCreateUpdate";
 import FormDelete from "../../components/Modals/Elaboration/ModalCompetence/FormDelete";

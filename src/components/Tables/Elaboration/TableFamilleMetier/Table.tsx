@@ -13,7 +13,9 @@ import Pagination from "../../../Pagination/Pagination";
 import { config } from "../../../../config";
 import { setErrorPageStructure, setStructureLoading} from "../../../../_redux/features/parametres/strucutureSlice";
 import { searchStructure } from "../../../../services/settings/structureAPI";
-import { searchFamilleMetier } from "../../../../services/familleMetierAPI";
+import { searchFamilleMetier } from "../../../../services/elaborations/familleMetierAPI";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableStructureProps {
     data: FamilleMetier[];
@@ -26,7 +28,7 @@ interface TableStructureProps {
 const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableStructureProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.familleMetierSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
     
     const dispatch = useDispatch();
@@ -125,14 +127,14 @@ const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableStructu
             <div className="rounded-sm border border-stroke bg-white px-3 lg:px-5 pt-0 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">                
 
                 {/* DEBUT DU TABLE */}
-                <div className="max-w-full overflow-x-auto mt-2 lg:mt-8">
+                <div className="max-w-full overflow-x-auto mt-2 lg:mt-8 h-full">
                     <table className="w-full table-auto">
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={12}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

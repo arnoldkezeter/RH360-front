@@ -20,6 +20,7 @@ import Etablissements from '../pages/Parametres/Etablissements';
 import Utilisateurs from '../pages/Utilisateurs/Utilisateurs';
 import Stagiaires from '../pages/Stagiaires/Stagiaires';
 import Chercheurs from '../pages/Chercheurs/Chercheurs';
+import ProgrammeFormations from '../pages/Elaboration/ProgrammesFormation';
 
 
 
@@ -53,7 +54,7 @@ const coreRoutes = [
   {
     path: '/elaboration-programme/programmes-formation',
     title: 'Liste des programmes de formation',
-    component: undefined,
+    component: ProgrammeFormations,
   },
 
   {

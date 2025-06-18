@@ -1,6 +1,10 @@
 interface MinUtilisateurState {
     _id?: string;
     role: string;
+    nom:string;
+    prenom?:string;
+    email:string;
+    photoDeProfil?:string;
 }
 
 
@@ -33,6 +37,7 @@ interface UtilisateurInitialData {
         totalItems: number;
         pageSize: number;
     };
+    utilisateur:Utilisateur;
     pageIsLoading: boolean;
     pageError: string | null;
 }

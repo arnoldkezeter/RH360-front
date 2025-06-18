@@ -5,7 +5,7 @@ import CustomDialogModal from '../../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { useUserFormData } from '../../../../hooks/useFormData';
+import { useUserFormData } from '../../../../hooks/useSettingData';
 import { getDepartementsForDropDown } from '../../../../services/settings/departementAPI';
 import { getCommunesForDropDown } from '../../../../services/settings/communeAPI';
 import { createChercheur, updateChercheur } from '../../../../services/chercheurs/chercheurAPI';
