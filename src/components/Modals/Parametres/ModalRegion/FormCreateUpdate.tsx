@@ -99,7 +99,7 @@ function ModalCreateUpdate({ region }: { region: Region | null }) {
 
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
             
         } else {
@@ -127,7 +127,7 @@ function ModalCreateUpdate({ region }: { region: Region | null }) {
                     createToast(e.message, '', 2);
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
         }
 

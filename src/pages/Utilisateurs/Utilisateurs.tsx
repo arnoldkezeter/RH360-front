@@ -46,7 +46,7 @@ const Utilisateurs = () => {
     // Configure le header
     useEffect(() => {
         setHeaderConfig({
-            title: t('sub_menu.utilisateurs'),
+            title: t('button.ajouter_utilisateur'),
             showAddButton: true,
             exportOptions: ['PDF', 'Excel'],
             onAdd: () => {setSelectedUtilisateur(null);dispatch(setShowModal())},

@@ -180,7 +180,7 @@ function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | n
     
                     }
                 }).catch((e) => {
-                    createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                    createToast(e.response.data.message, '', 2);
                 })
             }
         }else{
@@ -215,7 +215,7 @@ function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | n
 
                     }
                 }).catch((e) => {
-                    createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                    createToast(e.response.data.message, '', 2);
                 })
             }
         }

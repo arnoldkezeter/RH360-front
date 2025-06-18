@@ -211,101 +211,79 @@ const Table = ({ data, structures, services, currentPage, currentService, curren
 
                 {/* version desktop */}
                 <div className="hidden lg:block">
-                    <div className="flex justify-start items-start flex-col lg:flex-row mb-5 mt-1 gap-4">
-                        <div className="flex flex-wrap w-full gap-4 items-start">
-                            {/* InputSearch pour desktop - côté gauche */}
-                            <div className="flex-shrink-0 min-w-[250px] max-w-[300px]">
-                                <div className="mb-3">
-                                    <div className="text-sm lg:text-md font-medium text-transparent">
-                                        &nbsp;
-                                    </div>
-                                </div>
-                                <InputSearch 
-                                    hintText={t('recherche.rechercher')+t('recherche.utilisateur')} 
-                                    value={searchText} 
-                                    onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
-                                />
-                            </div>
+                {/* Ligne 1 : Filtres alignés */}
+                <div className="flex flex-wrap gap-4 items-end mt-4">
+
+                    {/* Structure */}
+                    <div className="min-w-[180px] flex-1">
+                        <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                            {t('label.structure')}
+                        </label>
+                        <CustomDropDown2<Structure>
+                            title={""}
+                            selectedItem={currentStructure}
+                            items={structures}
+                            defaultValue={undefined}
+                            displayProperty={(structure: Structure) => `${lang === 'fr' ? structure.nomFr : structure.nomEn}`}
+                            onSelect={handleStructureSelect}
+                        />
+                    </div>
+
+                    {/*Service*/}
+                    <div className="min-w-[180px] flex-1">
+                        <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                            {t('label.service')}
+                        </label>
+                        <CustomDropDown2<Service>
+                            title={""}
+                            selectedItem={currentService}
+                            items={services}
+                            defaultValue={undefined}
+                            displayProperty={(service: Service) => `${lang === 'fr' ? service.nomFr : service.nomEn}`}
+                            onSelect={handleServiceSelect}
+                        />
+                    </div>
+
+                    {/* Role */}
+                    <div className="min-w-[180px] flex-1">
+                        <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                            {t('label.role')}
+                        </label>
+                        <CustomDropDown2<Role>
+                            title={""}
+                            selectedItem={currentRole}
+                            items={roles}
+                            defaultValue={undefined}
+                            displayProperty={(role: Role) => `${lang === 'fr' ? role.nomFr : role.nomEn}`}
+                            onSelect={handleRoleSelect}
                             
-                            {/* Dropdown à droite */}
-                            <div className="flex flex-wrap gap-4 items-start">
-                                <div className="min-w-[180px]">
-                                    <div className="mb-2">
-                                        <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300">
-                                            {t('label.structure')}
-                                        </label>
-                                    </div>
-                                    <CustomDropDown2<Structure>
-                                        title={""}
-                                        selectedItem={currentStructure}
-                                        items={structures}
-                                        defaultValue={undefined}
-                                        displayProperty={(structure: Structure) => `${lang === 'fr' ? structure.nomFr : structure.nomEn}`}
-                                        onSelect={handleStructureSelect}
-                                    />
-                                </div>
-                                <div className="min-w-[180px]">
-                                    <div className="mb-2">
-                                        <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300">
-                                            {t('label.service')}
-                                        </label>
-                                    </div>
-                                    <CustomDropDown2<Service>
-                                        title={""}
-                                        selectedItem={currentService}
-                                        items={services}
-                                        defaultValue={undefined}
-                                        displayProperty={(service: Service) => `${lang === 'fr' ? service.nomFr : service.nomEn}`}
-                                        onSelect={handleServiceSelect}
-                                    />
-                                </div>
-                                
-                                <div className="min-w-[180px]">
-                                    <div className="mb-2">
-                                        <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300">
-                                            {t('label.role')}
-                                        </label>
-                                    </div>
-                                    <CustomDropDown2<Role>
-                                        title={""}
-                                        selectedItem={currentRole}
-                                        items={roles}
-                                        defaultValue={undefined}
-                                        displayProperty={(role: Role) => `${lang === 'fr' ? role.nomFr : role.nomEn}`}
-                                        onSelect={handleRoleSelect}
-                                        
-                                    />
-                                </div>
-                                
-                                {/* Bouton refresh pour desktop */}
-                                <div className="flex items-end">
-                                    <div className="mb-2">
-                                        <div className="text-sm lg:text-md font-medium text-transparent">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                    <button 
-                                        onClick={handleResetSelect}
-                                        className="mt-12"
-                                        
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                        </svg>
-                                        <span className="hidden sm:inline"></span>
-                                        <span className="sm:hidden">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        />
+                    </div>
+
+                    {/* Bouton reset */}
+                    <div className="min-w-[40px] flex-shrink-0">
+                        <label className="text-sm lg:text-md font-medium text-transparent block mb-1">
+                            &nbsp;
+                        </label>
+                        <button onClick={handleResetSelect}>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
+                {/* Ligne 2 : Barre de recherche pleine largeur */}
+                <div className="w-full mb-4 mt-4">
+                    <InputSearch 
+                        hintText={t('recherche.rechercher')+t('recherche.utilisateur')} 
+                        value={searchText} 
+                        onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
+                    />
+                </div>
+
+                
+            </div>
 
                 {/* DEBUT DU TABLE */}
                 <div className="max-w-full overflow-x-auto mt-2 lg:mt-8">

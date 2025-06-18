@@ -107,7 +107,7 @@ function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique |
 
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
                 
 
@@ -146,7 +146,7 @@ function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique |
                     createToast(e.message, '', 2);
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
                 
             

@@ -62,7 +62,7 @@ const HeaderPage: React.FC = () => {
                 {config.showAddButton && (
                   <Button
                     onClick={handleAdd}
-                    title={t('button.ajouter_utilisateur')}
+                    title={config.title}
                     className="text-sm lg:text-base whitespace-nowrap"
                   />
                 )}
@@ -146,7 +146,7 @@ const HeaderPage: React.FC = () => {
                           handleAdd();
                           setShowMobileMenu(false);
                         }}
-                        title={t('button.ajouter_utilisateur')}
+                        title={config.title}
                         className="w-full text-sm justify-center"
                       />
                     </div>

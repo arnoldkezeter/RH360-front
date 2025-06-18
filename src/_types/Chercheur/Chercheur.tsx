@@ -1,11 +1,3 @@
-interface Parcours {
-  annee: number,
-  etablissement: Etablissement,
-  filiere:string,
-  option?: string,
-  niveau: string
-}
-
 interface Chercheur {
     _id?: string;
     nom: string;

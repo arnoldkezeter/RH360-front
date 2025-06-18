@@ -8,14 +8,14 @@ import createToast from '../../../../hooks/toastify';
 import { useUserFormData } from '../../../../hooks/useFormData';
 import { getDepartementsForDropDown } from '../../../../services/settings/departementAPI';
 import { getCommunesForDropDown } from '../../../../services/settings/communeAPI';
-import { createStagiaire, updateStagiaire } from '../../../../services/stagiaires/stagiaireAPI';
+import { createChercheur, updateChercheur } from '../../../../services/chercheurs/chercheurAPI';
 import { formatDateForInput } from '../../../../fonctions/fonction';
 import { ROLES } from '../../../../config';
-import { createStagiaireSlice, updateStagiaireSlice } from '../../../../_redux/features/stagiaireSlice';
+import { createChercheurSlice, updateChercheurSlice } from '../../../../_redux/features/chercheurSlice';
 import FilterList from '../../../ui/AutoComplete';
 
 
-function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
+function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { loading, error, regions, etablissements} = useUserFormData(lang);
     const roles = Object.values(ROLES)
@@ -40,24 +40,18 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
     const [lieuNaissance, setLieuNaissance] = useState("");
     const [email, setEmail] = useState("");
     const [telephone, setTelephone] = useState("");
-    const [annee, setAnnee] = useState<number>();
     const [etablissement, setEtablissement] = useState<Etablissement>()
-    const [filiere, setFiliere] = useState("")
-    const [option, setOption] = useState("")
-    const [niveau, setNiveau] = useState("")
+    const [domaineRecherche, setDomaineRecherche] = useState("")
     const [region, setRegion] = useState<Region>();
     const [departement, setDepartement] = useState<Departement>();
     const [commune, setCommune] = useState<Commune>();
 
     const [errorNom, setErrorNom] = useState("");
-    const [errorRole, setErrorRole] = useState("");
     const [errorGenre, setErrorGenre] = useState("");
     const [errorEmail, setErrorEmail] = useState("");
-    const [errorAnnee, setErrorAnnee] = useState("");
     const [errorEtablissement, setErrorEtablissement] = useState("");
     const [errorTelephone, setErrorTelephone] = useState("");
-    const [errorFiliere, setErrorFiliere] = useState("")
-    const [errorNiveau, setErrorNiveau] = useState("");
+    const [errorDomaineRecherche, setErrorDomaineRecherche] = useState("")
     
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -66,26 +60,22 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
 
     useEffect(() => {
         
-        if (stagiaire) {
-            const parcour = stagiaire.parcours[0];
-            setModalTitle(t('form_update.enregistrer') + t('form_update.stagiaire'));
-            setNom(stagiaire.nom);
-            setPrenom(stagiaire?.prenom || ""); 
-            setGenre(stagiaire.genre);
-            setDateNaissance(formatDateForInput(stagiaire.dateNaissance) || "");
-            setLieuNaissance(stagiaire.lieuNaissance || "");
-            setEmail(stagiaire.email);
-            setTelephone(stagiaire?.telephone || "");
-            parcour.annee && setAnnee(parcour.annee);
-            setEtablissement(parcour.etablissement);
-            setFiliere(parcour.filiere);
-            setOption(parcour?.option || "")
-            setNiveau(parcour.niveau)
-            setRegion(stagiaire?.commune?.departement?.region || undefined);
-            setDepartement(stagiaire?.commune?.departement || undefined);
-            setCommune(stagiaire?.commune || undefined);
+        if (chercheur) {
+            setModalTitle(t('form_update.enregistrer') + t('form_update.chercheur'));
+            setNom(chercheur.nom);
+            setPrenom(chercheur?.prenom || ""); 
+            setGenre(chercheur.genre);
+            setDateNaissance(formatDateForInput(chercheur.dateNaissance) || "");
+            setLieuNaissance(chercheur.lieuNaissance || "");
+            setEmail(chercheur.email);
+            setTelephone(chercheur?.telephone || "");
+            setEtablissement(chercheur.etablissement);
+            setDomaineRecherche(chercheur.domaineRecherche);
+            setRegion(chercheur?.commune?.departement?.region || undefined);
+            setDepartement(chercheur?.commune?.departement || undefined);
+            setCommune(chercheur?.commune || undefined);
         } else {
-            setModalTitle(t('form_save.enregistrer') + t('form_save.stagiaire'));
+            setModalTitle(t('form_save.enregistrer') + t('form_save.chercheur'));
             setNom("");
             setPrenom("");
             setGenre("");
@@ -98,11 +88,9 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
             setDepartement(undefined);
             setCommune(undefined);
 
-            setAnnee(undefined);
             setEtablissement(undefined);
-            setFiliere("");
-            setOption("")
-            setNiveau("")
+            setDomaineRecherche("");
+           
         }
 
 
@@ -112,12 +100,10 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
             setErrorEmail("");
             setErrorEtablissement("")
             setErrorTelephone("")
-            setErrorAnnee("")
-            setErrorFiliere("")
-            setErrorNiveau("")
+            setErrorDomaineRecherche("")
             setIsFirstRender(false);
         }
-    }, [stagiaire, isFirstRender, t]);
+    }, [chercheur, isFirstRender, t]);
 
     const closeModal = () => {
         setErrorNom("");
@@ -125,9 +111,7 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
         setErrorEmail("");
         setErrorEtablissement("")
         setErrorTelephone("")
-        setErrorAnnee("")
-        setErrorFiliere("")
-        setErrorNiveau("")
+        setErrorDomaineRecherche("")
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -248,8 +232,8 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
 
 
 
-    const handleCreateStagiaire = async () => {
-        if (!nom || !genre || !email || !telephone || !etablissement || !filiere || !niveau) {
+    const handleCreateChercheur = async () => {
+        if (!nom || !genre || !email || !telephone || !etablissement || !domaineRecherche) {
             if (!nom) {
                 setErrorNom(t('error.nom'));
             }
@@ -269,18 +253,12 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                 setErrorEtablissement(t('error.etablissement'))
             }
             
-            if(!annee){
-                setErrorAnnee(t('error.annee'))
+           
+            if(!domaineRecherche){
+                setErrorDomaineRecherche(t('error.domaine_recherche'))
             }
+        
             
-            if(!filiere){
-                setErrorFiliere(t('error.filiere'))
-            }
-        
-            if(!niveau){
-                setErrorNiveau(t('error.niveau'))
-            }
-        
 
             return;
         }
@@ -288,16 +266,9 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
             return;
         }
 
-        const parcour : Parcour = {
-            annee: annee,
-            etablissement: etablissement,
-            filiere: filiere,
-            niveau: niveau,
-            option:option
-        }
 
-        if (!stagiaire) {
-            await createStagiaire(
+        if (!chercheur) {
+            await createChercheur(
                 {
                     nom,
                     prenom,
@@ -308,15 +279,16 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                     lieuNaissance,
                     photoDeProfil:"",
                     commune,
+                    etablissement,
+                    domaineRecherche,
                     actif:true,
-                    parcours:[parcour]
                 }, lang
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
-                    dispatch(createStagiaireSlice({
+                    dispatch(createChercheurSlice({
 
-                        stagiaire: {
+                        chercheur: {
                             _id: e.data._id,
                             nom: e.data.nom,
                             genre: e.data.genre,
@@ -326,7 +298,8 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                             prenom: e.data.prenom,
                             dateNaissance: e.data.dateNaissance,
                             lieuNaissance: e.data.lieuNaissance,
-                            parcours: e.data.parcours,
+                            etablissement: e.data.etablissement,
+                            domaineRecherche:e.data.domaineRecherche,
                             commune: commune,
                             actif: e.data.actif,
                         }
@@ -337,17 +310,15 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
 
                 } else {
                     createToast(e.message, '', 2);
-
                 }
             }).catch((e) => {
-                console.log(e);
                 createToast(e.response.data.message, '', 2);
             })
 
         } else {
-            await updateStagiaire(
+            await updateChercheur(
                 {
-                    _id: stagiaire._id,
+                    _id: chercheur._id,
                     nom,
                     prenom,
                     email,
@@ -356,14 +327,15 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                     dateNaissance,
                     lieuNaissance,
                     commune,
-                    parcours:[parcour],
+                    etablissement,
+                    domaineRecherche,
                     actif:true,
                 }, lang).then((e: ReponseApiPros) => {
                     if (e.success) {
                         createToast(e.message, '', 0);
-                        dispatch(updateStagiaireSlice({
+                        dispatch(updateChercheurSlice({
                             id: e.data._id,
-                            stagiaireData: {
+                            chercheurData: {
                                 _id: e.data._id,
                                 nom: e.data.nom,
                                 genre: e.data.genre,
@@ -373,7 +345,8 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                                 prenom: e.data.prenom,
                                 dateNaissance: e.data.dateNaissance,
                                 lieuNaissance: e.data.lieuNaissance,
-                                parcours:e.data.parcours,
+                                etablissement: e.data.etablissement,
+                                domaineRecherche:e.data.domaineRecherche,
                                 commune: commune,
                                 actif: e.data.actif
                             }
@@ -387,7 +360,6 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
 
                     }
                 }).catch((e) => {
-                    console.log(e);
                     createToast(e.response.data.message, '', 2);
                 })
         }
@@ -410,7 +382,7 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                 isModalOpen={isModalOpen}
                 isDelete={false}
                 closeModal={closeModal}
-                handleConfirm={handleCreateStagiaire}
+                handleConfirm={handleCreateChercheur}
             >
                 
                 <label>{t('label.nom')}</label><label className="text-red-500"> *</label>
@@ -481,15 +453,7 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                     onChange={(e) => { setEmail(e.target.value); setErrorEmail(""); }}
                 />
                 {errorEmail && <p className="text-red-500">{errorEmail}</p>}
-                <label>{t('label.annee')}</label><label className="text-red-500"> *</label>
-                <input
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    type="text"
-                    value={annee}
-                    onChange={(e) => {setAnnee(parseInt(e.target.value)); setErrorAnnee("")}}
-                />
-                {errorAnnee && <p className="text-red-500">{errorAnnee}</p>}
-
+                
                 <label>{t('label.etablissement')}</label><label className="text-red-500"> *</label>
                 <FilterList
                     items={etablissements}
@@ -500,31 +464,14 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                 />
                 {errorEtablissement && <p className="text-red-500">{errorEtablissement}</p>}
 
-                <label>{t('label.filiere')}</label><label className="text-red-500"> *</label>
+                <label>{t('label.domaine_recherche')}</label><label className="text-red-500"> *</label>
                 <input
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     type="text"
-                    value={filiere}
-                    onChange={(e) => {setFiliere(e.target.value); setErrorFiliere("")}}
+                    value={domaineRecherche}
+                    onChange={(e) => {setDomaineRecherche(e.target.value); setErrorDomaineRecherche("")}}
                 />
-                {errorFiliere && <p className="text-red-500">{errorFiliere}</p>}
-
-                <label>{t('label.option')}</label>
-                <input
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    type="text"
-                    value={option}
-                    onChange={(e) => setOption(e.target.value)}
-                />
-
-                <label>{t('label.niveau')}</label><label className="text-red-500"> *</label>
-                <input
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    type="text"
-                    value={niveau}
-                    onChange={(e) => {setNiveau(e.target.value); setErrorNiveau("")}}
-                />
-                {errorNiveau && <p className="text-red-500">{errorNiveau}</p>}
+                {errorDomaineRecherche && <p className="text-red-500">{errorDomaineRecherche}</p>}
 
                 <label>{t('label.region')}</label>
                 <select

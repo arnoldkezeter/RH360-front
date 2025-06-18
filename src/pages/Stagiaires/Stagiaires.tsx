@@ -49,7 +49,7 @@ const Stagiaires = () => {
     // Configure le header
     useEffect(() => {
         setHeaderConfig({
-            title: t('sub_menu.stagiaires'),
+            title: t('button.ajouter_stagiaire'),
             showAddButton: true,
             exportOptions: ['PDF', 'Excel'],
             onAdd: () => {setSelectedStagiaire(null);dispatch(setShowModal())},

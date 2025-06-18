@@ -153,6 +153,7 @@
 
     "etablissement":"Etablissement",
     "filiere":"Filière",
+    "domaine_recherche":"Domaine de recherche",
 
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
@@ -581,6 +582,7 @@
     "text_fr":"Le champ texte en français est obligatoire.",
     "text_en":"Le champ texte en anglais est obligatoire.",
     "famille_metier":"Le champ famille de métier est obligatoire.",
+    "domaine_recherche":"Le champ domaine de recherche est obligatoire.",
     "etablissement":"Le champ établissement est obligatoire.",
     "filiere":"Le champ filière est obligatoire.",
     "telephone":"Le champ téléphone est obligatoire.",

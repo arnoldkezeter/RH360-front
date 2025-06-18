@@ -109,7 +109,7 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
 
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
                 
 
@@ -146,7 +146,7 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
                     createToast(e.message, '', 2);
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
                 
             

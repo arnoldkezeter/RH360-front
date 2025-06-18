@@ -19,6 +19,7 @@ import BesoinFormationPredefinis from '../pages/Parametres/BesoinFormationPredef
 import Etablissements from '../pages/Parametres/Etablissements';
 import Utilisateurs from '../pages/Utilisateurs/Utilisateurs';
 import Stagiaires from '../pages/Stagiaires/Stagiaires';
+import Chercheurs from '../pages/Chercheurs/Chercheurs';
 
 
 
@@ -192,7 +193,7 @@ const coreRoutes = [
   {
     path: '/chercheurs/gestion-chercheur',
     title: 'Gestion des chercheurs (Enregistrement, Modification, Suppression , Liste)',
-    component: undefined,
+    component: Chercheurs,
   },
 
   {

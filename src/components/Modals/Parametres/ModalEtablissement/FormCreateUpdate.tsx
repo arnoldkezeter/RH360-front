@@ -97,7 +97,7 @@ function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | nu
 
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
                 
 
@@ -131,7 +131,7 @@ function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | nu
                     createToast(e.message, '', 2);
                 }
             }).catch((e) => {
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
                 
             
