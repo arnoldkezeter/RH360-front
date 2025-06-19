@@ -5,7 +5,7 @@ import CustomDialogModal from '../../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { useUserFormData } from '../../../../hooks/useSettingData';
+import { useSettingData } from '../../../../hooks/useSettingData';
 import { getServicesForDropDownByStructure } from '../../../../services/settings/serviceAPI';
 import { getDepartementsForDropDown } from '../../../../services/settings/departementAPI';
 import { getCommunesForDropDown } from '../../../../services/settings/communeAPI';
@@ -19,17 +19,13 @@ import { ROLES } from '../../../../config';
 
 function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
-    const { loading, error, regions, structures, grades, familleMetiers } = useUserFormData(lang);
+    
+    const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
+    const {data:{structures}} = useSelector((state: RootState) => state.structureSlice)
+    const {data:{grades}}= useSelector((state: RootState) => state.gradeSlice)
+    const {data:{familleMetiers}} = useSelector((state: RootState) => state.familleMetierSlice)
     const roles = Object.values(ROLES)
-    // const structures:Structure[] =[];
-    // const regions:Region[] =[];
-    // const grades:Grade[] =[];
-    // const familleMetiers:FamilleMetier[] =[];
-    // const {data:{departements}} = useSelector((state: RootState) => state.departementSlice) ?? [];
-    // const {data:{communes}} = useSelector((state: RootState) => state.communeSlice) ?? [];
-    // const {data:{posteDeTravails}} = useSelector((state: RootState) => state.posteDeTavailSlice) ?? [];
-    // const {data:{categorieProfessionnelles}} = useSelector((state: RootState) => state.categorieProfessionnelleSlice) ?? [];
-    // const {data:{services}}= useSelector((state: RootState) => state.serviceSlice) ?? [];
+    
     const { t } = useTranslation();
     const [filteredDepartements, setFilteredDepartements]=useState<Departement[]>([])
     const [filteredCommunes, setFilteredCommunes]=useState<Commune[]>([])
@@ -532,14 +528,14 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
     }
 
 
-    if (loading) {
-        return <div>{t("Chargement des données...")}</div>;
-    }
+    // if (loading) {
+    //     return <div>{t("Chargement des données...")}</div>;
+    // }
 
-    const firstError = Object.values(error).find(err => err !== null);
-    if (firstError) {
-        return <div>{t("Une erreur est survenue :")} {firstError}</div>;
-    }
+    // const firstError = Object.values(error).find(err => err !== null);
+    // if (firstError) {
+    //     return <div>{t("Une erreur est survenue :")} {firstError}</div>;
+    // }
     
     return (
         <>

@@ -15,6 +15,8 @@ import { searchDepartement } from "../../../../services/settings/departementAPI"
 import { setErrorPageDepartement, setDepartementLoading } from "../../../../_redux/features/parametres/departementSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import { FaFilter, FaSort } from "react-icons/fa";
+import { NoData } from "../../../NoData";
+import Skeleton from "react-loading-skeleton";
 
 interface TableDepartementProps {
     data: Departement[];
@@ -30,7 +32,7 @@ interface TableDepartementProps {
 const Table = ({data, regions, currentPage, currentRegion, onPageChange, onRegionChange, onCreate, onEdit}: TableDepartementProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.departementSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
      const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -177,9 +179,9 @@ const Table = ({data, regions, currentPage, currentRegion, onPageChange, onRegio
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={15}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

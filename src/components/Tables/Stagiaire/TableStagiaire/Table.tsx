@@ -1,8 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import LoadingTable from "../../common/LoadingTable";
-import NoDataTable from "../../common/NoDataTable";
+
 import InputSearch from "../../common/SearchTable";
-import { Ref, SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaFilter, FaSort } from "react-icons/fa6";
 import HeaderTable from "./HeaderTable";
 import BodyTable from "./BodyTable";
@@ -12,9 +11,11 @@ import { RootState } from "../../../../_redux/store";
 import { setErrorPageStagiaire, setStagiairesLoading } from "../../../../_redux/features/stagiaireSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import Pagination from "../../../Pagination/Pagination";
-import { getStagiairesByFiltres, searchStagiaire } from "../../../../services/stagiaires/stagiaireAPI";
+import { getStagiairesByFiltres } from "../../../../services/stagiaires/stagiaireAPI";
 import { STATUTS } from "../../../../config";
 import DateRangePicker, { DateRangePickerHandle } from "../../../ui/RangeDatePicker";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 
 
@@ -336,9 +337,9 @@ const Table = ({ data, structures, services, currentPage, currentService, curren
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={12}/>
                                 : filteredData.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

@@ -15,6 +15,8 @@ import { searchCommune } from "../../../../services/settings/communeAPI";
 import { setErrorPageCommune, setCommuneLoading } from "../../../../_redux/features/parametres/communeSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import { FaFilter, FaSort } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableCommuneProps {
     data: Commune[];
@@ -33,7 +35,7 @@ interface TableCommuneProps {
 const Table = ({data, regions, departements, currentPage, currentRegion, currentDepartement, onPageChange, onRegionChange, onDepartementChange, onCreate, onEdit}: TableCommuneProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.communeSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
      const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -172,10 +174,12 @@ const Table = ({data, regions, departements, currentPage, currentRegion, current
                         </div>
                     )}
                 </div>
-
                 <div className="hidden lg:block">
-                    <div className="flex  justify-start items-center  flex-col lg:flex-row    mb-5  mt-1 gap-x-4 verflow-x-auto ">
-                        <div className="flex flex-wrap  w-full lg:w-auto gap-x-6">
+                    {/* Ligne 1 : Filtres alignés */}
+                    <div className="flex flex-wrap gap-4 items-end mt-4">
+
+                        {/* Region */}
+                        <div className="min-w-[180px] flex-1">
                             <CustomDropDown2<Region>
                                 title={t('label.region')}
                                 selectedItem={currentRegion}
@@ -184,6 +188,10 @@ const Table = ({data, regions, departements, currentPage, currentRegion, current
                                 displayProperty={(region: Region) => `${lang === 'fr' ? region.nomFr : region.nomEn}`}
                                 onSelect={handleRegionSelect}
                             />
+                        </div>
+
+                        {/* Déparement */}
+                        <div className="min-w-[180px] flex-1">
                             <CustomDropDown2<Departement>
                                 title={t('label.departement')}
                                 selectedItem={currentDepartement}
@@ -194,8 +202,10 @@ const Table = ({data, regions, departements, currentPage, currentRegion, current
                             />
                         </div>
                     </div>
+
+                           
                 </div>
-           
+
 
                 {/* DEBUT DU TABLE */}
                 <div className="max-w-full overflow-x-auto mt-2 lg:mt-8">
@@ -203,9 +213,9 @@ const Table = ({data, regions, departements, currentPage, currentRegion, current
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={15}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

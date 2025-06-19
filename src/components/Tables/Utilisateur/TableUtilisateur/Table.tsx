@@ -1,6 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import LoadingTable from "../../common/LoadingTable";
-import NoDataTable from "../../common/NoDataTable";
 import InputSearch from "../../common/SearchTable";
 import { useEffect, useRef, useState } from "react";
 import { FaFilter, FaSort } from "react-icons/fa6";
@@ -14,6 +12,8 @@ import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import Pagination from "../../../Pagination/Pagination";
 import { searchUtilisateur } from "../../../../services/utilisateurs/utilisateurAPI";
 import { ROLES } from "../../../../config";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 
 interface TableUtilisateurProps {
@@ -36,11 +36,9 @@ const Table = ({ data, structures, services, currentPage, currentService, curren
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const roles = Object.values(ROLES)
-    const userRole = useSelector((state: RootState) => state.user.role);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const pageIsLoading = useSelector((state: RootState) => state.utilisateurSlice.pageIsLoading);
-    const [isDownload, setIsDownload]=useState(false);
     
     // Fonction pour basculer la visibilité des CustomDropDown
     const toggleDropdownVisibility = () => {
@@ -291,9 +289,9 @@ const Table = ({ data, structures, services, currentPage, currentService, curren
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={12}/>
                                 : filteredData.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

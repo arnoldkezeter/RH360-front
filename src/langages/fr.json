@@ -125,6 +125,8 @@
   },
   
   "label": {
+
+    "aucune_donnee":"Aucune donnée disponible pour le moment.",
     "famille_metier":"Famille de métier",
     "nature_taxe":"Nature de la taxe",
     "nature_taxe_fr":"Nature de la taxe en français",

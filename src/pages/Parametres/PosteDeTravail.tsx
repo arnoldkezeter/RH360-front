@@ -38,34 +38,6 @@ const PosteDeTravails = () => {
         });
     }, []);
    
-    useEffect(() => {
-        const fetchFamilleMetiers = async () => {
-            dispatch(setFamilleMetierLoading(true));
-            try {
-                const fetchedFamilleMetiers = await getFamillesMetierForDropDown({ lang });
-                if (fetchedFamilleMetiers) {
-                    dispatch(setFamilleMetiers(fetchedFamilleMetiers));
-                    // Initialiser la région courante avec la première région récupérée
-                    setCurrentFamilleMetier(fetchedFamilleMetiers.familleMetiers[0] || null);
-                } else {
-                    dispatch(setFamilleMetiers({
-                        familleMetiers: [],
-                        currentPage: 0,
-                        totalItems: 0,
-                        totalPages: 0,
-                        pageSize: 0,
-                    }));
-                }
-            } catch (error) {
-                dispatch(setErrorPageFamilleMetier(t('message.erreur')));
-                createToast(t('message.erreur'), "", 2);
-            } finally {
-                dispatch(setFamilleMetierLoading(false));
-            }
-        };
-        fetchFamilleMetiers();
-    }, [lang, dispatch, t]);
-
     
     const fetchPosteDeTravails = async () => {
         if (!currentFamilleMetier || familleMetiers.length === 0) return;

@@ -41,35 +41,6 @@ const Services = () => {
         });
     }, []);
    
-    useEffect(() => {
-        const fetchStructures = async () => {
-            dispatch(setStructureLoading(true));
-            try {
-                const fetchedStructures = await getStructuresForDropDown({ lang });
-                
-                if (fetchedStructures) {
-                    dispatch(setStructures(fetchedStructures));
-                    // Initialiser la région courante avec la première région récupérée
-                    setCurrentStructure(fetchedStructures.structures[0] || null);
-                } else {
-                    dispatch(setStructures({
-                        structures: [],
-                        currentPage: 0,
-                        totalItems: 0,
-                        totalPages: 0,
-                        pageSize: 0,
-                    }));
-                }
-            } catch (error) {
-                dispatch(setErrorPageStructure(t('message.erreur')));
-                createToast(t('message.erreur'), "", 2);
-            } finally {
-                dispatch(setStructureLoading(false));
-            }
-        };
-        fetchStructures();
-    }, [lang, dispatch, t]);
-
     
     const fetchServices = async () => {
         if (!currentStructure || structures.length === 0) return;

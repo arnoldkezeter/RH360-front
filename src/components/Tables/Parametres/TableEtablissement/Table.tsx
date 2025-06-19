@@ -13,6 +13,8 @@ import Pagination from "../../../Pagination/Pagination";
 import { config } from "../../../../config";
 import { searchEtablissement } from "../../../../services/settings/etablissementAPI";
 import { setErrorPageEtablissement, setEtablissementLoading } from "../../../../_redux/features/parametres/etablissementSlice";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableEtablissementProps {
     data: Etablissement[];
@@ -25,7 +27,7 @@ interface TableEtablissementProps {
 const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableEtablissementProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.etablissementSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
     
     const dispatch = useDispatch();
@@ -129,9 +131,9 @@ const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableEtablis
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={15}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

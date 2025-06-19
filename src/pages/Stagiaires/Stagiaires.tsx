@@ -62,18 +62,6 @@ const Stagiaires = () => {
         // Implémentez ici la logique d'export
     };
 
-    // Charge les structures
-    useEffect(() => {
-        fetchData({
-            apiFunction: getStructuresForDropDown,
-            params: { lang },
-            onSuccess: (data) => dispatch(setStructures(data)),
-            onError: () => {
-                dispatch(setErrorPageStructure(t('message.erreur')));
-            },
-        });
-        
-    }, [fetchData, lang, dispatch]);
 
     // Charge les services pour une structure spécifique
     useEffect(() => {

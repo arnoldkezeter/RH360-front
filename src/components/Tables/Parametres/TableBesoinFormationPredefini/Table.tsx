@@ -13,6 +13,7 @@ import Pagination from "../../../Pagination/Pagination";
 import { config } from "../../../../config";
 import { setBesoinFormationPredefiniLoading, setErrorPageBesoinFormationPredefini } from "../../../../_redux/features/parametres/besoinFormationPredefini";
 import { searchBesoinFormationPredefini } from "../../../../services/settings/besoinFormationPredefiniAPI";
+import Skeleton from "react-loading-skeleton";
 
 interface TablebesoinFormationPredefiniProps {
     data: BesoinFormationPredefini[];
@@ -25,7 +26,7 @@ interface TablebesoinFormationPredefiniProps {
 const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TablebesoinFormationPredefiniProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.besoinFormationPredefiniSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
     
     const dispatch = useDispatch();
@@ -129,7 +130,7 @@ const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TablebesoinF
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={15}/>
                                 : filteredData?.length === 0 ?
                                     <NoDataTable /> :
                                     <HeaderTable />

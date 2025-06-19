@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import ButtonCreate from "../../common/ButtonCreate";
-import LoadingTable from "../../common/LoadingTable";
-import NoDataTable from "../../common/NoDataTable";
 import InputSearch from "../../common/SearchTable";
 import { setShowModal } from "../../../../_redux/features/setting";
 import { useEffect, useRef, useState } from "react";
@@ -13,6 +11,8 @@ import Pagination from "../../../Pagination/Pagination";
 import { config } from "../../../../config";
 import { searchGrade } from "../../../../services/settings/gradeAPI";
 import { setErrorPageGrade, setGradeLoading } from "../../../../_redux/features/parametres/gradeSlice";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableGradeProps {
     data: Grade[];
@@ -25,7 +25,7 @@ interface TableGradeProps {
 const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableGradeProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.gradeSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
     
     const dispatch = useDispatch();
@@ -129,9 +129,9 @@ const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableGradePr
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={15}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

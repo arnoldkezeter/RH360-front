@@ -1,12 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../_redux/store";
-import { config } from "../../../../config";
 
 const HeaderTable = () => {
     const {t}=useTranslation();
-    const userRole = useSelector((state: RootState) => state.user.role);
-    const roles = config.roles;
     return (
 
         <thead className=''>

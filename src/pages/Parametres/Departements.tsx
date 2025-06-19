@@ -39,34 +39,6 @@ const Departements = () => {
         });
     }, []);
    
-    useEffect(() => {
-        const fetchRegions = async () => {
-            dispatch(setRegionLoading(true));
-            try {
-                const fetchedRegions = await getRegionsForDropDown({ lang });
-                if (fetchedRegions) {
-                    dispatch(setRegions(fetchedRegions));
-                    // Initialiser la région courante avec la première région récupérée
-                    setCurrentRegion(fetchedRegions.regions[0] || null);
-                } else {
-                    dispatch(setRegions({
-                        regions: [],
-                        currentPage: 0,
-                        totalItems: 0,
-                        totalPages: 0,
-                        pageSize: 0,
-                    }));
-                }
-            } catch (error) {
-                dispatch(setErrorPageRegion(t('message.erreur')));
-                createToast(t('message.erreur'), "", 2);
-            } finally {
-                dispatch(setRegionLoading(false));
-            }
-        };
-        fetchRegions();
-    }, [lang, dispatch, t]);
-
     
     const fetchDepartements = async () => {
         if (!currentRegion || regions.length === 0) return;

@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import ButtonCreate from "../../common/ButtonCreate";
-import LoadingTable from "../../common/LoadingTable";
-import NoDataTable from "../../common/NoDataTable";
 import InputSearch from "../../common/SearchTable";
 import { setShowModal } from "../../../../_redux/features/setting";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +13,8 @@ import { searchService } from "../../../../services/settings/serviceAPI";
 import { setErrorPageService, setServiceLoading } from "../../../../_redux/features/parametres/serviceSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import { FaFilter, FaSort } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableServiceProps {
     data: Service[];
@@ -30,7 +30,7 @@ interface TableServiceProps {
 const Table = ({data, structures, currentPage, currentStructure, onPageChange, onStructureChange, onCreate, onEdit}: TableServiceProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.serviceSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
      const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -176,9 +176,9 @@ const Table = ({data, structures, currentPage, currentStructure, onPageChange, o
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={15}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

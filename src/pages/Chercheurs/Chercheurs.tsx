@@ -58,20 +58,6 @@ const Chercheurs = () => {
         // Implémentez ici la logique d'export
     };
 
-    // Charge les etablissements
-    useEffect(() => {
-        fetchData({
-            apiFunction: getEtablissementsForDropDown,
-            params: { lang },
-            onSuccess: (data) => dispatch(setEtablissements(data)),
-            onError: () => {
-                dispatch(setErrorPageEtablissement(t('message.erreur')));
-            },
-        });
-        
-    }, [fetchData, lang, dispatch]);
-
-   
 
 
     // Charge les chercheurs en fonction des filtres

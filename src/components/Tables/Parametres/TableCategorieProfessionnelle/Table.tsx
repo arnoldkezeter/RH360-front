@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import ButtonCreate from "../../common/ButtonCreate";
-import LoadingTable from "../../common/LoadingTable";
 import NoDataTable from "../../common/NoDataTable";
 import InputSearch from "../../common/SearchTable";
 import { setShowModal } from "../../../../_redux/features/setting";
@@ -15,6 +14,8 @@ import { searchCategorieProfessionnelle } from "../../../../services/settings/ca
 import { setErrorPageCategorieProfessionnelle, setCategorieProfessionnelleLoading } from "../../../../_redux/features/parametres/categorieProfessionnelleSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import { FaFilter, FaSort } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableCategorieProfessionnelleProps {
     data: CategorieProfessionnelle[];
@@ -30,7 +31,7 @@ interface TableCategorieProfessionnelleProps {
 const Table = ({data, grades, currentPage, currentGrade, onPageChange, onGradeChange, onCreate, onEdit}: TableCategorieProfessionnelleProps) => {
     const {t}=useTranslation();
     const pageIsLoading = useSelector((state: RootState) => state.categorieProfessionnelleSlice.pageIsLoading);
-    const userRole = useSelector((state: RootState) => state.user.role);
+    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
      const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -177,9 +178,9 @@ const Table = ({data, grades, currentPage, currentGrade, onPageChange, onGradeCh
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={15}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

@@ -31,7 +31,6 @@ const Utilisateurs = () => {
 
     const lang = useSelector((state: RootState) => state.setting.language);
     const { data: { utilisateurs } } = useSelector((state: RootState) => state.utilisateurSlice);
-    const { data: { structures } } = useSelector((state: RootState) => state.structureSlice);
     const { data: { services } } = useSelector((state: RootState) => state.serviceSlice);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -60,17 +59,7 @@ const Utilisateurs = () => {
     };
 
     // Charge les structures
-    useEffect(() => {
-        fetchData({
-            apiFunction: getStructuresForDropDown,
-            params: { lang },
-            onSuccess: (data) => dispatch(setStructures(data)),
-            onError: () => {
-                dispatch(setErrorPageStructure(t('message.erreur')));
-            },
-        });
-        
-    }, [fetchData, lang, dispatch]);
+    const {data:{structures}} = useSelector((state: RootState) => state.structureSlice)
 
     // Charge les services pour une structure spécifique
     useEffect(() => {

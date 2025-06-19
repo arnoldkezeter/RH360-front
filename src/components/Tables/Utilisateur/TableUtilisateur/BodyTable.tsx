@@ -1,16 +1,11 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import ButtonCrudTable from "../../common/ButtonActionTable"
 import { setShowModal, setShowModalDelete } from "../../../../_redux/features/setting"
-import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
-import { config } from "../../../../config"
-import { RootState } from "../../../../_redux/store"
 
 const BodyTable = ({ data, onEdit}: { data: Utilisateur[], onEdit: (utilisateur: Utilisateur) => void }) => {
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const {t}=useTranslation();
+   
     
     return <tbody>
         {data && data.map((item, index) => (

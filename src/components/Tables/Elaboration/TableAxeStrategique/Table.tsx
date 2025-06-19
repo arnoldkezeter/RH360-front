@@ -13,6 +13,8 @@ import Pagination from "../../../Pagination/Pagination";
 import { config } from "../../../../config";
 import { setErrorPageAxeStrategique, setAxeStrategiqueLoading} from "../../../../_redux/features/elaborations/axeStrategiqueSlice";
 import { searchAxeStrategique } from "../../../../services/elaborations/axeStrategiqueAPI";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableaxeStrategiqueProps {
     data: AxeStrategique[];
@@ -129,9 +131,9 @@ const Table = ({data, currentPage, onPageChange, onCreate, onEdit}: TableaxeStra
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={12}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

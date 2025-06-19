@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import ButtonCreate from "../../common/ButtonCreate";
-import LoadingTable from "../../common/LoadingTable";
-import NoDataTable from "../../common/NoDataTable";
 import InputSearch from "../../common/SearchTable";
 import { setShowModal } from "../../../../_redux/features/setting";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +13,8 @@ import { searchCompetence } from "../../../../services/elaborations/competenceAP
 import { setErrorPageCompetence, setCompetenceLoading } from "../../../../_redux/features/elaborations/competenceSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import { FaFilter, FaSort } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 interface TableCompetenceProps {
     data: Competence[];
@@ -177,9 +177,9 @@ const Table = ({data, familleMetiers, currentPage, currentFamilleMetier, onPageC
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={12}/>
                                 : filteredData?.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

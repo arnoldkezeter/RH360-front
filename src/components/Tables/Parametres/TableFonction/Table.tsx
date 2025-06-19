@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import ButtonCreate from "../../common/ButtonCreate";
-import LoadingTable from "../../common/LoadingTable";
-import NoDataTable from "../../common/NoDataTable";
 import InputSearch from "../../common/SearchTable";
 import HeaderTable from "./HeaderTable";
 import BodyTable from "./BodyTable";
 import { useTranslation } from "react-i18next";
 import { setShowModal } from "../../../../_redux/features/setting";
 import { RootState } from "../../../../_redux/store";
-import ErrorTable from "../../common/ErrorTable";
 
 interface TableFonctionProps {
     data: CommonSettingProps[];

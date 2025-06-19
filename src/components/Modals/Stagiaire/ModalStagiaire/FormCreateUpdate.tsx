@@ -5,7 +5,7 @@ import CustomDialogModal from '../../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { useUserFormData } from '../../../../hooks/useSettingData';
+import { useSettingData } from '../../../../hooks/useSettingData';
 import { getDepartementsForDropDown } from '../../../../services/settings/departementAPI';
 import { getCommunesForDropDown } from '../../../../services/settings/communeAPI';
 import { createStagiaire, updateStagiaire } from '../../../../services/stagiaires/stagiaireAPI';
@@ -17,7 +17,8 @@ import FilterList from '../../../ui/AutoComplete';
 
 function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
-    const { loading, error, regions, etablissements} = useUserFormData(lang);
+    const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
+    const {data:{etablissements}} = useSelector((state: RootState) => state.etablissementSlice)
     const roles = Object.values(ROLES)
     // const structures:Structure[] =[];
     // const regions:Region[] =[];
@@ -394,14 +395,6 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
     }
 
 
-    if (loading) {
-        return <div>{t("Chargement des données...")}</div>;
-    }
-
-    const firstError = Object.values(error).find(err => err !== null);
-    if (firstError) {
-        return <div>{t("Une erreur est survenue :")} {firstError}</div>;
-    }
     
     return (
         <>

@@ -39,34 +39,6 @@ const CategorieProfessionnelles = () => {
         });
     }, []);
    
-    useEffect(() => {
-        const fetchGrades = async () => {
-            dispatch(setGradeLoading(true));
-            try {
-                const fetchedGrades = await getGradesForDropDown({ lang });
-                if (fetchedGrades) {
-                    dispatch(setGrades(fetchedGrades));
-                    // Initialiser la région courante avec la première région récupérée
-                    setCurrentGrade(fetchedGrades.grades[0] || null);
-                } else {
-                    dispatch(setGrades({
-                        grades: [],
-                        currentPage: 0,
-                        totalItems: 0,
-                        totalPages: 0,
-                        pageSize: 0,
-                    }));
-                }
-            } catch (error) {
-                dispatch(setErrorPageGrade(t('message.erreur')));
-                createToast(t('message.erreur'), "", 2);
-            } finally {
-                dispatch(setGradeLoading(false));
-            }
-        };
-        fetchGrades();
-    }, [lang, dispatch, t]);
-
     
     const fetchCategorieProfessionnelles = async () => {
         if (!currentGrade || grades.length === 0) return;

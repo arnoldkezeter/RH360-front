@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import LoadingTable from "../../common/LoadingTable";
-import NoDataTable from "../../common/NoDataTable";
 import InputSearch from "../../common/SearchTable";
-import { Ref, SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaFilter, FaSort } from "react-icons/fa6";
 import HeaderTable from "./HeaderTable";
 import BodyTable from "./BodyTable";
@@ -14,6 +12,8 @@ import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import Pagination from "../../../Pagination/Pagination";
 import { getChercheursByFiltres } from "../../../../services/chercheurs/chercheurAPI";
 import { STATUTS } from "../../../../config";
+import Skeleton from "react-loading-skeleton";
+import { NoData } from "../../../NoData";
 
 
 
@@ -37,8 +37,6 @@ const Table = ({ data, etablissements, currentPage, currentEtablissement, curren
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const pageIsLoading = useSelector((state: RootState) => state.chercheurSlice.pageIsLoading);
-    const [isDownload, setIsDownload]=useState(false);
-
     
     
     // Fonction pour basculer la visibilité des CustomDropDown
@@ -264,9 +262,9 @@ const Table = ({ data, etablissements, currentPage, currentEtablissement, curren
                         {/* en tete du tableau */}
                         {
                             pageIsLoading ?
-                                <LoadingTable />
+                                <Skeleton count={12}/>
                                 : filteredData.length === 0 ?
-                                    <NoDataTable /> :
+                                    <NoData /> :
                                     <HeaderTable />
                         }
 

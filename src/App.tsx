@@ -22,125 +22,98 @@ import ProtectedRoute from './components/protectRoutes.js';
 import AccessDenied from './pages/CommonPage/AccesRefuse.js';
 import { HeaderProvider } from './components/Context/HeaderConfig.js';
 import { setUser } from './_redux/features/utilisateurs/utilisateurSlice.js';
+import { useSettingData } from './hooks/useSettingData.js';
+import { setRegions } from './_redux/features/parametres/regionSlice.js';
 
 function App() {
 
   const dispatch = useDispatch();
+  const lang: string = useSelector((state: RootState) => state.setting.language); // fr ou en
 
-
-  const [isMobileOrTablet, setIsMobileOrTablet] = useState(true);
-  const roles = config.roles;
-
-
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState<boolean>(true);
   const [userRole, setUserRole] = useState<string>('');
-
-  const [loading, setLoading] = useState<boolean>(false);
-  // recuperer les info en local storage
-
+  const [loading, setLoading] = useState<boolean>(true); // Commence en mode chargement
   const [isAuth, setIsAuth] = useState<{ value: any; status: boolean }>({ value: 'default', status: false });
-
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
 
-  const lang:string = useSelector((state: RootState) => state.setting.language); // fr ou en
-  const user:MinUtilisateurState = useSelector((state: RootState) => state.utilisateurSlice.utilisateur); 
-  
-  const {t}=useTranslation();
-
-
-
-
-  // au lencement de la page
-  const checkIfMobileOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  // Vérifier si le dispositif est mobile ou tablette
   useEffect(() => {
-    dispatch(setSaveDeviceType(checkIfMobileOrTablet))
-    if (checkIfMobileOrTablet) {
-      setIsMobileOrTablet(false);
-    }
-  }, [checkIfMobileOrTablet]);
-
-
-
-  // recupeer les info du token
-  useEffect(() => {
-    setLoading(true)
-    const updateAuthStatus = async () => {
-      await isUserAuthenticated().then((getAuth) => {
-        setIsAuth(getAuth);
-      })
-
-    };
-    updateAuthStatus();
-
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    setIsMobileOrTablet(isMobile);
+    dispatch(setSaveDeviceType(isMobile));
   }, []);
- 
 
-
+  // Récupérer les informations d'authentification
   useEffect(() => {
+    const updateAuthStatus = async () => {
+      try {
+        const authData = await isUserAuthenticated();
+        setIsAuth(authData);
+      } catch (err) {
+        console.error("Erreur lors de la vérification d'authentification :", err);
+      } finally {
+        setLoading(false); // Fin du chargement
+      }
+    };
+
+    updateAuthStatus();
+  }, []);
+
+  // Gérer l'état d'authentification et charger les informations utilisateur
+  useEffect(() => {
+    if (!isAuth.status) return;
 
     const handleAuthentication = async () => {
-      if (isAuth.status) {
-        const localUser = isAuth.value;
+      const localUser = isAuth.value;
 
-        if (localUser) {
-          const { _id, role, nom, prenom, email, photoDeProfil, genre, actif  } = localUser;
-          if (role !== "" && role !== null && role !== undefined) {
-            // dispatch(setMinimumUser({
-            //   _id: userId, role: role,
-            // }));
-            dispatch(setUser({
-              _id: _id,
-              role: role,
-              nom: nom,
-              prenom: prenom,
-              email: email,
-              photoDeProfil: photoDeProfil,
-              genre: genre,
-              actif: actif
-            }))
-            setUserRole(role);
-            
-          }
+      if (localUser) {
+        const { _id, role, nom, prenom, email, photoDeProfil, genre, actif } = localUser;
+        if (role) {
+          dispatch(
+            setUser({
+              _id,
+              role,
+              nom,
+              prenom,
+              email,
+              photoDeProfil,
+              genre,
+              actif,
+            })
+          );
+          setUserRole(role);
         }
-
-      } else {
-
-        setLoading(false);
       }
-
-    }
+    };
 
     handleAuthentication();
-  }, [isAuth]);
+  }, [isAuth, dispatch]);
+
+  // Charger les paramètres de l'application uniquement si l'utilisateur est authentifié
+  const { error } = useSettingData(lang, isAuth.status);
+
+  // Gestion de l'état global de chargement
+  if (loading) {
+    return <InitialPage />;
+  }
+
+  if (Object.keys(error).length > 0) {
+      return (
+        <div>
+          <h1>Une erreur est survenue :</h1>
+          <ul>
+            {Object.entries(error).map(([key, message]) => (
+              <li key={key}>{`${key}: ${message}`}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+
+  const roles = config.roles;
 
  
-  // useEffect(() => {
-  //   // recuperer les settings 
-  //   const fetchSettingsData = async () => {
-
-  //     dispatch(setLoadingDataSetting(true));
-  //     try {
-  //       const settingsData = await apiGetAllSettings();
-  //       dispatch(setDataSetting(settingsData));
-  //       dispatch(setErrorDataSetting(null))
-  //     } catch (error) {
-  //       dispatch(setErrorDataSetting('une erreur est survenue'))
-  //     } finally {
-  //       dispatch(setLoadingDataSetting(false));
-  //     }
-  //   };
-
-  //   const fetchSettingsDataIfAuth = async () => {
-  //     if (isAuth.status) {
-  //       await fetchSettingsData();
-  //     }
-  //   };
-
-  //   fetchSettingsDataIfAuth();
-  // }, [isAuth]);
-
-
-
-
   return loading ? (
     <InitialPage />
   ) : (

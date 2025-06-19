@@ -41,7 +41,7 @@ const resources = [
   },
 ];
 
-export const useUserFormData = (lang: string) => {
+export const useSettingData = (lang: string, isAuth:boolean) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Record<string, string | null>>({});
   const dispatch = useDispatch();
@@ -57,6 +57,7 @@ export const useUserFormData = (lang: string) => {
   const fetchData = useFetchData();
 
   useEffect(() => {
+    if(!isAuth) return;
     const fetchAllData = async () => {
       setLoading(true);
       setError({});
