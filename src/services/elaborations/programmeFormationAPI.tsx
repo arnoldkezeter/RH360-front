@@ -95,6 +95,29 @@ export async function getProgrammeFormations({page, lang }: {page: number, lang:
     }
 }
 
+export async function getProgrammeFormationForDropDown({lang }: {lang:string }): Promise<ProgrammeFormationReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown/all`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const programmesFormations: ProgrammeFormationReturnGetType = response.data.data;
+        
+        return programmesFormations;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
 export async function getProgrammeFormation({id, lang }: {id: string, lang:string }): Promise<ProgrammeFormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(

@@ -128,30 +128,40 @@ const DateRangePicker = forwardRef<DateRangePickerHandle, DateRangePickerProps>(
     );
   };
 
-  const handleDateClick = (date: Date) => {
-  if (selectingStart || !startDate) {
-    setStartDate(date);
-    setEndDate(null);
-    setSelectingStart(false);
-  } else {
-    if (date < startDate) {
-      setStartDate(date);
-      setEndDate(startDate);
+const handleDateClick = (date: Date) => {
+    if (selectingStart || !startDate) {
+        // Premier clic : définir la date de début
+        setStartDate(date);
+        setEndDate(null);
+        setSelectingStart(false);
     } else {
-      setEndDate(date);
+        // Deuxième clic : définir la date de fin
+        let finalStart: Date;
+        let finalEnd: Date;
+        
+        if (date < startDate) {
+            // Si la nouvelle date est antérieure, inverser les dates
+            finalStart = date;
+            finalEnd = startDate;
+        } else {
+            // Si la nouvelle date est postérieure, ordre normal
+            finalStart = startDate;
+            finalEnd = date;
+        }
+        
+        // Mettre à jour les états avec les valeurs finales
+        setStartDate(finalStart);
+        setEndDate(finalEnd);
+        setSelectingStart(true);
+        
+        // Auto-fermeture et appel onDateChange avec les valeurs calculées
+        
+        setIsOpen(false);
+        if (onDateChange) {
+            onDateChange(finalStart, finalEnd);
+        }
     }
-    setSelectingStart(true);
-
-    // 👉 Auto-fermeture et appel onDateChange dès que endDate est défini
-    setIsOpen(false);
-    if (onDateChange) {
-      const finalStart = date < startDate! ? date : startDate!;
-      const finalEnd = date < startDate! ? startDate! : date;
-      onDateChange(finalStart, finalEnd);
-    }
-  }
 };
-
 
   const handleValidate = () => {
     if (startDate && endDate) {

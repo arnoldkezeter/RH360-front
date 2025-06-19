@@ -99,7 +99,8 @@
     "utilisateur":"Permet la gestion centralisée de tous les utilisateurs (Ajout, Modification, Suppression)",
     "stagiaire":"Suivre les stagiaires avec une vue d'ensemble de leur affectation",
     "chercheur":"Suivre les chercheurs avec une vue d'ensemble de leur affectation",
-    "programme_formation":"Permettre la création, la gestion et l'organisation des programmes de formation pour répondre aux besoins stratégiques et opérationnels."
+    "programme_formation":"Permettre la création, la gestion et l'organisation des programmes de formation pour répondre aux besoins stratégiques et opérationnels.",
+    "formation":"Gérez vos formations a déployé"
   },
 
   "tableau_de_bord": {
@@ -166,6 +167,14 @@
     "taux_execution":"Pourcentage d'exécution global",
     "formations_prevues":"Formations prévues",
     "formations_executees":"Formations exécutées",
+
+    "programme_formation":"Programme de formation",
+    "axe_strategique":"Axe Stratégique",
+    "theme":"Thème",
+    "public_cible":"Public cible",
+    "budget_estimatif":"Budget estimatif",
+    "budget_reel":"Budget réel",
+
 
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
@@ -420,6 +429,10 @@
     "stagiaire":"un stagiaire",
     "chercheur":"un chercheur",
 
+    "formation":"une formation",
+    "theme_formation":"un thème de formation",
+    "objectif":"un objectif de formation",
+
     "pas_de_resultats":"Aucun résultat"
     
   },
@@ -428,7 +441,11 @@
     "ajouter_utilisateur":"Ajouter un utilisateur",
     "ajouter_stagiaire":"Ajouter un stagiaire",
     "ajouter_chercheur":"Ajouter un chercheur",
-    "ajouter_programme_formation":"Nouveau programme"
+    "ajouter_programme_formation":"Nouveau programme",
+
+    "ajouter_formation":"Ajouter une formation",
+    "ajouter_theme_formation":"Ajouter un thème de formation",
+    "ajouter_objectif":"Ajouter un objectif de formation"
   },
 
   "actions":{
@@ -505,7 +522,9 @@
     "famille_metier":"une famille de métier",
     "structure":"une structure",
     "besoin_de_formation":"un besoin de formation",
-    "poste_de_travail":"un poste de travail"
+    "poste_de_travail":"un poste de travail",
+    "axe_strategique":"un axe stratégique",
+    "programme_formation":"un programme de formation"
 
   },
   
@@ -544,7 +563,11 @@
     "stagiaire":"un stagiaire",
     "chercheur":"un chercheur",
 
-    "programme_formation":"un programme de formation"
+    "programme_formation":"un programme de formation",
+
+    "formation":"une formation",
+    "theme_formation":"un thème de formation",
+    "objectif":"un objectif de formation"
 
   },
 
@@ -569,7 +592,11 @@
     "stagiaire":"du stagiaire",
     "chercheur":"du chercheur",
 
-    "programme_formation":"du programme de formation"
+    "programme_formation":"du programme de formation",
+
+    "formation":"de la formation",
+    "theme_formation":"du thème de formation",
+    "objectif":"de l'objectif de formation"
     
   },
   "form_delete": {
@@ -595,7 +622,11 @@
     "stagiaire":"du stagiaire",
     "chercheur":"du chercheur",
 
-    "programme_formation":"du programme de formation"
+    "programme_formation":"du programme de formation",
+
+    "formation":"de la formation",
+    "theme_formation":"du thème de formation",
+    "objectif":"de l'objectif de formation"
   },
   "error": {
     "text_fr":"Le champ texte en français est obligatoire.",
@@ -621,6 +652,8 @@
     "departement": "Le champ département est obligatoire.",
     "region": "Le champ région est obligatoire.",
     "date": "Le champ date est obligatoire.",
+    "axe_strategique": "Le champ axe stratégique est obligatoire.",
+    "programme_formation": "Le champ programme de formation est obligatoire.",
     "heure_debut": "Le champ heure de début est obligatoire.",
     "heure_fin": "Le champ heure de fin est obligatoire.",
     "debut_sup_fin_periode": "L'heure de fin ne peut pas être plus petite que l'heure de début",

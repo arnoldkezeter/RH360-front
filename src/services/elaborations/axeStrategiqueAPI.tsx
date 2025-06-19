@@ -142,3 +142,26 @@ export async function searchAxeStrategique({ searchString, lang }: { lang:string
         throw error;
     }
 }
+
+export async function getAxesStrategiqueForDropDown({lang }: {lang:string }): Promise<AxeStrategiqueReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown/all`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const axeStrategiques: AxeStrategiqueReturnGetType = response.data.data;
+        
+        return axeStrategiques;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}

@@ -21,6 +21,7 @@ import Utilisateurs from '../pages/Utilisateurs/Utilisateurs';
 import Stagiaires from '../pages/Stagiaires/Stagiaires';
 import Chercheurs from '../pages/Chercheurs/Chercheurs';
 import ProgrammeFormations from '../pages/Elaboration/ProgrammesFormation';
+import Formations from '../pages/Elaboration/Formations';
 
 
 
@@ -45,16 +46,17 @@ const coreRoutes = [
     component: FamilleMetiers,
   },
 
-  {
-    path: '/elaboration-programme/formations',
-    title: 'Liste des formations',
-    component: undefined,
-  },
 
   {
     path: '/elaboration-programme/programmes-formation',
     title: 'Liste des programmes de formation',
     component: ProgrammeFormations,
+  },
+
+  {
+    path: '/elaboration-programme/formations',
+    title: 'Liste des formations',
+    component: Formations,
   },
 
   {

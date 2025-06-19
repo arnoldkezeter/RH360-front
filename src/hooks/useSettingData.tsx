@@ -12,6 +12,10 @@ import { getFamillesMetierForDropDown } from "../services/elaborations/familleMe
 import { useFetchData } from "./fechDataOptions";
 import { getEtablissementsForDropDown } from "../services/settings/etablissementAPI";
 import { setEtablissements } from "../_redux/features/parametres/etablissementSlice";
+import { getAxesStrategiqueForDropDown } from "../services/elaborations/axeStrategiqueAPI";
+import { setAxeStrategiques } from "../_redux/features/elaborations/axeStrategiqueSlice";
+import { getProgrammeFormation, getProgrammeFormationForDropDown } from "../services/elaborations/programmeFormationAPI";
+import { setProgrammeFormations } from "../_redux/features/elaborations/programmeFormationSlice";
 
 const resources = [
   {
@@ -39,6 +43,18 @@ const resources = [
     setData: setEtablissements,
     selector: (state: RootState) => state.etablissementSlice.data.etablissements,
   },
+
+  {
+    apiFunction: getAxesStrategiqueForDropDown,
+    setData: setAxeStrategiques,
+    selector: (state: RootState) => state.axeStrategiqueSlice.data.axeStrategiques,
+  },
+
+  {
+    apiFunction: getProgrammeFormationForDropDown,
+    setData: setProgrammeFormations,
+    selector: (state: RootState) => state.programmeFormationSlice.data.programmeFormations,
+  },
 ];
 
 export const useSettingData = (lang: string, isAuth:boolean) => {
@@ -52,6 +68,9 @@ export const useSettingData = (lang: string, isAuth:boolean) => {
     grades: useSelector((state: RootState) => state.gradeSlice.data.grades),
     familleMetiers: useSelector((state: RootState) => state.familleMetierSlice.data.familleMetiers),
     etablissements:useSelector((state: RootState) => state.etablissementSlice.data.etablissements),
+    axeStrategiques:useSelector((state: RootState) => state.axeStrategiqueSlice.data.axeStrategiques),
+    programmeFomations:useSelector((state: RootState) => state.programmeFormationSlice.data.programmeFormations),
+
   };
 
   const fetchData = useFetchData();

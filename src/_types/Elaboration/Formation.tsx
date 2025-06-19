@@ -1,13 +1,19 @@
 interface Formation{
+    _id?:string,
     titreFr: string,
     titreEn: string,
     descriptionFr?:string,
     descriptionEn?:string,
-    familleMetier:[FamilleMetier],
+    familleMetier?:[FamilleMetier],
     axeStrategique:AxeStrategique,
     programmeFormation:ProgrammeFormation,
-    nbTachesTotal:number, //Enregistrer le nombre total de tache de la formation
-    nbTachesExecutees:number //Enregistrer le nombre total de tache executée de la formation
+    nbTachesTotal?:number, //Enregistrer le nombre total de tache de la formation
+    nbTachesExecutees?:number //Enregistrer le nombre total de tache executée de la formation
+    nbTheme?:number//Recevoir le nombre total de theme de la formation
+    totalPublicCible?:number//Recevoir le nombre total du public ciblé par la formation
+    periode?:string//Recevoir la période global de d'une formation
+    budgetEstimatif?:number//Recevoir le budget estimatif de la formation
+    budgetReel?:number//Recevoir le budget réel de la formation
 }
 
 

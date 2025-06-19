@@ -2,14 +2,11 @@ import { useDispatch, useSelector } from "react-redux"
 import ButtonCrudTable from "../../common/ButtonActionTable"
 import { setShowModal, setShowModalDelete } from "../../../../_redux/features/setting"
 import { RootState } from "../../../../_redux/store";
-import { useTranslation } from "react-i18next";
-import { config } from "../../../../config";
 
 const BodyTable = ({ data, onEdit }: { data?: FamilleMetier[], onEdit: (familleMetier: FamilleMetier) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const dispatch = useDispatch();
-    const {t}=useTranslation();
-    const roles = config.roles;
+    
     return <tbody>
         {data?.map((item, index) => (
             <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">

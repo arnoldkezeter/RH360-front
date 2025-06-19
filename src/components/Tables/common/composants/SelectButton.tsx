@@ -1,3 +1,4 @@
+import { MoreVertical } from 'lucide-react';
 import  { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiArrowDropDownLine } from 'react-icons/ri';
@@ -47,7 +48,7 @@ export function SelectButton({ listPage }: SelectButtonProps) {
                 ${dropdownOpen ? 'focus:bg-boxdark' : ''}`}
             >
                 <div className={`text-3xl ${dropdownOpen ? 'text-white rotate-3' : ''}`}>
-                    <RiArrowDropDownLine />
+                   <MoreVertical />
                 </div>
             </button>
 
