@@ -116,7 +116,7 @@ const Stagiaires = () => {
                 service: currentService?._id,
                 statut:currentStatut?.key,
                 dateDebut:startDate?.toString(),
-                endDate:endDate?.toString(),
+                dateFin:endDate?.toString(),
                 lang,
             },
             onSuccess: (data) => {

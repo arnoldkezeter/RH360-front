@@ -18,7 +18,8 @@ import utilisateurReducer from "./features/utilisateurs/utilisateurSlice.tsx";
 import stagiaireReducer from "./features/stagiaireSlice.tsx";
 import chercheurRededucer from "./features/chercheurSlice.tsx";
 import programmeFormationReducer from "./features/elaborations/programmeFormationSlice.tsx";
-import formationReducer from "./features/elaborations/formationSlice.tsx"
+import formationReducer from "./features/elaborations/formationSlice.tsx";
+import themeFormationReducer from "./features/elaborations/themeFormationSlice.tsx";
 
 
 const store = configureStore({
@@ -43,6 +44,7 @@ const store = configureStore({
     chercheurSlice:chercheurRededucer,
     programmeFormationSlice:programmeFormationReducer,
     formationSlice:formationReducer,
+    themeFormationSlice:themeFormationReducer
   }
 });
 

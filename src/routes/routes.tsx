@@ -22,6 +22,7 @@ import Stagiaires from '../pages/Stagiaires/Stagiaires';
 import Chercheurs from '../pages/Chercheurs/Chercheurs';
 import ProgrammeFormations from '../pages/Elaboration/ProgrammesFormation';
 import Formations from '../pages/Elaboration/Formations';
+import ThemeFormations from '../pages/Elaboration/ThemeFormations';
 
 
 
@@ -62,7 +63,7 @@ const coreRoutes = [
   {
     path: '/elaboration-programme/formation/themes-formation',
     title: 'Liste des thèmes de formation',
-    component: undefined,
+    component: ThemeFormations,
   },
  
   {

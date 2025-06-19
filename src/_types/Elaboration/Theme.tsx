@@ -1,22 +1,26 @@
-interface Theme{
+interface ThemeFormation{
+    _id?:string,
     titreFr: string,
     titreEn: string,
-    publicCible: [PosteDeTravail],
-    lieux: [{lieu:string, cohorte:Cohorte}],
+    publicCible?: PosteDeTravail[],
+    lieux?: {lieu:string, cohorte:Cohorte}[],
     dateDebut: string,
     dateFin: string,
-    formateurs: [{formateur:Utilisateur, interne:boolean}],
-    responsable:  Utilisateur ,
-    supports: [string],
+    formateurs?: {formateur:Utilisateur, interne:boolean}[],
+    responsable?:  Utilisateur ,
+    supports?: string[],
     formation:Formation,
-    nbTachesTotal:number, //Enregistrer le nombre total de tache du thème
-    nbTachesExecutees:number //Enregistrer le nombre total de tache executée du thème
+    nbTachesTotal?:number, //Enregistrer le nombre total de tache du thème
+    nbTachesExecutees?:number //Enregistrer le nombre total de tache executée du thème
+    budgetEstimatif?:number
+    budgetReel?:number
+    duree?:number
 }
 
 
-interface ThemeInitialData {
+interface ThemeFormationInitialData {
     data: {
-        themes: Theme[];
+        themeFormations: ThemeFormation[];
         currentPage: number;
         totalPages: number;
         totalItems: number;
@@ -26,23 +30,23 @@ interface ThemeInitialData {
     pageError: string | null;
 }
 
-interface CreateThemePayload {
-    theme: Theme; // Données de l'événement à créer
+interface CreateThemeFormationPayload {
+    themeFormation: ThemeFormation; // Données de l'événement à créer
 }
 
-interface UpdateThemePayload {
+interface UpdateThemeFormationPayload {
     id: string; // ID de l'événement à mettre à jour
-    themeData: Partial<Theme>; // Données mises à jour de l'événement
+    themeFormationData: Partial<ThemeFormation>; // Données mises à jour de l'événement
 }
-interface DeleteThemePayload {
+interface DeleteThemeFormationPayload {
     id: string; // ID de l'événement à supprimer
 }
 interface UpdateRolePayload {
     id: string; // ID de l'événement à mettre à jour
-    themeData: Partial<Theme>; // Données mises à jour de l'événement
+    themeFormationData: Partial<ThemeFormation>; // Données mises à jour de l'événement
 }
-interface ThemeReturnGetType {
-    themes: Theme[];
+interface ThemeFormationReturnGetType {
+    themeFormations: ThemeFormation[];
     currentPage: number;
     totalItems: number;
     totalPages: number;

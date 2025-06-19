@@ -16,7 +16,7 @@ import FilterList from '../../../ui/AutoComplete';
 
 
 function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
-    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
+    const lang:string = useSelector((state: RootState) => state.setting.language); // fr ou en
     const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
     const {data:{etablissements}} = useSelector((state: RootState) => state.etablissementSlice)
     const roles = Object.values(ROLES)

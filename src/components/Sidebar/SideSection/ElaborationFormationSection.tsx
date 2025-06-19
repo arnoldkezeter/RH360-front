@@ -27,6 +27,7 @@ const ElaborationSidebarLink: React.FC<ElaborationSidebarLinkProps> = ({
         {path: '/elaboration-programme/familles-metier', label: t('sub_menu.familles_metier')},
         {path: '/elaboration-programme/programmes-formation', label: t('sub_menu.programmes_formation')},
         {path: '/elaboration-programme/formations', label: t('sub_menu.formations')},
+        {path: '/elaboration-programme/formation/themes-formation', label: t('sub_menu.themes_formations')},
         {path: '/elaboration-programme/besoins-formation/exprimer', label: t('sub_menu.besoins_formation_exprimer')},
         {path: '/elaboration-programme/besoins-formation/rapports', label: t('sub_menu.besoins_formation_rapport')},
     ];

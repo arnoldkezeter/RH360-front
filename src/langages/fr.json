@@ -49,6 +49,7 @@
     "familles_metier":"Familles de métier",
     "formations":"Formation",
     "programmes_formation":"Programme de formation",
+    "themes_formations":"Thème de formation",
     "besoins_formation_exprimer":"Exprimez vos besoins de formation",
     "besoins_formation_rapport" : "Besoins de formation (Rapport)",
 
@@ -100,7 +101,8 @@
     "stagiaire":"Suivre les stagiaires avec une vue d'ensemble de leur affectation",
     "chercheur":"Suivre les chercheurs avec une vue d'ensemble de leur affectation",
     "programme_formation":"Permettre la création, la gestion et l'organisation des programmes de formation pour répondre aux besoins stratégiques et opérationnels.",
-    "formation":"Gérez vos formations a déployé"
+    "formation":"Gérez vos formations a déployé",
+    "theme_formation":"Gérez vos formations a déployé"
   },
 
   "tableau_de_bord": {
@@ -147,11 +149,15 @@
     "telephone": "Téléphone",
     "email": "E-mail",
     "mot_de_passe": "Mot de passe",
+    "responsable":"Responsable",
 
     "nb_place_stage":"Nombre de place pour les stages",
     "titre":"Titre",
     "titre_fr":"Titre en français",
     "titre_en":"Titre en anglais",
+    "duree":"Durée",
+    "du":"Du",
+    "au":"au",
 
     "role":"Rôle",
 
@@ -169,13 +175,19 @@
     "formations_executees":"Formations exécutées",
 
     "programme_formation":"Programme de formation",
+    "formation":"Formation",
     "axe_strategique":"Axe Stratégique",
     "theme":"Thème",
     "public_cible":"Public cible",
     "budget_estimatif":"Budget estimatif",
     "budget_reel":"Budget réel",
 
-
+    "aucun_responsable":"Aucun responsable trouvé.",
+    "aucun_poste":"Aucun poste trouvé",
+    "recherche_responsable":"Recherche des responsables...",
+    "recherche_poste":"Recherche des postes...",
+    "tapez_car_deb":"Tapez au moins",
+    "tapez_car_fin":"caractères pour lancer la recherche.",
     
     "aucune_soumission":"Aucune soumission pour l'instant.",
     "termine":"Terminé",
@@ -428,6 +440,7 @@
     "utilisateur":"un utilisateur",
     "stagiaire":"un stagiaire",
     "chercheur":"un chercheur",
+    "responsable":"un responsable",
 
     "formation":"une formation",
     "theme_formation":"un thème de formation",
@@ -524,7 +537,8 @@
     "besoin_de_formation":"un besoin de formation",
     "poste_de_travail":"un poste de travail",
     "axe_strategique":"un axe stratégique",
-    "programme_formation":"un programme de formation"
+    "programme_formation":"un programme de formation",
+    "formation":"une formation"
 
   },
   
@@ -654,6 +668,7 @@
     "date": "Le champ date est obligatoire.",
     "axe_strategique": "Le champ axe stratégique est obligatoire.",
     "programme_formation": "Le champ programme de formation est obligatoire.",
+    "formation": "Le champ formation est obligatoire.",
     "heure_debut": "Le champ heure de début est obligatoire.",
     "heure_fin": "Le champ heure de fin est obligatoire.",
     "debut_sup_fin_periode": "L'heure de fin ne peut pas être plus petite que l'heure de début",
