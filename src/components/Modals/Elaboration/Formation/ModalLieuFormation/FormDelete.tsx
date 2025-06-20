@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowModalDelete } from '../../../../_redux/features/setting.tsx';
-import { RootState } from '../../../../_redux/store.tsx';
-import CustomDialogModal from '../../CustomDialogModal.tsx';
+import { setShowModalDelete } from '../../../../../_redux/features/setting.tsx';
+import { RootState } from '../../../../../_redux/store.tsx';
+import CustomDialogModal from '../../../CustomDialogModal.tsx';
 import { useTranslation } from 'react-i18next';
-import createToast from '../../../../hooks/toastify.tsx';
-import { deleteThemeFormation } from '../../../../services/elaborations/themeFormationAPI.tsx';
-import { deleteThemeFormationSlice } from '../../../../_redux/features/elaborations/themeFormationSlice.tsx';
+import createToast from '../../../../../hooks/toastify.tsx';
+import { deleteLieuFormation } from '../../../../../services/elaborations/lieuFormationAPI.tsx';
+import { deleteLieuFormationSlice } from '../../../../../_redux/features/elaborations/lieuFormationSlice.tsx';
 
 
 
-function FormDelete({ themeFormation }: { themeFormation : ThemeFormation | null}) {
+function FormDelete({ lieuFormation, themeId }: { lieuFormation : LieuFormation | null, themeId:string}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
 
@@ -18,13 +18,13 @@ function FormDelete({ themeFormation }: { themeFormation : ThemeFormation | null
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
-        if (themeFormation?._id != undefined) {
-            await deleteThemeFormation(themeFormation._id, lang).then((e: ReponseApiPros) => {
+        if (lieuFormation?._id != undefined) {
+            await deleteLieuFormation(themeId, lieuFormation._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
 
-                    if (themeFormation._id) {
-                        dispatch(deleteThemeFormationSlice({ id: themeFormation._id }));
+                    if (lieuFormation._id) {
+                        dispatch(deleteLieuFormationSlice({ id: lieuFormation._id }));
                     }
 
                     closeModal();
@@ -47,7 +47,7 @@ function FormDelete({ themeFormation }: { themeFormation : ThemeFormation | null
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression')+t('form_delete.theme_formation')} : {themeFormation?lang === 'fr'?themeFormation.titreFr:themeFormation.titreEn:""} </h1>
+                <h1>{t('form_delete.suppression')+t('form_delete.lieu_formation')} : {lieuFormation?lieuFormation.lieu:""} </h1>
             </CustomDialogModal>
         </>
     );

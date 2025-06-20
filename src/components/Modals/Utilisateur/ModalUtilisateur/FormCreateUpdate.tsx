@@ -97,6 +97,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
             setEmail("");
             setMatricule("");
             setTelephone("");
+            setRole(undefined)
             setGrade(undefined);
             setCategorie(undefined);
             setFamilleMetier(undefined);
@@ -464,7 +465,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                 }
             }).catch((e) => {
                 console.log(e);
-                createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                createToast(e.response.data.message, '', 2);
             })
 
         } else {
@@ -522,7 +523,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     }
                 }).catch((e) => {
                     console.log(e);
-                    createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+                    createToast(e.response.data.message, '', 2);
                 })
         }
     }

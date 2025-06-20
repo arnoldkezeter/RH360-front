@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import settingReducer from "./features/setting.tsx";
 import structureReducer from "./features/parametres/strucutureSlice.tsx";
+import cohorteReducer from "./features/parametres/cohorteSlice.tsx";
 import serviceReducer from "./features/parametres/serviceSlice.tsx";
 import categorieProfessionnelleReducer from "./features/parametres/categorieProfessionnelleSlice.tsx";
 import besoinFormationPredefiniReducer from "./features/parametres/besoinFormationPredefini.tsx";
@@ -20,12 +21,14 @@ import chercheurRededucer from "./features/chercheurSlice.tsx";
 import programmeFormationReducer from "./features/elaborations/programmeFormationSlice.tsx";
 import formationReducer from "./features/elaborations/formationSlice.tsx";
 import themeFormationReducer from "./features/elaborations/themeFormationSlice.tsx";
+import lieuFormationReducer from "./features/elaborations/lieuFormationSlice.tsx"
 
 
 const store = configureStore({
   reducer: {
     setting: settingReducer,
     structureSlice:structureReducer,
+    cohorteSlice:cohorteReducer,
     gradeSlice:gradeReducer,
     serviceSlice:serviceReducer,
     categorieProfessionnelleSlice:categorieProfessionnelleReducer,
@@ -44,7 +47,8 @@ const store = configureStore({
     chercheurSlice:chercheurRededucer,
     programmeFormationSlice:programmeFormationReducer,
     formationSlice:formationReducer,
-    themeFormationSlice:themeFormationReducer
+    themeFormationSlice:themeFormationReducer,
+    lieuFormationSlice:lieuFormationReducer
   }
 });
 

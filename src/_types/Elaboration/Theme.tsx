@@ -1,9 +1,10 @@
+
 interface ThemeFormation{
     _id?:string,
     titreFr: string,
     titreEn: string,
     publicCible?: PosteDeTravail[],
-    lieux?: {lieu:string, cohorte:Cohorte}[],
+    lieux?: LieuFormation[],
     dateDebut: string,
     dateFin: string,
     formateurs?: {formateur:Utilisateur, interne:boolean}[],
@@ -28,6 +29,7 @@ interface ThemeFormationInitialData {
     };
     pageIsLoading: boolean;
     pageError: string | null;
+    selectedTheme:ThemeFormation | undefined
 }
 
 interface CreateThemeFormationPayload {

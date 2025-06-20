@@ -16,6 +16,8 @@ import { getAxesStrategiqueForDropDown } from "../services/elaborations/axeStrat
 import { setAxeStrategiques } from "../_redux/features/elaborations/axeStrategiqueSlice";
 import { getProgrammeFormation, getProgrammeFormationForDropDown } from "../services/elaborations/programmeFormationAPI";
 import { setProgrammeFormations } from "../_redux/features/elaborations/programmeFormationSlice";
+import { getCohortesForDropDown } from "../services/settings/cohorteAPI";
+import { setCohortes } from "../_redux/features/parametres/cohorteSlice";
 
 const resources = [
   {
@@ -55,6 +57,12 @@ const resources = [
     setData: setProgrammeFormations,
     selector: (state: RootState) => state.programmeFormationSlice.data.programmeFormations,
   },
+
+  {
+    apiFunction: getCohortesForDropDown,
+    setData: setCohortes,
+    selector: (state: RootState) => state.cohorteSlice.data.cohortes,
+  },
 ];
 
 export const useSettingData = (lang: string, isAuth:boolean) => {
@@ -70,7 +78,7 @@ export const useSettingData = (lang: string, isAuth:boolean) => {
     etablissements:useSelector((state: RootState) => state.etablissementSlice.data.etablissements),
     axeStrategiques:useSelector((state: RootState) => state.axeStrategiqueSlice.data.axeStrategiques),
     programmeFomations:useSelector((state: RootState) => state.programmeFormationSlice.data.programmeFormations),
-
+    cohortes:useSelector((state: RootState) => state.cohorteSlice.data.cohortes),
   };
 
   const fetchData = useFetchData();

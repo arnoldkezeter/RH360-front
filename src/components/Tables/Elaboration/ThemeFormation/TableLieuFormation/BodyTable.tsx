@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
-import ButtonCrudTable from "../../common/ButtonActionTable"
-import { setShowModal, setShowModalDelete } from "../../../../_redux/features/setting"
-import { SelectButton } from "../../common/composants/SelectButton";
-import { RootState } from "../../../../_redux/store";
-import { formatDateWithLang } from "../../../../fonctions/fonction";
+import ButtonCrudTable from "../../../common/ButtonActionTable"
+import { setShowModal, setShowModalDelete } from "../../../../../_redux/features/setting"
+import { SelectButton } from "../../../common/composants/SelectButton";
+import { RootState } from "../../../../../_redux/store";
+import { calculerTotalParticipantsTS, formatDateWithLang, getCohorteNamesString } from "../../../../../fonctions/fonction";
 import { useTranslation } from "react-i18next";
 
-const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeFormation: ThemeFormation) => void }) => {
+const BodyTable = ({ data, onEdit}: { data: LieuFormation[], onEdit: (lieuFormation: LieuFormation) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); 
     const dispatch = useDispatch();
     const {t}=useTranslation()
@@ -24,7 +24,7 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                 {/* titre */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{lang === 'fr' ? item.titreFr : item.titreEn}</h5>
+                        <h5>{item.lieu}</h5>
                     </div>
                 </td>
 
@@ -32,35 +32,26 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark align-top">
                     <div className="min-h-[40px] flex items-center">
                         <h5>
-                            {formatDateWithLang(item.dateDebut, lang) === formatDateWithLang(item.dateFin, lang) 
-                                ? formatDateWithLang(item.dateDebut, lang)
-                                : `${t('label.du')} ${formatDateWithLang(item.dateDebut, lang)} ${t('label.au')} ${formatDateWithLang(item?.dateFin, lang)}`
-                            }
+                            {getCohorteNamesString(item.cohortes, lang)}
                         </h5>
                     </div>
                 </td>
 
-                {/* durée */}
-                <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
+                {/* nombre de cohorte */}
+                <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top hidden md:table-cell align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{item?.duree || 0}</h5>
+                        <h5>{item.cohortes.length || 0}</h5>
                     </div>
                 </td>
 
-
-                {/* budget estimatif */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{`${(item?.budgetEstimatif || 0)} ${lang === 'fr' ? "FCFA" : "XAF"}`}</h5>
+                        <h5>
+                            {calculerTotalParticipantsTS(item)}
+                        </h5>
                     </div>
                 </td>
 
-                {/* budget reel */}
-                <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
-                    <div className="min-h-[40px] flex items-center">
-                        <h5>{`${(item?.budgetReel || 0)} ${lang === 'fr' ? "FCFA" : "XAF"}`}</h5>
-                    </div>
-                </td>
 
                 {/* Action bouton pour edit */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-2 dark:border-strokedark align-top">
@@ -75,7 +66,7 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                                 dispatch(setShowModalDelete())
                             }}
                         />
-                        <SelectButton listPage={[]} />
+                        
                     </div>
                 </td>
             </tr>

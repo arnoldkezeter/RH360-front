@@ -3,11 +3,13 @@ import ButtonCrudTable from "../../common/ButtonActionTable"
 import { setShowModal, setShowModalDelete } from "../../../../_redux/features/setting"
 import { RootState } from "../../../../_redux/store";
 import { SelectButton } from "../../common/composants/SelectButton";
+import { formatDateWithLang } from "../../../../fonctions/fonction";
+import { useTranslation } from "react-i18next";
 
 const BodyTable = ({ data, onEdit}: { data: Formation[], onEdit: (formation: Formation) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const dispatch = useDispatch();
-    
+    const {t}=useTranslation();
     return <tbody>
         {data && data.map((item, index) => (
             <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">
@@ -41,9 +43,12 @@ const BodyTable = ({ data, onEdit}: { data: Formation[], onEdit: (formation: For
 
                 {/* periode */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell align-top">
-                    <div className="min-h-[40px] flex items-center">
-                        {/* <h5>{item?.periode || ""}</h5> */}
-                    </div>
+                    <h5>
+                        {formatDateWithLang(item.dateDebut, lang) === formatDateWithLang(item.dateFin, lang) 
+                            ? formatDateWithLang(item.dateDebut, lang)
+                            : `${t('label.du')} ${formatDateWithLang(item.dateDebut, lang)} ${t('label.au')} ${formatDateWithLang(item?.dateFin, lang)}`
+                        }
+                    </h5>
                 </td>
 
                 {/* budget estimatif */}

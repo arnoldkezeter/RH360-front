@@ -50,6 +50,10 @@
     "formations":"Formation",
     "programmes_formation":"Programme de formation",
     "themes_formations":"Thème de formation",
+    "lieux_formation":"Lieux de formation",
+    "taches_formation":"Tâches a exécuté",
+    "objectifs":"Objectifs de la formation",
+    "formateurs":"Formateurs",
     "besoins_formation_exprimer":"Exprimez vos besoins de formation",
     "besoins_formation_rapport" : "Besoins de formation (Rapport)",
 
@@ -84,6 +88,7 @@
     "profil": "Mon Profile",
     "cree_besoin_formation":"Besoins de formation",
     "structures":"Structures",
+    "cohortes":"Cohortes",
     "services": "Services",
     "grades": "Grades",
     "categories_professionnelles": "Catégories professionnelles",
@@ -102,7 +107,11 @@
     "chercheur":"Suivre les chercheurs avec une vue d'ensemble de leur affectation",
     "programme_formation":"Permettre la création, la gestion et l'organisation des programmes de formation pour répondre aux besoins stratégiques et opérationnels.",
     "formation":"Gérez vos formations a déployé",
-    "theme_formation":"Gérez vos formations a déployé"
+    "theme_formation":"Gérez vos formations a déployé",
+    "lieu_formation":"Gérez vos différents lieu de formation par cohorte",
+    "tache_formation":"Gérez vos différentes tâche a exécuté durant la formation",
+    "objetif":"Gérez vos objectifs de formation",
+    "formateur":"Gérez les différents formateurs (internes et externes)"
   },
 
   "tableau_de_bord": {
@@ -135,6 +144,8 @@
     "nature_taxe_fr":"Nature de la taxe en français",
     "nature_taxe_en":"Nature de la taxe en anglais",
     "taux":"Taux",
+    "cohortes":"Cohortes",
+    "cohorte":"Cohorte",
     "structure":"Structure",
     "grade":"Grade",
     "service":"Service",
@@ -158,6 +169,8 @@
     "duree":"Durée",
     "du":"Du",
     "au":"au",
+    "nb_cohorte":"Nombre de cohorte",
+    "nb_participant":"Nombre de participant",
 
     "role":"Rôle",
 
@@ -181,11 +194,18 @@
     "public_cible":"Public cible",
     "budget_estimatif":"Budget estimatif",
     "budget_reel":"Budget réel",
+    "formateurs":"Formateurs",
+    "lieux_formation":"Lieux de formation",
+    "lieu":"Lieu",
+    "tache_formation":"Tache a exécuté",
+    "gerer_utilisateur":"Gérer les participants",
 
     "aucun_responsable":"Aucun responsable trouvé.",
     "aucun_poste":"Aucun poste trouvé",
+    "aucune_cohorte":"Aucune cohorte trouvé",
     "recherche_responsable":"Recherche des responsables...",
     "recherche_poste":"Recherche des postes...",
+    "recherche_cohorte":"Recherche des cohortes...",
     "tapez_car_deb":"Tapez au moins",
     "tapez_car_fin":"caractères pour lancer la recherche.",
     
@@ -425,6 +445,7 @@
     "competence":"une compétence",
 
     "structure":"une structure",
+    "cohorte":"une cohorte",
     "categorie_professionnelle":"une catégorie professionnelle",
     "poste_de_travail":"un poste de travail",
     "grade": "un grade",
@@ -445,6 +466,9 @@
     "formation":"une formation",
     "theme_formation":"un thème de formation",
     "objectif":"un objectif de formation",
+    "lieu_formation":"un lieu de formation",
+    "tache_formation":"une tache de formation",
+    "formateur":"un formateur",
 
     "pas_de_resultats":"Aucun résultat"
     
@@ -458,7 +482,10 @@
 
     "ajouter_formation":"Ajouter une formation",
     "ajouter_theme_formation":"Ajouter un thème de formation",
-    "ajouter_objectif":"Ajouter un objectif de formation"
+    "ajouter_objectif":"Ajouter un objectif de formation",
+    "ajouter_lieu_formation":"Ajouter un lieu de formation",
+    "ajouter_tache_formation":"Ajouter une tâche de formation",
+    "ajouter_formateur":"Ajouter un formateur"
   },
 
   "actions":{
@@ -532,13 +559,17 @@
     "region": "une région",
     "departement": "un département",
     "commune": "une commune",
+    "role":"un rôle",
+    "statut":"un statut",
     "famille_metier":"une famille de métier",
     "structure":"une structure",
+    "cohorte":"une cohorte",
     "besoin_de_formation":"un besoin de formation",
     "poste_de_travail":"un poste de travail",
     "axe_strategique":"un axe stratégique",
     "programme_formation":"un programme de formation",
     "formation":"une formation"
+    
 
   },
   
@@ -559,6 +590,7 @@
     "enregistrer": "Enregistrer ",
 
     "structure":"une structure",
+    "cohorte":"une cohorte",
     "departement":"un département",
     "commune":"une commune",
     "grade":"un grade",
@@ -581,13 +613,17 @@
 
     "formation":"une formation",
     "theme_formation":"un thème de formation",
-    "objectif":"un objectif de formation"
+    "objectif":"un objectif de formation",
+    "lieu_formation":"un lieu de formation",
+    "formateur":"un formateur",
+    "tache_formation":"une tache a executée"
 
   },
 
   "form_update": {
     "enregistrer": "Mettre à jour les informations ",
     "structure":"de la structure",
+    "cohorte":"de la cohorte",
     "departement":"du département",
     "commune":"d'une commune",
     "grade":"du grade",
@@ -610,7 +646,10 @@
 
     "formation":"de la formation",
     "theme_formation":"du thème de formation",
-    "objectif":"de l'objectif de formation"
+    "objectif":"de l'objectif de formation",
+    "lieu_formation":"du lieu de formation",
+    "formateur":"du formateur",
+    "tache_formation":"de la tache a executée"
     
   },
   "form_delete": {
@@ -618,6 +657,7 @@
     "suppression": "Suppression ",
 
     "structure":"de la structure",
+    "cohorte":"de la cohorte",
     "departement":"du département",
     "commune":"d'une commune",
     "grade":"du grade",
@@ -640,7 +680,11 @@
 
     "formation":"de la formation",
     "theme_formation":"du thème de formation",
-    "objectif":"de l'objectif de formation"
+    "objectif":"de l'objectif de formation",
+
+    "lieu_formation":"du lieu de formation",
+    "formateur":"du formateur",
+    "tache_formation":"de la tache a executée"
   },
   "error": {
     "text_fr":"Le champ texte en français est obligatoire.",
@@ -663,12 +707,15 @@
     "titre_en": "Le champ titre en anglais est obligatoire.",
     "type": "Le champ type est obligatoire.",
     "structure":"Le champ structure est obligatoire.",
+    "cohorte":"Le champ cohorte est obligatoire.",
     "departement": "Le champ département est obligatoire.",
     "region": "Le champ région est obligatoire.",
     "date": "Le champ date est obligatoire.",
     "axe_strategique": "Le champ axe stratégique est obligatoire.",
     "programme_formation": "Le champ programme de formation est obligatoire.",
     "formation": "Le champ formation est obligatoire.",
+    "lieu":"Le champs lieu est obligatoire",
+    "type_formateur":"Le type de formateur est obligatoire",
     "heure_debut": "Le champ heure de début est obligatoire.",
     "heure_fin": "Le champ heure de fin est obligatoire.",
     "debut_sup_fin_periode": "L'heure de fin ne peut pas être plus petite que l'heure de début",

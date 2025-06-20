@@ -123,5 +123,69 @@ export async function getThemeFormationForDropDown({lang }: {lang:string }): Pro
     }
 }
 
+export async function addLieuToTheme(themeId: string,lieu: { lieu: string; cohortes: string[] },lang: string): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.post(
+            `${api}/${themeId}/lieu`,
+            { lieu, cohortes: lieu.cohortes },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error adding lieu to theme:', error);
+        throw error;
+    }
+}
+
+
+export async function updateLieuInTheme(themeId: string,lieuId: string,lieuData: { lieu: string; cohortes: string[] },lang: string): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.put(
+            `${api}/${themeId}/lieu/${lieuId}`,
+            { lieu: lieuData.lieu, cohortes: lieuData.cohortes },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error updating lieu in theme:', error);
+        throw error;
+    }
+}
+
+export async function deleteLieuFromTheme(themeId: string,lieuId: string,lang: string): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.delete(
+            `${api}/${themeId}/lieu/${lieuId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting lieu from theme:', error);
+        throw error;
+    }
+}
+
+
 
 

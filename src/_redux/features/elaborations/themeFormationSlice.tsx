@@ -13,6 +13,7 @@ const initialState: ThemeFormationInitialData = {
     },
     pageIsLoading: false,
     pageError: null,
+    selectedTheme:undefined
 };
 
 // Création du slice
@@ -20,6 +21,9 @@ const themeFormationSlice = createSlice({
     name: "themeFormationSlice",
     initialState,
     reducers: {
+        setThemeFormationSelected(state, action: PayloadAction<ThemeFormation | undefined>) {
+            state.selectedTheme = action.payload;
+        },
         setThemeFormationLoading(state, action: PayloadAction<boolean>) {
             state.pageIsLoading = action.payload;
         },
@@ -43,17 +47,22 @@ const themeFormationSlice = createSlice({
             const { id } = action.payload;
             state.data.themeFormations = state.data.themeFormations.filter(e => e._id !== id);
         },
+
+       
+    
     },
 });
 
 // Actions exportées
 export const {
+    setThemeFormationSelected,
     setThemeFormationLoading,
     setErrorPageThemeFormation,
     setThemeFormations,
     createThemeFormationSlice,
     updateThemeFormationSlice,
-    deleteThemeFormationSlice
+    deleteThemeFormationSlice,
+    
 } = themeFormationSlice.actions;
 
 // Reducer exporté

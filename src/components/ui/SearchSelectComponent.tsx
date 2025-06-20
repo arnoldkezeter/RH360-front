@@ -155,7 +155,7 @@ export const SearchSelectComponent = <T extends Record<string, any>>({
       {/* Éléments sélectionnés sous forme de cercles */}
       {selectedItems.length > 0 && (
         <div className="mb-4">
-          {/* <div className="flex flex-wrap gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg max-h-24 overflow-y-auto"> */}
+          <div className="flex flex-wrap gap-2 p-3 bg-gray-50 border border-stroke rounded-lg max-h-24 overflow-y-auto">
             {selectedItems.map((item: T, index: number) => (
               <div
                 key={index}
@@ -171,7 +171,7 @@ export const SearchSelectComponent = <T extends Record<string, any>>({
                 </button>
               </div>
             ))}
-          {/* </div> */}
+          </div>
         </div>
       )}
       

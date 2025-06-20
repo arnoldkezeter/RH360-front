@@ -22,7 +22,10 @@ import Stagiaires from '../pages/Stagiaires/Stagiaires';
 import Chercheurs from '../pages/Chercheurs/Chercheurs';
 import ProgrammeFormations from '../pages/Elaboration/ProgrammesFormation';
 import Formations from '../pages/Elaboration/Formations';
-import ThemeFormations from '../pages/Elaboration/ThemeFormations';
+import ThemeFormations from '../pages/Elaboration/ThemeFormation/ThemeFormations';
+import Cohortes from '../pages/Parametres/Cohortes';
+import CohorteUserManager from '../pages/Parametres/CohorteUserManager';
+import LieuFormations from '../pages/Elaboration/ThemeFormation/LieuFormation';
 
 
 
@@ -73,22 +76,24 @@ const coreRoutes = [
   },
 
   {
-    path: '/elaboration-programme/formation/theme-formation/public-cible',
-    title: 'Liste du public cible de la formation',
+    path: '/elaboration-programme/formation/theme-formation/lieux-formation',
+    title: 'Les lieux de formation',
+    component: LieuFormations,
+  },
+
+  {
+    path: '/elaboration-programme/formation/theme-formation/formateurs',
+    title: 'Formateurs',
     component: undefined,
   },
 
   {
-    path: '/elaboration-programme/formation/theme-formation/tache-a-executee',
+    path: '/elaboration-programme/formation/theme-formation/taches-a-executee',
     title: 'Tache a executé durant une formation',
     component: undefined,
   },
 
-  {
-    path: '/elaboration-programme/formation/theme-formation/cohortes',
-    title: 'Tache a executé durant une formation',
-    component: undefined,
-  },
+  
 
   {
     path: '/elaboration-programme/besoins-formation/exprimer',
@@ -271,6 +276,18 @@ const coreRoutes = [
     path: '/parametres/structures',
     title: 'Structure',
     component: Structures,
+  },
+
+  {
+    path: '/parametres/cohortes',
+    title: 'Cohorte',
+    component: Cohortes,
+  },
+
+  {
+    path: '/parametres/cohorte/utilisateur',
+    title: 'Cohorte utilisateur',
+    component: CohorteUserManager,
   },
 
   {

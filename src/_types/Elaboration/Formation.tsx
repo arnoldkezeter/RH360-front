@@ -11,7 +11,8 @@ interface Formation{
     nbTachesExecutees?:number //Enregistrer le nombre total de tache executée de la formation
     nbTheme?:number//Recevoir le nombre total de theme de la formation
     totalPublicCible?:number//Recevoir le nombre total du public ciblé par la formation
-    periode?:string//Recevoir la période global de d'une formation
+    dateDebut?: string,
+    dateFin?: string,
     budgetEstimatif?:number//Recevoir le budget estimatif de la formation
     budgetReel?:number//Recevoir le budget réel de la formation
 }

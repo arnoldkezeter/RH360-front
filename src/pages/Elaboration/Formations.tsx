@@ -86,7 +86,6 @@ const Formations = () => {
                 lang,
             },
             onSuccess: (data) => {
-                
                 dispatch(setFormations(data || {
                     formations: [],
                     currentPage: 0,

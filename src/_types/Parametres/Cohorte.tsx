@@ -1,9 +1,10 @@
 interface Cohorte{
+    _id?:string;
     nomFr: string,
     nomEn: string,
     descriptionFr?: string,
     descriptionEn?: string,
-    utilisateurs: [Utilisateur],
+    participants?:Utilisateur[]
 }
 
 

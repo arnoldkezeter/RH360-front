@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../_redux/store";
-import { useHeader } from "../../components/Context/HeaderConfig";
-import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
+import { RootState } from "../../../_redux/store";
+import { useHeader } from "../../../components/Context/HeaderConfig";
+import BreadcrumbPageDescription from "../../../components/BreadcrumbPageDescription";
 
-import { setShowModal } from "../../_redux/features/setting";
-import { useFetchData } from "../../hooks/fechDataOptions";
-import { getFormationForDropDown } from "../../services/elaborations/formationAPI";
-import { setErrorPageThemeFormation, setThemeFormationLoading, setThemeFormations } from "../../_redux/features/elaborations/themeFormationSlice";
-import { getFilteredThemeFormations } from "../../services/elaborations/themeFormationAPI";
-import Table from "../../components/Tables/Elaboration/TableThemeFormation/Table";
-import { setErrorPageFormation, setFormations } from "../../_redux/features/elaborations/formationSlice";
-import FormDelete from "../../components/Modals/Elaboration/ModalThemeFormation/FormDelete";
-import FormCreateUpdate from "../../components/Modals/Elaboration/ModalThemeFormation/FormCreateUpdate";
+import { setShowModal } from "../../../_redux/features/setting";
+import { useFetchData } from "../../../hooks/fechDataOptions";
+import { getFormationForDropDown } from "../../../services/elaborations/formationAPI";
+import { setErrorPageThemeFormation, setThemeFormationLoading, setThemeFormations, setThemeFormationSelected } from "../../../_redux/features/elaborations/themeFormationSlice";
+import { getFilteredThemeFormations } from "../../../services/elaborations/themeFormationAPI";
+import Table from "../../../components/Tables/Elaboration/ThemeFormation/TableThemeFormation/Table";
+import { setErrorPageFormation, setFormations } from "../../../_redux/features/elaborations/formationSlice";
+import FormDelete from "../../../components/Modals/Elaboration/Formation/ModalThemeFormation/FormDelete";
+import FormCreateUpdate from "../../../components/Modals/Elaboration/Formation/ModalThemeFormation/FormCreateUpdate";
 
 const ThemeFormations = () => {
     const dispatch = useDispatch();
@@ -54,6 +54,9 @@ const ThemeFormations = () => {
         // Implémentez ici la logique d'export
     };
 
+    useEffect(()=>{
+        dispatch(setThemeFormationSelected(undefined));
+    },[])
 
     // Charge les formations pour une programmeFormation spécifique
     useEffect(() => {

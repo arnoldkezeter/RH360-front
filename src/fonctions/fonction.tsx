@@ -250,6 +250,33 @@ export function compareDates(date1: string, date2: string): boolean {
   return trimmedDate1 === trimmedDate2;
 }
 
+export function getCohorteNamesString(cohortes:Cohorte[], lang = 'fr') {
+  const nomField = lang === 'en' ? 'nomEn' : 'nomFr';
+
+  // Extraire tous les noms et garder uniquement les noms valides
+  const noms = cohortes.map(c => c[nomField]).filter(Boolean);
+
+  // Supprimer les doublons
+  const nomsUniques = [...new Set(noms)];
+
+  // Retourner sous forme de chaîne, noms séparés par des virgules
+  return nomsUniques.join(', ');
+}
+
+
+export function calculerTotalParticipantsTS(lieu: LieuFormation) {
+    const totalLieu = lieu.cohortes.reduce((totalCohortes, cohorte) => {
+      if (!cohorte.participants || !Array.isArray(cohorte.participants)) {
+        return totalCohortes;
+      }
+      return totalCohortes + cohorte.participants.length;
+    }, 0);
+    return totalLieu
+};
+
+
+
+
  // Fonction pour récupérer les permissions par défaut à partir des fichiers JSON
 //  export async function loadDefaultPermissions(role : string, lang:string) {
 //   let defaultPermissions:{_id:string, permission:string}[] = [];
