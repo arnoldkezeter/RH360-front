@@ -52,7 +52,7 @@
     "themes_formations":"Thème de formation",
     "lieux_formation":"Lieux de formation",
     "taches_formation":"Tâches a exécuté",
-    "objectifs":"Objectifs de la formation",
+    "objectifs_theme":"Objectifs de la formation",
     "formateurs":"Formateurs",
     "besoins_formation_exprimer":"Exprimez vos besoins de formation",
     "besoins_formation_rapport" : "Besoins de formation (Rapport)",
@@ -110,7 +110,7 @@
     "theme_formation":"Gérez vos formations a déployé",
     "lieu_formation":"Gérez vos différents lieu de formation par cohorte",
     "tache_formation":"Gérez vos différentes tâche a exécuté durant la formation",
-    "objetif":"Gérez vos objectifs de formation",
+    "objectif_theme":"Gérez vos objectifs de formation",
     "formateur":"Gérez les différents formateurs (internes et externes)"
   },
 
@@ -172,6 +172,11 @@
     "nb_cohorte":"Nombre de cohorte",
     "nb_participant":"Nombre de participant",
 
+    "formateur":"Formateur",
+    "origine_expertise":"Origine expertise",
+    "interne":"Interne",
+    "externe":"Externe",
+
     "role":"Rôle",
 
     "etablissement":"Etablissement",
@@ -203,9 +208,11 @@
     "aucun_responsable":"Aucun responsable trouvé.",
     "aucun_poste":"Aucun poste trouvé",
     "aucune_cohorte":"Aucune cohorte trouvé",
+    "aucun_formateur":"Aucun formateur trouvé",
     "recherche_responsable":"Recherche des responsables...",
     "recherche_poste":"Recherche des postes...",
     "recherche_cohorte":"Recherche des cohortes...",
+    "recherche_formateur":"Recherche des formateurs...",
     "tapez_car_deb":"Tapez au moins",
     "tapez_car_fin":"caractères pour lancer la recherche.",
     
@@ -482,7 +489,7 @@
 
     "ajouter_formation":"Ajouter une formation",
     "ajouter_theme_formation":"Ajouter un thème de formation",
-    "ajouter_objectif":"Ajouter un objectif de formation",
+    "ajouter_objectif_theme":"Ajouter un objectif de formation",
     "ajouter_lieu_formation":"Ajouter un lieu de formation",
     "ajouter_tache_formation":"Ajouter une tâche de formation",
     "ajouter_formateur":"Ajouter un formateur"
@@ -687,6 +694,8 @@
     "tache_formation":"de la tache a executée"
   },
   "error": {
+    "origine_expertise":"L'origine de l'expertise doit être défini",
+    "formateur":"Le champ formateur est obligatoire",
     "text_fr":"Le champ texte en français est obligatoire.",
     "text_en":"Le champ texte en anglais est obligatoire.",
     "famille_metier":"Le champ famille de métier est obligatoire.",

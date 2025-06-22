@@ -1,6 +1,6 @@
 interface Formateur{
     _id?:string
-    formateur:Utilisateur,
+    utilisateur:Utilisateur,
     interne:boolean
 }
 

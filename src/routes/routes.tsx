@@ -26,6 +26,8 @@ import ThemeFormations from '../pages/Elaboration/ThemeFormation/ThemeFormations
 import Cohortes from '../pages/Parametres/Cohortes';
 import CohorteUserManager from '../pages/Parametres/CohorteUserManager';
 import LieuFormations from '../pages/Elaboration/ThemeFormation/LieuFormation';
+import ObjectifThemes from '../pages/Elaboration/ThemeFormation/ObjectifsTheme';
+import Formateurs from '../pages/Elaboration/ThemeFormation/Formateurs';
 
 
 
@@ -72,7 +74,7 @@ const coreRoutes = [
   {
     path: '/elaboration-programme/formation/theme-formation/objectifs',
     title: 'Liste des objectifs de formation',
-    component: undefined,
+    component: ObjectifThemes,
   },
 
   {
@@ -84,7 +86,7 @@ const coreRoutes = [
   {
     path: '/elaboration-programme/formation/theme-formation/formateurs',
     title: 'Formateurs',
-    component: undefined,
+    component: Formateurs,
   },
 
   {

@@ -110,7 +110,7 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                             listPage.push({
                                 name: t('label.objectifs'),
                                 handleClick: () => {
-
+                                    dispatch(setThemeFormationSelected(item));
                                     navigate('/elaboration-programme/formation/theme-formation/objectifs');
                                 },
                             });

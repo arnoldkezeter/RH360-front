@@ -22,6 +22,8 @@ import programmeFormationReducer from "./features/elaborations/programmeFormatio
 import formationReducer from "./features/elaborations/formationSlice.tsx";
 import themeFormationReducer from "./features/elaborations/themeFormationSlice.tsx";
 import lieuFormationReducer from "./features/elaborations/lieuFormationSlice.tsx"
+import objectifThemeReducer from "./features/elaborations/objectifThemeSlice.tsx"
+import formateurReducer from "./features/elaborations/formateurSlice.tsx"
 
 
 const store = configureStore({
@@ -48,7 +50,9 @@ const store = configureStore({
     programmeFormationSlice:programmeFormationReducer,
     formationSlice:formationReducer,
     themeFormationSlice:themeFormationReducer,
-    lieuFormationSlice:lieuFormationReducer
+    lieuFormationSlice:lieuFormationReducer,
+    objectifThemeSlice:objectifThemeReducer,
+    formateurSlice:formateurReducer,
   }
 });
 
