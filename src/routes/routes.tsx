@@ -28,6 +28,7 @@ import CohorteUserManager from '../pages/Parametres/CohorteUserManager';
 import LieuFormations from '../pages/Elaboration/ThemeFormation/LieuFormation';
 import ObjectifThemes from '../pages/Elaboration/ThemeFormation/ObjectifsTheme';
 import Formateurs from '../pages/Elaboration/ThemeFormation/Formateurs';
+import TachesGeneriques from '../pages/Parametres/TachesGeneriques';
 
 
 
@@ -284,6 +285,12 @@ const coreRoutes = [
     path: '/parametres/cohortes',
     title: 'Cohorte',
     component: Cohortes,
+  },
+
+  {
+    path: '/parametres/taches-formations',
+    title: 'Taches de formation générique',
+    component: TachesGeneriques,
   },
 
   {

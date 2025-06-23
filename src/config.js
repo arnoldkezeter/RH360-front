@@ -20,6 +20,14 @@ export const ROLES = {
 };
 
 
+export const METHODES_VALIDATIONS = {
+    MANUELLE: { nomFr: "Manuelle", nomEn: "Manual", key: "MANUELLE" },
+    DONNEES: { nomFr: "Données", nomEn: "Data", key: "DONNEES" },
+    FICHIER: { nomFr: "Fichier", nomEn: "File", key: "FICHIER" },
+    AUTOMATIQUE: { nomFr: "Automatique", nomEn: "Automatic", key: "AUTOMATIQUE" },
+};
+
+
 // frontnomEnd/constants/status.ts
 export const STATUTS = {
     ACCEPTER: { nomFr: "Accepté", nomEn: "Accepted", key:"ACCEPTER" },

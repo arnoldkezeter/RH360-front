@@ -44,6 +44,7 @@ const ParametreSidebarLink = ({
         { permission: hasProfilePermission, path: '/parametres/profile', label: t('sub_menu.profil') },
         { permission: hasServicePermission, path: '/parametres/besoins-formation/manage', label: t('sub_menu.cree_besoin_formation') },
         { permission: hasServicePermission, path: '/parametres/etablissements', label: t('sub_menu.etablissements') },
+        { permission: hasServicePermission, path: '/parametres/taches-formations', label: t('sub_menu.taches_formations') },        
         { permission: hasServicePermission, path: '/parametres/cohortes', label: t('sub_menu.cohortes') },
         { permission: hasServicePermission, path: '/parametres/taxes', label: t('sub_menu.taxes') },
         { permission: hasServicePermission, path: '/parametres/structures', label: t('sub_menu.structures') },

@@ -51,11 +51,11 @@
     "programmes_formation":"Programme de formation",
     "themes_formations":"Thème de formation",
     "lieux_formation":"Lieux de formation",
-    "taches_formation":"Tâches a exécuté",
     "objectifs_theme":"Objectifs de la formation",
     "formateurs":"Formateurs",
     "besoins_formation_exprimer":"Exprimez vos besoins de formation",
     "besoins_formation_rapport" : "Besoins de formation (Rapport)",
+
 
     "calendrier_formation":"Calendrier de formation",
     "tache_executee":"Tâches exécutées",
@@ -97,8 +97,8 @@
     "regions": "Regions",
     "departements": "Departments",
     "communes": "Communes",
-    "etablissements":"Etablissements"
-
+    "etablissements":"Etablissements",
+    "taches_formations":"Tâches de formation"
   },
 
   "page_description":{
@@ -216,6 +216,8 @@
     "tapez_car_deb":"Tapez au moins",
     "tapez_car_fin":"caractères pour lancer la recherche.",
     
+    "methode_validation":"Méthode de validation",
+
     "aucune_soumission":"Aucune soumission pour l'instant.",
     "termine":"Terminé",
     "en_cours":"En cours",
@@ -474,7 +476,7 @@
     "theme_formation":"un thème de formation",
     "objectif":"un objectif de formation",
     "lieu_formation":"un lieu de formation",
-    "tache_formation":"une tache de formation",
+    "tache_formation":"une tâche de formation",
     "formateur":"un formateur",
 
     "pas_de_resultats":"Aucun résultat"
@@ -575,8 +577,8 @@
     "poste_de_travail":"un poste de travail",
     "axe_strategique":"un axe stratégique",
     "programme_formation":"un programme de formation",
-    "formation":"une formation"
-    
+    "formation":"une formation",
+    "methode_validation":"une méthode de validation"
 
   },
   
@@ -623,7 +625,7 @@
     "objectif":"un objectif de formation",
     "lieu_formation":"un lieu de formation",
     "formateur":"un formateur",
-    "tache_formation":"une tache a executée"
+    "tache_formation":"une tâche de formation"
 
   },
 
@@ -656,7 +658,7 @@
     "objectif":"de l'objectif de formation",
     "lieu_formation":"du lieu de formation",
     "formateur":"du formateur",
-    "tache_formation":"de la tache a executée"
+    "tache_formation":"de la tâche de formation"
     
   },
   "form_delete": {
@@ -691,9 +693,10 @@
 
     "lieu_formation":"du lieu de formation",
     "formateur":"du formateur",
-    "tache_formation":"de la tache a executée"
+    "tache_formation":"de la tâche de formation"
   },
   "error": {
+    "methode_validation":"Le champ méthode de validation est obligatoire",
     "origine_expertise":"L'origine de l'expertise doit être défini",
     "formateur":"Le champ formateur est obligatoire",
     "text_fr":"Le champ texte en français est obligatoire.",
