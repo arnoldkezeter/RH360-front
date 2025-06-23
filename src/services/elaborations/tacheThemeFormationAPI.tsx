@@ -1,15 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 import { apiUrl, wstjqer } from '../../config.js';
 
-const api = `${apiUrl}/themes-formations`;
+const api = `${apiUrl}/taches-theme-formation`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createThemeFormation({titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation}: ThemeFormation, lang:string): Promise<ReponseApiPros> {
+export async function createTacheThemeFormation({tache, dateDebut, dateFin}: TacheThemeFormation,themeId:string,  lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
-            `${api}/`,
-            {titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation},
+            `${api}/${themeId}/`,
+            {tache:tache._id, dateDebut, dateFin},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,16 +21,16 @@ export async function createThemeFormation({titreFr, titreEn, publicCible, dateD
 
         return response.data;
     } catch (error) {
-        console.error('Error creating themeformation:', error);
+        console.error('Error creating tachethemeformation:', error);
         throw error;
     }
 }
 
-export async function updateThemeFormation({ _id, titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation }: ThemeFormation, lang:string): Promise<ReponseApiPros> {
+export async function updateTacheThemeFormation({ _id, tache, dateDebut, dateFin }: TacheThemeFormation,lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation},
+            {tache:tache._id, dateDebut, dateFin},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,15 +42,15 @@ export async function updateThemeFormation({ _id, titreFr, titreEn, publicCible,
 
         return response.data;
     } catch (error) {
-        console.error('Error updating themeformation:', error);
+        console.error('Error updating tachethemeformation:', error);
         throw error;
     }
 }
 
-export async function deleteThemeFormation(themeformationId: string, lang:string): Promise<ReponseApiPros> {
+export async function deleteTacheThemeFormation(tacheThemeFormationId: string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.delete(
-            `${api}/${themeformationId}`,
+            `${api}/${tacheThemeFormationId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,16 +62,16 @@ export async function deleteThemeFormation(themeformationId: string, lang:string
 
         return response.data;
     } catch (error) {
-        console.error('Error deleting themeformation:', error);
+        console.error('Error deleting tachethemeformation:', error);
         throw error;
     }
 }
 
-export async function getFilteredThemeFormations({page, lang, familleMetier, formation, dateDebut, dateFin, search }: {page?: number, lang:string, familleMetier?:string, formation?:string, dateDebut?:string, dateFin?:string, search?:string }): Promise<ThemeFormationReturnGetType> {
+export async function getFilteredTacheThemeFormations({page, lang,themeId, dateDebut, dateFin, executee, search }: {page: number, lang:string,themeId?:string, executee?:boolean, dateDebut?:string, dateFin?:string, search?:string }): Promise<TacheThemeFormationReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/filtre`,
+            `${api}/theme/${themeId}/filtre`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,26 +81,25 @@ export async function getFilteredThemeFormations({page, lang, familleMetier, for
                 params: {
                     page: page,
                     limit: pageSize,
-                    familleMetier, 
-                    formation,
-                    debut:dateDebut, 
-                    fin:dateFin, 
-                    titre:search
+                    estExecutee:executee,
+                    dateDebut, 
+                    dateFin, 
+                    query:search
                 },
             },
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const themeFormations: ThemeFormationReturnGetType = response.data.data;
+        const tacheThemeFormations: TacheThemeFormationReturnGetType = response.data.data;
         
-        return themeFormations;
+        return tacheThemeFormations;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;
     }
 }
 
-export async function getThemeFormationForDropDown({lang }: {lang:string }): Promise<ThemeFormationReturnGetType> {
+export async function getTacheThemeFormationForDropDown({lang }: {lang:string }): Promise<TacheThemeFormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/dropdown/all`,
@@ -114,7 +113,7 @@ export async function getThemeFormationForDropDown({lang }: {lang:string }): Pro
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const programmesFormations: ThemeFormationReturnGetType = response.data.data;
+        const programmesFormations: TacheThemeFormationReturnGetType = response.data.data;
         
         return programmesFormations;
     } catch (error) {

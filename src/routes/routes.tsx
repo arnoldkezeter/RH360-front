@@ -29,6 +29,7 @@ import LieuFormations from '../pages/Elaboration/ThemeFormation/LieuFormation';
 import ObjectifThemes from '../pages/Elaboration/ThemeFormation/ObjectifsTheme';
 import Formateurs from '../pages/Elaboration/ThemeFormation/Formateurs';
 import TachesGeneriques from '../pages/Parametres/TachesGeneriques';
+import TacheThemeFormations from '../pages/Elaboration/ThemeFormation/TacheThemeFormation';
 
 
 
@@ -93,7 +94,7 @@ const coreRoutes = [
   {
     path: '/elaboration-programme/formation/theme-formation/taches-a-executee',
     title: 'Tache a executé durant une formation',
-    component: undefined,
+    component: TacheThemeFormations,
   },
 
   

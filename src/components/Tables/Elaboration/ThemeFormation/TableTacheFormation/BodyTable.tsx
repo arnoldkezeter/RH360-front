@@ -5,14 +5,15 @@ import { SelectButton } from "../../../common/composants/SelectButton";
 import { RootState } from "../../../../../_redux/store";
 import { formatDateWithLang } from "../../../../../fonctions/fonction";
 import { useTranslation } from "react-i18next";
-import { setThemeFormationSelected } from "../../../../../_redux/features/elaborations/themeFormationSlice";
 import { useNavigate } from "react-router-dom";
+import { ETAT_TACHE } from "../../../../../config";
 
-const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeFormation: ThemeFormation) => void }) => {
+const BodyTable = ({ data, onEdit}: { data: TacheThemeFormation[], onEdit: (tacheThemeFormation: TacheThemeFormation) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); 
     const dispatch = useDispatch();
     const {t}=useTranslation()
     const navigate = useNavigate();
+    const etatTache = ETAT_TACHE
     return <tbody>
         {data && data.map((item, index) => (
             <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">
@@ -26,7 +27,7 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                 {/* titre */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{lang === 'fr' ? item.titreFr : item.titreEn}</h5>
+                        <h5>{lang === 'fr' ? item.tache.nomFr : item.tache.nomEn}</h5>
                     </div>
                 </td>
 
@@ -43,26 +44,12 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                 </td>
 
                 {/* durée */}
-                <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black hidden md:table-cell align-top">
-                    <div className="min-h-[40px] flex items-center">
-                        <h5>{item?.duree || 0}</h5>
-                    </div>
-                </td>
-
-
-                {/* budget estimatif */}
-                <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark align-top">
-                    <div className="min-h-[40px] flex items-center">
-                        <h5>{`${(item?.budgetEstimatif || 0)} ${lang === 'fr' ? "FCFA" : "XAF"}`}</h5>
-                    </div>
-                </td>
-
-                {/* budget reel */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{`${(item?.budgetReel || 0)} ${lang === 'fr' ? "FCFA" : "XAF"}`}</h5>
+                        <h5>{item?.estExecutee?(lang==='fr'?etatTache.EXECUTEE.nomFr:etatTache.EXECUTEE.nomEn): (lang==='fr'?etatTache.NON_EXECUTEE.nomFr:etatTache.NON_EXECUTEE.nomEn)}</h5>
                     </div>
                 </td>
+
 
                 {/* Action bouton pour edit */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-2 dark:border-strokedark align-top">
@@ -77,49 +64,6 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                                 dispatch(setShowModalDelete())
                             }}
                         />
-                        {(() => {
-                        // Construire dynamiquement la liste des pages en fonction des permissions
-                            const listPage = [];
-
-                            listPage.push({
-                                name: t('label.lieux_formation'),
-                                handleClick: () => {
-                                    dispatch(setThemeFormationSelected(item));
-                                    navigate('/elaboration-programme/formation/theme-formation/lieux-formation');
-                                },
-                            });
-
-                            listPage.push({
-                                name: t('label.formateurs'),
-                                handleClick: () => {
-                                    dispatch(setThemeFormationSelected(item));
-                                    navigate('/elaboration-programme/formation/theme-formation/formateurs');
-                                },
-                            });
-                        
-
-                            listPage.push({
-                                name: t('label.taches_formations'),
-                                handleClick: () => {
-                                    dispatch(setThemeFormationSelected(item));
-                                    navigate('/elaboration-programme/formation/theme-formation/taches-a-executee');
-                                },
-                            });
-
-                        
-                            listPage.push({
-                                name: t('label.objectifs'),
-                                handleClick: () => {
-                                    dispatch(setThemeFormationSelected(item));
-                                    navigate('/elaboration-programme/formation/theme-formation/objectifs');
-                                },
-                            });
-                        
-
-                            return listPage.length > 0 ? (
-                                <SelectButton listPage={listPage} />
-                            ) : null;
-                        })()}
                     </div>
                 </td>
             </tr>

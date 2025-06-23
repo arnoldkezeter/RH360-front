@@ -25,6 +25,7 @@ import lieuFormationReducer from "./features/elaborations/lieuFormationSlice.tsx
 import objectifThemeReducer from "./features/elaborations/objectifThemeSlice.tsx"
 import formateurReducer from "./features/elaborations/formateurSlice.tsx"
 import tacheGeneriqueReducer from "./features/parametres/tacheGeneriqueSlice.tsx"
+import tacheThemeFormationReducer from "./features/elaborations/tacheThemeFormationSlice.tsx"
 
 
 const store = configureStore({
@@ -55,6 +56,7 @@ const store = configureStore({
     objectifThemeSlice:objectifThemeReducer,
     formateurSlice:formateurReducer,
     tacheGeneriqueSlice:tacheGeneriqueReducer,
+    tacheThemeFormationSlice:tacheThemeFormationReducer,
   }
 });
 

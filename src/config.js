@@ -27,6 +27,11 @@ export const METHODES_VALIDATIONS = {
     AUTOMATIQUE: { nomFr: "Automatique", nomEn: "Automatic", key: "AUTOMATIQUE" },
 };
 
+export const ETAT_TACHE = {
+    EXECUTEE: { nomFr: "Exécutée", nomEn: "Executed", key: "EXECUTEE" },
+    NON_EXECUTEE: { nomFr: "Non exécutée", nomEn: "Not executed", key: "NON_EXECUTEE" },
+};
+
 
 // frontnomEnd/constants/status.ts
 export const STATUTS = {
