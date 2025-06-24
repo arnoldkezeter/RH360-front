@@ -30,6 +30,7 @@ import ObjectifThemes from '../pages/Elaboration/ThemeFormation/ObjectifsTheme';
 import Formateurs from '../pages/Elaboration/ThemeFormation/Formateurs';
 import TachesGeneriques from '../pages/Parametres/TachesGeneriques';
 import TacheThemeFormations from '../pages/Elaboration/ThemeFormation/TacheThemeFormation';
+import CalendrierFormations from '../pages/Execution/CalendrierFormation';
 
 
 
@@ -116,7 +117,7 @@ const coreRoutes = [
   {
     path: '/execution-programme/calendrier-formation',
     title: 'Calendrier de formation',
-    component: undefined,
+    component: CalendrierFormations,
   },
 
   {

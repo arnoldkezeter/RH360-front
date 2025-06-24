@@ -64,18 +64,18 @@ const Table = ({data, currentPage, onPageChange,repartitions, programmeActif, po
                 <CardStat
                     title={t('label.programme_actif')}
                     value={programmeActif}
-                    icon={<BarChart3 className="w-6 h-6 text-blue-600" />}
-                    color="bg-blue-100"
+                    icon={<BarChart3 className="w-6 h-6 text-[#2563EB]" />}
+                    color="bg-[#D1FAE5]"
                     isLoading={pageIsLoading}
                 />
 
                 <CardStat
-                title={t('label.taux_execution')}
-                value={pourcentageExecution+" %"}
-                icon={<CheckCircle className="w-6 h-6 text-green-600" />}
-                color="bg-green-100"
-                footer={<ProgressBar value={pourcentageExecution} />}
-                isLoading={pageIsLoading}
+                    title={t('label.taux_execution')}
+                    value={pourcentageExecution+" %"}
+                    icon={<CheckCircle className="w-6 h-6 text-[#16A34A]" />}
+                    color="bg-[#D1FAE5]"
+                    footer={<ProgressBar value={pourcentageExecution} />}
+                    isLoading={pageIsLoading}
                 />
             </div>
 

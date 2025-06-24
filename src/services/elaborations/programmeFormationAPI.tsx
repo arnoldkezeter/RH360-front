@@ -87,7 +87,7 @@ export async function getProgrammeFormations({page, lang }: {page: number, lang:
 
         // Extraction de tous les objets de paramètres de la réponse
         const programmeFormations: ProgrammeFormationReturnGetType = response.data.data;
-        
+        console.log(programmeFormations)
         return programmeFormations;
     } catch (error) {
         console.error('Error getting all settings:', error);

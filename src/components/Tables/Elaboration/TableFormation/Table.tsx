@@ -3,19 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import InputSearch from "../../common/SearchTable";
 import { useEffect, useRef, useState } from "react";
 import { FaFilter, FaSort } from "react-icons/fa6";
-import HeaderTable from "./HeaderTable";
-import BodyTable from "./BodyTable";
 
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../_redux/store";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import Pagination from "../../../Pagination/Pagination";
-import { STATUTS } from "../../../../config";
 import DateRangePicker, { DateRangePickerHandle } from "../../../ui/RangeDatePicker";
 import Skeleton from "react-loading-skeleton";
 import { NoData } from "../../../NoData";
 import { setErrorPageFormation, setFormationLoading } from "../../../../_redux/features/elaborations/formationSlice";
-import { getFilteredFormations } from "../../../../services/elaborations/formationAPI";
+import { getFormationsForGantt } from "../../../../services/elaborations/formationAPI";
+import GanttChart from "../../../ui/GanttChart";
+import ProgrammeFormations from "../../../../pages/Elaboration/ProgrammesFormation";
+import GanttDiagram from "../../../ui/GanttDiagram";
 
 
 
@@ -23,10 +23,13 @@ interface TableFormationProps {
     data: Formation[];
     familles:FamilleMetier[];
     axeStrategiques:AxeStrategique[];
+    programmeFormations:ProgrammeFormation[]
     currentPage: number;
     currentFamille?:FamilleMetier;
     currentAxe?:AxeStrategique;
+    currentProgramme:ProgrammeFormation
     onPageChange: (page: number) => void;
+    onProgrammeChange:(programme:ProgrammeFormation)=>void;
     onAxeChange:(axeStrategique:AxeStrategique)=>void;
     onFamilleChange:(familleMetier:FamilleMetier)=>void;
     onDateChange:(startDate:Date | null, endDate:Date |null)=>void;
@@ -34,7 +37,33 @@ interface TableFormationProps {
     onEdit: (Formation : Formation) => void;
 }
 
-const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, currentFamille, onPageChange, onAxeChange, onFamilleChange, onDateChange, onResetFilters, onEdit}: TableFormationProps) => {
+let data = [
+        {
+            TaskID: 1,
+            TaskName: 'Project Initiation',
+            StartDate: new Date('04/02/2019'),
+            EndDate: new Date('04/21/2019'),
+            subtasks: [
+                { TaskID: 2, TaskName: 'Identify Site location', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50 },
+                { TaskID: 3, TaskName: 'Perform Soil test', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50  },
+                { TaskID: 4, TaskName: 'Soil test approval', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50 },
+            ]
+        },
+        {
+            TaskID: 5,
+            TaskName: 'Project Estimation',
+            StartDate: new Date('04/02/2019'),
+            EndDate: new Date('04/21/2019'),
+            subtasks: [
+                { TaskID: 6, TaskName: 'Develop floor plan for estimation', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 },
+                { TaskID: 7, TaskName: 'List materials', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 },
+                { TaskID: 8, TaskName: 'Estimation approval', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 }
+            ]
+        }];
+    let taskSettings = {id: 'TaskID', name: 'TaskName', startDate: 'StartDate', endDate: 'EndDate', duration: 'Duration', progress: 'Progress', child: 'subtasks' };
+      
+
+const Table = ({ data, programmeFormations, familles, axeStrategiques, currentPage, currentProgramme, currentAxe, currentFamille, onPageChange, onProgrammeChange, onAxeChange, onFamilleChange, onDateChange, onResetFilters, onEdit}: TableFormationProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -58,8 +87,13 @@ const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, curre
     const [searchText, setSearchText] = useState<string>('');
     const [isSearch, setIsSearch] = useState(false);
 
+    const handleProgrammeSelect = (selected: ProgrammeFormation | undefined) => {
+        if (selected) {
+            onProgrammeChange(selected);
+        }
+    };
     
-     const handleFamilleMetierSelect = (selected: FamilleMetier | undefined) => {
+    const handleFamilleMetierSelect = (selected: FamilleMetier | undefined) => {
         if (selected) {
             resetAllFilters()
             onFamilleChange(selected);
@@ -131,7 +165,7 @@ const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, curre
                     // setFilteredNiveaux([]);
                     let FormationsResult : Formation[] = [];
                     
-                    await getFilteredFormations({page:1, search:searchText, lang}).then(result=>{
+                    await getFormationsForGantt({page:1, search:searchText, programmeFormation:currentProgramme.annee, lang}).then(result=>{
                         if (latestQueryFormation.current === searchText) {
                             if(result){
                                 FormationsResult = result.formations;
@@ -191,6 +225,14 @@ const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, curre
                             </div>
 
                             {/* Dropdowns */}
+                            <CustomDropDown2<ProgrammeFormation>
+                                title={t('label.programme_formation')}
+                                selectedItem={currentProgramme}
+                                items={programmeFormations}
+                                defaultValue={currentProgramme}
+                                displayProperty={(programme: ProgrammeFormation) => `${programme.annee}`}
+                                onSelect={handleProgrammeSelect}
+                            />
                             <CustomDropDown2<FamilleMetier>
                                 title={t('label.famille_metier')}
                                 selectedItem={currentFamille}
@@ -225,8 +267,22 @@ const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, curre
                     {/* Ligne 1 : Filtres alignés */}
                     <div className="flex flex-wrap gap-4 items-end mt-4">
 
+                        <div className="min-w-[175px] flex-1">
+                            <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                                {t('label.programme_formation')}
+                            </label>
+                            <CustomDropDown2<ProgrammeFormation>
+                                title=""
+                                selectedItem={currentProgramme}
+                                items={programmeFormations}
+                                defaultValue={currentProgramme}
+                                displayProperty={(programme: ProgrammeFormation) => `${programme.annee}`}
+                                onSelect={handleProgrammeSelect}
+                            />
+                        </div>
+
                         {/* DateRangePicker */}
-                        <div className="min-w-[220px] flex-1">
+                        <div className="min-w-[215px] flex-1">
                             <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
                                 {t('label.periode')}
                             </label>
@@ -241,7 +297,7 @@ const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, curre
                         </div>
 
                         {/* FamilleMetier */}
-                        <div className="min-w-[180px] flex-1">
+                        <div className="min-w-[175px] flex-1">
                             <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
                                 {t('label.famille_metier')}
                             </label>
@@ -256,7 +312,7 @@ const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, curre
                         </div>
 
                         {/* AxeStrategique */}
-                        <div className="min-w-[180px] flex-1">
+                        <div className="min-w-[175px] flex-1">
                             <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
                                 {t('label.axe_strategique')}
                             </label>
@@ -299,22 +355,30 @@ const Table = ({ data, familles, axeStrategiques, currentPage, currentAxe, curre
 
 
                 {/* DEBUT DU TABLE */}
+                {/* <div className="min-h-screen bg-gray-50 p-4">
+                    
+                </div> */}
                 <div className="max-w-full overflow-x-auto mt-2 lg:mt-8">
-                    <table className="w-full table-auto">
+                    {pageIsLoading ?
+                                <Skeleton count={12}/>
+                                : filteredData.length === 0 ?
+                                    <NoData /> :
+                    <GanttChart formations={filteredData} lang={lang} />}
+                     {/* <table className="w-full table-auto"> */}
                         {/* en tete du tableau */}
-                        {
+                        {/* {
                             pageIsLoading ?
                                 <Skeleton count={12}/>
                                 : filteredData.length === 0 ?
                                     <NoData /> :
                                     <HeaderTable />
-                        }
+                        } */}
 
                         {/* corp du tableau*/}
-                        {
+                        {/* {
                             !pageIsLoading && <BodyTable data={filteredData} onEdit={onEdit}/>
-                        }
-                    </table>
+                        } */}
+                    {/* </table>  */}
                 </div>
 
                 {/* Pagination */}

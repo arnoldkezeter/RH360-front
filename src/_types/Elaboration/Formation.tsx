@@ -15,6 +15,7 @@ interface Formation{
     dateFin?: string,
     budgetEstimatif?:number//Recevoir le budget estimatif de la formation
     budgetReel?:number//Recevoir le budget réel de la formation
+    themes:ThemeFormation[]
 }
 
 

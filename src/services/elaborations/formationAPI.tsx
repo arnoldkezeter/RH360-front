@@ -100,6 +100,39 @@ export async function getFilteredFormations({page, lang, familleMetier, axeStrat
     }
 }
 
+export async function getFormationsForGantt({page, lang, programmeFormation, familleMetier, axeStrategique, dateDebut, dateFin, search }: {page: number, lang:string, programmeFormation:number, familleMetier?:string, axeStrategique?:string, dateDebut?:string, dateFin?:string, search?:string }): Promise<FormationReturnGetType> {
+    const pageSize: number = 10;
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/calendrier`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+                params: {
+                    page: page,
+                    limit: pageSize,
+                    familleMetier, 
+                    axeStrategique,
+                    debut:dateDebut, 
+                    fin:dateFin, 
+                    titre:search,
+                    programmeAnnee:programmeFormation
+                },
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const formations: FormationReturnGetType = response.data.data;
+        return formations;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
 export async function getFormationForDropDown({lang, programmeId }: {lang:string, programmeId:string }): Promise<FormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(
