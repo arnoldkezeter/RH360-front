@@ -263,6 +263,22 @@ export function getCohorteNamesString(cohortes:Cohorte[], lang = 'fr') {
   return nomsUniques.join(', ');
 }
 
+export function getTaxeNamesString(taxes?: Taxe[], lang = 'fr', forTable = false) {
+  const nomField = lang === 'en' ? 'natureFr' : 'natureEn';
+  if(!taxes)return;
+  // Extraire les noms et taux valides
+  const taxesValides = taxes
+    .filter(taxe => taxe[nomField] && taxe.taux !== undefined && taxe.taux !== null)
+    .map(taxe => `${taxe[nomField]} (${taxe.taux}%)`);
+  
+  // Supprimer les doublons
+  const taxesUniques = [...new Set(taxesValides)];
+  
+  // Retourner avec le séparateur approprié
+  const separateur = forTable ? '\n' : ', ';
+  return taxesUniques.join(separateur);
+}
+
 
 export function calculerTotalParticipantsTS(lieu: LieuFormation) {
     const totalLieu = lieu.cohortes.reduce((totalCohortes, cohorte) => {
@@ -273,6 +289,59 @@ export function calculerTotalParticipantsTS(lieu: LieuFormation) {
     }, 0);
     return totalLieu
 };
+
+/**
+ * Calcule le montant TTC pour une dépense unique
+ * @param depense La dépense à calculer
+ * @param utiliserReel Si vrai, utilise le montant réel, sinon prévu
+ * @returns Le montant TTC arrondi à 2 décimales
+ */
+export function calculerMontantTTC({
+  depense,
+  utiliserReel = false,
+}: { depense: Depense; utiliserReel?: boolean }): number {
+  const quantite = depense.quantite ?? 1;
+  const montantUnitaire = utiliserReel
+    ? depense.montantUnitaireReel ?? 0
+    : depense.montantUnitairePrevu ?? 0;
+
+  // Somme des taux de toutes les taxes applicables
+  const tauxTotal = (depense.taxes ?? []).reduce((acc, taxe) => acc + (taxe.taux ?? 0), 0);
+
+  const montantHT = quantite * montantUnitaire;
+  const montantTTC = montantHT * (1 + tauxTotal / 100);
+
+  return Math.round(montantTTC * 100) / 100;
+}
+
+
+/**
+ * Calcule l'écart TTC d'une dépense (reel - prevu)
+ * @param depense La dépense concernée
+ * @returns L'écart TTC (positif = dépassement, négatif = économie)
+ */
+export function calculerEcartDepenseTTC(depense: {
+  quantite?: number;
+  montantUnitairePrevu?: number;
+  montantUnitaireReel?: number;
+  taxes?: { taux: number }[]; // ou mongoose documents si tu préfères
+}): number {
+  const quantite = depense.quantite ?? 1;
+  const prevuHT = depense.montantUnitairePrevu ?? 0;
+  const reelHT = depense.montantUnitaireReel ?? 0;
+
+  // Calcule le taux cumulé des taxes
+  const totalTaux = (depense.taxes ?? []).reduce((acc, taxe) => acc + (taxe.taux ?? 0), 0);
+
+  const prevuTTC = prevuHT * quantite * (1 + totalTaux / 100);
+  const reelTTC = reelHT * quantite * (1 + totalTaux / 100);
+
+  const ecart = reelTTC - prevuTTC;
+
+  return Math.round(ecart * 100) / 100;
+}
+
+
 
 
 

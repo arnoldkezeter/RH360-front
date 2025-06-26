@@ -13,7 +13,7 @@ interface CardStatProps {
 
 export const CardStat = ({ title, value, icon, color = '', footer, isLoading }: CardStatProps) => {
   return (
-    isLoading?<Skeleton count={3}/>:(<div className="bg-white dark:bg-boxdark rounded-2xl p-5 shadow-sm border hover:shadow-lg transition-all duration-300">
+    isLoading?<Skeleton count={3}/>:(<div className="bg-white dark:bg-boxdark rounded-2xl p-5 shadow-sm border border-stroke hover:shadow-lg transition-all duration-300">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-[#6B7280] dark:text-[#9CA3AF] font-medium">{title}</p>

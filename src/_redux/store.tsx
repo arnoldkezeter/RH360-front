@@ -26,6 +26,8 @@ import objectifThemeReducer from "./features/elaborations/objectifThemeSlice.tsx
 import formateurReducer from "./features/elaborations/formateurSlice.tsx"
 import tacheGeneriqueReducer from "./features/parametres/tacheGeneriqueSlice.tsx"
 import tacheThemeFormationReducer from "./features/elaborations/tacheThemeFormationSlice.tsx"
+import budgetFormationReducer from "./features/elaborations/budgetFormationSlice.tsx"
+import depenseReducer from "./features/execution/depenseSlice.tsx"
 
 
 const store = configureStore({
@@ -57,6 +59,8 @@ const store = configureStore({
     formateurSlice:formateurReducer,
     tacheGeneriqueSlice:tacheGeneriqueReducer,
     tacheThemeFormationSlice:tacheThemeFormationReducer,
+    budgetFormationSlice:budgetFormationReducer,
+    depenseSlice:depenseReducer
   }
 });
 

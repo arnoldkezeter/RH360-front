@@ -1,47 +1,49 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import InputSearch from "../../../common/SearchTable";
+import InputSearch from "../../common/SearchTable";
 import { useEffect, useRef, useState } from "react";
 import { FaFilter, FaSort } from "react-icons/fa6";
-import HeaderTable from "./HeaderTable";
-import BodyTable from "./BodyTable";
 
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../../_redux/store";
-import CustomDropDown2 from "../../../../DropDown/CustomDropDown2";
-import Pagination from "../../../../Pagination/Pagination";
-import DateRangePicker, { DateRangePickerHandle } from "../../../../ui/RangeDatePicker";
+import { RootState } from "../../../../_redux/store";
+import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
+import Pagination from "../../../Pagination/Pagination";
+import DateRangePicker, { DateRangePickerHandle } from "../../../ui/RangeDatePicker";
 import Skeleton from "react-loading-skeleton";
-import { NoData } from "../../../../NoData";
-import { setErrorPageThemeFormation, setThemeFormationLoading } from "../../../../../_redux/features/elaborations/themeFormationSlice";
-import { getFilteredThemeFormations } from "../../../../../services/elaborations/themeFormationAPI";
+import { NoData } from "../../../NoData";
+import { setErrorPageFormation, setFormationLoading } from "../../../../_redux/features/elaborations/formationSlice";
+import { getFormationsForGantt } from "../../../../services/elaborations/formationAPI";
+import GanttChart from "../../../ui/GanttChart";
+import ProgrammeFormations from "../../../../pages/Elaboration/ProgrammesFormation";
+import GanttDiagram from "../../../ui/GanttDiagram";
 
 
 
-interface TableThemeFormationProps {
-    data: ThemeFormation[];
-    programmeFormations:ProgrammeFormation[];
-    formations:Formation[];
+interface TableFormationProps {
+    data: Formation[];
+    familles:FamilleMetier[];
+    axeStrategiques:AxeStrategique[];
+    programmeFormations:ProgrammeFormation[]
     currentPage: number;
-    currentProgrammeFormation?:ProgrammeFormation;
-    currentFormation?:Formation;
-    currentFamilleMetier?:FamilleMetier;
+    currentFamille?:FamilleMetier;
+    currentAxe?:AxeStrategique;
+    currentProgramme:ProgrammeFormation
     onPageChange: (page: number) => void;
-    onFormationChange:(formation:Formation)=>void;
-    onProgrammeFormationChange:(programmeFormation:ProgrammeFormation)=>void;
-    onFamilleMetierChange:(familleMetier:FamilleMetier)=>void;
+    onProgrammeChange:(programme:ProgrammeFormation)=>void;
+    onAxeChange:(axeStrategique:AxeStrategique)=>void;
+    onFamilleChange:(familleMetier:FamilleMetier)=>void;
     onDateChange:(startDate:Date | null, endDate:Date |null)=>void;
     onResetFilters:(value:boolean)=>void;
-    onEdit: (themeFormation : ThemeFormation) => void;
+    onEdit: (Formation : Formation) => void;
 }
+    
 
-const Table = ({ data, programmeFormations, formations, currentPage, currentFormation, currentProgrammeFormation, currentFamilleMetier, onPageChange, onFormationChange, onProgrammeFormationChange, onFamilleMetierChange, onDateChange, onResetFilters, onEdit}: TableThemeFormationProps) => {
+const Table = ({ data, programmeFormations, familles, axeStrategiques, currentPage, currentProgramme, currentAxe, currentFamille, onPageChange, onProgrammeChange, onAxeChange, onFamilleChange, onDateChange, onResetFilters, onEdit}: TableFormationProps) => {
     const {t}=useTranslation();
-    const {data:{familleMetiers}} = useSelector((state: RootState) => state.familleMetierSlice);
     const dispatch = useDispatch();
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
-    const pageIsLoading = useSelector((state: RootState) => state.themeFormationSlice.pageIsLoading);
+    const pageIsLoading = useSelector((state: RootState) => state.formationSlice.pageIsLoading);
 
     const datePickerRef = useRef<DateRangePickerHandle>(null);
     
@@ -60,29 +62,27 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
     const [searchText, setSearchText] = useState<string>('');
     const [isSearch, setIsSearch] = useState(false);
 
+    const handleProgrammeSelect = (selected: ProgrammeFormation | undefined) => {
+        if (selected) {
+            onProgrammeChange(selected);
+        }
+    };
     
-    const handleProgrammeFormationSelect = (selected: ProgrammeFormation | undefined) => {
+    const handleFamilleMetierSelect = (selected: FamilleMetier | undefined) => {
         if (selected) {
             resetAllFilters()
-            onProgrammeFormationChange(selected);
+            onFamilleChange(selected);
         }
     };
 
-    const handleFormationSelect = (selected: Formation | undefined) => {
+    const handleAxeStrategiqueSelect = (selected: AxeStrategique | undefined) => {
         if (selected) {
             resetAllFilters()
-            onFormationChange(selected);
+            onAxeChange(selected);
             
         }
     };
 
-    const handleFamilleMetierSelect = (selected: FamilleMetier| undefined) => {
-
-        if (selected) {
-            resetAllFilters()
-            onFamilleMetierChange(selected);
-        }
-    };
 
     const handleResetSelect = () => {
         resetAllFilters()
@@ -92,8 +92,8 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
     
 
      // variable pour la pagination
-    const itemsPerPage =  useSelector((state: RootState) => state.themeFormationSlice.data.pageSize); // nombre d'éléments maximum par page
-    const count = useSelector((state: RootState) => state.themeFormationSlice.data.totalItems);
+    const itemsPerPage =  useSelector((state: RootState) => state.formationSlice.data.pageSize); // nombre d'éléments maximum par page
+    const count = useSelector((state: RootState) => state.formationSlice.data.totalItems);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
 
@@ -111,24 +111,24 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
     
 
     // modifier les données de la page lors de la recherche ou de la sélection de la section
-    const [filteredData, setFilteredData] = useState<ThemeFormation[]>(data);
+    const [filteredData, setFilteredData] = useState<Formation[]>(data);
     
 
-    const latestQueryThemeFormation = useRef('');
+    const latestQueryFormation = useRef('');
     useEffect(() => {
-        dispatch(setThemeFormationLoading(true));
-        latestQueryThemeFormation.current = searchText;
+        dispatch(setFormationLoading(true));
+        latestQueryFormation.current = searchText;
         
         try{
             
-            const filterThemeFormationByContent = async () => {
+            const filterFormationByContent = async () => {
                 if (searchText === '') {
                     // if(isSearch){
                         // sections.length>0?setSection(sections[0]):setSection(undefined);
                         // filterCycleBySection(section?._id);
                         // filterNiveauxByCycle(cycle?._id);
                         
-                        const result: ThemeFormation[] = data;
+                        const result: Formation[] = data;
                         setFilteredData(result); 
                         
                     // }
@@ -138,13 +138,13 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
                     // setNiveau(undefined);
                     // setFilteredCycle([]);
                     // setFilteredNiveaux([]);
-                    let themeFormationsResult : ThemeFormation[] = [];
+                    let FormationsResult : Formation[] = [];
                     
-                    await getFilteredThemeFormations({page:1, search:searchText, lang}).then(result=>{
-                        if (latestQueryThemeFormation.current === searchText) {
+                    await getFormationsForGantt({page:1, search:searchText, programmeFormation:currentProgramme.annee, lang}).then(result=>{
+                        if (latestQueryFormation.current === searchText) {
                             if(result){
-                                themeFormationsResult = result.themeFormations;
-                                setFilteredData(themeFormationsResult);
+                                FormationsResult = result.formations;
+                                setFilteredData(FormationsResult);
                             }
                           }
                         
@@ -154,12 +154,12 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
                 
             };
             
-            filterThemeFormationByContent();
+            filterFormationByContent();
         }catch(e){
-            dispatch(setErrorPageThemeFormation(t('message.erreur')));
+            dispatch(setErrorPageFormation(t('message.erreur')));
         }finally{
-            if (latestQueryThemeFormation.current === searchText) {
-                dispatch(setThemeFormationLoading(false)); // Définissez le loading à false après le chargement
+            if (latestQueryFormation.current === searchText) {
+                dispatch(setFormationLoading(false)); // Définissez le loading à false après le chargement
             }
         }
     }, [searchText, isSearch, data]);
@@ -179,7 +179,7 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
                             {/* InputSearch pour mobile */}
                             <div className="w-full">
                                 <InputSearch 
-                                    hintText={t('recherche.rechercher')+t('recherche.theme_formation')} 
+                                    hintText={t('recherche.rechercher')+t('recherche.formation')} 
                                     value={searchText} 
                                     onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
                                 />
@@ -202,29 +202,28 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
                             {/* Dropdowns */}
                             <CustomDropDown2<ProgrammeFormation>
                                 title={t('label.programme_formation')}
-                                selectedItem={currentProgrammeFormation}
+                                selectedItem={currentProgramme}
                                 items={programmeFormations}
-                                defaultValue={undefined}
-                                displayProperty={(programmeFormation: ProgrammeFormation) => `${programmeFormation.annee}`}
-                                onSelect={handleProgrammeFormationSelect}
-                            />
-                            <CustomDropDown2<Formation>
-                                title={t('label.formation')}
-                                selectedItem={currentFormation}
-                                items={formations}
-                                defaultValue={undefined}
-                                displayProperty={(formation: Formation) => `${lang === 'fr' ? formation.titreFr : formation.titreEn}`}
-                                onSelect={handleFormationSelect}
+                                defaultValue={currentProgramme}
+                                displayProperty={(programme: ProgrammeFormation) => `${programme.annee}`}
+                                onSelect={handleProgrammeSelect}
                             />
                             <CustomDropDown2<FamilleMetier>
                                 title={t('label.famille_metier')}
-                                selectedItem={currentFamilleMetier}
-                                items={familleMetiers}
+                                selectedItem={currentFamille}
+                                items={familles}
                                 defaultValue={undefined}
                                 displayProperty={(familleMetier: FamilleMetier) => `${lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn}`}
                                 onSelect={handleFamilleMetierSelect}
                             />
-
+                            <CustomDropDown2<AxeStrategique>
+                                title={t('label.axe_strategique')}
+                                selectedItem={currentAxe}
+                                items={axeStrategiques}
+                                defaultValue={undefined}
+                                displayProperty={(axeStrategique: AxeStrategique) => `${lang === 'fr' ? axeStrategique.nomFr : axeStrategique.nomEn}`}
+                                onSelect={handleAxeStrategiqueSelect}
+                            />
                             {/* Bouton reset mobile */}
                             <div className="w-full flex justify-end mt-1">
                                 <button onClick={handleResetSelect}>
@@ -243,65 +242,66 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
                     {/* Ligne 1 : Filtres alignés */}
                     <div className="flex flex-wrap gap-4 items-end mt-4">
 
+                        <div className="min-w-[175px] flex-1">
+                            <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                                {t('label.programme_formation')}
+                            </label>
+                            <CustomDropDown2<ProgrammeFormation>
+                                title=""
+                                selectedItem={currentProgramme}
+                                items={programmeFormations}
+                                defaultValue={currentProgramme}
+                                displayProperty={(programme: ProgrammeFormation) => `${programme.annee}`}
+                                onSelect={handleProgrammeSelect}
+                            />
+                        </div>
+
                         {/* DateRangePicker */}
-                        <div className="min-w-[220px] flex-1">
+                        <div className="min-w-[215px] flex-1">
                             <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
                                 {t('label.periode')}
                             </label>
                             <DateRangePicker
                                 ref={datePickerRef}
                                 onDateChange={(start, end) => {
+                                    
                                     onDateChange(start, end)
                                 }}
                                 language={lang==="fr"?"fr":"en"}
                             />
                         </div>
 
-                        {/* ProgrammeFormation */}
-                        <div className="min-w-[180px] flex-1">
-                            <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
-                                {t('label.programme_formation')}
-                            </label>
-                            <CustomDropDown2<ProgrammeFormation>
-                                title=""
-                                selectedItem={currentProgrammeFormation}
-                                items={programmeFormations}
-                                defaultValue={undefined}
-                                displayProperty={(programmeFormation: ProgrammeFormation) => `${programmeFormation.annee}`}
-                                onSelect={handleProgrammeFormationSelect}
-                            />
-                        </div>
-
-                        {/* Formation */}
-                        <div className="min-w-[180px] flex-1">
-                            <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
-                                {t('label.formation')}
-                            </label>
-                            <CustomDropDown2<Formation>
-                                title=""
-                                selectedItem={currentFormation}
-                                items={formations}
-                                defaultValue={undefined}
-                                displayProperty={(formation: Formation) => `${lang === 'fr' ? formation.titreFr : formation.titreEn}`}
-                                onSelect={handleFormationSelect}
-                                
-                            />
-                        </div>
-
                         {/* FamilleMetier */}
-                        <div className="min-w-[180px] flex-1">
+                        <div className="min-w-[175px] flex-1">
                             <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
                                 {t('label.famille_metier')}
                             </label>
                             <CustomDropDown2<FamilleMetier>
                                 title=""
-                                selectedItem={currentFamilleMetier}
-                                items={familleMetiers}
+                                selectedItem={currentFamille}
+                                items={familles}
                                 defaultValue={undefined}
                                 displayProperty={(familleMetier: FamilleMetier) => `${lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn}`}
                                 onSelect={handleFamilleMetierSelect}
                             />
                         </div>
+
+                        {/* AxeStrategique */}
+                        <div className="min-w-[175px] flex-1">
+                            <label className="text-sm lg:text-md font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                                {t('label.axe_strategique')}
+                            </label>
+                            <CustomDropDown2<AxeStrategique>
+                                title=""
+                                selectedItem={currentAxe}
+                                items={axeStrategiques}
+                                defaultValue={undefined}
+                                displayProperty={(axeStrategique: AxeStrategique) => `${lang === 'fr' ? axeStrategique.nomFr : axeStrategique.nomEn}`}
+                                onSelect={handleAxeStrategiqueSelect}
+                                
+                            />
+                        </div>
+
 
                         {/* Bouton reset */}
                         <div className="min-w-[40px] flex-shrink-0">
@@ -319,7 +319,7 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
                     {/* Ligne 2 : Barre de recherche pleine largeur */}
                     <div className="w-full mb-4 mt-4">
                         <InputSearch 
-                            hintText={t('recherche.rechercher')+t('recherche.theme_formation')} 
+                            hintText={t('recherche.rechercher')+t('recherche.formation')} 
                             value={searchText} 
                             onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
                         />
@@ -330,22 +330,30 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
 
 
                 {/* DEBUT DU TABLE */}
+                {/* <div className="min-h-screen bg-gray-50 p-4">
+                    
+                </div> */}
                 <div className="max-w-full overflow-x-auto mt-2 lg:mt-8">
-                    <table className="w-full table-auto">
+                    {pageIsLoading ?
+                                <Skeleton count={12}/>
+                                : filteredData.length === 0 ?
+                                    <NoData /> :
+                    <GanttChart formations={filteredData} lang={lang} />}
+                     {/* <table className="w-full table-auto"> */}
                         {/* en tete du tableau */}
-                        {
+                        {/* {
                             pageIsLoading ?
                                 <Skeleton count={12}/>
-                                : filteredData && filteredData.length === 0 ?
+                                : filteredData.length === 0 ?
                                     <NoData /> :
                                     <HeaderTable />
-                        }
+                        } */}
 
                         {/* corp du tableau*/}
-                        {
+                        {/* {
                             !pageIsLoading && <BodyTable data={filteredData} onEdit={onEdit}/>
-                        }
-                    </table>
+                        } */}
+                    {/* </table>  */}
                 </div>
 
                 {/* Pagination */}

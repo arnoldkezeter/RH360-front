@@ -33,6 +33,19 @@ export const ETAT_TACHE = {
 };
 
 
+export const TYPE_DEPENSE = {
+    BIENS_SERVICES: { nomFr: "Aquisition des biens et services", nomEn: "Acquisition of goods and services", key: "ACQUISITION_BIENS_SERVICES" },
+    FRAIS_ADMINISTRATIF: { nomFr: "Frais administratif", nomEn: "Administrative costs", key: "FRAIS_ADMINISTRATIF" },
+};
+
+export const STATUT_BUDGET = {
+    BROUILLON: { nomFr: "Brouillon", nomEn: "Draft", key: "BROUILLON" },
+    VALIDE: { nomFr: "Valide", nomEn: "Validated", key: "VALIDE" },
+    EXECUTE: { nomFr: "Exécuté", nomEn: "Executed", key: "EXECUTE" },
+    CLOTURE: { nomFr: "Clôturé", nomEn: "Closed", key: "CLOTURE" },
+};
+
+
 // frontnomEnd/constants/status.ts
 export const STATUTS = {
     ACCEPTER: { nomFr: "Accepté", nomEn: "Accepted", key:"ACCEPTER" },

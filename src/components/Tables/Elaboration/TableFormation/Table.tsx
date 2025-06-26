@@ -16,6 +16,8 @@ import { getFormationsForGantt } from "../../../../services/elaborations/formati
 import GanttChart from "../../../ui/GanttChart";
 import ProgrammeFormations from "../../../../pages/Elaboration/ProgrammesFormation";
 import GanttDiagram from "../../../ui/GanttDiagram";
+import HeaderTable from "./HeaderTable";
+import BodyTable from "./BodyTable";
 
 
 
@@ -36,32 +38,6 @@ interface TableFormationProps {
     onResetFilters:(value:boolean)=>void;
     onEdit: (Formation : Formation) => void;
 }
-
-let data = [
-        {
-            TaskID: 1,
-            TaskName: 'Project Initiation',
-            StartDate: new Date('04/02/2019'),
-            EndDate: new Date('04/21/2019'),
-            subtasks: [
-                { TaskID: 2, TaskName: 'Identify Site location', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50 },
-                { TaskID: 3, TaskName: 'Perform Soil test', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50  },
-                { TaskID: 4, TaskName: 'Soil test approval', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50 },
-            ]
-        },
-        {
-            TaskID: 5,
-            TaskName: 'Project Estimation',
-            StartDate: new Date('04/02/2019'),
-            EndDate: new Date('04/21/2019'),
-            subtasks: [
-                { TaskID: 6, TaskName: 'Develop floor plan for estimation', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 },
-                { TaskID: 7, TaskName: 'List materials', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 },
-                { TaskID: 8, TaskName: 'Estimation approval', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 }
-            ]
-        }];
-    let taskSettings = {id: 'TaskID', name: 'TaskName', startDate: 'StartDate', endDate: 'EndDate', duration: 'Duration', progress: 'Progress', child: 'subtasks' };
-      
 
 const Table = ({ data, programmeFormations, familles, axeStrategiques, currentPage, currentProgramme, currentAxe, currentFamille, onPageChange, onProgrammeChange, onAxeChange, onFamilleChange, onDateChange, onResetFilters, onEdit}: TableFormationProps) => {
     const {t}=useTranslation();
@@ -358,27 +334,22 @@ const Table = ({ data, programmeFormations, familles, axeStrategiques, currentPa
                 {/* <div className="min-h-screen bg-gray-50 p-4">
                     
                 </div> */}
-                <div className="max-w-full overflow-x-auto mt-2 lg:mt-8">
-                    {pageIsLoading ?
-                                <Skeleton count={12}/>
-                                : filteredData.length === 0 ?
-                                    <NoData /> :
-                    <GanttChart formations={filteredData} lang={lang} />}
-                     {/* <table className="w-full table-auto"> */}
+                <div className="max-w-full overflow-x-auto mt-2 lg:mt-8">                                
+                     <table className="w-full table-auto"> 
                         {/* en tete du tableau */}
-                        {/* {
+                        {
                             pageIsLoading ?
                                 <Skeleton count={12}/>
                                 : filteredData.length === 0 ?
                                     <NoData /> :
                                     <HeaderTable />
-                        } */}
+                        } 
 
                         {/* corp du tableau*/}
-                        {/* {
+                        {
                             !pageIsLoading && <BodyTable data={filteredData} onEdit={onEdit}/>
-                        } */}
-                    {/* </table>  */}
+                        } 
+                    </table> 
                 </div>
 
                 {/* Pagination */}

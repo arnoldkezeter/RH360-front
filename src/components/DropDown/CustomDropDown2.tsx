@@ -40,7 +40,7 @@ function CustomDropDown2<T>({
         }
     }, [selectedItem, displayProperty]);
 
-    const filteredItems = items.filter((item) =>
+    const filteredItems = items && items.filter((item) =>
         displayProperty(item).toLowerCase().includes(searchText.toLowerCase())
     );
 
@@ -121,7 +121,7 @@ function CustomDropDown2<T>({
                     className="absolute z-50 top-full left-0 w-full max-h-48 overflow-auto border border-stroke
                     dark:border-gray-700 bg-white dark:bg-gray-800 rounded-md mt-1 shadow-lg "
                 >
-                    {filteredItems.length > 0 ? (
+                    {filteredItems && filteredItems.length > 0 ? (
                         filteredItems.map((item, index) => (
                            <li
                                 key={index}

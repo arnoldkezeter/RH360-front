@@ -94,7 +94,7 @@ const GanttChart: React.FC<GanttGridProps> = ({ formations, lang }) => {
           </tr>
         </thead>
         <tbody className="text-gray-700">
-          {formations.map((formation) => (
+          {formations && formations.map((formation) => (
             <React.Fragment key={formation._id}>
               <tr className="border-t border-stroke">
                 <td className="sticky left-0 z-10 bg-white px-4 py-3 font-medium text-gray-800 border-r border-stroke">

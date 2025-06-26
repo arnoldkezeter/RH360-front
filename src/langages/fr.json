@@ -55,6 +55,7 @@
     "formateurs":"Formateurs",
     "besoins_formation_exprimer":"Exprimez vos besoins de formation",
     "besoins_formation_rapport" : "Besoins de formation (Rapport)",
+    "budgets_theme":"Budget de la formation",
 
 
     "calendrier_formation":"Calendrier de formation",
@@ -111,7 +112,9 @@
     "lieu_formation":"Gérez vos différents lieu de formation par cohorte",
     "tache_formation":"Gérez vos différentes tâche a exécuté durant la formation",
     "objectif_theme":"Gérez vos objectifs de formation",
-    "formateur":"Gérez les différents formateurs (internes et externes)"
+    "formateur":"Gérez les différents formateurs (internes et externes)",
+    "suivi_budgetaire":"Gérez et analysez les dépenses prévues et réel pour chaque formation",
+    "budget_theme":"Gérez vos budgets de formation"
   },
 
   "tableau_de_bord": {
@@ -205,14 +208,34 @@
     "lieu":"Lieu",
     "tache_formation":"Tache a exécuté",
     "gerer_utilisateur":"Gérer les participants",
+    "total_budget_prevu":"Total budget prévu",
+    "total_budget_reel":"Total budget réel",
+    "total_ecart":"Total des écarts",
+    "graphique_depenses":"Graphique des dépenses",
+    "liste_depense":"Liste des dépenses",
+    "type_depense":"Type de dépense",
+    "quantite":"Quantité",
+    "montant_unitaire_prevu":"Montant unitaire estimatif (HT)",
+    "montant_unitaire_reel":"Montant unitaire réel (HT)",
+    "taxe":"Taxe",
+    "taxes":"Taxes",
+    "ecart":"Ecart",
+    "total_montant_prevu":"Total montant estimatif (TTC)",
+    "total_montant_reel":"Total montant réel (TTC)",
+    "nature_depense_fr":"Nature de la dépense en français",
+    "nature_depense_en":"Nature de la dépense en anglais",
+    "nature_depense":"Nature de la dépense",
+
 
     "aucune_tache_formation":"Aucune tâche de formation trouvée.",
+    "aucune_taxe":"Aucune taxe trouvée.",
     "aucun_responsable":"Aucun responsable trouvé.",
     "aucun_poste":"Aucun poste trouvé",
     "aucune_cohorte":"Aucune cohorte trouvé",
     "aucun_formateur":"Aucun formateur trouvé",
     "recherche_responsable":"Recherche des responsables...",
     "recherche_tache_formation":"Recherche des tâches de formation...",
+    "recherche_taxe":"Recherche des taxes...",
     "recherche_poste":"Recherche des postes...",
     "recherche_cohorte":"Recherche des cohortes...",
     "recherche_formateur":"Recherche des formateurs...",
@@ -220,6 +243,8 @@
     "tapez_car_fin":"caractères pour lancer la recherche.",
     
     "methode_validation":"Méthode de validation",
+
+    "budget":"Budget",
 
     "aucune_soumission":"Aucune soumission pour l'instant.",
     "termine":"Terminé",
@@ -481,6 +506,8 @@
     "lieu_formation":"un lieu de formation",
     "tache_formation":"une tâche de formation",
     "formateur":"un formateur",
+    "budget_theme":"un budget",
+    "depense":"une dépense",
 
     "pas_de_resultats":"Aucun résultat"
     
@@ -497,7 +524,9 @@
     "ajouter_objectif_theme":"Ajouter un objectif de formation",
     "ajouter_lieu_formation":"Ajouter un lieu de formation",
     "ajouter_tache_formation":"Ajouter une tâche de formation",
-    "ajouter_formateur":"Ajouter un formateur"
+    "ajouter_formateur":"Ajouter un formateur",
+    "ajouter_budget_theme":"Ajouter un budget",
+    "ajouter_depense":"Ajouter une dépense"
   },
 
   "actions":{
@@ -581,7 +610,8 @@
     "axe_strategique":"un axe stratégique",
     "programme_formation":"un programme de formation",
     "formation":"une formation",
-    "methode_validation":"une méthode de validation"
+    "methode_validation":"une méthode de validation",
+    "type_depense":"un type de dépense"
 
   },
   
@@ -628,7 +658,9 @@
     "objectif":"un objectif de formation",
     "lieu_formation":"un lieu de formation",
     "formateur":"un formateur",
-    "tache_formation":"une tâche de formation"
+    "tache_formation":"une tâche de formation",
+    "budget":"un budget",
+    "depense":"une dépense"
 
   },
 
@@ -661,7 +693,9 @@
     "objectif":"de l'objectif de formation",
     "lieu_formation":"du lieu de formation",
     "formateur":"du formateur",
-    "tache_formation":"de la tâche de formation"
+    "tache_formation":"de la tâche de formation",
+    "budget":"du budget",
+    "depense":"de la dépense"
     
   },
   "form_delete": {
@@ -696,9 +730,15 @@
 
     "lieu_formation":"du lieu de formation",
     "formateur":"du formateur",
-    "tache_formation":"de la tâche de formation"
+    "tache_formation":"de la tâche de formation",
+    "budget":"du budget",
+    "depense":"de la dépense"
   },
   "error": {
+    "nature_depense_fr":"Le champ nature de la dépense en français est obligatoire.",
+    "nature_depense_en":"Le champ nature de la dépense en anglais est obligatoire.",
+    "type_depense":"Le champ type dépense est obligatoire.",
+    "montant_unitaire_prevu":"Le champ montant unitaire estimatif est obligatoire.",
     "tache_formation":"Le champ tâche a exécuté est obligatoire.",
     "methode_validation":"Le champ méthode de validation est obligatoire.",
     "origine_expertise":"L'origine de l'expertise doit être défini.",

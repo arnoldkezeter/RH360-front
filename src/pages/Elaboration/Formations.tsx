@@ -12,6 +12,7 @@ import { getFilteredFormations } from "../../services/elaborations/formationAPI"
 import FormDelete from "../../components/Modals/Elaboration/ModalFormation/FormDelete";
 import FormCreateUpdate from "../../components/Modals/Elaboration/ModalFormation/FormCreateUpdate";
 import Table from "../../components/Tables/Elaboration/TableFormation/Table";
+import ProgrammeFormations from "./ProgrammesFormation";
 
 const Formations = () => {
     const dispatch = useDispatch();
@@ -22,10 +23,12 @@ const Formations = () => {
     const { data: { formations } } = useSelector((state: RootState) => state.formationSlice);
     const { data: { axeStrategiques } } = useSelector((state: RootState) => state.axeStrategiqueSlice);
     const { data: { familleMetiers } } = useSelector((state: RootState) => state.familleMetierSlice);
+    const { data: { programmeFormations } } = useSelector((state: RootState) => state.programmeFormationSlice);
 
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [currentAxe, setCurrentAxe] = useState<AxeStrategique | undefined>();
+    const [currentProgramme, setCurrentProgramme] = useState<ProgrammeFormation>(programmeFormations[0] || undefined);
     const [currentFamille, setCurrentFamille] = useState<FamilleMetier | undefined>();
     const [resetFilters, setResetFilters] = useState<boolean>(true);
     const [selectedFormation, setSelectedFormation] = useState<Formation | null>(null);
@@ -107,7 +110,13 @@ const Formations = () => {
 
     // Handlers pour les filtres
     const handlePageChange = (page: number) => setCurrentPage(page);
-
+    const handleProgrammeChange = (programme: ProgrammeFormation) => {
+        setCurrentProgramme(programme);
+        setCurrentAxe(undefined);
+        setStartDate(null);
+        setEndDate(null)
+        setResetFilters(false);
+    };
     const handleDateChange = (start: Date | null, end:Date | null) => {
         setStartDate(start);
         setEndDate(end)
@@ -152,17 +161,19 @@ const Formations = () => {
             <Table
                 data={formations}
                 familles={familleMetiers}
+                programmeFormations={programmeFormations}
+                currentProgramme={currentProgramme}
                 axeStrategiques={axeStrategiques}
                 currentAxe={currentAxe}
                 currentFamille={currentFamille}
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
+                onProgrammeChange={handleProgrammeChange}
                 onFamilleChange={handleFamilleChange}
                 onAxeChange={handleAxeChange}
                 onDateChange={handleDateChange}
                 onResetFilters={handleResetFilters}
-                onEdit={setSelectedFormation} 
-            />
+                onEdit={setSelectedFormation}              />
             <FormCreateUpdate formation={selectedFormation} />
             <FormDelete formation={selectedFormation} />
         </>

@@ -100,7 +100,7 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
                         objectifTheme: {
                             _id: e.data._id,
                             nomFr: e.data.nomFr,
-                            nomEn: e.data.cohortes,
+                            nomEn: e.data.nomEn,
                         }
 
                     }));
@@ -130,7 +130,7 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
                             objectifThemeData: {
                                 _id: e.data._id,
                                 nomFr: e.data.nomFr,
-                                nomEn: e.data.cohortes,
+                                nomEn: e.data.nomEn,
                             }
 
                         }));

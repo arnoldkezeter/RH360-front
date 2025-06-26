@@ -100,10 +100,10 @@ export async function getFilteredThemeFormations({page, lang, familleMetier, for
     }
 }
 
-export async function getThemeFormationForDropDown({lang }: {lang:string }): Promise<ThemeFormationReturnGetType> {
+export async function getThemeFormationForDropDown({lang, formation }: {lang:string,formation:string  }): Promise<ThemeFormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/dropdown/all`,
+            `${api}/dropdown/formation/${formation}`,
             {
                 headers: {
                     'Content-Type': 'application/json',

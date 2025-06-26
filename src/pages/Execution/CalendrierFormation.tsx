@@ -2,16 +2,12 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import { useHeader } from "../../components/Context/HeaderConfig";
 import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
 
-import { setShowModal } from "../../_redux/features/setting";
 import { useFetchData } from "../../hooks/fechDataOptions";
 import { setErrorPageFormation, setFormationLoading, setFormations } from "../../_redux/features/elaborations/formationSlice";
 import {getFormationsForGantt } from "../../services/elaborations/formationAPI";
-import FormDelete from "../../components/Modals/Elaboration/ModalFormation/FormDelete";
-import FormCreateUpdate from "../../components/Modals/Elaboration/ModalFormation/FormCreateUpdate";
-import Table from "../../components/Tables/Elaboration/TableFormation/Table";
+import Table from "../../components/Tables/Execution/TableCalendrier/Table";
 
 const CalendrierFormations = () => {
     const dispatch = useDispatch();
@@ -98,7 +94,6 @@ const CalendrierFormations = () => {
                 lang,
             },
             onSuccess: (data) => {  
-                console.log(data)
                 dispatch(setFormations(data || {
                     formations: [],
                     currentPage: 0,

@@ -31,6 +31,8 @@ import Formateurs from '../pages/Elaboration/ThemeFormation/Formateurs';
 import TachesGeneriques from '../pages/Parametres/TachesGeneriques';
 import TacheThemeFormations from '../pages/Elaboration/ThemeFormation/TacheThemeFormation';
 import CalendrierFormations from '../pages/Execution/CalendrierFormation';
+import BudgetFormations from '../pages/Elaboration/ThemeFormation/BudgetThemeFormation';
+import SuiviBudgetaires from '../pages/Execution/SuiviBudgetaire';
 
 
 
@@ -98,6 +100,12 @@ const coreRoutes = [
     component: TacheThemeFormations,
   },
 
+  {
+    path: '/elaboration-programme/formation/theme-formation/budgets',
+    title: 'Budget de formation',
+    component: BudgetFormations,
+  },
+
   
 
   {
@@ -129,7 +137,7 @@ const coreRoutes = [
   {
     path: '/execution-programme/suivi-budgetaire',
     title: 'Suivi budgetaire sur les formations',
-    component: undefined,
+    component: SuiviBudgetaires,
   },
 
   {
