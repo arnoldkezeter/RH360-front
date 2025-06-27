@@ -80,6 +80,9 @@ export const useFetchDepensesData = ({
   };
 
   useEffect(() => {
+    if (!formationId || !themeId) {
+      return
+    };
     fetchData();
   }, [page, lang, budgetId, type, search, formationId, themeId]);
 

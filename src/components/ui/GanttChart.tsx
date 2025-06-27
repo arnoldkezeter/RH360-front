@@ -100,20 +100,23 @@ const GanttChart: React.FC<GanttGridProps> = ({ formations, lang }) => {
                 <td className="sticky left-0 z-10 bg-white px-4 py-3 font-medium text-gray-800 border-r border-stroke">
                   {formation[`titre${language}`]}
                   <div className="text-xs text-[#2563EB]">
-                    {formation.axeStrategique[`nom${language}`]}
+                    {formation?.axeStrategique?.[`nom${language}`] || ""}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
                     {formation.nbTachesExecutees}/{formation.nbTachesTotal} tâches
                   </div>
                 </td>
-                {renderMonthlyProgress(
-                  formation.dateDebut || "",
-                  formation.dateFin || "",
-                  calculateProgress(formation.nbTachesExecutees || 0, formation.nbTachesTotal || 0),
-                  formation[`titre${language}`]
-                )}
+                {formation?.dateDebut && formation?.dateFin
+                  ? renderMonthlyProgress(
+                      formation.dateDebut,
+                      formation.dateFin,
+                      calculateProgress(formation.nbTachesExecutees || 0, formation.nbTachesTotal || 0),
+                      formation[`titre${language}`]
+                    )
+                  : null
+                }
               </tr>
-              {formation.themes.map((theme) => (
+              {formation && formation.themes && formation.themes.map((theme) => (
                 <tr key={theme._id} className="border-t border-stroke">
                   <td className="sticky left-0 z-10 bg-white px-6 py-3 text-gray-600 border-r border-stroke">
                     {theme[`titre${language}`]}

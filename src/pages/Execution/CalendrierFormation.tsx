@@ -22,14 +22,18 @@ const CalendrierFormations = () => {
 
 
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [currentProgramme, setCurrentProgramme] = useState<ProgrammeFormation>(programmeFormations[0]);
+    const [currentProgramme, setCurrentProgramme] = useState<ProgrammeFormation | undefined>(undefined);
     const [currentAxe, setCurrentAxe] = useState<AxeStrategique | undefined>();
     const [currentFamille, setCurrentFamille] = useState<FamilleMetier | undefined>();
     const [resetFilters, setResetFilters] = useState<boolean>(true);
     const [selectedFormation, setSelectedFormation] = useState<Formation | null>(null);
     const [startDate, setStartDate] = useState<Date |null>(null)
     const [endDate, setEndDate] = useState<Date | null>(null)
-    
+    useEffect(() => {
+        if (!currentProgramme && programmeFormations.length > 0) {
+            setCurrentProgramme(programmeFormations[0]);
+        }
+    }, [programmeFormations, currentProgramme]);
 
     // const { setHeaderConfig } = useHeader();
 

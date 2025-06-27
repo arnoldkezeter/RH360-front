@@ -28,14 +28,18 @@ const Formations = () => {
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [currentAxe, setCurrentAxe] = useState<AxeStrategique | undefined>();
-    const [currentProgramme, setCurrentProgramme] = useState<ProgrammeFormation>(programmeFormations[0] || undefined);
+    const [currentProgramme, setCurrentProgramme] = useState<ProgrammeFormation | undefined>(undefined);
     const [currentFamille, setCurrentFamille] = useState<FamilleMetier | undefined>();
     const [resetFilters, setResetFilters] = useState<boolean>(true);
     const [selectedFormation, setSelectedFormation] = useState<Formation | null>(null);
     const [startDate, setStartDate] = useState<Date |null>(null)
     const [endDate, setEndDate] = useState<Date | null>(null)
     
-
+    useEffect(() => {
+            if (!currentProgramme && programmeFormations.length > 0) {
+                setCurrentProgramme(programmeFormations[0]);
+            }
+        }, [programmeFormations, currentProgramme]);
     const { setHeaderConfig } = useHeader();
 
     // Configure le header
@@ -60,8 +64,7 @@ const Formations = () => {
     useEffect(() => {
         // Cas : filtre sur service demandé explicitement mais service = undefined
         // => on vide la liste sans appel API
-       
-        if (!resetFilters && !endDate && !startDate && currentAxe === undefined && currentFamille === undefined) {
+        if(!currentProgramme || !currentProgramme._id){
             dispatch(setFormations({
                 formations: [],
                 currentPage: 0,
@@ -71,17 +74,14 @@ const Formations = () => {
             }));
             return;
         }
-        // Cas où on ne filtre pas (pas de service, pas de statut, pas resetFilters)
-        if (
-            (!currentAxe && !currentFamille && (!endDate && !startDate) && !resetFilters) ||
-            (axeStrategiques.length === 0 && !resetFilters)
-        ) return;
-        
+       
+    
         fetchData({
             
             apiFunction: getFilteredFormations,
             params: {
                 page: currentPage,
+                programme:currentProgramme._id,
                 axeStrategique: currentAxe?._id,
                 familleMetier:currentFamille?._id,
                 dateDebut:startDate?.toString(),
@@ -104,7 +104,7 @@ const Formations = () => {
                 dispatch(setFormationLoading(isLoading));
             },
         });
-    }, [currentPage, currentAxe, currentFamille, startDate, endDate, resetFilters, lang, dispatch]);
+    }, [currentPage,currentProgramme, currentAxe, currentFamille, startDate, endDate, resetFilters, lang, dispatch]);
 
 
 

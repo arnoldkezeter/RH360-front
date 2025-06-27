@@ -67,7 +67,7 @@ export async function deleteFormation(formationId: string, lang:string): Promise
     }
 }
 
-export async function getFilteredFormations({page, lang, familleMetier, axeStrategique, dateDebut, dateFin, search }: {page: number, lang:string, familleMetier?:string, axeStrategique?:string, dateDebut?:string, dateFin?:string, search?:string }): Promise<FormationReturnGetType> {
+export async function getFilteredFormations({page, lang, programme, familleMetier, axeStrategique, dateDebut, dateFin, search }: {page: number, lang:string, programme:string, familleMetier?:string, axeStrategique?:string, dateDebut?:string, dateFin?:string, search?:string }): Promise<FormationReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
@@ -81,6 +81,7 @@ export async function getFilteredFormations({page, lang, familleMetier, axeStrat
                 params: {
                     page: page,
                     limit: pageSize,
+                    programme,
                     familleMetier, 
                     axeStrategique,
                     debut:dateDebut, 

@@ -8,7 +8,6 @@ import { setBudgetFormationSelected } from "../../../../_redux/features/elaborat
 const BodyTable = ({ data, onEdit }: { data?: Depense[], onEdit: (depense: Depense) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const dispatch = useDispatch();
-    console.log(data)
     return <tbody>
         {data?.map((item, index) => (
             

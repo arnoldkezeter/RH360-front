@@ -12,7 +12,7 @@ import DateRangePicker, { DateRangePickerHandle } from "../../../ui/RangeDatePic
 import Skeleton from "react-loading-skeleton";
 import { NoData } from "../../../NoData";
 import { setErrorPageFormation, setFormationLoading } from "../../../../_redux/features/elaborations/formationSlice";
-import { getFormationsForGantt } from "../../../../services/elaborations/formationAPI";
+import { getFilteredFormations, getFormationsForGantt } from "../../../../services/elaborations/formationAPI";
 import GanttChart from "../../../ui/GanttChart";
 import ProgrammeFormations from "../../../../pages/Elaboration/ProgrammesFormation";
 import GanttDiagram from "../../../ui/GanttDiagram";
@@ -29,7 +29,7 @@ interface TableFormationProps {
     currentPage: number;
     currentFamille?:FamilleMetier;
     currentAxe?:AxeStrategique;
-    currentProgramme:ProgrammeFormation
+    currentProgramme?:ProgrammeFormation
     onPageChange: (page: number) => void;
     onProgrammeChange:(programme:ProgrammeFormation)=>void;
     onAxeChange:(axeStrategique:AxeStrategique)=>void;
@@ -139,13 +139,17 @@ const Table = ({ data, programmeFormations, familles, axeStrategiques, currentPa
                     // setNiveau(undefined);
                     // setFilteredCycle([]);
                     // setFilteredNiveaux([]);
-                    let FormationsResult : Formation[] = [];
+                    let formationsResult : Formation[] = [];
+                    if(!currentProgramme || !currentProgramme._id){
+                        setFilteredData([]);
+                        return;
+                    }
                     
-                    await getFormationsForGantt({page:1, search:searchText, programmeFormation:currentProgramme.annee, lang}).then(result=>{
+                    await getFilteredFormations({page:1, search:searchText, programme:currentProgramme?._id, lang}).then(result=>{
                         if (latestQueryFormation.current === searchText) {
                             if(result){
-                                FormationsResult = result.formations;
-                                setFilteredData(FormationsResult);
+                                formationsResult = result.formations;
+                                setFilteredData(formationsResult);
                             }
                           }
                         

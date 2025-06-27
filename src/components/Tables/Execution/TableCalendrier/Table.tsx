@@ -27,7 +27,7 @@ interface TableFormationProps {
     currentPage: number;
     currentFamille?:FamilleMetier;
     currentAxe?:AxeStrategique;
-    currentProgramme:ProgrammeFormation
+    currentProgramme?:ProgrammeFormation
     onPageChange: (page: number) => void;
     onProgrammeChange:(programme:ProgrammeFormation)=>void;
     onAxeChange:(axeStrategique:AxeStrategique)=>void;
@@ -120,7 +120,7 @@ const Table = ({ data, programmeFormations, familles, axeStrategiques, currentPa
         latestQueryFormation.current = searchText;
         
         try{
-            
+            if(!currentProgramme) return
             const filterFormationByContent = async () => {
                 if (searchText === '') {
                     // if(isSearch){

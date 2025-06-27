@@ -51,11 +51,11 @@ const SuiviBudgetaires = () => {
     });
   }, [t]);
 
-  useEffect(() => {
-          if (!currentProgrammeFormation && programmeFormations.length > 0) {
-              setCurrentProgrammeFormation(programmeFormations[0]);
-          }
-      }, [programmeFormations, currentProgrammeFormation]);
+    useEffect(() => {
+        if (!currentProgrammeFormation && programmeFormations.length > 0) {
+            setCurrentProgrammeFormation(programmeFormations[0]);
+        }
+    }, [programmeFormations, currentProgrammeFormation]);
 
   const { 
     isLoading, 
@@ -69,7 +69,7 @@ const SuiviBudgetaires = () => {
   } = useFetchDepensesData({page:currentPage, lang:lang, budgetId:currentBudget?._id||undefined, formationId:currentFormation?._id, themeId:currentTheme?._id, type:currentType?.key});
   
   
-  // Charge les formations pour une programmeFormation spécifique
+  // Charge les formations pour un programmeFormation spécifique
   useEffect(() => {
           if (!currentProgrammeFormation || !currentProgrammeFormation._id) return;
   
