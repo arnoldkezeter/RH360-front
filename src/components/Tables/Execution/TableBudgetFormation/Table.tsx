@@ -137,11 +137,11 @@ const Table = ({
             
                 {/* Conteneur des filtres */}
                 <div className={`
-                    transition-all duration-300 ease-in-out overflow-hidden
-                    md:block md:opacity-100 md:max-h-none
+                    transition-all duration-300 ease-in-out md:overflow-visible
+                    md:block md:opacity-100 md:max-h-none relative z-50
                     ${isFiltersVisible 
-                        ? 'block opacity-100 max-h-96' 
-                        : 'hidden md:block opacity-0 md:opacity-100 max-h-0 md:max-h-none'
+                        ? 'block opacity-100 max-h-96 overflow-visible' 
+                        : 'hidden md:block opacity-0 md:opacity-100 max-h-0 md:max-h-none overflow-hidden'
                     }
                 `}>
                     <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-3 md:gap-4 mb-3">
@@ -306,12 +306,13 @@ const Table = ({
                 </div>
 
                 {/* Conteneur du Bloc 2 (budget, type, recherche, ajout) */}
+                {/* Conteneur des filtres */}
                 <div className={`
-                    transition-all duration-300 ease-in-out overflow-hidden
-                    md:block md:opacity-100 md:max-h-none
+                    transition-all duration-300 ease-in-out md:overflow-visible
+                    md:block md:opacity-100 md:max-h-none relative z-50
                     ${isBloc2Visible 
-                        ? 'block opacity-100 max-h-[1000px]' 
-                        : 'hidden md:block opacity-0 md:opacity-100 max-h-0 md:max-h-none'
+                        ? 'block opacity-100 max-h-96 overflow-visible' 
+                        : 'hidden md:block opacity-0 md:opacity-100 max-h-0 md:max-h-none overflow-hidden'
                     }
                 `}>
                     <div className="flex flex-col gap-4 mb-3">

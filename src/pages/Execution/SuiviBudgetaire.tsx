@@ -32,7 +32,7 @@ const SuiviBudgetaires = () => {
   const typesDepenses = Object.values(TYPE_DEPENSE)
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedDepense, setSelectedDepense] = useState<Depense | null>(null);
-  const [currentProgrammeFormation, setCurrentProgrammeFormation] = useState<ProgrammeFormation>(programmeFormations[0]);
+  const [currentProgrammeFormation, setCurrentProgrammeFormation] = useState<ProgrammeFormation | undefined>(undefined);
   const [currentFormation, setCurrentFormation] = useState<Formation | undefined>(undefined);
   const [currentTheme, setCurrentTheme] = useState<ThemeFormation | undefined>(undefined);
   const [currentBudget, setCurrentBudget] = useState<BudgetFormation | undefined>(undefined);
@@ -51,6 +51,12 @@ const SuiviBudgetaires = () => {
     });
   }, [t]);
 
+  useEffect(() => {
+          if (!currentProgrammeFormation && programmeFormations.length > 0) {
+              setCurrentProgrammeFormation(programmeFormations[0]);
+          }
+      }, [programmeFormations, currentProgrammeFormation]);
+
   const { 
     isLoading, 
     depenses,
@@ -61,6 +67,7 @@ const SuiviBudgetaires = () => {
     updateDepense,
     deleteDepense
   } = useFetchDepensesData({page:currentPage, lang:lang, budgetId:currentBudget?._id||undefined, formationId:currentFormation?._id, themeId:currentTheme?._id, type:currentType?.key});
+  
   
   // Charge les formations pour une programmeFormation spécifique
   useEffect(() => {

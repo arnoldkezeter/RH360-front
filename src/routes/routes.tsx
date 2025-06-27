@@ -33,6 +33,7 @@ import TacheThemeFormations from '../pages/Elaboration/ThemeFormation/TacheTheme
 import CalendrierFormations from '../pages/Execution/CalendrierFormation';
 import BudgetFormations from '../pages/Elaboration/ThemeFormation/BudgetThemeFormation';
 import SuiviBudgetaires from '../pages/Execution/SuiviBudgetaire';
+import RapportFormations from '../pages/Execution/RapportFormation';
 
 
 
@@ -149,7 +150,7 @@ const coreRoutes = [
   {
     path: '/execution-programme/rapports-formation',
     title: 'rapports sur les formation',
-    component: undefined,
+    component: RapportFormations,
   },
 
 

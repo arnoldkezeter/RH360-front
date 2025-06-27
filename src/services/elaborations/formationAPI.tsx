@@ -156,3 +156,122 @@ export async function getFormationForDropDown({lang, programmeId }: {lang:string
     }
 }
 
+//statistiques
+export async function getStatsParticipants({ programmeId, formationId }: { programmeId?: string, formationId?: string }): Promise<any> {
+  try {
+    const response = await axios.get(`${api}/stats/participants`, {
+      params: { programmeId, formationId },
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getStatsParticipants:', error);
+    throw error;
+  }
+}
+
+
+export async function getNbFormateursParType({ programmeId, formationId }: { programmeId?: string, formationId?: string }): Promise<any> {
+  try {
+    const response = await axios.get(`${api}/stats/formateurs`, {
+      params: { programmeId, formationId },
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getNbFormateursParType:', error);
+    throw error;
+  }
+}
+
+
+export async function getTauxExecutionParTheme({ programmeId, formationId }: { programmeId?: string, formationId?: string }): Promise<any> {
+  try {
+    const response = await axios.get(`${api}/stats/taux-execution/themes`, {
+      params: { programmeId, formationId },
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getTauxExecutionParTheme:', error);
+    throw error;
+  }
+}
+
+
+export async function getTauxExecutionParAxe({ programmeId, formationId }: { programmeId?: string, formationId?: string }): Promise<any> {
+  try {
+    const response = await axios.get(`${api}/stats/taux-execution/axes`, {
+      params: { programmeId, formationId },
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getTauxExecutionParAxe:', error);
+    throw error;
+  }
+}
+
+
+export async function getCoutReelTTCParTheme({ programmeId, formationId }: { programmeId?: string, formationId?: string }): Promise<any> {
+  try {
+    const response = await axios.get(`${api}/stats/cout-reel-ttc/themes`, {
+      params: { programmeId, formationId },
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getCoutReelTTCParTheme:', error);
+    throw error;
+  }
+}
+
+
+export async function getCoutReelEtPrevuTTCParTheme({ programmeId, formationId }: { programmeId?: string, formationId?: string }): Promise<any> {
+  try {
+    const response = await axios.get(`${api}/stats/cout-reel-prevu-ttc/themes`, {
+      params: { programmeId, formationId },
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getCoutReelEtPrevuTTCParTheme:', error);
+    throw error;
+  }
+}
+
+export async function getCoutsReelEtPrevu({ programmeId, formationId }: { programmeId?: string, formationId?: string }): Promise<any[]> {
+  try {
+    const response = await axios.get(`${api}/stats/couts-reel-prevu`, {
+      params: { programmeId, formationId },
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getCoutsReelEtPrevu:', error);
+    throw error;
+  }
+}
+
+

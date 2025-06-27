@@ -114,7 +114,8 @@
     "objectif_theme":"Gérez vos objectifs de formation",
     "formateur":"Gérez les différents formateurs (internes et externes)",
     "suivi_budgetaire":"Gérez et analysez les dépenses prévues et réel pour chaque formation",
-    "budget_theme":"Gérez vos budgets de formation"
+    "budget_theme":"Gérez vos budgets de formation",
+    "rapport_formation":"Gérez et consulter des rapports détailler sur les formations planifiées et exécutées."
   },
 
   "tableau_de_bord": {
@@ -245,6 +246,37 @@
     "methode_validation":"Méthode de validation",
 
     "budget":"Budget",
+    "taux_execution_global":"Taux d'exécution Global",
+    "repartition":"Répartition",
+    "excellent":"Excellent",
+    "bon":"Bon",
+    "a_ameliorer":"A améliorer",
+    "detail_par_axe":"Détail par axe stratégique",
+    "detail_par_theme":"Détail par thème",
+    "axes_strategique":"Axes stratégiques",
+    "themes":"Thèmes",
+    "moyenne":"Moyenne",
+
+    "participants_par_sexe":"Participants par sexe",
+    "participants_par_service":"Participants par service",
+    "participants_par_categorie":"Participants par catégorie professionnelle",
+    "participants_par_tranche_age":"Participants par tranche d'âge",
+    "services":"Services",
+    "categories":"Catégories",
+    "tranches":"Tranches",
+    "cout_par_formation":"Coût par formation",
+    "cout_par_theme":"Coût par thème",
+    "formations":"Formations",
+    "formateurs_internes":"Formateurs internes",
+    "formateurs_externes":"Formateurs externes",
+    "internes":"Internes",
+    "externes":"Externes",
+    "total":"Total",
+    "cout_prevu_ttc":"Coût prévu (TTC)",
+    "cout_reel_ttc":"Coût réel (TTC)",
+    "hommes":"Hommes",
+    "femmes":"Femmes",
+
 
     "aucune_soumission":"Aucune soumission pour l'instant.",
     "termine":"Terminé",
