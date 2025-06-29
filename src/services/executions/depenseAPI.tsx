@@ -23,7 +23,7 @@ export async function createDepense({nomFr, nomEn, montantUnitairePrevu, montant
                 },
             }
         );
-
+        
         return response.data;
     } catch (error) {
         console.error('Error adding objectif to objectif:', error);

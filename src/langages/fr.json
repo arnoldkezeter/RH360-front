@@ -115,7 +115,8 @@
     "formateur":"Gérez les différents formateurs (internes et externes)",
     "suivi_budgetaire":"Gérez et analysez les dépenses prévues et réel pour chaque formation",
     "budget_theme":"Gérez vos budgets de formation",
-    "rapport_formation":"Gérez et consulter des rapports détailler sur les formations planifiées et exécutées."
+    "rapport_formation":"Gérez et consulter des rapports détailler sur les formations planifiées et exécutées.",
+    "support_formation":"Un espace réservé au stockage et au partage des supports associés à chaque formation."
   },
 
   "tableau_de_bord": {
@@ -276,7 +277,7 @@
     "cout_reel_ttc":"Coût réel (TTC)",
     "hommes":"Hommes",
     "femmes":"Femmes",
-
+    "support_formation":"Support de formation",
 
     "aucune_soumission":"Aucune soumission pour l'instant.",
     "termine":"Terminé",
@@ -558,7 +559,9 @@
     "ajouter_tache_formation":"Ajouter une tâche de formation",
     "ajouter_formateur":"Ajouter un formateur",
     "ajouter_budget_theme":"Ajouter un budget",
-    "ajouter_depense":"Ajouter une dépense"
+    "ajouter_depense":"Ajouter une dépense",
+    "ajouter_support":"Ajouter un support",
+    "telecharger":"Télécharger"
   },
 
   "actions":{
@@ -692,7 +695,8 @@
     "formateur":"un formateur",
     "tache_formation":"une tâche de formation",
     "budget":"un budget",
-    "depense":"une dépense"
+    "depense":"une dépense",
+    "support_formation":"un support de formation"
 
   },
 
@@ -727,7 +731,8 @@
     "formateur":"du formateur",
     "tache_formation":"de la tâche de formation",
     "budget":"du budget",
-    "depense":"de la dépense"
+    "depense":"de la dépense",
+    "support_formation":"du support de formation"
     
   },
   "form_delete": {
@@ -764,9 +769,11 @@
     "formateur":"du formateur",
     "tache_formation":"de la tâche de formation",
     "budget":"du budget",
-    "depense":"de la dépense"
+    "depense":"de la dépense",
+    "support_formation":"du support de formation"
   },
   "error": {
+    "fichier": "Veuillez choisir un fichier.",
     "nature_depense_fr":"Le champ nature de la dépense en français est obligatoire.",
     "nature_depense_en":"Le champ nature de la dépense en anglais est obligatoire.",
     "type_depense":"Le champ type dépense est obligatoire.",

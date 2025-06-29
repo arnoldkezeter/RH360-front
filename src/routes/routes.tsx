@@ -34,6 +34,7 @@ import CalendrierFormations from '../pages/Execution/CalendrierFormation';
 import BudgetFormations from '../pages/Elaboration/ThemeFormation/BudgetThemeFormation';
 import SuiviBudgetaires from '../pages/Execution/SuiviBudgetaire';
 import RapportFormations from '../pages/Execution/RapportFormation';
+import SupportFormationManager from '../pages/Execution/SupportFormation';
 
 
 
@@ -144,7 +145,7 @@ const coreRoutes = [
   {
     path: '/execution-programme/supports-formation',
     title: 'Supports de formation',
-    component: undefined,
+    component: SupportFormationManager,
   },
 
   {

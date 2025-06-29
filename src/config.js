@@ -9,6 +9,8 @@ export const config = {
     twitter: "#",
 }
 
+export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 Mo en octets
+
 export const ROLES = {
     SUPER_ADMIN: { nomFr: "Super Administrateur", nomEn: "Super Administrator", key: "SUPER-ADMIN" },
     ADMIN: { nomFr: "Administrateur", nomEn: "Administrator", key: "ADMIN" },

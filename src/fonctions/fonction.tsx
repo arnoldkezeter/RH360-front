@@ -2,6 +2,7 @@ import { config } from "../config";
 import CryptoJS from 'crypto-js';
 import { t } from "i18next";
 import createToast from "../hooks/toastify";
+import { Archive, File, FileAudio, FileImage, FileText, FileVideo } from "lucide-react";
 
 
 
@@ -341,6 +342,84 @@ export function calculerEcartDepenseTTC(depense: {
   return Math.round(ecart * 100) / 100;
 }
 
+
+export function cn(...classes: (string | undefined | false | null)[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
+ // Fonction pour tronquer le texte
+export  const truncateText = (text: string, maxLength: number = 25) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
+  // Fonction pour obtenir l'icône selon l'extension du fichier
+  export const getFileIcon = (fileName: string) => {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    const iconProps = { className: "w-8 h-8" };
+    
+    switch (extension) {
+      case 'pdf':
+        return <FileText {...iconProps} className="w-8 h-8 text-[#ef4444]" />;
+      case 'doc':
+      case 'docx':
+        return <FileText {...iconProps} className="w-8 h-8 text-[#2563eb]" />;
+      case 'ppt':
+      case 'pptx':
+        return <FileText {...iconProps} className="w-8 h-8 text-[#ea580c]" />;
+      case 'xls':
+      case 'xlsx':
+        return <FileText {...iconProps} className="w-8 h-8 text-[#16a34a]" />;
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'svg':
+        return <FileImage {...iconProps} className="w-8 h-8 text-[#8b5cf6]" />;
+      case 'mp4':
+      case 'avi':
+      case 'mov':
+      case 'wmv':
+        return <FileVideo {...iconProps} className="w-8 h-8 text-[#dc2626]" />;
+      case 'mp3':
+      case 'wav':
+      case 'flac':
+        return <FileAudio {...iconProps} className="w-8 h-8 text-[#06b6d4]" />;
+      case 'zip':
+      case 'rar':
+      case '7z':
+        return <Archive {...iconProps} className="w-8 h-8 text-[#a855f7]" />;
+      default:
+        return <File {...iconProps} className="w-8 h-8 text-[#6b7280]" />;
+    }
+  };
+
+export const formatFileSizeInMo = (bytes: number)=> {
+  const sizeInMo = bytes / (1024 * 1024);
+  return `${sizeInMo.toFixed(2)} Mo`; // Limite à 2 décimales
+}
+
+  // Fonction pour obtenir la taille du fichier (simulation)
+  export const getFileSize = (fileName: string) => {
+    // Simulation de tailles de fichiers basées sur l'extension
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'pdf':
+        return '2.5 MB';
+      case 'docx':
+        return '850 KB';
+      case 'pptx':
+        return '4.2 MB';
+      case 'xlsx':
+        return '1.1 MB';
+      case 'mp4':
+        return '125 MB';
+      case 'zip':
+        return '15.8 MB';
+      default:
+        return '1.2 MB';
+    }
+  };
 
 
 
