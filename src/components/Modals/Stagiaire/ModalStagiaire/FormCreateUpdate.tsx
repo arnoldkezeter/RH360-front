@@ -11,7 +11,7 @@ import { getCommunesForDropDown } from '../../../../services/settings/communeAPI
 import { createStagiaire, updateStagiaire } from '../../../../services/stagiaires/stagiaireAPI';
 import { formatDateForInput } from '../../../../fonctions/fonction';
 import { ROLES } from '../../../../config';
-import { createStagiaireSlice, updateStagiaireSlice } from '../../../../_redux/features/stagiaireSlice';
+import { createStagiaireSlice, updateStagiaireSlice } from '../../../../_redux/features/stagiaire/stagiaireSlice';
 import FilterList from '../../../ui/AutoComplete';
 
 

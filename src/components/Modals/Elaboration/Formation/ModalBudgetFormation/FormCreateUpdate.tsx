@@ -17,7 +17,7 @@ function FormCreateUpdate({ budgetFormation, theme }: { budgetFormation: BudgetF
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
-    const [statut, setStatut] = useState<StatutBudget>(statuts[0] || undefined);
+    const [statut, setStatut] = useState<StatutBudget | undefined>(statuts[0] || undefined);
     
     
 
@@ -35,13 +35,16 @@ function FormCreateUpdate({ budgetFormation, theme }: { budgetFormation: BudgetF
             setModalTitle(t('form_update.enregistrer') + t('form_update.budget'));
             
             setNomFr(budgetFormation.nomFr);
-            setNomEn(budgetFormation.nomEn)
+            setNomEn(budgetFormation.nomEn);
+            const statut = statuts.find(sta => sta.key === budgetFormation.statut);
+            setStatut(statut)
             
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.budget'));
             
             setNomFr("");
             setNomEn("")
+            setStatut(statuts[0] || undefined)
             
         }
 

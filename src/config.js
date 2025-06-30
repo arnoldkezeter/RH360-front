@@ -55,6 +55,12 @@ export const STATUTS = {
     EN_ATTENTE: { nomFr: "En attente", nomEn: "Pending", key:"EN_ATTENTE" },
 };
 
+export const STATUT_TACHE={
+    COMPLETE: { nomFr: "Complétée", nomEn: "Completed", key:"COMPLETE" },
+    EN_COURS: { nomFr: "En cours", nomEn: "In progress", key:"EN_COURS" },
+    ABSENT: { nomFr: "Absent", nomEn: "Absent", key:"ABSENT" },
+}
+
 
 
 export const apiUrl = import.meta.env.VITE_APP_API_URL || "non defini";

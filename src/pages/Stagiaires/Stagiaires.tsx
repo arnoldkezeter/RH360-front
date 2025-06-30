@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import createToast from "../../hooks/toastify";
 import { useHeader } from "../../components/Context/HeaderConfig";
 import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
 import Table from "../../components/Tables/Stagiaire/TableStagiaire/Table";
@@ -10,13 +9,12 @@ import Table from "../../components/Tables/Stagiaire/TableStagiaire/Table";
 import { 
     setErrorPageStagiaire, 
     setStagiaires, 
+    setStagiaireSelected, 
     setStagiairesLoading 
-} from "../../_redux/features/stagiaireSlice";
+} from "../../_redux/features/stagiaire/stagiaireSlice";
 import { setErrorPageService, setServices } from "../../_redux/features/parametres/serviceSlice";
-import { setErrorPageStructure, setStructures } from "../../_redux/features/parametres/strucutureSlice";
 import { setShowModal } from "../../_redux/features/setting";
 import { useFetchData } from "../../hooks/fechDataOptions";
-import { getStructuresForDropDown } from "../../services/settings/structureAPI";
 import { getServicesForDropDownByStructure } from "../../services/settings/serviceAPI";
 import FormCreateUpdate from "../../components/Modals/Stagiaire/ModalStagiaire/FormCreateUpdate";
 import { getStagiairesByFiltres } from "../../services/stagiaires/stagiaireAPI";
@@ -43,7 +41,9 @@ const Stagiaires = () => {
     const [startDate, setStartDate] = useState<Date |null>(null)
     const [endDate, setEndDate] = useState<Date | null>(null)
     
-
+     useEffect(()=>{
+            dispatch(setStagiaireSelected(undefined));
+    },[])
     const { setHeaderConfig } = useHeader();
 
     // Configure le header

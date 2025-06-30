@@ -19,7 +19,6 @@ export async function createStagiaire({nom, prenom, email, genre, telephone, dat
                 },
             },
         );
-        console.log(response.data)
         return response.data;
 
     } catch (error) {

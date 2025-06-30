@@ -35,6 +35,7 @@ import BudgetFormations from '../pages/Elaboration/ThemeFormation/BudgetThemeFor
 import SuiviBudgetaires from '../pages/Execution/SuiviBudgetaire';
 import RapportFormations from '../pages/Execution/RapportFormation';
 import SupportFormationManager from '../pages/Execution/SupportFormation';
+import CarnetsStage from '../pages/Stagiaires/CarnetStage';
 
 
 
@@ -189,9 +190,9 @@ const coreRoutes = [
   },
 
   {
-    path: '/stagiaires/carnet-stage',
+    path: '/stagiaire/carnet-stage',
     title: 'Elaboration du carnet de stage',
-    component: undefined,
+    component: CarnetsStage,
   },
 
   {
@@ -201,7 +202,7 @@ const coreRoutes = [
   },
 
   {
-    path: '/stagiaires/attestations&convention',
+    path: '/stagiaire/attestations&convention',
     title: 'Attestation et convention de stage',
     component: undefined,
   },

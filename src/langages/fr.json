@@ -116,7 +116,8 @@
     "suivi_budgetaire":"Gérez et analysez les dépenses prévues et réel pour chaque formation",
     "budget_theme":"Gérez vos budgets de formation",
     "rapport_formation":"Gérez et consulter des rapports détailler sur les formations planifiées et exécutées.",
-    "support_formation":"Un espace réservé au stockage et au partage des supports associés à chaque formation."
+    "support_formation":"Un espace réservé au stockage et au partage des supports associés à chaque formation.",
+    "carnet_stage":"Enregistrez les tâches quotidiennes des stagiaires, marquez les absences, verrouillez les enregistrements hebdomadaires, et générez des carnets de stage téléchargeables"
   },
 
   "tableau_de_bord": {
@@ -279,10 +280,29 @@
     "femmes":"Femmes",
     "support_formation":"Support de formation",
 
-    "aucune_soumission":"Aucune soumission pour l'instant.",
-    "termine":"Terminé",
+    "carnet_stage":"Carnet de stage",
+    "taches_completees":"Tâches complétées",
+    "taches_en_cours":"En cours",
+    "jour_absence":"Jours d'absence",
+    "vue_hebdomadaire":"Vue hebdomadaire",
+    "analyse":"Analyse des performances de la semaine",
+    "taches_terminees":"Tâches terminées",
+    "nombre_absence":"Nombre d'absences",
+    "progression_hebdomadaire":"Progression hebdomadaire",
+    "complete_semaine":"complété cette semaine",
+    "completee":"Completée",
+    "absent":"Absent",
     "en_cours":"En cours",
+    "termine":"Terminé",
+    "activite_quotidienne":"Activité quotidienne",
+    "generation_carnet":"Génération et téléchargement du carnet de stage",
+    "inclure_rapport":"Inclure dans le rapport",
+    "liste_tache":"Liste des tâches",
+    "taux_absence":"Taux d'absence",
+    "observation_superviseur":"Observations superviseur",
+    "aucune_soumission":"Aucune soumission pour l'instant.",
     "liste_etudiants":"Liste des étudiants",
+    
     "note":"Note",
     "tentatives_effectuees":"Tentatives effectuées",
     "nombre_participant":"Nombre de participants",
@@ -561,7 +581,8 @@
     "ajouter_budget_theme":"Ajouter un budget",
     "ajouter_depense":"Ajouter une dépense",
     "ajouter_support":"Ajouter un support",
-    "telecharger":"Télécharger"
+    "telecharger":"Télécharger",
+    "ajouter_tache_stagiaire":"Ajouter une tâche"
   },
 
   "actions":{
@@ -696,7 +717,9 @@
     "tache_formation":"une tâche de formation",
     "budget":"un budget",
     "depense":"une dépense",
-    "support_formation":"un support de formation"
+    "support_formation":"un support de formation",
+
+    "tache_stagiaire":"une tâche"
 
   },
 
@@ -732,7 +755,9 @@
     "tache_formation":"de la tâche de formation",
     "budget":"du budget",
     "depense":"de la dépense",
-    "support_formation":"du support de formation"
+    "support_formation":"du support de formation",
+
+    "tache_stagiaire":"de la tâche"
     
   },
   "form_delete": {
@@ -770,7 +795,9 @@
     "tache_formation":"de la tâche de formation",
     "budget":"du budget",
     "depense":"de la dépense",
-    "support_formation":"du support de formation"
+    "support_formation":"du support de formation",
+
+    "tache_stagiaire":"de la tâche"
   },
   "error": {
     "fichier": "Veuillez choisir un fichier.",

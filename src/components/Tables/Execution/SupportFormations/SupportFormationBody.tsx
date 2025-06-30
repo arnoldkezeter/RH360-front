@@ -268,7 +268,7 @@ const SupportFormationBody = ({
                     </div>
                 </div>
                 {/* </div> */}
-                {true && (
+                { (
                 <>
                     {console.log(data)}
                     {filteredData && filteredData.length === 0 ? (

@@ -31,6 +31,7 @@ interface StagiaireInitialData {
         totalItems: number;
         pageSize: number;
     };
+    selectedStagiaire:Stagiaire | undefined;
     pageIsLoading: boolean;
     pageError: string | null;
 }

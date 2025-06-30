@@ -23,9 +23,7 @@ const StagiaireSidebarLink: React.FC<StagiaireSidebarLinkProps> = ({
     const menuItems = [
          
         {path: '/stagiaires/gestion-stagiaire', label: t('sub_menu.gerer_stagiaires')},
-        {path: '/stagiaires/carnet-stage', label: t('sub_menu.carnet_stage')},
         {path: '/stagiaires/stages', label: t('sub_menu.stages')},
-        {path: '/stagiaires/attestations&convention', label: t('sub_menu.attestations_conventions')},
         {path: '/stagiaires/rapports', label: t('sub_menu.rapports_stages')},
 
     ];

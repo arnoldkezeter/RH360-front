@@ -8,7 +8,7 @@ import BodyTable from "./BodyTable";
 
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../_redux/store";
-import { setErrorPageStagiaire, setStagiairesLoading } from "../../../../_redux/features/stagiaireSlice";
+import { setErrorPageStagiaire, setStagiairesLoading } from "../../../../_redux/features/stagiaire/stagiaireSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import Pagination from "../../../Pagination/Pagination";
 import { getStagiairesByFiltres } from "../../../../services/stagiaires/stagiaireAPI";

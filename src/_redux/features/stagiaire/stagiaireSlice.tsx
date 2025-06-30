@@ -10,6 +10,7 @@ const initialState: StagiaireInitialData = {
         totalPages: 0,
         pageSize: 0,
     },
+    selectedStagiaire:undefined,
     pageIsLoading: false,
     pageError: null,
 };
@@ -19,6 +20,9 @@ const stagiaireSlice = createSlice({
     name: "stagiaireSlice",
     initialState,
     reducers: {
+        setStagiaireSelected(state, action: PayloadAction<Stagiaire | undefined>) {
+            state.selectedStagiaire = action.payload;
+        },
         setStagiairesLoading(state, action: PayloadAction<boolean>) {
             state.pageIsLoading = action.payload;
         },
@@ -56,6 +60,7 @@ const stagiaireSlice = createSlice({
 
 // Actions exportées
 export const {
+    setStagiaireSelected,
     setStagiairesLoading,
     setErrorPageStagiaire,
     setStagiaires,

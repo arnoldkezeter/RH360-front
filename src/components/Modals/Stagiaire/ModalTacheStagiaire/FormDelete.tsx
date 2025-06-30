@@ -1,15 +1,17 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { setShowModalDelete } from '../../../../_redux/features/setting.tsx';
-import { RootState } from '../../../../_redux/store.tsx';
-import CustomDialogModal from '../../CustomDialogModal.tsx';
+
 import { useTranslation } from 'react-i18next';
-import createToast from '../../../../hooks/toastify.tsx';
-import { deleteStagiaire } from '../../../../services/stagiaires/stagiaireAPI.tsx';
-import { deleteStagiaireSlice } from '../../../../_redux/features/stagiaire/stagiaireSlice.tsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../_redux/store';
+import { setShowModalDelete } from '../../../../_redux/features/setting';
+import { deleteTacheStagiaire } from '../../../../services/stagiaires/tacheStagiaireAPI';
+import createToast from '../../../../hooks/toastify';
+import { deleteTacheStagiaireSlice } from '../../../../_redux/features/stagiaire/tacheStagiaireSlice';
+import CustomDialogModal from '../../CustomDialogModal.tsx';
 
 
 
-function FormDelete({ stagiaire }: { stagiaire : Stagiaire|null}) {
+
+function FormDelete({ tacheStagiaire, onDelete}: { tacheStagiaire : TacheStagiaire | null, onDelete: (depenseId: string) => void}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
 
@@ -18,13 +20,14 @@ function FormDelete({ stagiaire }: { stagiaire : Stagiaire|null}) {
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
-        if (stagiaire?._id != undefined) {
-            await deleteStagiaire(stagiaire._id, lang).then((e: ReponseApiPros) => {
+        if (tacheStagiaire?._id != undefined) {
+            await deleteTacheStagiaire(tacheStagiaire._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
 
-                    if (stagiaire._id) {
-                        dispatch(deleteStagiaireSlice({ id: stagiaire._id }));
+                    if (tacheStagiaire._id) {
+                        onDelete(tacheStagiaire._id);
+                        dispatch(deleteTacheStagiaireSlice({ id: tacheStagiaire._id }));
                     }
 
                     closeModal();
@@ -47,7 +50,7 @@ function FormDelete({ stagiaire }: { stagiaire : Stagiaire|null}) {
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression')+t('form_delete.stagiaire')} : {stagiaire?stagiaire.nom:""} {stagiaire?stagiaire.prenom:""}</h1>
+                <h1>{t('form_delete.suppression')+t('form_delete.tache_stagiaire')} : {lang==='fr'?tacheStagiaire?.nomFr:tacheStagiaire?.nomEn} </h1>
             </CustomDialogModal>
         </>
     );

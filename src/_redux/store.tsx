@@ -16,7 +16,7 @@ import familleMetierReducer from "./features/elaborations/familleMetierSlice.tsx
 import competenceReducer from "./features/elaborations/competenceSlice.tsx";
 import axeStrategiqueReducer from "./features/elaborations/axeStrategiqueSlice.tsx";
 import utilisateurReducer from "./features/utilisateurs/utilisateurSlice.tsx";
-import stagiaireReducer from "./features/stagiaireSlice.tsx";
+import stagiaireReducer from "./features/stagiaire/stagiaireSlice.tsx";
 import chercheurRededucer from "./features/chercheurSlice.tsx";
 import programmeFormationReducer from "./features/elaborations/programmeFormationSlice.tsx";
 import formationReducer from "./features/elaborations/formationSlice.tsx";
@@ -29,6 +29,7 @@ import tacheThemeFormationReducer from "./features/elaborations/tacheThemeFormat
 import budgetFormationReducer from "./features/elaborations/budgetFormationSlice.tsx"
 import depenseReducer from "./features/execution/depenseSlice.tsx"
 import supportFormationReducer from "./features/execution/supportFormationSlice.tsx"
+import tacheStagiaireReducer from "./features/stagiaire/tacheStagiaireSlice.tsx"
 
 
 const store = configureStore({
@@ -63,6 +64,7 @@ const store = configureStore({
     budgetFormationSlice:budgetFormationReducer,
     depenseSlice:depenseReducer,
     supportFormationSlice:supportFormationReducer,
+    tacheStagiaireSlice:tacheStagiaireReducer,
   }
 });
 
