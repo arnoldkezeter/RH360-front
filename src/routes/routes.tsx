@@ -36,6 +36,8 @@ import SuiviBudgetaires from '../pages/Execution/SuiviBudgetaire';
 import RapportFormations from '../pages/Execution/RapportFormation';
 import SupportFormationManager from '../pages/Execution/SupportFormation';
 import CarnetsStage from '../pages/Stagiaires/CarnetStage';
+import Rapports from '../pages/Stagiaires/Rapports';
+import StageManagement from '../pages/Stagiaires/Stages';
 
 
 
@@ -198,7 +200,7 @@ const coreRoutes = [
   {
     path: '/stagiaires/stages',
     title: 'Enregistremenet des stages',
-    component: undefined,
+    component: StageManagement,
   },
 
   {
@@ -210,7 +212,7 @@ const coreRoutes = [
   {
     path: '/stagiaires/rapports',
     title: 'rapports sur les stages',
-    component: undefined,
+    component: Rapports,
   },
 
 

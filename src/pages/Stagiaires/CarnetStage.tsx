@@ -116,7 +116,7 @@ const CarnetsStage = () => {
                     path: "#"
                 }]}
             />
-            <CardSection stats={stats} progressionPercent={progressionPercent}/>
+            <CardSection stats={stats} progressionPercent={progressionPercent} isLoading={isLoading}/>
             <Table
                 data={tachesStagiaire}
                 statuts={statuts}
@@ -130,7 +130,7 @@ const CarnetsStage = () => {
                 isLoading={isLoading}
             />
             {/* Weekly View Section */}
-            <WeeklySection stats={stats} progressionPercent={progressionPercent}/>
+            <WeeklySection stats={stats} progressionPercent={progressionPercent} isLoading={isLoading}/>
                     
             {/* Generate Report Section */}
             <GenerateSection dateDebut={startDate} dateFin={endDate} />

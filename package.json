@@ -1,6 +1,6 @@
 {
-  "name": "gestion_etudiants",
-  "version": "1.0.5",
+  "name": "rh_360",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -8,9 +8,8 @@
     "preview": "vite preview"
   },
   "author": {
-    "name": "Arnold Junior & Mba Jordane",
-    "email": "takoukam.jordane@gmail.com",
-    "email2": "arnoldkezeter@gmail.com"
+    "name": "Arnold KEZETER",
+    "email": "arnoldkezeter@gmail.com"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",

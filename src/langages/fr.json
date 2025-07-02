@@ -117,7 +117,8 @@
     "budget_theme":"Gérez vos budgets de formation",
     "rapport_formation":"Gérez et consulter des rapports détailler sur les formations planifiées et exécutées.",
     "support_formation":"Un espace réservé au stockage et au partage des supports associés à chaque formation.",
-    "carnet_stage":"Enregistrez les tâches quotidiennes des stagiaires, marquez les absences, verrouillez les enregistrements hebdomadaires, et générez des carnets de stage téléchargeables"
+    "carnet_stage":"Enregistrez les tâches quotidiennes des stagiaires, marquez les absences, verrouillez les enregistrements hebdomadaires, et générez des carnets de stage téléchargeables",
+    "rapport_stage":"Offrir une vue analytique complète des stagiaires et de leurs stages au sein de l'organisation, incluant une répartition par superviseur."
   },
 
   "tableau_de_bord": {
@@ -300,9 +301,22 @@
     "liste_tache":"Liste des tâches",
     "taux_absence":"Taux d'absence",
     "observation_superviseur":"Observations superviseur",
+    "total_stagiaires":"Total stagiaires",
+    "stages_termines":"Stages terminés",
+    "stagiaires_par_superviseur":"Stagiaires par superviseur",
+    "duree_moyenne_mois":"Durée moyenne de stage (Mois)",
+    "taux_acceptation":"Taux d'acceptation",
+    "taux_refus":"Taux de refus",
+    "repartition_par_superviseur":"Répartition des stagiaires par superviseur",
+    "repartition_par_service":"Répartition des stagiaires par service",
+    "repartition_par_etablissement":"Répartition des stagiaires par établissement",
+    "acceptes":"Acceptés",
+    "refuses":"Refusés",
+    "termines":"Terminés",
+    "nombre_stagiaires":"Nombre de stagiaire",
+
     "aucune_soumission":"Aucune soumission pour l'instant.",
     "liste_etudiants":"Liste des étudiants",
-    
     "note":"Note",
     "tentatives_effectuees":"Tentatives effectuées",
     "nombre_participant":"Nombre de participants",

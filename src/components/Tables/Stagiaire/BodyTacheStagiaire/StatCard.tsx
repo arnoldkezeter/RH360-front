@@ -2,21 +2,22 @@
 
 import { CheckCircle, Clock, TrendingUp, XCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import Skeleton from "react-loading-skeleton";
 
 
 
 interface CardSectionTacheStagiaireProps {
     stats:any;
-    progressionPercent:number
-   
+    progressionPercent:number;
+    isLoading:boolean;
 }
 
-const CardSection = ({ stats, progressionPercent}: CardSectionTacheStagiaireProps) => {
+const CardSection = ({ stats, progressionPercent, isLoading}: CardSectionTacheStagiaireProps) => {
    const {t}=useTranslation()
     return (
         
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6  mt-3">
-          <div className="bg-gradient-to-br from-[#22C55E] to-[#16A34A] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
+          {isLoading?<Skeleton height={100}/>:<div className="bg-gradient-to-br from-[#22C55E] to-[#16A34A] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-100 text-xs sm:text-sm font-medium">{t('label.taches_completees')}</p>
@@ -24,9 +25,9 @@ const CardSection = ({ stats, progressionPercent}: CardSectionTacheStagiaireProp
               </div>
               <CheckCircle className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-green-200" />
             </div>
-          </div>
+          </div>}
           
-          <div className="bg-gradient-to-br from-[#3B82F6] to-[#2563EB] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
+          {isLoading?<Skeleton height={100}/>:<div className="bg-gradient-to-br from-[#3B82F6] to-[#2563EB] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-blue-100 text-xs sm:text-sm font-medium">{t('label.taches_en_cours')}</p>
@@ -34,9 +35,9 @@ const CardSection = ({ stats, progressionPercent}: CardSectionTacheStagiaireProp
               </div>
               <Clock className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-blue-200" />
             </div>
-          </div>
+          </div>}
           
-          <div className="bg-gradient-to-br from-[#EF4444] to-[#DC2626] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
+          {isLoading?<Skeleton height={100}/>:<div className="bg-gradient-to-br from-[#EF4444] to-[#DC2626] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-red-100 text-xs sm:text-sm font-medium">{t('label.jour_absence')}</p>
@@ -44,9 +45,9 @@ const CardSection = ({ stats, progressionPercent}: CardSectionTacheStagiaireProp
               </div>
               <XCircle className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-red-200" />
             </div>
-          </div>
+          </div>}
           
-          <div className="bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
+          {isLoading?<Skeleton height={100}/>:<div className="bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-purple-100 text-xs sm:text-sm font-medium">{t('label.progression')}</p>
@@ -54,7 +55,7 @@ const CardSection = ({ stats, progressionPercent}: CardSectionTacheStagiaireProp
               </div>
               <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-purple-200" />
             </div>
-          </div>
+          </div>}
         </div>
     );
 };

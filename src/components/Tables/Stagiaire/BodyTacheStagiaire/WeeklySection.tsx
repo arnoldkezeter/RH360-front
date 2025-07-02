@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertCircle, CheckCircle, Clock, TrendingUp, XCircle, Calendar, BarChart3 } from "lucide-react";
 import { STATUT_TACHE } from '../../../../config';
 import { useTranslation } from 'react-i18next';
+import Skeleton from 'react-loading-skeleton';
 
 
 
@@ -13,6 +14,7 @@ interface WeeklySectionTacheStagiaireProps {
   };
   progressionPercent?: number;
   lang?:string;
+  isLoading:boolean;
 }
 
 // Fonction pour déterminer la couleur et hauteur des barres
@@ -51,7 +53,8 @@ const WeeklySection: React.FC<WeeklySectionTacheStagiaireProps> = ({
     etatJournalier: []
   }, 
   progressionPercent = 85,
-  lang='fr'
+  lang='fr',
+  isLoading
 }) => {
   const {t}=useTranslation()
 
@@ -93,24 +96,24 @@ const WeeklySection: React.FC<WeeklySectionTacheStagiaireProps> = ({
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* Stats Cards */}
           <div className="xl:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <StatCard
+            {isLoading?<Skeleton height={100}/>:<StatCard
               title={t('label.taches_terminees')}
               value={stats?.totalCompletees || 0}
               icon={CheckCircle}
               gradient="from-[#ECFDF5] to-[#D1FAE5]"
               iconColor="text-[#10B981]"
-            />
+            />}
             
-            <StatCard
+            {isLoading?<Skeleton height={100}/>:<StatCard
               title={t('label.nombre_absence')}
               value={stats?.totalAbsences || 0}
               icon={AlertCircle}
               gradient="from-[#FEF2F2] to-[#FECACA]"
               iconColor="text-[#EF4444]"
-            />
+            />}
             
             {/* Progress Card */}
-            <div className="bg-gradient-to-br from-[#EEF2FF] to-[#DBEAFE] rounded-xl p-4 border border-[#C7D2FE]/50 shadow-md hover:shadow-lg transition-all duration-300">
+            {isLoading?<Skeleton height={100}/>:<div className="bg-gradient-to-br from-[#EEF2FF] to-[#DBEAFE] rounded-xl p-4 border border-[#C7D2FE]/50 shadow-md hover:shadow-lg transition-all duration-300">
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp className="w-4 h-4 text-[#3B82F6]" />
                 <span className="text-xs font-medium text-gray-700">{t('label.progression_hebdomadaire')}</span>
@@ -131,7 +134,7 @@ const WeeklySection: React.FC<WeeklySectionTacheStagiaireProps> = ({
                   {t('label.complete_semaine')}
                 </span>
               </div>
-            </div>
+            </div>}
           </div>
           
           {/* Chart Section */}
@@ -157,7 +160,7 @@ const WeeklySection: React.FC<WeeklySectionTacheStagiaireProps> = ({
                 <span className="text-xs font-medium text-[#6B7280]">{t('label.activite_quotidienne')}</span>
               </div>
               
-              <div className="flex justify-center items-end gap-3 h-32 px-2">
+              {isLoading?<Skeleton height={150}/>:<div className="flex justify-center items-end gap-3 h-32 px-2">
                 {stats?.etatJournalier?.map((day, index) => {
                   const barProps = getBarProps(day);
                   return (
@@ -189,7 +192,7 @@ const WeeklySection: React.FC<WeeklySectionTacheStagiaireProps> = ({
                     </div>
                   );
                 })}
-              </div>
+              </div>}
             </div>
           </div>
         </div>

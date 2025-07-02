@@ -42,3 +42,17 @@ interface ServiceReturnGetType {
     totalPages: number;
     pageSize : number;
 }
+
+//Assigné des service a un stagiaire
+
+interface ServiceAssignment {
+  serviceId?: string;
+  superviseurId?: string;
+  dateDebut?: string;
+  dateFin?: string;
+}
+
+
+interface ServiceGroupAssignment extends Service {
+  superviseur?: Utilisateur;
+}

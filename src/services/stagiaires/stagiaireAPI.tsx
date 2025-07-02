@@ -136,7 +136,7 @@ export async function searchStagiaire({ searchString, lang }: { lang:string, sea
             },
         );
         const stagiaires: StagiaireReturnGetType = response.data.data;
-
+        console.log(stagiaires)
         return stagiaires;
     } catch (error) {
         // console.error('Error getting all settings:', error);

@@ -12,6 +12,26 @@ interface Stagiaires {
     servicesAffectes:[Services]
 }
 
+interface ServiceFinal{
+    service?:Service,
+    superviseur?: Utilisateur,
+    dateDebut: string,
+    dateFin: string,
+}
+interface Groupe {
+    id: number;
+    nom: string;
+    stagiaires: Stagiaire[];
+    serviceFinal?: ServiceFinal
+}
+
+interface GroupeParams {
+  dateDebut: string;
+  dateFin: string;
+  stagiaireParGroupe: string;
+  joursRotation: string;
+}
+
 interface Stage {
     typeStage: string,
     stagiaires: [Stagiaires],//Utilisé uniquement pour des stages individuels
