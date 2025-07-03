@@ -188,3 +188,20 @@ export async function getNombreStagiairesParStatutEtEtablissement(dateDebut:stri
   }
 }
 
+export async function getNombreStagesEnCours(): Promise<number> {
+  try {
+    const response = await axios.get(`${api}/stages-en-cours`, {
+      
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+     
+    return response.data.data;
+  } catch (error) {
+    console.error("Erreur getNombreStagiairesParStatutEtEtablissement:", error);
+    throw error;
+  }
+}
+

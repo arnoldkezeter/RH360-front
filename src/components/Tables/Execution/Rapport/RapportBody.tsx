@@ -49,11 +49,7 @@ const RapportBody = ({
     onProgrammeFormationChange
 }: RapportBodyDepenseProps) => {
     const { t } = useTranslation();
-    const pageIsLoading = isLoading;
-    const lang = useSelector((state: RootState) => state.setting.language);
-    const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
-    const roles = config.roles;
-    const dispatch = useDispatch();
+    const lang:string = useSelector((state: RootState) => state.setting.language);
     const [isFiltersVisible, setIsFiltersVisible] = useState(false);
     const toggleFilters = () => {
         setIsFiltersVisible(!isFiltersVisible);
@@ -336,75 +332,75 @@ const RapportBody = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Participants par Catégorie */}
                 <div className="bg-white rounded-xl shadow-lg border border-stroke p-6 hover:shadow-xl transition-shadow duration-300">
-                <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                    <div className="w-2 h-6 bg-gradient-to-b from-[#f59e0b] to-[#d97706] rounded-full"></div>
-                    {t('label.participants_par_categorie')}
-                    </h3>
-                    <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
-                    {participantsByCategoryData?.datasets?.[0]?.data?.length || 0} {t('label.categories')}
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <div className="w-2 h-6 bg-gradient-to-b from-[#f59e0b] to-[#d97706] rounded-full"></div>
+                        {t('label.participants_par_categorie')}
+                        </h3>
+                        <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
+                        {participantsByCategoryData?.datasets?.[0]?.data?.length || 0} {t('label.categories')}
+                        </div>
                     </div>
-                </div>
-                <div className="relative">
-                    <div 
-                    className="overflow-x-auto scrollbar-custom"
-                    style={{
-                        maxHeight: participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? '400px' : 'auto',
-                        overflowY: participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? 'auto' : 'visible'
-                    }}
-                    >
-                    <div style={{ minWidth: participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? '500px' : 'auto' }}>
-                        {isLoading?<Skeleton height={320}/>:
-                        
-                            !participantsByCategoryData?<NoData/>:
-                            <Bar 
-                            data={participantsByCategoryData} 
-                            options={{ 
-                                responsive: true, 
-                                maintainAspectRatio: false,
-                                plugins: {
-                                legend: {
-                                    display: false
-                                }
-                                },
-                                scales: {
-                                x: {
-                                    grid: {
-                                    color: '#f1f5f9'
+                    <div className="relative">
+                        <div 
+                        className="overflow-x-auto scrollbar-custom"
+                        style={{
+                            maxHeight: participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? '400px' : 'auto',
+                            overflowY: participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? 'auto' : 'visible'
+                        }}
+                        >
+                        <div style={{ minWidth: participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? '500px' : 'auto' }}>
+                            {isLoading?<Skeleton height={320}/>:
+                            
+                                !participantsByCategoryData?<NoData/>:
+                                <Bar 
+                                data={participantsByCategoryData} 
+                                options={{ 
+                                    responsive: true, 
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                    legend: {
+                                        display: false
+                                    }
                                     },
-                                    ticks: {
-                                    font: {
-                                        size: 11
-                                    },
-                                    maxRotation: 0,
-                                    minRotation: 0,
-                                    callback: function(value, index, ticks) {
-                                            const label = this.getLabelForValue ? this.getLabelForValue(Number(value)) : '';
-                                            if (label && label.length > 12) {
-                                                return label.substring(0, 12) + '...';
+                                    scales: {
+                                    x: {
+                                        grid: {
+                                        color: '#f1f5f9'
+                                        },
+                                        ticks: {
+                                        font: {
+                                            size: 11
+                                        },
+                                        maxRotation: 0,
+                                        minRotation: 0,
+                                        callback: function(value, index, ticks) {
+                                                const label = this.getLabelForValue ? this.getLabelForValue(Number(value)) : '';
+                                                if (label && label.length > 12) {
+                                                    return label.substring(0, 12) + '...';
+                                                }
+                                                return label || '';
                                             }
-                                            return label || '';
+                                        }
+                                    },
+                                    y: {
+                                        grid: {
+                                        color: '#f8fafc'
+                                        },
+                                        ticks: {
+                                        font: {
+                                            size: 11
+                                        }
                                         }
                                     }
-                                },
-                                y: {
-                                    grid: {
-                                    color: '#f8fafc'
-                                    },
-                                    ticks: {
-                                    font: {
-                                        size: 11
                                     }
-                                    }
-                                }
-                                }
-                            }}
-                            height={participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? 350 : 250}
-                            />
-                        }
+                                }}
+                                height={participantsByCategoryData?.datasets?.[0]?.data?.length > 10 ? 350 : 250}
+                                />
+                            }
+                        </div>
+                        </div>
                     </div>
-                    </div>
-                </div>
                 </div>
 
                 {/* Participants par Tranche d'âge */}

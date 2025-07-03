@@ -58,7 +58,7 @@ function FormCreateUpdate({ groupe, onEditGroupe }: { groupe: Groupe | undefined
     
     const [isFirstRender, setIsFirstRender] = useState(true);
 
-    const isModalOpen = useSelector((state: RootState) => state.setting.showModal.open);
+    const isModalOpen:boolean = useSelector((state: RootState) => state.setting.showModal.open);
     const [modalTitle, setModalTitle] = useState(""); // Ajout du titre du modal
 
     useEffect(() => {

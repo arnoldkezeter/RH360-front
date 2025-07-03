@@ -119,9 +119,9 @@ const RapportFormations = () => {
         currentFormation={currentFormation}
         currentProgrammeFormation={currentProgrammeFormation}
         pourcentageExecution={data.tauxExecution} 
-            coutFormations={data.coutsFormationOuTheme} 
-            statPersonnesFormes={data.statsParticipants} 
-            formateurs={data.statsFormateurs} 
+        coutFormations={data.coutsFormationOuTheme} 
+        statPersonnesFormes={data.statsParticipants} 
+        formateurs={data.statsFormateurs} 
         onFormationChange={handleFormationChange}
         onProgrammeFormationChange={handleProgrammeFormationChange}
        

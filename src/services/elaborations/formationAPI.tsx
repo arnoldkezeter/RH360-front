@@ -275,4 +275,34 @@ export async function getCoutsReelEtPrevu({ programmeId, formationId }: { progra
   }
 }
 
+export async function getFormationAVenir({ programmeId}: { programmeId: string}): Promise<any[]> {
+  try {
+    const response = await axios.get(`${api}/formations-a-venir/${programmeId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getCoutsReelEtPrevu:', error);
+    throw error;
+  }
+}
+
+export async function getTauxExecutionParMois({ programmeId}: { programmeId: string}): Promise<any[]> {
+  try {
+    const response = await axios.get(`${api}/stats/taux-execution-mois/${programmeId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': token,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Erreur getCoutsReelEtPrevu:', error);
+    throw error;
+  }
+}
+
 
