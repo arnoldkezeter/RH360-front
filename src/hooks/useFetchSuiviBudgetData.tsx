@@ -27,7 +27,6 @@ export const useFetchDepensesData = ({
   type,
   search,
   formationId,
-  themeId,
 }: {
   page: number;
   lang: string;
@@ -35,7 +34,6 @@ export const useFetchDepensesData = ({
   type?: string;
   search?: string;
   formationId?: string;
-  themeId?: string;
 }): UseFetchDepensesReturnType => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
@@ -53,8 +51,8 @@ export const useFetchDepensesData = ({
       setIsLoading(true);
       const [depensesData, histogrammeData, totauxData] = await Promise.all([
         getFilteredDepenses({ page, lang, budgetId, type, search }),
-        getHistogrammeDepense({ formationId, themeId }),
-        getTotauxBudget({ formationId, themeId }),
+        getHistogrammeDepense({ formationId }),
+        getTotauxBudget({ formationId }),
       ]);
 
       if (depensesData) {
@@ -80,11 +78,11 @@ export const useFetchDepensesData = ({
   };
 
   useEffect(() => {
-    if (!formationId || !themeId) {
+    if (!formationId) {
       return
     };
     fetchData();
-  }, [page, lang, budgetId, type, search, formationId, themeId]);
+  }, [page, lang, budgetId, type, search, formationId]);
 
   const refresh = async () => {
     await fetchData();

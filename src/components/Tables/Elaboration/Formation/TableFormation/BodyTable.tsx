@@ -1,14 +1,17 @@
 import { useDispatch, useSelector } from "react-redux"
-import ButtonCrudTable from "../../common/ButtonActionTable"
-import { setShowModal, setShowModalDelete } from "../../../../_redux/features/setting"
-import { RootState } from "../../../../_redux/store";
-import { SelectButton } from "../../common/composants/SelectButton";
-import { formatDateWithLang } from "../../../../fonctions/fonction";
+import ButtonCrudTable from "../../../common/ButtonActionTable"
+import { setShowModal, setShowModalDelete } from "../../../../../_redux/features/setting"
+import { RootState } from "../../../../../_redux/store";
+import { SelectButton } from "../../../common/composants/SelectButton";
+import { formatDateWithLang } from "../../../../../fonctions/fonction";
 import { useTranslation } from "react-i18next";
+import { setFormationSelected } from "../../../../../_redux/features/elaborations/formationSlice";
+import { useNavigate } from "react-router-dom";
 
 const BodyTable = ({ data, onEdit}: { data: Formation[], onEdit: (formation: Formation) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const {t}=useTranslation();
     return <tbody>
         {data && data.map((item, index) => (
@@ -78,7 +81,23 @@ const BodyTable = ({ data, onEdit}: { data: Formation[], onEdit: (formation: For
                                 dispatch(setShowModalDelete())
                             }}
                         />
-                        <SelectButton listPage={[]} />
+                        {(() => {
+                            // Construire dynamiquement la liste des pages en fonction des permissions
+                                const listPage = [];
+    
+                                listPage.push({
+                                    name: t('label.budget'),
+                                    handleClick: () => {
+                                        dispatch(setFormationSelected(item));
+                                        navigate('/elaboration-programme/formation/budgets');
+                                    },
+                                });
+                            
+    
+                                return listPage.length > 0 ? (
+                                    <SelectButton listPage={listPage} />
+                                ) : null;
+                            })()}
                     </div>
                 </td>
             </tr>

@@ -29,6 +29,7 @@ interface FormationInitialData {
     };
     pageIsLoading: boolean;
     pageError: string | null;
+    selectedFormation:Formation | undefined
 }
 
 interface CreateFormationPayload {

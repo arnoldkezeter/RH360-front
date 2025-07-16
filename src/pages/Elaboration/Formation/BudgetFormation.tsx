@@ -12,7 +12,7 @@ import FormCreateUpdate from "../../../components/Modals/Elaboration/Formation/M
 import { getFilteredBudgetFormations } from "../../../services/elaborations/budgetFormationAPI";
 import { setErrorPageBudgetFormation, setBudgetFormationLoading, setBudgetFormations } from "../../../_redux/features/elaborations/budgetFormationSlice";
 import { useNavigate } from "react-router-dom";
-import Table from "../../../components/Tables/Elaboration/ThemeFormation/TableBudgetFormation/Table";
+import Table from "../../../components/Tables/Elaboration/Formation/TableBudgetFormation/Table";
 
 const BudgetFormations = () => {
     const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const BudgetFormations = () => {
 
     const lang = useSelector((state: RootState) => state.setting.language);
     const { data: { budgetFormations } } = useSelector((state: RootState) => state.budgetFormationSlice);
-    const selectedTheme = useSelector((state: RootState) => state.themeFormationSlice.selectedTheme);
+    const selectedFormation = useSelector((state: RootState) => state.formationSlice.selectedFormation);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [selectedBudgetFormation, setSelectedBudgetFormation] = useState<BudgetFormation | null>(null);
@@ -30,8 +30,8 @@ const BudgetFormations = () => {
     const { setHeaderConfig } = useHeader();
 
     useEffect(()=>{
-        if(!selectedTheme){
-            navigate("/elaboration-programme/formation/themes-formation")
+        if(!selectedFormation){
+            navigate("/elaboration-programme/formations")
         }
     },[])
 
@@ -53,12 +53,12 @@ const BudgetFormations = () => {
 
     useEffect(() => {
 
-        if(!selectedTheme) return;
+        if(!selectedFormation) return;
         fetchData({
             apiFunction: getFilteredBudgetFormations,
             params: {
                 page: currentPage,
-                themeId:selectedTheme?._id || "",
+                formationId:selectedFormation?._id || "",
                 lang,
             },
             onSuccess: (data) => {
@@ -77,7 +77,7 @@ const BudgetFormations = () => {
                 dispatch(setBudgetFormationLoading(isLoading));
             },
         });
-    }, [currentPage, lang, selectedTheme?._id, dispatch]);
+    }, [currentPage, lang, selectedFormation?._id, dispatch]);
 
 
     // Handlers pour les filtres
@@ -87,27 +87,27 @@ const BudgetFormations = () => {
     return (
         <>
             <BreadcrumbPageDescription 
-                pageDescription={t('page_description.budget_theme')} 
+                pageDescription={t('page_description.budget_formation')} 
                 titleColor="text-[#1e3a8a]" 
-                pageName={t('sub_menu.budgets_theme')} 
+                pageName={t('sub_menu.budgets_formation')} 
                 breadcrumbItems={[{
                     isActive: false,
-                    name: t('sub_menu.themes_formations'),
-                    path: "/elaboration-programme/formation/themes-formation"
+                    name: t('sub_menu.formations'),
+                    path: "/elaboration-programme/formations"
                 },{
                     isActive: true,
-                    name: t('sub_menu.budgets_theme'),
+                    name: t('sub_menu.budgets_formation'),
                     path: "#"
                 }]}
             />
             <Table
                 data={budgetFormations}
-                selectedTheme={selectedTheme}
+                selectedFormation={selectedFormation}
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
                 onEdit={setSelectedBudgetFormation} 
             />
-            <FormCreateUpdate budgetFormation={selectedBudgetFormation} theme={selectedTheme} />
+            <FormCreateUpdate budgetFormation={selectedBudgetFormation} formation={selectedFormation} />
             <FormDelete budgetFormation={selectedBudgetFormation} />
         </>
     );

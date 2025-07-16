@@ -21,6 +21,7 @@ const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
         '/elaboration-programme/axes-strategique',
         '/elaboration-programme/competences',
         '/elaboration-programme/familles-metier',
+        '/execution-programme/calendrier-formation',
         '/parametres/profile',
         '/parametres/besoins-formation/manage',
         '/parametres/etablissements',

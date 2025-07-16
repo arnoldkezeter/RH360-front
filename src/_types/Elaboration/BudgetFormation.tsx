@@ -1,7 +1,7 @@
 
 interface BudgetFormation{
     _id?:string
-    theme?:ThemeFormation,
+    formation?:Formation,
     nomFr:string,
     nomEn:string,
     statut:string,

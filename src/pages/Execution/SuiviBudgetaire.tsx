@@ -34,7 +34,7 @@ const SuiviBudgetaires = () => {
   const [selectedDepense, setSelectedDepense] = useState<Depense | null>(null);
   const [currentProgrammeFormation, setCurrentProgrammeFormation] = useState<ProgrammeFormation | undefined>(undefined);
   const [currentFormation, setCurrentFormation] = useState<Formation | undefined>(undefined);
-  const [currentTheme, setCurrentTheme] = useState<ThemeFormation | undefined>(undefined);
+//   const [currentTheme, setCurrentTheme] = useState<ThemeFormation | undefined>(undefined);
   const [currentBudget, setCurrentBudget] = useState<BudgetFormation | undefined>(undefined);
   const [currentType, setCurrentType] = useState<TypeDepense>();
 
@@ -66,7 +66,7 @@ const SuiviBudgetaires = () => {
     addDepense,
     updateDepense,
     deleteDepense
-  } = useFetchDepensesData({page:currentPage, lang:lang, budgetId:currentBudget?._id||undefined, formationId:currentFormation?._id, themeId:currentTheme?._id, type:currentType?.key});
+  } = useFetchDepensesData({page:currentPage, lang:lang, budgetId:currentBudget?._id||undefined, formationId:currentFormation?._id, type:currentType?.key});
   
   
   // Charge les formations pour un programmeFormation spécifique
@@ -93,7 +93,8 @@ const SuiviBudgetaires = () => {
   }, [fetchData, currentProgrammeFormation, lang, dispatch]);
 
 
-  // Charge les themeFormations en fonction des filtres
+
+  // Charge les budget en fonction des filtres
   useEffect(() => {          
       // Cas où on ne filtre pas (pas de formation, pas de familleMetier, pas resetFilters)
       if (
@@ -102,48 +103,9 @@ const SuiviBudgetaires = () => {
 
 
       fetchData({
-          apiFunction: getThemeFormationForDropDown,
-          params: {
-              formation: currentFormation?._id || "",
-              lang,
-          },
-          onSuccess: (data) => {
-              // Définir le premier theme formation comme formation courant
-              if (data.themeFormations?.length > 0) {
-                  setCurrentTheme(data.themeFormations[0]);
-              } else {
-                  setCurrentTheme(undefined);
-              }
-              dispatch(setThemeFormations(data || {
-                  themeFormations: [],
-                  currentPage: 0,
-                  totalItems: 0,
-                  totalPages: 0,
-                  pageSize: 0,
-              }));
-          },
-          onError: () => {
-              dispatch(setErrorPageThemeFormation(t('message.erreur')));
-          },
-          onLoading: (isLoading) => {
-              dispatch(setThemeFormationLoading(isLoading));
-          },
-      });
-  }, [currentFormation, lang, dispatch]);
-
-
-  // Charge les budget en fonction des filtres
-  useEffect(() => {          
-      // Cas où on ne filtre pas (pas de formation, pas de familleMetier, pas resetFilters)
-      if (
-          !currentTheme || themeFormations.length === 0 
-      ) return;
-
-
-      fetchData({
           apiFunction: getBudgetFormationForDropDown,
           params: {
-              themeId: currentTheme?._id || "",
+              formationId: currentFormation?._id || "",
               lang,
           },
           onSuccess: (data) => {
@@ -168,7 +130,7 @@ const SuiviBudgetaires = () => {
               dispatch(setBudgetFormationLoading(isLoading));
           },
       });
-  }, [currentTheme, lang, dispatch]);
+  }, [currentFormation, lang, dispatch]);
   
   
   
@@ -196,9 +158,6 @@ const SuiviBudgetaires = () => {
       setCurrentFormation(formation);
   };
 
-  const handleThemeChange = (theme: ThemeFormation) => {
-      setCurrentTheme(theme);
-  };
 
   const handleBudgetChange = (budget: BudgetFormation) => {
       setCurrentBudget(budget);
@@ -221,11 +180,9 @@ const SuiviBudgetaires = () => {
         typesDepenses={typesDepenses}
         programmeFormations={programmeFormations}
         formations={formations}
-        themes={themeFormations}
         budgets={budgetFormations}
         currentFormation={currentFormation}
         currentProgrammeFormation={currentProgrammeFormation}
-        currentTheme={currentTheme}
         currentBudget={currentBudget}
         currentType={currentType}
         data={depenses?.depenses || []}
@@ -235,7 +192,6 @@ const SuiviBudgetaires = () => {
         onPageChange={setCurrentPage}
         onFormationChange={handleFormationChange}
         onProgrammeFormationChange={handleProgrammeFormationChange}
-        onThemeChange={handleThemeChange}
         onBudgetChange={handleBudgetChange}
         onTypeChange={handleTypeChange}
         onCreate={() => setSelectedDepense(null)}

@@ -13,6 +13,7 @@ const initialState: FormationInitialData = {
     },
     pageIsLoading: false,
     pageError: null,
+    selectedFormation:undefined
 };
 
 // Création du slice
@@ -20,6 +21,9 @@ const formationSlice = createSlice({
     name: "formationSlice",
     initialState,
     reducers: {
+        setFormationSelected(state, action: PayloadAction<Formation | undefined>) {
+            state.selectedFormation = action.payload;
+        },
         setFormationLoading(state, action: PayloadAction<boolean>) {
             state.pageIsLoading = action.payload;
         },
@@ -48,6 +52,7 @@ const formationSlice = createSlice({
 
 // Actions exportées
 export const {
+    setFormationSelected,
     setFormationLoading,
     setErrorPageFormation,
     setFormations,

@@ -268,6 +268,7 @@ export async function getCoutsReelEtPrevu({ programmeId, formationId }: { progra
         'authorization': token,
       },
     });
+    
     return response.data.data;
   } catch (error) {
     console.error('Erreur getCoutsReelEtPrevu:', error);

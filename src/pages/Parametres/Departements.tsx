@@ -78,6 +78,7 @@ const Departements = () => {
     };
 
     const handleRegionChange = (region: Region) => {
+        setCurrentPage(1)
         setCurrentRegion(region);
     };
     

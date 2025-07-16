@@ -1,21 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import InputSearch from "../../common/SearchTable";
+import InputSearch from "../../../common/SearchTable";
 import { useEffect, useRef, useState } from "react";
 import { FaFilter, FaSort } from "react-icons/fa6";
 
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../_redux/store";
-import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
-import Pagination from "../../../Pagination/Pagination";
-import DateRangePicker, { DateRangePickerHandle } from "../../../ui/RangeDatePicker";
+import { RootState } from "../../../../../_redux/store";
+import CustomDropDown2 from "../../../../DropDown/CustomDropDown2";
+import Pagination from "../../../../Pagination/Pagination";
+import DateRangePicker, { DateRangePickerHandle } from "../../../../ui/RangeDatePicker";
 import Skeleton from "react-loading-skeleton";
-import { NoData } from "../../../NoData";
-import { setErrorPageFormation, setFormationLoading } from "../../../../_redux/features/elaborations/formationSlice";
-import { getFilteredFormations, getFormationsForGantt } from "../../../../services/elaborations/formationAPI";
-import GanttChart from "../../../ui/GanttChart";
-import ProgrammeFormations from "../../../../pages/Elaboration/ProgrammesFormation";
-import GanttDiagram from "../../../ui/GanttDiagram";
+import { NoData } from "../../../../NoData";
+import { setErrorPageFormation, setFormationLoading } from "../../../../../_redux/features/elaborations/formationSlice";
+import { getFilteredFormations, getFormationsForGantt } from "../../../../../services/elaborations/formationAPI";
+import GanttChart from "../../../../ui/GanttChart";
+import ProgrammeFormations from "../../../../../pages/Elaboration/ProgrammesFormation";
+import GanttDiagram from "../../../../ui/GanttDiagram";
 import HeaderTable from "./HeaderTable";
 import BodyTable from "./BodyTable";
 

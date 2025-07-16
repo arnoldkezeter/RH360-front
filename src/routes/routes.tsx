@@ -21,7 +21,6 @@ import Utilisateurs from '../pages/Utilisateurs/Utilisateurs';
 import Stagiaires from '../pages/Stagiaires/Stagiaires';
 import Chercheurs from '../pages/Chercheurs/Chercheurs';
 import ProgrammeFormations from '../pages/Elaboration/ProgrammesFormation';
-import Formations from '../pages/Elaboration/Formations';
 import ThemeFormations from '../pages/Elaboration/ThemeFormation/ThemeFormations';
 import Cohortes from '../pages/Parametres/Cohortes';
 import CohorteUserManager from '../pages/Parametres/CohorteUserManager';
@@ -31,13 +30,14 @@ import Formateurs from '../pages/Elaboration/ThemeFormation/Formateurs';
 import TachesGeneriques from '../pages/Parametres/TachesGeneriques';
 import TacheThemeFormations from '../pages/Elaboration/ThemeFormation/TacheThemeFormation';
 import CalendrierFormations from '../pages/Execution/CalendrierFormation';
-import BudgetFormations from '../pages/Elaboration/ThemeFormation/BudgetThemeFormation';
+import BudgetFormations from '../pages/Elaboration/Formation/BudgetFormation';
 import SuiviBudgetaires from '../pages/Execution/SuiviBudgetaire';
 import RapportFormations from '../pages/Execution/RapportFormation';
 import SupportFormationManager from '../pages/Execution/SupportFormation';
 import CarnetsStage from '../pages/Stagiaires/CarnetStage';
 import Rapports from '../pages/Stagiaires/Rapports';
 import StageManagement from '../pages/Stagiaires/Stages';
+import Formations from '../pages/Elaboration/Formation/Formations';
 
 
 
@@ -106,7 +106,7 @@ const coreRoutes = [
   },
 
   {
-    path: '/elaboration-programme/formation/theme-formation/budgets',
+    path: '/elaboration-programme/formation/budgets',
     title: 'Budget de formation',
     component: BudgetFormations,
   },

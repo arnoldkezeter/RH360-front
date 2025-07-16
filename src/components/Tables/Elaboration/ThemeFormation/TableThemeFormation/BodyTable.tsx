@@ -115,13 +115,13 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                                 },
                             });
 
-                            listPage.push({
-                                name: t('label.budget'),
-                                handleClick: () => {
-                                    dispatch(setThemeFormationSelected(item));
-                                    navigate('/elaboration-programme/formation/theme-formation/budgets');
-                                },
-                            });
+                            // listPage.push({
+                            //     name: t('label.budget'),
+                            //     handleClick: () => {
+                            //         dispatch(setThemeFormationSelected(item));
+                            //         navigate('/elaboration-programme/formation/theme-formation/budgets');
+                            //     },
+                            // });
                         
 
                             return listPage.length > 0 ? (

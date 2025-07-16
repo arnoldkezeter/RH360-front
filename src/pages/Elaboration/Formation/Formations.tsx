@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../_redux/store";
-import { useHeader } from "../../components/Context/HeaderConfig";
-import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
+import { RootState } from "../../../_redux/store";
+import { useHeader } from "../../../components/Context/HeaderConfig";
+import BreadcrumbPageDescription from "../../../components/BreadcrumbPageDescription";
 
-import { setShowModal } from "../../_redux/features/setting";
-import { useFetchData } from "../../hooks/fechDataOptions";
-import { setErrorPageFormation, setFormationLoading, setFormations } from "../../_redux/features/elaborations/formationSlice";
-import { getFilteredFormations } from "../../services/elaborations/formationAPI";
-import FormDelete from "../../components/Modals/Elaboration/ModalFormation/FormDelete";
-import FormCreateUpdate from "../../components/Modals/Elaboration/ModalFormation/FormCreateUpdate";
-import Table from "../../components/Tables/Elaboration/TableFormation/Table";
-import ProgrammeFormations from "./ProgrammesFormation";
+import { setShowModal } from "../../../_redux/features/setting";
+import { useFetchData } from "../../../hooks/fechDataOptions";
+import { setErrorPageFormation, setFormationLoading, setFormations, setFormationSelected } from "../../../_redux/features/elaborations/formationSlice";
+import { getFilteredFormations } from "../../../services/elaborations/formationAPI";
+import FormDelete from "../../../components/Modals/Elaboration/ModalFormation/FormDelete";
+import FormCreateUpdate from "../../../components/Modals/Elaboration/ModalFormation/FormCreateUpdate";
+import Table from "../../../components/Tables/Elaboration/Formation/TableFormation/Table";
 
 const Formations = () => {
     const dispatch = useDispatch();
@@ -35,6 +34,9 @@ const Formations = () => {
     const [startDate, setStartDate] = useState<Date |null>(null)
     const [endDate, setEndDate] = useState<Date | null>(null)
     
+    useEffect(()=>{
+            dispatch(setFormationSelected(undefined));
+    },[])
     useEffect(() => {
             if (!currentProgramme && programmeFormations.length > 0) {
                 setCurrentProgramme(programmeFormations[0]);

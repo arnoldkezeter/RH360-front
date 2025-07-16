@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import NoDataTable from "../../common/NoDataTable";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import HeaderTable from "./HeaderTable";
 import BodyTable from "./BodyTable";
 import { useTranslation } from "react-i18next";
@@ -10,8 +9,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { CardStat } from "../../../ui/Card";
-import { BarChart3, CheckCircle, Search, Plus, Target, DollarSign, TrendingUp, Banknote, Filter, ChevronUp, ChevronDown } from "lucide-react";
-import { ProgressBar } from "../../../ui/Progress";
+import { Target, TrendingUp, Banknote, Filter, ChevronUp, ChevronDown } from "lucide-react";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { NoData } from "../../../NoData";
@@ -19,7 +17,6 @@ import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import InputSearch from "../../common/SearchTable";
 import { setShowModal } from "../../../../_redux/features/setting";
 import { config } from "../../../../config";
-import ButtonCreate from "../../common/ButtonCreate";
 import Button from "../../common/Button";
 
 interface TableDepenseProps {
@@ -27,11 +24,9 @@ interface TableDepenseProps {
     typesDepenses: TypeDepense[];
     programmeFormations: ProgrammeFormation[];
     formations: Formation[];
-    themes: ThemeFormation[];
     budgets: BudgetFormation[];
     currentFormation?: Formation;
     currentProgrammeFormation?: ProgrammeFormation;
-    currentTheme?: ThemeFormation;
     currentBudget?: BudgetFormation;
     currentType?: TypeDepense;
     histogramme: any[];
@@ -41,7 +36,6 @@ interface TableDepenseProps {
     onPageChange: (page: number) => void;
     onFormationChange: (formation: Formation) => void;
     onProgrammeFormationChange: (programme: ProgrammeFormation) => void;
-    onThemeChange: (theme: ThemeFormation) => void;
     onBudgetChange: (budget: BudgetFormation) => void;
     onTypeChange: (type: TypeDepense) => void;
     onCreate: () => void;
@@ -49,14 +43,14 @@ interface TableDepenseProps {
 }
 
 const Table = ({
-    data, typesDepenses, programmeFormations, formations, themes, budgets,
-    currentFormation, currentProgrammeFormation, currentTheme, currentBudget, currentType,
+    data, typesDepenses, programmeFormations, formations, budgets,
+    currentFormation, currentProgrammeFormation, currentBudget, currentType,
     histogramme, totaux, isLoading, currentPage, onPageChange, onFormationChange,
-    onProgrammeFormationChange, onThemeChange, onBudgetChange, onTypeChange, onCreate, onEdit
+    onProgrammeFormationChange, onBudgetChange, onTypeChange, onCreate, onEdit
 }: TableDepenseProps) => {
     const { t } = useTranslation();
     const pageIsLoading = isLoading;
-    const lang = useSelector((state: RootState) => state.setting.language);
+    const lang:string = useSelector((state: RootState) => state.setting.language);
     const userRole = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role);
     const roles = config.roles;
     const dispatch = useDispatch();
@@ -97,9 +91,6 @@ const Table = ({
         if (selected) onFormationChange(selected);
     };
 
-    const handleThemeSelect = (selected: ThemeFormation | undefined) => {
-        if (selected) onThemeChange(selected);
-    };
 
     const handleBudgetSelect = (selected: BudgetFormation | undefined) => {
         if (selected) onBudgetChange(selected);
@@ -175,7 +166,7 @@ const Table = ({
                             />
                         </div>
             
-                        {/* Thème */}
+                        {/* Thème
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {t('label.theme')}
@@ -188,7 +179,7 @@ const Table = ({
                                 displayProperty={(item) => `${lang === 'fr' ? item.titreFr : item.titreEn}`}
                                 onSelect={handleThemeSelect}
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {/* </div> */}

@@ -10,7 +10,7 @@ import { STATUT_BUDGET } from '../../../../../config';
 import { createBudgetFormation, updateBudgetFormation } from '../../../../../services/elaborations/budgetFormationAPI';
 
 
-function FormCreateUpdate({ budgetFormation, theme }: { budgetFormation: BudgetFormation | null, theme:ThemeFormation|undefined }) {
+function FormCreateUpdate({ budgetFormation, formation }: { budgetFormation: BudgetFormation | null, formation:Formation|undefined }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
     const statuts = Object.values(STATUT_BUDGET)
@@ -97,10 +97,10 @@ function FormCreateUpdate({ budgetFormation, theme }: { budgetFormation: BudgetF
         }
 
         if (!budgetFormation ) {
-            if(theme){     
+            if(formation){     
                 await createBudgetFormation(
                     {
-                        theme,
+                        formation,
                         nomFr,
                         nomEn,
                         statut:statut?.key ||""
@@ -115,7 +115,7 @@ function FormCreateUpdate({ budgetFormation, theme }: { budgetFormation: BudgetF
                                 _id: e.data._id,
                                 nomFr: e.data.nomFr,
                                 nomEn: e.data.nomEn,
-                                theme: e.data.theme,
+                                formation: e.data.formation,
                                 statut: e.data.statut
                             }
 
@@ -148,7 +148,7 @@ function FormCreateUpdate({ budgetFormation, theme }: { budgetFormation: BudgetF
                                 _id: e.data._id,
                                 nomFr: e.data.nomFr,
                                 nomEn: e.data.nomEn,
-                                theme: e.data.theme,
+                                formation: e.data.formation,
                                 statut: e.data.statut
                             }
 

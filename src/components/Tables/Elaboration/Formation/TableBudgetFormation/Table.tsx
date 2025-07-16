@@ -18,13 +18,13 @@ import { getFilteredBudgetFormations } from "../../../../../services/elaboration
 
 interface TableBudgetFormationProps {
     data: BudgetFormation[];
-    selectedTheme?:ThemeFormation;
+    selectedFormation?:Formation;
     currentPage: number;
     onPageChange: (page: number) => void;
     onEdit: (budgetFormation : BudgetFormation) => void;
 }
 
-const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableBudgetFormationProps) => {
+const Table = ({ data, selectedFormation, currentPage, onPageChange, onEdit}: TableBudgetFormationProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -93,7 +93,7 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableB
                     // setFilteredNiveaux([]);
                     let budgetFormationsResult : BudgetFormation[] = [];
                     
-                    await getFilteredBudgetFormations({page:1, search:searchText, lang, themeId:selectedTheme?._id || ""}).then(result=>{
+                    await getFilteredBudgetFormations({page:1, search:searchText, lang, formationId:selectedFormation?._id || ""}).then(result=>{
                         if (latestQueryBudgetFormation.current === searchText) {
                             if(result){
                                 budgetFormationsResult = result.budgetFormations;
@@ -121,7 +121,7 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableB
             {/*  */}
             <div className="rounded-sm border border-stroke bg-white px-3 lg:px-5 pt-0 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 mt-2">
                 <div>
-                    {lang==='fr'?selectedTheme?.titreFr || "undefined":selectedTheme?.titreEn}
+                    {lang==='fr'?selectedFormation?.titreFr || "undefined":selectedFormation?.titreEn}
                 </div>
                 {/* version mobile */}
                 <div className="block lg:hidden">

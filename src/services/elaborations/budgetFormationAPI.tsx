@@ -6,11 +6,11 @@ const api = `${apiUrl}/theme-formation/budgets-formations`;
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
-export async function createBudgetFormation({theme, nomFr, nomEn, statut}:BudgetFormation, lang:string): Promise<ReponseApiPros> {
+export async function createBudgetFormation({formation, nomFr, nomEn, statut}:BudgetFormation, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {theme:theme?._id, nomFr, nomEn, statut },
+            {formation:formation?._id, nomFr, nomEn, statut },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,11 +69,11 @@ export async function deleteBudgetFormation(budgetId: string,lang: string): Prom
 }
 
 
-export async function getFilteredBudgetFormations({page, lang, search, themeId }: {page: number, lang:string, search?:string, themeId:string }): Promise<BudgetFormationReturnGetType> {
+export async function getFilteredBudgetFormations({page, lang, search, formationId }: {page: number, lang:string, search?:string, formationId:string }): Promise<BudgetFormationReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/filtre/${themeId}`,
+            `${api}/filtre/${formationId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,10 +100,10 @@ export async function getFilteredBudgetFormations({page, lang, search, themeId }
 
 
 
-export async function getBudgetFormationForDropDown({lang, themeId }: {lang:string, themeId:string }): Promise<BudgetFormationReturnGetType> {
+export async function getBudgetFormationForDropDown({lang, formationId }: {lang:string, formationId:string }): Promise<BudgetFormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/dropdown/theme/${themeId}`,
+            `${api}/dropdown/formation/${formationId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,10 +124,10 @@ export async function getBudgetFormationForDropDown({lang, themeId }: {lang:stri
 }
 
 
-export async function getHistogrammeDepense({formationId, themeId}:{formationId?:string, themeId?:string}): Promise<any[]> {
+export async function getHistogrammeDepense({formationId}:{formationId?:string}): Promise<any[]> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/histogramme/${formationId}/${themeId}`,
+            `${api}/histogramme/${formationId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -144,10 +144,10 @@ export async function getHistogrammeDepense({formationId, themeId}:{formationId?
     }
 }
 
-export async function getTotauxBudget ({formationId, themeId}:{formationId?:string, themeId?:string}): Promise<any> {
+export async function getTotauxBudget ({formationId}:{formationId?:string}): Promise<any> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/totaux/${formationId}/${themeId}`,
+            `${api}/totaux/${formationId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
