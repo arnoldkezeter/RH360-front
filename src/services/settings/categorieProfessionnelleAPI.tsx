@@ -5,11 +5,11 @@ const api = `${apiUrl}/categories-professionnelles`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createCategorieProfessionnelle({nomFr, nomEn, descriptionFr, descriptionEn, grade }: CategorieProfessionnelle, lang:string): Promise<ReponseApiPros> {
+export async function createCategorieProfessionnelle({nomFr, nomEn, descriptionFr, descriptionEn, grades }: CategorieProfessionnelle, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr, nomEn, descriptionFr, descriptionEn, grade },
+            {nomFr, nomEn, descriptionFr, descriptionEn, grades },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ export async function createCategorieProfessionnelle({nomFr, nomEn, descriptionF
     }
 }
 
-export async function updateCategorieProfessionnelle({ _id, nomFr, nomEn, descriptionFr, descriptionEn, grade }: CategorieProfessionnelle, lang:string): Promise<ReponseApiPros> {
+export async function updateCategorieProfessionnelle({ _id, nomFr, nomEn, descriptionFr, descriptionEn, grades }: CategorieProfessionnelle, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {nomFr, nomEn, descriptionFr, descriptionEn, grade },
+            {nomFr, nomEn, descriptionFr, descriptionEn, grades },
             {
                 headers: {
                     'Content-Type': 'application/json',

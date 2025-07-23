@@ -9,6 +9,8 @@ import Input from '../../../ui/input';
 import createToast from '../../../../hooks/toastify';
 import { createPosteDeTravail, updatePosteDeTravail } from '../../../../services/settings/posteDeTravailAPI';
 import { createPosteDeTravailSlice, updatePosteDeTravailSlice } from '../../../../_redux/features/parametres/posteDeTravailSlice';
+import { SearchSelectComponent } from '../../../ui/SearchSelectComponent';
+import { searchFamilleMetier } from '../../../../services/elaborations/familleMetierAPI';
 
 
 function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTravail: PosteDeTravail | null, onDepartmentUpdated: () => void; }) {
@@ -20,7 +22,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
-    const [familleMetier, setFamilleMetier] = useState<FamilleMetier>();
+    const [selectedFamilles, setSelectedFamilles] = useState<FamilleMetier[]>([]);
 
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
@@ -34,7 +36,6 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
 
     const lang = useSelector((state: RootState) => state.setting.language);
 
-    const { data: { familleMetiers } } = useSelector((state: RootState) => state.familleMetierSlice) ?? [];
     useEffect(() => {
         if (posteDeTravail) {
             setModalTitle(t('form_update.enregistrer') + t('form_update.categorie_professionnelle'));
@@ -43,7 +44,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
             setNomEn(posteDeTravail.nomEn);
             setDescriptionFr(posteDeTravail?.descriptionFr || "");
             setDescriptionEn(posteDeTravail?.descriptionEn || "");
-            setFamilleMetier(posteDeTravail.familleMetier);
+            setSelectedFamilles(posteDeTravail.famillesMetier || [])
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.categorie_professionnelle'));
             setCode("");
@@ -51,7 +52,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
             setNomEn("");
             setDescriptionFr("");
             setDescriptionEn("");
-            setFamilleMetier(undefined);
+            setSelectedFamilles([]);
         }
         if (isFirstRender) {
             setErrorNomEn("");
@@ -69,104 +70,90 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
         dispatch(setShowModal());
     };
 
-    const handleFamilleMetierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedFamilleMetierNom = e.target.value;
-        var selectedFamilleMetier = null;
-        if (lang === 'fr') {
-            selectedFamilleMetier = familleMetiers.find(familleMetier => familleMetier.nomFr === selectedFamilleMetierNom);
-        }else {
-            selectedFamilleMetier = familleMetiers.find(familleMetier => familleMetier.nomEn === selectedFamilleMetierNom);
-        }
-        if (selectedFamilleMetier) {
-            setFamilleMetier(selectedFamilleMetier);
-            setErrorFamilleMetier("");
-        }
+
+
+
+    const onSearchFamille = async (search: string) => {
+        const data = await searchFamilleMetier({searchString: search, lang});
+        return data?.familleMetiers || [];
     };
-
-
-
-
     const handleCreateUpdate = async () => {
-        if (!nomFr || !nomEn || !familleMetier) {
+        if (!nomFr || !nomEn || (!selectedFamilles || selectedFamilles.length===0)) {
             if (!nomFr) {
                 setErrorNomFr(t('error.nom_fr'));
             }
             if (!nomEn) {
                 setErrorNomEn(t('error.nom_en'));
             }
-            if (!familleMetier) {
+            if (!selectedFamilles || selectedFamilles.length===0) {
                 setErrorFamilleMetier(t('error.famille_metier'));
             }
             return;
         } 
         // create
         if (!posteDeTravail) {
-            if (familleMetier._id) {
-                await createPosteDeTravail(
-                    {
-                        nomFr,
-                        nomEn,
-                        descriptionFr,
-                        descriptionEn,
-                        familleMetier,
-                    },lang
-                ).then((e: ReponseApiPros) => {
-                    if (e.success) {
-                        createToast(e.message, '', 0);
-                        dispatch(createPosteDeTravailSlice({
-                            posteDeTravail:{
-                                nomFr: e.data.nomFr,
-                                nomEn: e.data.nomEn,
-                                descriptionFr:e.data.descriptionFr,
-                                descriptionEn:e.data.descriptionEn,
-                                familleMetier: familleMetier,
-                                _id: e.data._id,
-                            }
-                        }));
-                        closeModal();
-                    } else {
-                        createToast(e.message, '', 2);
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message, '', 2);
-                })
-            }
+            await createPosteDeTravail(
+                {
+                    nomFr,
+                    nomEn,
+                    descriptionFr,
+                    descriptionEn,
+                    famillesMetier:selectedFamilles,
+                },lang
+            ).then((e: ReponseApiPros) => {
+                if (e.success) {
+                    createToast(e.message, '', 0);
+                    dispatch(createPosteDeTravailSlice({
+                        posteDeTravail:{
+                            nomFr: e.data.nomFr,
+                            nomEn: e.data.nomEn,
+                            descriptionFr:e.data.descriptionFr,
+                            descriptionEn:e.data.descriptionEn,
+                            famillesMetier:selectedFamilles,
+                            _id: e.data._id,
+                        }
+                    }));
+                    closeModal();
+                } else {
+                    createToast(e.message, '', 2);
+                }
+            }).catch((e) => {
+                createToast(e.response.data.message, '', 2);
+            })
         }else {
-            if (familleMetier._id) {
-                await updatePosteDeTravail(
-                    {
-                        
-                        nomFr,
-                        nomEn,
-                        descriptionFr,
-                        descriptionEn,
-                        familleMetier,
-                        _id: posteDeTravail._id,
-                    }, lang
-                ).then((e: ReponseApiPros) => {
-                    if (e.success) {
-                        createToast(e.message, '', 0);
-                        dispatch(updatePosteDeTravailSlice({
-                            id:e.data._id,
-                            posteDeTravailData:{
-                                nomFr: e.data.nomFr,
-                                nomEn: e.data.nomEn,
-                                descriptionFr:e.data.descriptionFr,
-                                descriptionEn:e.data.descriptionEn,
-                                familleMetier: familleMetier,
-                                _id: e.data._id,
-                            }
-                        }));
-                        
-                        closeModal();
-                        onDepartmentUpdated(); // Appeler pour rafraîchir la liste
-                    } else {
-                        createToast(e.message, '', 2);
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message, '', 2);
-                })
-            }
+            await updatePosteDeTravail(
+                {
+                    
+                    nomFr,
+                    nomEn,
+                    descriptionFr,
+                    descriptionEn,
+                    famillesMetier:selectedFamilles,
+                    _id: posteDeTravail._id,
+                }, lang
+            ).then((e: ReponseApiPros) => {
+                if (e.success) {
+                    createToast(e.message, '', 0);
+                    dispatch(updatePosteDeTravailSlice({
+                        id:e.data._id,
+                        posteDeTravailData:{
+                            nomFr: e.data.nomFr,
+                            nomEn: e.data.nomEn,
+                            descriptionFr:e.data.descriptionFr,
+                            descriptionEn:e.data.descriptionEn,
+                            famillesMetier:selectedFamilles,
+                            _id: e.data._id,
+                        }
+                    }));
+                    
+                    closeModal();
+                    onDepartmentUpdated(); // Appeler pour rafraîchir la liste
+                } else {
+                    createToast(e.message, '', 2);
+                }
+            }).catch((e) => {
+                createToast(e.response.data.message, '', 2);
+            })
         }
     }
 
@@ -216,16 +203,19 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                 />
 
                 <Label text={t('label.famille_metier')} required />
-                <select
-                    value={familleMetier ? (lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.famille_metier')}
-                    onChange={handleFamilleMetierChange}
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                >
-                    <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.famille_metier')}</option>
-                    {familleMetiers.map(familleMetier => (
-                        <option key={familleMetier._id} value={lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn}>{lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn}</option>
-                    ))}
-                </select>
+                <SearchSelectComponent<FamilleMetier>
+                    onSearch={onSearchFamille}
+                    selectedItems={selectedFamilles}
+                    onSelectionChange={setSelectedFamilles}
+                    placeholder={t('recherche.rechercher')+t('recherche.famille_metier')}
+                    displayField={lang?"nomFr":"nomEn"}
+                    searchDelay={300}
+                    minSearchLength={2}
+                    noResultsMessage={t('label.aucune_famille_metier')}
+                    loadingMessage={t('label.recherche_famille_metier')}
+                    textDebutCaractere={t('label.tapez_car_deb')}
+                    textFinCaractere={t('label.tapez_car_fin')}
+                />
                 <ErrorMessage message={errorFamilleMetier} />
             </CustomDialogModal>
 

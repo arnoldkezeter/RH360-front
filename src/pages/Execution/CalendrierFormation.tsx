@@ -35,18 +35,7 @@ const CalendrierFormations = () => {
         }
     }, [programmeFormations, currentProgramme]);
 
-    // const { setHeaderConfig } = useHeader();
-
-    // Configure le header
-    // useEffect(() => {
-    //     setHeaderConfig({
-    //         title: t('button.ajouter_formation'),
-    //         showAddButton: true,
-    //         exportOptions: ['PDF', 'Excel'],
-    //         onAdd: () => {setSelectedFormation(null);dispatch(setShowModal())},
-    //         onExport: handleExportUsers,
-    //     });
-    // }, [t]);
+   
 
     const handleExportUsers = (format: string) => {
         console.log(`Export des formations en ${format}`);

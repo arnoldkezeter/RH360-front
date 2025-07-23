@@ -5,11 +5,11 @@ const api = `${apiUrl}/postes-de-travail`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createPosteDeTravail({nomFr, nomEn, descriptionFr, descriptionEn, familleMetier }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
+export async function createPosteDeTravail({nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr, nomEn, descriptionFr, descriptionEn, familleMetier },
+            {nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ export async function createPosteDeTravail({nomFr, nomEn, descriptionFr, descrip
     }
 }
 
-export async function updatePosteDeTravail({ _id, nomFr, nomEn, descriptionFr, descriptionEn, familleMetier }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
+export async function updatePosteDeTravail({ _id, nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {nomFr, nomEn, descriptionFr, descriptionEn, familleMetier },
+            {nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier },
             {
                 headers: {
                     'Content-Type': 'application/json',

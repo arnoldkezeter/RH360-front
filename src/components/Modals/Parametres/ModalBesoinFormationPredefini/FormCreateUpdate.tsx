@@ -9,6 +9,8 @@ import Input from '../../../ui/input';
 import createToast from '../../../../hooks/toastify';
 import { createBesoinFormationPredefini, updateBesoinFormationPredefini } from '../../../../services/settings/besoinFormationPredefiniAPI';
 import { createBesoinFormationPredefiniSlice, updateBesoinFormationPredefiniSlice } from '../../../../_redux/features/parametres/besoinFormationPredefini';
+import { SearchSelectComponent } from '../../../ui/SearchSelectComponent';
+import { searchPosteDeTravail } from '../../../../services/settings/posteDeTravailAPI';
 
 
 function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefini: BesoinFormationPredefini | null }) {
@@ -20,10 +22,12 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
     const [titreEn, setTitreEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
+    const [selectedPostesDeTravail, setSelectedPostesDeTravail] = useState<PosteDeTravail[]>([]);
     
 
     const [errorTitreFr, setErrorTitreFr] = useState("");
     const [errorTitreEn, setErrorTitreEn] = useState("");
+    const [errorPoste, setErrorPoste]=useState("")
 
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -41,6 +45,7 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
             setTitreEn(besoinFormationPredefini.titreEn);
             setDescriptionFr(besoinFormationPredefini?.descriptionFr || "");
             setDescriptionEn(besoinFormationPredefini?.descriptionEn || "");
+            setSelectedPostesDeTravail(besoinFormationPredefini?.postesDeTravail || [])
 
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.besoin_formation_predefini'));
@@ -48,12 +53,14 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
             setTitreEn("");
             setDescriptionFr("");
             setDescriptionEn("");
+            setSelectedPostesDeTravail([]);
         }
 
 
         if (isFirstRender) {
             setErrorTitreEn("");
             setErrorTitreFr("");
+            setErrorPoste("");
             setIsFirstRender(false);
         }
     }, [besoinFormationPredefini, isFirstRender, t]);
@@ -61,18 +68,26 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
     const closeModal = () => {
         setErrorTitreFr("");
         setErrorTitreEn("");
+        setErrorPoste("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
 
-
+    const onSearchPoste = async (search: string) => {
+        const data = await searchPosteDeTravail({searchString: search, lang});
+        return data?.posteDeTravails || [];
+    };
     const handleCreateUpdate = async () => {
-        if(!titreFr || !titreEn){
+        if(!titreFr || !titreEn || (!selectedPostesDeTravail || selectedPostesDeTravail.length===0)){
             if (!titreFr) {
                 setErrorTitreFr(t('error.titre_fr'));
             }
             if (!titreEn) {
                 setErrorTitreEn(t('error.titre_en'));
+            }
+
+            if(!selectedPostesDeTravail || selectedPostesDeTravail.length === 0){
+                setErrorPoste(t('error.poste_de_travail'))
             }
             return;
         }
@@ -85,6 +100,7 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                     titreEn,
                     descriptionFr,
                     descriptionEn,
+                    postesDeTravail:selectedPostesDeTravail
                 },
                 lang
             ).then((e: ReponseApiPros) => {
@@ -96,7 +112,8 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                             titreFr:e.data.titreFr,
                             titreEn:e.data.titreEn,
                             descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn
+                            descriptionEn:e.data.descriptionEn,
+                            postesDeTravail:selectedPostesDeTravail,
                         }
                     }));
 
@@ -122,7 +139,7 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                     titreEn,
                     descriptionFr:descriptionFr,
                     descriptionEn:descriptionEn,
-                    
+                    postesDeTravail:selectedPostesDeTravail
                 },
                 lang
             ).then((e: ReponseApiPros) => {
@@ -135,7 +152,8 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                             titreFr: e.data.titreFr,
                             titreEn: e.data.titreEn,
                             descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn
+                            descriptionEn:e.data.descriptionEn,
+                            postesDeTravail:selectedPostesDeTravail
                             
                         }
                     }));
@@ -146,7 +164,8 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                     createToast(e.message, '', 2);
                 }
             }).catch((e) => {
-                createToast(e.response.data.message, '', 2);
+                console.log(e)
+                // createToast(e.response.data.message, '', 2);
             })
                 
             
@@ -198,6 +217,21 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                     type='text'
                     setValue={(value) => { setDescriptionEn(value); }}
                     hasBackground={true}
+                />
+
+                <Label text={t('label.postes_de_travail')} required />
+                <SearchSelectComponent<PosteDeTravail>
+                    onSearch={onSearchPoste}
+                    selectedItems={selectedPostesDeTravail}
+                    onSelectionChange={setSelectedPostesDeTravail}
+                    placeholder={t('recherche.rechercher')+t('recherche.poste_de_travail')}
+                    displayField={lang?"nomFr":"nomEn"}
+                    searchDelay={300}
+                    minSearchLength={2}
+                    noResultsMessage={t('label.aucun_poste')}
+                    loadingMessage={t('label.recherche_poste')}
+                    textDebutCaractere={t('label.tapez_car_deb')}
+                    textFinCaractere={t('label.tapez_car_fin')}
                 />
             </CustomDialogModal>
 

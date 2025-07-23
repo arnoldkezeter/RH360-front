@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Initial state
 const initialState: BesoinFormationPredefiniInitialData = {
     data: {
-        besoinFormationPredefinis: [],
+        besoinsFormationPredefinis: [],
         currentPage: 0,
         totalItems: 0,
         totalPages: 0,
@@ -30,18 +30,19 @@ const besoinFormationPredefiniSlice = createSlice({
             state.data = action.payload;
         },
         createBesoinFormationPredefiniSlice(state, action: PayloadAction<CreateBesoinFormationPredefiniPayload>) {
-            state.data.besoinFormationPredefinis.unshift(action.payload.besoinFormationPredefini);
+            state.data.besoinsFormationPredefinis.unshift(action.payload.besoinFormationPredefini);
         },
         updateBesoinFormationPredefiniSlice(state, action: PayloadAction<UpdateBesoinFormationPredefiniPayload>) {
             const { id, besoinFormationPredefiniData } = action.payload;
-            const index = state.data.besoinFormationPredefinis.findIndex(e => e._id === id);
+            console.log(state.data.besoinsFormationPredefinis)
+            const index = state.data.besoinsFormationPredefinis.findIndex(e => e._id === id);
             if (index !== -1) {
-                state.data.besoinFormationPredefinis[index] = { ...state.data.besoinFormationPredefinis[index], ...besoinFormationPredefiniData };
+                state.data.besoinsFormationPredefinis[index] = { ...state.data.besoinsFormationPredefinis[index], ...besoinFormationPredefiniData };
             }
         },
         deleteBesoinFormationPredefiniSlice(state, action: PayloadAction<DeleteBesoinFormationPredefiniPayload>) {
             const { id } = action.payload;
-            state.data.besoinFormationPredefinis = state.data.besoinFormationPredefinis.filter(e => e._id !== id);
+            state.data.besoinsFormationPredefinis = state.data.besoinsFormationPredefinis.filter(e => e._id !== id);
         },
     },
 });

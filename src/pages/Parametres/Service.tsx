@@ -41,6 +41,10 @@ const Services = () => {
         });
     }, []);
    
+    useEffect(()=>{
+        if(structures && structures.length>0)
+            setCurrentStructure(structures[0])
+    },[structures])
     
     const fetchServices = async () => {
         if (!currentStructure || structures.length === 0) return;

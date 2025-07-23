@@ -6,12 +6,12 @@ interface BesoinFormationPredefini {
     titreEn: string;
     descriptionFr?:string;
     descriptionEn?:string;
-    posteDeTravail?:PosteDeTravail;
+    postesDeTravail?:PosteDeTravail[];
 }
 
 interface BesoinFormationPredefiniInitialData {
     data: {
-        besoinFormationPredefinis: BesoinFormationPredefini[];
+        besoinsFormationPredefinis: BesoinFormationPredefini[];
         currentPage: number;
         totalPages: number;
         totalItems: number;
@@ -35,7 +35,7 @@ interface DeleteBesoinFormationPredefiniPayload {
 }
 
 interface BesoinFormationPredefiniReturnGetType {
-    besoinFormationPredefinis: BesoinFormationPredefini[];
+    besoinsFormationPredefinis: BesoinFormationPredefini[];
     currentPage: number;
     totalItems: number;
     totalPages: number;

@@ -59,11 +59,11 @@ const RapportFormations = () => {
 
     
   const { 
-        data,
-        error,
-        isLoading, 
-        
-      } = useFetchRapportFormationData({programmeId:currentProgrammeFormation?._id, formationId:currentFormation?._id});
+      data,
+      error,
+      isLoading, 
+      
+    } = useFetchRapportFormationData({programmeId:currentProgrammeFormation?._id, formationId:currentFormation?._id});
   
   // Charge les formations pour une programmeFormation spécifique
   useEffect(() => {

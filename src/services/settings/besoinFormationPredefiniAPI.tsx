@@ -5,11 +5,11 @@ const api = `${apiUrl}/besoins-formation-predefinis`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createBesoinFormationPredefini({titreFr, titreEn, descriptionFr, descriptionEn, posteDeTravail }: BesoinFormationPredefini, lang:string): Promise<ReponseApiPros> {
+export async function createBesoinFormationPredefini({titreFr, titreEn, descriptionFr, descriptionEn, postesDeTravail }: BesoinFormationPredefini, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {titreFr, titreEn, descriptionFr, descriptionEn, posteDeTravail },
+            {titreFr, titreEn, descriptionFr, descriptionEn, postesDeTravail },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ export async function createBesoinFormationPredefini({titreFr, titreEn, descript
     }
 }
 
-export async function updateBesoinFormationPredefini({ _id, titreFr, titreEn, descriptionFr, descriptionEn, posteDeTravail }: BesoinFormationPredefini, lang:string): Promise<ReponseApiPros> {
+export async function updateBesoinFormationPredefini({ _id, titreFr, titreEn, descriptionFr, descriptionEn, postesDeTravail }: BesoinFormationPredefini, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {titreFr, titreEn, descriptionFr, descriptionEn, posteDeTravail },
+            {titreFr, titreEn, descriptionFr, descriptionEn, postesDeTravail },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,11 +67,11 @@ export async function deleteBesoinFormationPredefini(besoinFormationPredefiniId:
     }
 }
 
-export async function getBesoinFormationPredefinis({page, lang }: {page: number, lang:string }): Promise<BesoinFormationPredefiniReturnGetType> {
+export async function getBesoinFormationPredefinis({page, lang, posteId }: {page: number, lang:string, posteId:string }): Promise<BesoinFormationPredefiniReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/`,
+            `${api}/poste/${posteId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,9 +86,8 @@ export async function getBesoinFormationPredefinis({page, lang }: {page: number,
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const BesoinFormationPredefinis: BesoinFormationPredefiniReturnGetType = response.data.data;
-        
-        return BesoinFormationPredefinis;
+        const besoins: BesoinFormationPredefiniReturnGetType = response.data.data;
+        return besoins;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;

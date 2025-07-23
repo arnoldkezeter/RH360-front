@@ -6,7 +6,7 @@ interface CategorieProfessionnelle {
     nomEn: string;
     descriptionFr?:string;
     descriptionEn?:string;
-    grade:Grade;
+    grades:Grade[];
 }
 
 interface CategorieProfessionnelleInitialData {

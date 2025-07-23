@@ -9,6 +9,8 @@ import Input from '../../../ui/input';
 import createToast from '../../../../hooks/toastify';
 import { createCategorieProfessionnelle, updateCategorieProfessionnelle } from '../../../../services/settings/categorieProfessionnelleAPI';
 import { createCategorieProfessionnelleSlice, updateCategorieProfessionnelleSlice } from '../../../../_redux/features/parametres/categorieProfessionnelleSlice';
+import { searchGrade } from '../../../../services/settings/gradeAPI';
+import { SearchSelectComponent } from '../../../ui/SearchSelectComponent';
 
 
 function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { categorieProfessionnelle: CategorieProfessionnelle | null, onDepartmentUpdated: () => void; }) {
@@ -20,7 +22,7 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
-    const [grade, setGrade] = useState<Grade>();
+    const [selectedGrades, setSelectedGrades] = useState<Grade[]>([]);
 
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
@@ -43,7 +45,7 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
             setNomEn(categorieProfessionnelle.nomEn);
             setDescriptionFr(categorieProfessionnelle?.descriptionFr || "");
             setDescriptionEn(categorieProfessionnelle?.descriptionEn || "");
-            setGrade(categorieProfessionnelle.grade);
+            setSelectedGrades(categorieProfessionnelle.grades || [])
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.categorie_professionnelle'));
             setCode("");
@@ -51,7 +53,7 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
             setNomEn("");
             setDescriptionFr("");
             setDescriptionEn("");
-            setGrade(undefined);
+            setSelectedGrades([]);
         }
         if (isFirstRender) {
             setErrorNomEn("");
@@ -69,104 +71,92 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
         dispatch(setShowModal());
     };
 
-    const handleGradeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedGradeNom = e.target.value;
-        var selectedGrade = null;
-        if (lang === 'fr') {
-            selectedGrade = grades.find(grade => grade.nomFr === selectedGradeNom);
-        }else {
-            selectedGrade = grades.find(grade => grade.nomEn === selectedGradeNom);
-        }
-        if (selectedGrade) {
-            setGrade(selectedGrade);
-            setErrorGrade("");
-        }
+    const onSearchGrade = async (search: string) => {
+        const data = await searchGrade({searchString: search, lang});
+        return data?.grades || [];
     };
 
-
-
-
     const handleCreateUpdate = async () => {
-        if (!nomFr || !nomEn || !grade) {
+        if (!nomFr || !nomEn || (!selectedGrades || selectedGrades.length===0)) {
             if (!nomFr) {
                 setErrorNomFr(t('error.nom_fr'));
             }
             if (!nomEn) {
                 setErrorNomEn(t('error.nom_en'));
             }
-            if (!grade) {
+            if (!selectedGrades || selectedGrades.length===0) {
                 setErrorGrade(t('error.grade'));
             }
             return;
         } 
         // create
         if (!categorieProfessionnelle) {
-            if (grade._id) {
-                await createCategorieProfessionnelle(
-                    {
-                        nomFr,
-                        nomEn,
-                        descriptionFr,
-                        descriptionEn,
-                        grade,
-                    },lang
-                ).then((e: ReponseApiPros) => {
-                    if (e.success) {
-                        createToast(e.message, '', 0);
-                        dispatch(createCategorieProfessionnelleSlice({
-                            categorieProfessionnelle:{
-                                nomFr: e.data.nomFr,
-                                nomEn: e.data.nomEn,
-                                descriptionFr:e.data.descriptionFr,
-                                descriptionEn:e.data.descriptionEn,
-                                grade: grade,
-                                _id: e.data._id,
-                            }
-                        }));
-                        closeModal();
-                    } else {
-                        createToast(e.message, '', 2);
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message, '', 2);
-                })
-            }
+            
+            await createCategorieProfessionnelle(
+                {
+                    nomFr,
+                    nomEn,
+                    descriptionFr,
+                    descriptionEn,
+                    grades:selectedGrades,
+                },lang
+            ).then((e: ReponseApiPros) => {
+                if (e.success) {
+                    createToast(e.message, '', 0);
+                    dispatch(createCategorieProfessionnelleSlice({
+                        categorieProfessionnelle:{
+                            nomFr: e.data.nomFr,
+                            nomEn: e.data.nomEn,
+                            descriptionFr:e.data.descriptionFr,
+                            descriptionEn:e.data.descriptionEn,
+                            grades:selectedGrades,
+                            _id: e.data._id,
+                        }
+                    }));
+                    closeModal();
+                } else {
+                    createToast(e.message, '', 2);
+                }
+            }).catch((e) => {
+                createToast(e.response.data.message, '', 2);
+            })
+            
         }else {
-            if (grade._id) {
-                await updateCategorieProfessionnelle(
-                    {
-                        
-                        nomFr,
-                        nomEn,
-                        descriptionFr,
-                        descriptionEn,
-                        grade,
-                        _id: categorieProfessionnelle._id,
-                    }, lang
-                ).then((e: ReponseApiPros) => {
-                    if (e.success) {
-                        createToast(e.message, '', 0);
-                        dispatch(updateCategorieProfessionnelleSlice({
-                            id:e.data._id,
-                            categorieProfessionnelleData:{
-                                nomFr: e.data.nomFr,
-                                nomEn: e.data.nomEn,
-                                descriptionFr:e.data.descriptionFr,
-                                descriptionEn:e.data.descriptionEn,
-                                grade: grade,
-                                _id: e.data._id,
-                            }
-                        }));
-                        
-                        closeModal();
-                        onDepartmentUpdated(); // Appeler pour rafraîchir la liste
-                    } else {
-                        createToast(e.message, '', 2);
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message, '', 2);
-                })
-            }
+            
+            await updateCategorieProfessionnelle(
+                {
+                    
+                    nomFr,
+                    nomEn,
+                    descriptionFr,
+                    descriptionEn,
+                    grades:selectedGrades,
+                    _id: categorieProfessionnelle._id,
+                }, lang
+            ).then((e: ReponseApiPros) => {
+                if (e.success) {
+                    createToast(e.message, '', 0);
+                    dispatch(updateCategorieProfessionnelleSlice({
+                        id:e.data._id,
+                        categorieProfessionnelleData:{
+                            nomFr: e.data.nomFr,
+                            nomEn: e.data.nomEn,
+                            descriptionFr:e.data.descriptionFr,
+                            descriptionEn:e.data.descriptionEn,
+                            grades:selectedGrades,
+                            _id: e.data._id,
+                        }
+                    }));
+                    
+                    closeModal();
+                    onDepartmentUpdated(); // Appeler pour rafraîchir la liste
+                } else {
+                    createToast(e.message, '', 2);
+                }
+            }).catch((e) => {
+                createToast(e.response.data.message, '', 2);
+            })
+            
         }
     }
 
@@ -216,16 +206,19 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
                 />
 
                 <Label text={t('label.grade')} required />
-                <select
-                    value={grade ? (lang === 'fr' ? grade.nomFr : grade.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.grade')}
-                    onChange={handleGradeChange}
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                >
-                    <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.grade')}</option>
-                    {grades.map(grade => (
-                        <option key={grade._id} value={lang === 'fr' ? grade.nomFr : grade.nomEn}>{lang === 'fr' ? grade.nomFr : grade.nomEn}</option>
-                    ))}
-                </select>
+                <SearchSelectComponent<Grade>
+                    onSearch={onSearchGrade}
+                    selectedItems={selectedGrades}
+                    onSelectionChange={setSelectedGrades}
+                    placeholder={t('recherche.rechercher')+t('recherche.grade')}
+                    displayField={lang?"nomFr":"nomEn"}
+                    searchDelay={300}
+                    minSearchLength={2}
+                    noResultsMessage={t('label.aucun_grade')}
+                    loadingMessage={t('label.recherche_grade')}
+                    textDebutCaractere={t('label.tapez_car_deb')}
+                    textFinCaractere={t('label.tapez_car_fin')}
+                />
                 <ErrorMessage message={errorGrade} />
             </CustomDialogModal>
 

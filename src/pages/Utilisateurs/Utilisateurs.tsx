@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import createToast from "../../hooks/toastify";
 import { useHeader } from "../../components/Context/HeaderConfig";
 import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
 import Table from "../../components/Tables/Utilisateur/TableUtilisateur/Table";
@@ -13,12 +12,10 @@ import {
     setUtilisateursLoading 
 } from "../../_redux/features/utilisateurs/utilisateurSlice";
 import { setErrorPageService, setServices } from "../../_redux/features/parametres/serviceSlice";
-import { setErrorPageStructure, setStructures } from "../../_redux/features/parametres/strucutureSlice";
 import FormDelete from "../../components/Modals/Utilisateur/ModalUtilisateur/FormDelete";
 import { setShowModal } from "../../_redux/features/setting";
 import { useFetchData } from "../../hooks/fechDataOptions";
 import { getUtilisateursByFiltres } from "../../services/utilisateurs/utilisateurAPI";
-import { getStructuresForDropDown } from "../../services/settings/structureAPI";
 import { getServicesForDropDownByStructure } from "../../services/settings/serviceAPI";
 import FormCreateUpdate from "../../components/Modals/Utilisateur/ModalUtilisateur/FormCreateUpdate";
 import { ROLES } from "../../config";
