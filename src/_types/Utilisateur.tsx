@@ -22,6 +22,8 @@ interface Utilisateur {
     dateEntreeEnService?: string,
     photoDeProfil?:string;
     service?: Service;
+    familleMetier?:FamilleMetier
+    grade?:Grade;
     categorieProfessionnelle?: CategorieProfessionnelle,
     posteDeTravail?: PosteDeTravail,
     commune?:Commune,

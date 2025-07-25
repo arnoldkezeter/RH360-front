@@ -34,7 +34,6 @@ const besoinFormationPredefiniSlice = createSlice({
         },
         updateBesoinFormationPredefiniSlice(state, action: PayloadAction<UpdateBesoinFormationPredefiniPayload>) {
             const { id, besoinFormationPredefiniData } = action.payload;
-            console.log(state.data.besoinsFormationPredefinis)
             const index = state.data.besoinsFormationPredefinis.findIndex(e => e._id === id);
             if (index !== -1) {
                 state.data.besoinsFormationPredefinis[index] = { ...state.data.besoinsFormationPredefinis[index], ...besoinFormationPredefiniData };

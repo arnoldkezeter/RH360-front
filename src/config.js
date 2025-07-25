@@ -55,11 +55,45 @@ export const STATUTS = {
     EN_ATTENTE: { nomFr: "En attente", nomEn: "Pending", key:"EN_ATTENTE" },
 };
 
+export const STATUT_BESOIN = {
+    VALIDER: { nomFr: "Validé", nomEn: "Validate", key:"VALIDER" },
+    REFUSER: { nomFr: "Rejeté", nomEn: "Rejected", key:"REJETE" },
+    EN_ATTENTE: { nomFr: "En attente", nomEn: "Pending", key:"EN_ATTENTE" },
+    NON_EVALUE: {nomFr:"Non évalué", nomEn:"Not rated", key:"NON_EVALUE"}
+};
+
 export const STATUT_TACHE={
     COMPLETE: { nomFr: "Complétée", nomEn: "Completed", key:"COMPLETE" },
     EN_COURS: { nomFr: "En cours", nomEn: "In progress", key:"EN_COURS" },
     ABSENT: { nomFr: "Absent", nomEn: "Absent", key:"ABSENT" },
 }
+
+export const NIVEAU_AUTO_EVALUATION = {
+  NIVEAU_1: {
+    nomFr: "Vous ne disposez d'aucun savoir-faire en la matière",
+    nomEn: "You have no expertise in this area",
+    niveau: 1,
+  },
+  NIVEAU_2: {
+    nomFr: "Vos capacités techniques pour exécuter les tâches sont faibles",
+    nomEn: "Your technical ability to perform the tasks is weak",
+    niveau: 2,
+  },
+  NIVEAU_3: {
+    nomFr: "Vos capacités techniques en la matière sont bonnes, mais les matériels insuffisants",
+    nomEn: "Your technical skills in this area are good, but the equipment is insufficient",
+    niveau: 3,
+  },
+  NIVEAU_4: {
+    nomFr: "Vos capacités techniques en la matière sont bonnes et vous exercez effectivement ces compétences selon les règles de l'art",
+    nomEn: "Your technical skills in this area are good and you effectively apply them according to professional standards",
+    niveau: 4,
+  },
+};
+
+export const monthsFullFr = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin','Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+export const monthsFullEn = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December'];
+
 
 
 

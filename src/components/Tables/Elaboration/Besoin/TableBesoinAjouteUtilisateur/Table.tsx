@@ -11,25 +11,25 @@ import { RootState } from "../../../../../_redux/store";
 import Pagination from "../../../../Pagination/Pagination";
 import Skeleton from "react-loading-skeleton";
 import { NoData } from "../../../../NoData";
-import { setErrorPageObjectifTheme, setObjectifThemeLoading } from "../../../../../_redux/features/elaborations/objectifThemeSlice";
-import { getFilteredObjectifThemes } from "../../../../../services/elaborations/objectifThemeAPI";
+import { setErrorPageBesoinAjouteUtilisateur, setBesoinAjouteUtilisateurLoading } from "../../../../../_redux/features/elaborations/besoinAjouteUtilisateurSlice";
+import { getBesoinsByUser } from "../../../../../services/elaborations/besoinAjouteUtilisateurAPI";
 
 
 
-interface TableObjectifThemeProps {
-    data: ObjectifTheme[];
-    selectedTheme?:ThemeFormation;
+interface TableBesoinAjouteUtilisateurProps {
+    data: BesoinAjouteUtilisateur[];
+    utilisateur?:Utilisateur;
     currentPage: number;
     onPageChange: (page: number) => void;
-    onEdit: (objectifTheme : ObjectifTheme) => void;
+    onEdit: (besoinAjouteUtilisateur : BesoinAjouteUtilisateur) => void;
 }
 
-const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableObjectifThemeProps) => {
+const Table = ({ data, utilisateur, currentPage, onPageChange, onEdit}: TableBesoinAjouteUtilisateurProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
-    const pageIsLoading = useSelector((state: RootState) => state.objectifThemeSlice.pageIsLoading);
+    const pageIsLoading = useSelector((state: RootState) => state.besoinAjouteUtilisateurSlice.pageIsLoading);
     
 
     
@@ -45,8 +45,8 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableO
     
 
      // variable pour la pagination
-    const itemsPerPage =  useSelector((state: RootState) => state.objectifThemeSlice.data.pageSize); // nombre d'éléments maximum par page
-    const count = useSelector((state: RootState) => state.objectifThemeSlice.data.totalItems);
+    const itemsPerPage =  useSelector((state: RootState) => state.besoinAjouteUtilisateurSlice.data.pageSize); // nombre d'éléments maximum par page
+    const count = useSelector((state: RootState) => state.besoinAjouteUtilisateurSlice.data.totalItems);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
 
@@ -64,24 +64,24 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableO
     
 
     // modifier les données de la page lors de la recherche ou de la sélection de la section
-    const [filteredData, setFilteredData] = useState<ObjectifTheme[]>(data);
+    const [filteredData, setFilteredData] = useState<BesoinAjouteUtilisateur[]>(data);
     
 
-    const latestQueryObjectifTheme = useRef('');
+    const latestQueryBesoinAjouteUtilisateur = useRef('');
     useEffect(() => {
-        dispatch(setObjectifThemeLoading(true));
-        latestQueryObjectifTheme.current = searchText;
+        dispatch(setBesoinAjouteUtilisateurLoading(true));
+        latestQueryBesoinAjouteUtilisateur.current = searchText;
         
         try{
             
-            const filterObjectifThemeByContent = async () => {
+            const filterBesoinAjouteUtilisateurByContent = async () => {
                 if (searchText === '') {
                     // if(isSearch){
                         // sections.length>0?setSection(sections[0]):setSection(undefined);
                         // filterCycleBySection(section?._id);
                         // filterNiveauxByCycle(cycle?._id);
                         
-                        const result: ObjectifTheme[] = data;
+                        const result: BesoinAjouteUtilisateur[] = data;
                         setFilteredData(result); 
                         
                     // }
@@ -91,13 +91,13 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableO
                     // setNiveau(undefined);
                     // setFilteredCycle([]);
                     // setFilteredNiveaux([]);
-                    let objectifThemesResult : ObjectifTheme[] = [];
+                    let besoinAjouteUtilisateursResult : BesoinAjouteUtilisateur[] = [];
                     
-                    await getFilteredObjectifThemes({page:1, search:searchText, lang, themeId:selectedTheme?._id || ""}).then(result=>{
-                        if (latestQueryObjectifTheme.current === searchText) {
+                    await getBesoinsByUser({page:1, utilisateurId:utilisateur?._id, search:searchText, lang}).then(result=>{
+                        if (latestQueryBesoinAjouteUtilisateur.current === searchText) {
                             if(result){
-                                objectifThemesResult = result.objectifThemes;
-                                setFilteredData(objectifThemesResult);
+                                besoinAjouteUtilisateursResult = result.besoinAjouteUtilisateurs;
+                                setFilteredData(besoinAjouteUtilisateursResult);
                             }
                           }
                         
@@ -107,12 +107,12 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableO
                 
             };
             
-            filterObjectifThemeByContent();
+            filterBesoinAjouteUtilisateurByContent();
         }catch(e){
-            dispatch(setErrorPageObjectifTheme(t('message.erreur')));
+            dispatch(setErrorPageBesoinAjouteUtilisateur(t('message.erreur')));
         }finally{
-            if (latestQueryObjectifTheme.current === searchText) {
-                dispatch(setObjectifThemeLoading(false)); // Définissez le loading à false après le chargement
+            if (latestQueryBesoinAjouteUtilisateur.current === searchText) {
+                dispatch(setBesoinAjouteUtilisateurLoading(false)); // Définissez le loading à false après le chargement
             }
         }
     }, [searchText, isSearch, data]);
@@ -120,9 +120,7 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableO
         <div>
             {/*  */}
             <div className="rounded-sm border border-stroke bg-white px-3 lg:px-5 pt-0 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 mt-2">
-                <div>
-                    {lang==='fr'?selectedTheme?.titreFr || "undefined":selectedTheme?.titreEn}
-                </div>
+                
                 {/* version mobile */}
                 <div className="block lg:hidden">
                     <button className="px-2.5 py-1 border border-gray text-[12px] mb-2 flex justify-center items-center gap-x-2" onClick={toggleDropdownVisibility}>
@@ -134,7 +132,7 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableO
                             {/* InputSearch pour mobile */}
                             <div className="w-full">
                                 <InputSearch 
-                                    hintText={t('recherche.rechercher')+t('recherche.objectif')} 
+                                    hintText={t('recherche.rechercher')+t('recherche.competence')} 
                                     value={searchText} 
                                     onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
                                 />
@@ -147,7 +145,7 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableO
                 <div className="hidden lg:block">
                     <div className="w-full mb-4 mt-4">
                         <InputSearch 
-                            hintText={t('recherche.rechercher')+t('recherche.objectif')} 
+                            hintText={t('recherche.rechercher')+t('recherche.competence')} 
                             value={searchText} 
                             onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
                         />

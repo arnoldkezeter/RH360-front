@@ -5,10 +5,11 @@ import { useTranslation } from "react-i18next";
 interface ButtonNewProps {
     onClick: () => void;
     title:string;
-    isAbsence?:boolean;
+    useTitle?:boolean
+    removeIcon?:boolean
 }
 
-const ButtonCreate = ({ isAbsence, onClick }: ButtonNewProps) => {
+const ButtonCreate = ({ useTitle, onClick, title, removeIcon }: ButtonNewProps) => {
     const { t } = useTranslation();
 
     return (
@@ -19,13 +20,14 @@ const ButtonCreate = ({ isAbsence, onClick }: ButtonNewProps) => {
             inline-flex items-center justify-center  bg-primary  text-center font-medium text-white 
             hover:bg-opacity-90 lg:py-4 lg:px-4 xl:px-6 rounded  "
         >
-            <div className="text-[18px]  md:text-[22px] ">
+            {!removeIcon && <div className="text-[18px]  md:text-[22px] ">
                 <IoMdAdd />
-            </div>
-            {!isAbsence?(<h1 className='hidden lg:block pr-1'>
+            </div>}
+            
+            {!useTitle?(<h1 className='hidden lg:block pr-1'>
                 {t('label.ajouter')}
             </h1>):<h1 className='hidden lg:block pr-1'>
-                {t('boutton.signaler_absence')}
+                {title}
             </h1>}
         </button>
     );

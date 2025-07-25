@@ -5,11 +5,11 @@ const api = `${apiUrl}/utilisateurs`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createUtilisateur({ matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, actif}: Utilisateur, lang:string): Promise<ReponseApiPros> {
+export async function createUtilisateur({ matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif}: Utilisateur, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, actif},
+            {matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ export async function createUtilisateur({ matricule, nom, prenom, email, genre, 
     }
 }
 
-export async function updateUtilisateur({ _id,matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, actif }: Utilisateur, lang:string): Promise<ReponseApiPros> {
+export async function updateUtilisateur({ _id,matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif }: Utilisateur, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, actif },
+            {matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,9 +188,8 @@ export async function getUtilisateursByFiltres({page, service, role, lang }: {pa
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const Utilisateurs: UtilisateurReturnGetType = response.data.data;
-        
-        return Utilisateurs;
+        const utilisateurs: UtilisateurReturnGetType = response.data.data;
+        return utilisateurs;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;

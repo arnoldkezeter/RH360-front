@@ -38,6 +38,9 @@ import CarnetsStage from '../pages/Stagiaires/CarnetStage';
 import Rapports from '../pages/Stagiaires/Rapports';
 import StageManagement from '../pages/Stagiaires/Stages';
 import Formations from '../pages/Elaboration/Formation/Formations';
+import AutoEvaluationBesoins from '../pages/Elaboration/BesoinFormation/AutoEvaluation';
+import RapportAutoEvaluation from '../pages/Elaboration/BesoinFormation/AdminDashbord';
+import BesoinAjouteUtilisateur from '../pages/Elaboration/BesoinFormation/BesoinAjouteUtilisateur';
 
 
 
@@ -116,13 +119,19 @@ const coreRoutes = [
   {
     path: '/elaboration-programme/besoins-formation/exprimer',
     title: 'Expression des besoins de formation',
-    component: undefined,
+    component: AutoEvaluationBesoins,
+  },
+
+  {
+    path: '/elaboration-programme/besoins-formation/exprimer/nouvelle-competence',
+    title: 'Expression des besoins de formation',
+    component: BesoinAjouteUtilisateur,
   },
 
   {
     path: '/elaboration-programme/besoins-formation/rapports',
     title: 'Rapports sur les besoins de formation',
-    component: undefined,
+    component: RapportAutoEvaluation,
   },
 
 

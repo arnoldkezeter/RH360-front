@@ -53,9 +53,10 @@
     "lieux_formation":"Lieux de formation",
     "objectifs_theme":"Objectifs de la formation",
     "formateurs":"Formateurs",
-    "besoins_formation_exprimer":"Exprimez vos besoins de formation",
+    "besoins_formation_exprimer":"Auto-Evaluation des besoins de formation",
     "besoins_formation_rapport" : "Besoins de formation (Rapport)",
     "budgets_formation":"Budget de la formation",
+    "nouvelle_competence":"Nouvelle compétence",
 
 
     "calendrier_formation":"Calendrier de formation",
@@ -118,7 +119,10 @@
     "rapport_formation":"Gérez et consulter des rapports détailler sur les formations planifiées et exécutées.",
     "support_formation":"Un espace réservé au stockage et au partage des supports associés à chaque formation.",
     "carnet_stage":"Enregistrez les tâches quotidiennes des stagiaires, marquez les absences, verrouillez les enregistrements hebdomadaires, et générez des carnets de stage téléchargeables",
-    "rapport_stage":"Offrir une vue analytique complète des stagiaires et de leurs stages au sein de l'organisation, incluant une répartition par superviseur."
+    "rapport_stage":"Offrir une vue analytique complète des stagiaires et de leurs stages au sein de l'organisation, incluant une répartition par superviseur.",
+    "auto_evaluation_besoin":"Exprimez vos besoins de formations",
+    "nouvelle_competence":"Décrivez les nouvelles compétences que vous pensez nécessaires à acquérir.",
+    "besoins_formation_rapport":""
   },
 
   "tableau_de_bord": {
@@ -144,7 +148,37 @@
   },
   
   "label": {
-
+    "aucun_point":"Aucun point d'amélioration spécifié",
+    "point_a_ameliorer":"Points à améliorer",
+    "point":"point",
+    "niveau_1":"Niveau 1",
+    "niveau_2":"Niveau 2",
+    "niveau_3":"Niveau 3",
+    "niveau_4":"Niveau 4",
+    "vue_ensemble":"Vue d'ensemble",
+    "evaluations":"Evaluations",
+    "competence_utilisateur":"Compétences nécessaires à acquérir par utilisateur",
+    "resultat_auto_evaluation":"Evalution des besoins des utilisateurs",
+    "besoin_prioritaire":"Besoins prioritaires (niveaux faibles)",
+    "repartition_besoin_poste":"Répartition des besoins par poste de travail",
+    "repartition_besoin_niveau":"Répartition des besoins par niveau",
+    "nombre_utilisateurs":"Nombre d'utilisateurs",
+    "postes_concernes":"Postes concernés",
+    "nombre_besoin":"Nombre de besoins",
+    "repartition_competence_poste":"Répartition des nouvelles compétences nécessaires par poste de travail",
+    "nombre_competence":"Nombre de compétences",
+    "evolution_mensuelle":"Évolution mensuelle",
+    "taux_validation":"Taux de validation",
+    "valides":"Validés",
+    "rejetees":"Rejetées",
+    "en_attentes":"En attentes",
+    "competence_fr":"Competence (Français)",
+    "competence_en":"Competence (Anglais)",
+    "points_a_ameliorer_fr":"Points de force à améliorer (Français)",
+    "points_a_ameliorer_en":"Points de force à améliorer (Anglais)",
+    "points_a_ameliorer":"Points de force à améliorer",
+    "commentaire_admin":"Commentaire",
+    "formulez_points_a_ameliorer":"Formulez les points de forces à améliorer...",
     "aucune_donnee":"Aucune donnée disponible pour le moment.",
     "famille_metier":"Famille de métier",
     "nature_taxe":"Nature de la taxe",
@@ -232,7 +266,14 @@
     "nature_depense_fr":"Nature de la dépense en français",
     "nature_depense_en":"Nature de la dépense en anglais",
     "nature_depense":"Nature de la dépense",
-
+    "niveau_auto_evaluation":"Niveau d'auto-évaluation",
+    "insuffisances_fr":"Insuffisances (Français)",
+    "insuffisances_en":"Insuffisances (Anglais)",
+    "besoins_en_renforcement_fr":"Besoins en renforcement (Français)",
+    "besoins_en_renforcement_en":"Besoins en renforcement (Anglais)",
+    "formulez_besoins":"Formulez les besoins...",
+    "decrivez_insuffisances":"Décrivez brièvement les insuffisances...",
+    
 
     "aucune_tache_formation":"Aucune tâche de formation trouvée.",
     "aucune_taxe":"Aucune taxe trouvée.",
@@ -593,6 +634,7 @@
     "ajouter_stagiaire":"Ajouter un stagiaire",
     "ajouter_chercheur":"Ajouter un chercheur",
     "ajouter_programme_formation":"Nouveau programme",
+    "ajouter_nouvelle_competence":"Ajouter une compétence",
 
     "ajouter_formation":"Ajouter une formation",
     "ajouter_theme_formation":"Ajouter un thème de formation",
@@ -604,7 +646,8 @@
     "ajouter_depense":"Ajouter une dépense",
     "ajouter_support":"Ajouter un support",
     "telecharger":"Télécharger",
-    "ajouter_tache_stagiaire":"Ajouter une tâche"
+    "ajouter_tache_stagiaire":"Ajouter une tâche",
+    "nouvelles_competences":"Nouvelles compétences"
   },
 
   "actions":{
@@ -669,6 +712,7 @@
  
   "select_par_defaut": {
     "selectionnez": "Sélectionnez ",
+    "niveau_evaluation":"un niveau d'évaluation",
     "grade": "un grade",
     "etat": "un état",
     "option":"une option",
@@ -708,7 +752,7 @@
   "form_save": {
     "ajouter":"Ajouter ",
     "enregistrer": "Enregistrer ",
-
+    "auto_evaluation":"une auto-évaluation",
     "structure":"une structure",
     "cohorte":"une cohorte",
     "departement":"un département",
@@ -747,6 +791,7 @@
 
   "form_update": {
     "enregistrer": "Mettre à jour les informations ",
+    "auto_evaluation":"de l'auto-évaluation",
     "structure":"de la structure",
     "cohorte":"de la cohorte",
     "departement":"du département",
@@ -785,7 +830,8 @@
   "form_delete": {
     "supprimer": "Supprimer",
     "suppression": "Suppression ",
-
+    "reinitialiser":"Réinitialiser",
+    "auto_evaluation":"Réinitialisation l'auto-évaluation du besoin",
     "structure":"de la structure",
     "cohorte":"de la cohorte",
     "departement":"du département",
@@ -864,6 +910,10 @@
     "heure_fin": "Le champ heure de fin est obligatoire.",
     "debut_sup_fin_periode": "L'heure de fin ne peut pas être plus petite que l'heure de début",
     "incorrect_email": "Veuillez saisir une adresse e-mail valide.",
+    "insuffisances": "Au moins un des champs d’insuffisances (Français ou Anglais) est requis.",
+    "formulation_besoins": "Au moins un des champs de formulation des besoins (Français ou Anglais) est requis.",
+    "points_a_ameliorer": "Au moins un des champs de points de force (Français ou Anglais) est requis.",
+    "competences": "Au moins un des champs de compétence (Français ou Anglais) est requis.",
     "nom": "Le champ nom est obligatoire.",
     "nom_fr": "Le champ nom en français est obligatoire.",
     "nom_en": "Le champ nom en anglais est obligatoire.",

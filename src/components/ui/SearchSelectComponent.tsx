@@ -194,7 +194,7 @@ export const SearchSelectComponent = <T extends Record<string, any>>({
         
         {/* Résultats de recherche */}
         {showResults && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-stroke hover:bg-primary hover:text-white rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-stroke rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
             {isLoading ? (
               <div className="p-4 text-gray-500 text-center">
                 <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2" />
@@ -205,7 +205,7 @@ export const SearchSelectComponent = <T extends Record<string, any>>({
                 <div
                   key={index}
                   onClick={() => addItem(item)}
-                  className="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
+                  className="px-4 py-3 hover:bg-primary hover:text-white cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
                 >
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-gray-800">{String(item[displayField])}</span>

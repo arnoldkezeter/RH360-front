@@ -55,7 +55,6 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
     const toggleDropdownVisibility = () => {
         setIsDropdownVisible(!isDropdownVisible);
     };
-
     
     const [searchText, setSearchText] = useState<string>('');
     const [isSearch, setIsSearch] = useState(false);

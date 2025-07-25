@@ -30,6 +30,8 @@ import budgetFormationReducer from "./features/elaborations/budgetFormationSlice
 import depenseReducer from "./features/execution/depenseSlice.tsx"
 import supportFormationReducer from "./features/execution/supportFormationSlice.tsx"
 import tacheStagiaireReducer from "./features/stagiaire/tacheStagiaireSlice.tsx"
+import autoEvalualtionBesoinReducer from "./features/elaborations/autoEvaluationBesoinSlice.tsx"
+import besoinAjouteUtilisateurReducer from "./features/elaborations/besoinAjouteUtilisateurSlice.tsx"
 
 
 const store = configureStore({
@@ -65,6 +67,8 @@ const store = configureStore({
     depenseSlice:depenseReducer,
     supportFormationSlice:supportFormationReducer,
     tacheStagiaireSlice:tacheStagiaireReducer,
+    autoEvalualtionBesoinSlice:autoEvalualtionBesoinReducer,
+    besoinAjouteUtilisateurSlice:besoinAjouteUtilisateurReducer
   }
 });
 

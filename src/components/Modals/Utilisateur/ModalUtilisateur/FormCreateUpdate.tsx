@@ -18,7 +18,7 @@ import { ROLES } from '../../../../config';
 
 
 function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) {
-    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
+    const lang:string = useSelector((state: RootState) => state.setting.language); // fr ou en
     
     const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
     const {data:{structures}} = useSelector((state: RootState) => state.structureSlice)
@@ -77,9 +77,9 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
             setEmail(utilisateur.email);
             setMatricule(utilisateur?.matricule || "");
             setTelephone(utilisateur?.telephone || "");
-            setGrade(utilisateur?.categorieProfessionnelle?.grade || undefined);
+            setGrade(utilisateur?.grade || undefined);
             setCategorie(utilisateur?.categorieProfessionnelle || undefined);
-            setFamilleMetier(utilisateur?.posteDeTravail?.familleMetier || undefined);
+            setFamilleMetier(utilisateur?.familleMetier || undefined);
             setPosteDeTravail(utilisateur?.posteDeTravail || undefined);
             setStructure(utilisateur?.service?.structure || undefined);
             setService(utilisateur?.service || undefined);
@@ -425,7 +425,9 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     dateEntreeEnService,
                     photoDeProfil:"",
                     service,
+                    grade,
                     categorieProfessionnelle:categorie,
+                    familleMetier,
                     posteDeTravail,
                     commune,
                     actif:true,
@@ -449,6 +451,8 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                             dateEntreeEnService: e.data.dateEntreeEnService,
                             categorieProfessionnelle: categorie,
                             posteDeTravail: posteDeTravail,
+                            grade:grade,
+                            familleMetier:familleMetier,
                             service: service,
                             commune: commune,
                             role: e.data.role,
@@ -486,6 +490,8 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     service,
                     categorieProfessionnelle:categorie,
                     posteDeTravail,
+                    grade,
+                    familleMetier,
                     commune,
                     actif:true,
                 }, lang).then((e: ReponseApiPros) => {
@@ -509,6 +515,8 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                                 posteDeTravail: posteDeTravail,
                                 service: service,
                                 commune: commune,
+                                grade:grade,
+                                familleMetier:familleMetier,
                                 role: e.data.role,
                                 actif: e.data.actif
                             }
