@@ -139,7 +139,7 @@ function Pagination({
             {/* Version mobile compacte */}
             <div className="flex sm:hidden items-center gap-2 order-3 w-full justify-center">
                 <span className="text-sm text-[#6B7280] dark:text-[#9CA3AF]">
-                    Page {currentPage} sur {Math.ceil(count / itemsPerPage)}
+                    {t('label.page')} {currentPage} {t('label.sur')} {Math.ceil(count / itemsPerPage)}
                 </span>
             </div>
         </div>

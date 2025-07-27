@@ -1,22 +1,3 @@
-interface EvaluationItem {
-  utilisateurNom: string;
-  utilisateurPrenom: string;
-  utilisateurEmail: string;
-  createdAt: string; // ou Date si vous transformez en objet Date
-  statut: string;
-  evaluationId: string;
-}
-
-interface GroupedBesoin {
-  besoinId: string;
-  titreFr: string;
-  titreEn: string;
-  niveau: number;
-  count: number;
-  evaluations: EvaluationItem[];
-}
-
-
 // Définir le type de données pour une autoEvaluationBesoin
 interface AutoEvaluationBesoin {
     _id?: string;

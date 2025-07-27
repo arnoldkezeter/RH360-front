@@ -15,8 +15,8 @@ interface SettingState {
         details:boolean,
         open: boolean,
         notificationDetails:boolean,
-        openSignalerAbsence:boolean,
-        openPause:boolean,
+        openEvaluation:boolean,
+        openCompetence:boolean,
         openElement:boolean,
         openScan:boolean,
         openPresence:boolean,
@@ -44,8 +44,8 @@ const initialState: SettingState = {
         details:false,
         open: false,
         notificationDetails:false,
-        openSignalerAbsence:false,
-        openPause:false,
+        openEvaluation:false,
+        openCompetence:false,
         openElement:false,
         openPresence:false,
         openPresenceM:false,
@@ -116,8 +116,8 @@ export const settingSlice = createSlice({
             state.showModal.open = !state.showModal.open;
         },
 
-        setShowModalSignalerAbsence: (state) => {
-            state.showModal.openSignalerAbsence = !state.showModal.openSignalerAbsence;
+        setShowModalEvaluation: (state) => {
+            state.showModal.openEvaluation = !state.showModal.openEvaluation;
         },
 
         setShowModalElement: (state) => {
@@ -136,8 +136,8 @@ export const settingSlice = createSlice({
             state.showModal.openScan = !state.showModal.openScan;
         },
 
-        setShowModalPause: (state) => {
-            state.showModal.openPause = !state.showModal.openPause;
+        setShowModalCompetence: (state) => {
+            state.showModal.openCompetence = !state.showModal.openCompetence;
         },
 
         setShowRoleModal: (state) => {
@@ -175,8 +175,8 @@ export const {
     setShowModalDeleteCustom,
     setShowModalCustom,
     setShowLanguage, setShowModalCreate, setShowModalUpdate, setShowModalDelete, setShowModalDetails, setShowModal, setShowModalToDOSondage
-    , setSaveDeviceType,setShowRoleModal, setShowModalPeriode, setShowModalElement, setShowModalPresence, setShowModalOpenScan, setShowModalPause, setShowModalNotificationDetails,
-    setCurrentIndexUserRole,setShowModalSignalerAbsence, setShowModalPresenceManuelle, setUserPermission, addUserPemission, removeUserPemission, setSelectedUserPermission, setSelectedUserRole
+    , setSaveDeviceType,setShowRoleModal, setShowModalPeriode, setShowModalElement, setShowModalPresence, setShowModalOpenScan, setShowModalCompetence, setShowModalNotificationDetails,
+    setCurrentIndexUserRole,setShowModalEvaluation, setShowModalPresenceManuelle, setUserPermission, addUserPemission, removeUserPemission, setSelectedUserPermission, setSelectedUserRole
 } = settingSlice.actions;
 
 // export const changeLanguage = createAction<string>('setting/changeLanguage');

@@ -148,6 +148,9 @@
   },
   
   "label": {
+    "page":"Page",
+    "sur":"sur",
+    "evaluation":"évaluation",
     "aucun_point":"Aucun point d'amélioration spécifié",
     "point_a_ameliorer":"Points à améliorer",
     "point":"point",
@@ -178,6 +181,8 @@
     "points_a_ameliorer_en":"Points de force à améliorer (Anglais)",
     "points_a_ameliorer":"Points de force à améliorer",
     "commentaire_admin":"Commentaire",
+    "commentaire_admin_fr":"Commentaire (Français)",
+    "commentaire_admin_en":"Commentaire (Anglais)",
     "formulez_points_a_ameliorer":"Formulez les points de forces à améliorer...",
     "aucune_donnee":"Aucune donnée disponible pour le moment.",
     "famille_metier":"Famille de métier",
@@ -269,7 +274,9 @@
     "niveau_auto_evaluation":"Niveau d'auto-évaluation",
     "insuffisances_fr":"Insuffisances (Français)",
     "insuffisances_en":"Insuffisances (Anglais)",
+    "insuffisances":"Insuffisances",
     "besoins_en_renforcement_fr":"Besoins en renforcement (Français)",
+    "besoins_en_renforcement":"Besoins en renforcement",
     "besoins_en_renforcement_en":"Besoins en renforcement (Anglais)",
     "formulez_besoins":"Formulez les besoins...",
     "decrivez_insuffisances":"Décrivez brièvement les insuffisances...",

@@ -226,7 +226,7 @@ export async function repartitionBesoinsAjoutesParPoste(lang: string): Promise<a
 }
 
 
-export async function getGroupedBesoinsAjoutes({page = 1, lang = "fr"}: {page?: number, lang?: string}): Promise<any> {
+export async function getGroupedBesoinsAjoutes({page = 1, lang, search}: {page?: number, lang?: string, search?:string}): Promise<GroupedCompetenceReturnGetType> {
   const pageSize = 10;
   try {
     const response: AxiosResponse<any> = await axios.get(
@@ -239,7 +239,8 @@ export async function getGroupedBesoinsAjoutes({page = 1, lang = "fr"}: {page?: 
         },
         params:{
           page,
-          limit:pageSize
+          limit:pageSize,
+          search
         }
       }
     );

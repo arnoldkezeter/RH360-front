@@ -419,7 +419,7 @@ export async function repartitionBesoinsNiveauParPoste({lang, posteId}:{lang: st
 }
 
 
-export async function getGroupedAutoEvaluations({page = 1, lang = "fr"}: {page?: number, lang?: string}): Promise<any> {
+export async function getGroupedAutoEvaluations({page = 1, lang = "fr", search}: {page?: number, lang?: string, search?:string}): Promise<GroupedBesoinReturnGetType> {
   const pageSize = 10;
   try {
     const response: AxiosResponse<any> = await axios.get(
@@ -432,7 +432,8 @@ export async function getGroupedAutoEvaluations({page = 1, lang = "fr"}: {page?:
         },
         params:{
           page,
-          limit:pageSize
+          limit:pageSize,
+          search
         }
       }
     );

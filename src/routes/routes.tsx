@@ -39,7 +39,7 @@ import Rapports from '../pages/Stagiaires/Rapports';
 import StageManagement from '../pages/Stagiaires/Stages';
 import Formations from '../pages/Elaboration/Formation/Formations';
 import AutoEvaluationBesoins from '../pages/Elaboration/BesoinFormation/AutoEvaluation';
-import RapportAutoEvaluation from '../pages/Elaboration/BesoinFormation/AdminDashbord';
+import RapportAutoEvaluation from '../pages/Elaboration/BesoinFormation/RapportBesoinFormation';
 import BesoinAjouteUtilisateur from '../pages/Elaboration/BesoinFormation/BesoinAjouteUtilisateur';
 
 
