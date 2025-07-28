@@ -216,7 +216,6 @@ export async function repartitionBesoinsAjoutesParPoste(lang: string): Promise<a
         },
       }
     );
-    console.log(response.data.data)
     return response.data.data;
     
   } catch (error) {

@@ -21,7 +21,7 @@ const EvaluationSidebarLink: React.FC<EvaluationSidebarLinkProps> = ({
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-            
+        {path: '/evaluations/type-echelle-reponse', label: t('sub_menu.types_echelles_reponses')},    
         {path: '/evaluations/cree-evaluation', label: t('sub_menu.cree_evaluation')},
         {path: '/evaluations/effectue-evaluation-a-chaud', label: t('sub_menu.effectuer_evaluation_a_chaud')},
         {path: '/evaluations/rapport/evaluation-a-chaud', label: t('sub_menu.rapport_evaluation_a_chaud')},

@@ -65,7 +65,9 @@
     "support_formation":"Support de formation",
     "rapport_formation":"Rapport de formation",
 
-    "cree_evaluation":"Crée une évaluation",
+    "types_echelles_reponses":"Types d'échelles de réponses",
+    "echelles_reponses":"Echelles de réponses",
+    "cree_evaluation":"Gestionnaire d'évaluations à chaud",
     "effectuer_evaluation_a_chaud":"Effectué une évaluation à chaud",
     "rapport_evaluation_a_chaud":"Rapport d'evalution à chaud",
     "rapport_evaluation_formateur":"Rapport d'évaluation par le formateur",
@@ -122,7 +124,10 @@
     "rapport_stage":"Offrir une vue analytique complète des stagiaires et de leurs stages au sein de l'organisation, incluant une répartition par superviseur.",
     "auto_evaluation_besoin":"Exprimez vos besoins de formations",
     "nouvelle_competence":"Décrivez les nouvelles compétences que vous pensez nécessaires à acquérir.",
-    "besoins_formation_rapport":""
+    "besoins_formation_rapport":"",
+    "type_echelle_reponse":"Définissez et organisez les types de réponses utilisés dans vos évaluations.",
+    "echelle_reponse":"Configurez les échelles de notation pour mieux interpréter les réponses.",
+    "evaluation_a_chaud":"Créez et gérez vos évaluations à chaud"
   },
 
   "tableau_de_bord": {
@@ -148,6 +153,35 @@
   },
   
   "label": {
+    "titre_evaluation_fr":"Titre de l'évaluation en français",
+    "titre_evaluation_en":"Titre de l'évaluation en anglais",
+    "description_evaluation_fr":"Description en français",
+    "description_evaluation_en":"Description en anglais",
+    "sous_question_fr":"Sous-question en français",
+    "sous_question_en":"Sous-question en anglais",
+    "commentaire_global":"Commentaire global",
+    "commentaire_obligatoire":"Commentaire obligatoire",
+    "question_francais":"Question en français",
+    "question_anglais":"Question en anglais",
+    "sous_question":"Sous-question",
+    "sous_questions":"Sous-questions",
+    "titre_rubrique_en":"Titre de la rubrique en anglais",
+    "titre_rubrique_fr":"Titre de la rubrique en français",
+    "rubrique":"Rubrique",
+    "etat_evaluation":"Etat de l'évaluation",
+    "inactif":"Inactif",
+    "actif":"Actif",
+    "cree_evaluation":"Créer une évaluation",
+    "modifier_evaluation":"Modifier l'évaluation",
+    "liste_evaluations":"Liste des évaluations",
+    "rubriques":"Rubriques",
+    "modifiee_le":"Modifiée le",
+    "creee_le":"Créée le",
+    "apercu_echelle":"Aperçu de l'échelle",
+    "type_echelle_reponse":"Type de réponse",
+    "echelle_reponse":"Echelle de réponse",
+    "types_echelles_reponses":"Types de réponses",
+    "echelles_reponses":"Echelles de réponses",
     "page":"Page",
     "sur":"sur",
     "evaluation":"évaluation",
@@ -285,11 +319,13 @@
     "aucune_tache_formation":"Aucune tâche de formation trouvée.",
     "aucune_taxe":"Aucune taxe trouvée.",
     "aucun_responsable":"Aucun responsable trouvé.",
+    "aucun_theme":"Aucun thème de formation trouvé",
     "aucun_poste":"Aucun poste trouvé",
     "aucun_grade":"Aucun grade trouvé",
     "aucune_famille_metier":"Aucune famille trouvée",
     "aucune_cohorte":"Aucune cohorte trouvé",
     "aucun_formateur":"Aucun formateur trouvé",
+    "recherche_theme_formation":"Recherche des thèmes de formation...",
     "recherche_responsable":"Recherche des responsables...",
     "recherche_tache_formation":"Recherche des tâches de formation...",
     "recherche_taxe":"Recherche des taxes...",
@@ -600,6 +636,11 @@
   "recherche": {
     "rechercher": "Rechercher ",
 
+    
+    "evaluation_a_chaud":"une évaluation",
+    "type_echelle_reponse":"un type de réponse",
+    "echelle_reponse":"une échelle de réponse",
+
     "famille_metier":"une famille de métier",
     "axe_strategique":"un axe stratégique",
     "competence":"une compétence",
@@ -637,6 +678,16 @@
   },
 
   "button":{
+    "mettre_a_jour":"Mettre à jour",
+    "sauvegarder":"Sauvegarder",
+    "annuler":"Annuler",
+    "ajouter_rubrique":"Ajouter une rubrique",
+    "ajouter_question":"Ajouter une question",
+    "ajouter_sous_question":"Ajouter une sous question",
+    "ajouter_type_echelle_reponse":"Ajouter un type de réponse",
+    "ajouter_echelle_reponse":"Ajouter une échelle de réponse",
+
+
     "ajouter_utilisateur":"Ajouter un utilisateur",
     "ajouter_stagiaire":"Ajouter un stagiaire",
     "ajouter_chercheur":"Ajouter un chercheur",
@@ -740,7 +791,9 @@
     "programme_formation":"un programme de formation",
     "formation":"une formation",
     "methode_validation":"une méthode de validation",
-    "type_depense":"un type de dépense"
+    "type_depense":"un type de dépense",
+    "type_echelle_reponse":"un type de réponse",
+    "echelle_reponse":"une échelle de réponse"
 
   },
   
@@ -759,6 +812,8 @@
   "form_save": {
     "ajouter":"Ajouter ",
     "enregistrer": "Enregistrer ",
+    "type_echelle_reponse":"un type de réponse",
+    "echelle_reponse":"une échelle de réponse", 
     "auto_evaluation":"une auto-évaluation",
     "structure":"une structure",
     "cohorte":"une cohorte",
@@ -798,6 +853,10 @@
 
   "form_update": {
     "enregistrer": "Mettre à jour les informations ",
+
+    "type_echelle_reponse":"du type de réponse",
+    "echelle_reponse":"de l'échelle de réponse",
+
     "auto_evaluation":"de l'auto-évaluation",
     "structure":"de la structure",
     "cohorte":"de la cohorte",
@@ -838,6 +897,10 @@
     "supprimer": "Supprimer",
     "suppression": "Suppression ",
     "reinitialiser":"Réinitialiser",
+
+    "evaluation_a_chaud":"de l'évaluation",
+    "type_echelle_reponse":"du type de réponse",
+    "echelle_reponse":"de l'échelle de réponse",
     "auto_evaluation":"Réinitialisation l'auto-évaluation du besoin",
     "structure":"de la structure",
     "cohorte":"de la cohorte",

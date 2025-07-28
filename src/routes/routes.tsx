@@ -41,6 +41,11 @@ import Formations from '../pages/Elaboration/Formation/Formations';
 import AutoEvaluationBesoins from '../pages/Elaboration/BesoinFormation/AutoEvaluation';
 import RapportAutoEvaluation from '../pages/Elaboration/BesoinFormation/RapportBesoinFormation';
 import BesoinAjouteUtilisateur from '../pages/Elaboration/BesoinFormation/BesoinAjouteUtilisateur';
+import EvaluationResults from '../pages/Evaluation/EvaluationAChaudRapport';
+import EvaluationForm from '../pages/Evaluation/EvaluationAChaud';
+import EvaluationManager from '../pages/Evaluation/CreeEvaluationAChaud';
+import EchelleReponses from '../pages/Evaluation/EchelleReponse';
+import TypeEchelleReponses from '../pages/Evaluation/TypeEchelleReponse';
 
 
 
@@ -169,21 +174,31 @@ const coreRoutes = [
 
   //Evaluation
   {
+    path:'/evaluations/type-echelle-reponse',
+    title: 'Gérer les types d\'échelle de réponse',
+    component: TypeEchelleReponses,
+  },
+  {
+    path:'/evaluations/type-echelle-reponse/echelle-reponse',
+    title: 'Gérer les échelle de réponse',
+    component: EchelleReponses,
+  },
+  {
     path: '/evaluations/cree-evaluation',
     title: 'Crée une évaluation',
-    component: undefined,
+    component: EvaluationManager,
   },
 
   {
     path: '/evaluations/effectue-evaluation-a-chaud',
     title: 'Effectuer une evaluation à chaud',
-    component: undefined,
+    component: EvaluationForm,
   },
 
   {
     path: '/evaluations/rapport/evaluation-a-chaud',
     title: 'Rapport d\'évaluation à chaud',
-    component: undefined,
+    component: EvaluationResults,
   },
 
   {

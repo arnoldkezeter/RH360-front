@@ -34,6 +34,9 @@ import autoEvalualtionBesoinReducer from "./features/elaborations/autoEvaluation
 import besoinAjouteUtilisateurReducer from "./features/elaborations/besoinAjouteUtilisateurSlice.tsx"
 import groupedBesoinReducer from "./features/elaborations/groupedBesoinSlice.tsx"
 import groupedCompetenceReducer from "./features/elaborations/groupedCompetenceSlice.tsx"
+import echelleReponseReducer from "./features/evaluations/echelleReponseSlice.tsx"
+import evaluationChaudReducer from "./features/evaluations/evaluationChaudSlice.tsx"
+import typeEchelleReponseReducer from "./features/evaluations/typeEchelleResponseSlice.tsx"
 
 
 const store = configureStore({
@@ -72,7 +75,10 @@ const store = configureStore({
     autoEvalualtionBesoinSlice:autoEvalualtionBesoinReducer,
     besoinAjouteUtilisateurSlice:besoinAjouteUtilisateurReducer,
     groupedBesoinSlice:groupedBesoinReducer,
-    groupedCompetenceSlice:groupedCompetenceReducer
+    groupedCompetenceSlice:groupedCompetenceReducer,
+    echelleReponseSlice:echelleReponseReducer,
+    evaluationChaudSlice:evaluationChaudReducer,
+    typeEchelleReponseSlice:typeEchelleReponseReducer
   }
 });
 

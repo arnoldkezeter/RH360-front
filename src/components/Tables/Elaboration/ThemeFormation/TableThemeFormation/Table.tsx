@@ -39,7 +39,7 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
     const {t}=useTranslation();
     const {data:{familleMetiers}} = useSelector((state: RootState) => state.familleMetierSlice);
     const dispatch = useDispatch();
-    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const pageIsLoading = useSelector((state: RootState) => state.themeFormationSlice.pageIsLoading);
 
@@ -52,6 +52,7 @@ const Table = ({ data, programmeFormations, formations, currentPage, currentForm
     
     
     // Fonction pour basculer la visibilité des CustomDropDown
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const toggleDropdownVisibility = () => {
         setIsDropdownVisible(!isDropdownVisible);
     };

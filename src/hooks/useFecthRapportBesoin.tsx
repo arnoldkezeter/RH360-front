@@ -102,7 +102,7 @@ export function useStatsAnalyses({
   const fetchAll = useCallback(async () => {
     // Éviter les appels multiples simultanés
     if (isExecuting) {
-      console.log('Appel déjà en cours, ignorer...');
+      // console.log('Appel déjà en cours, ignorer...');
       return;
     }
 
@@ -111,7 +111,7 @@ export function useStatsAnalyses({
     setError(null);
     
     try {
-      console.log('Chargement des statistiques...', { lang, posteId });
+      // console.log('Chargement des statistiques...', { lang, posteId });
       
       // Utilisation de Promise.allSettled pour une meilleure gestion des erreurs
       const results = await Promise.allSettled([
