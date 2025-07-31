@@ -36,6 +36,7 @@ interface EvaluationChaud {
   descriptionFr?: string;
   descriptionEn?: string;
   rubriques: Rubrique[];
+  progression?:number;
   actif: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -51,6 +52,7 @@ interface EvaluationChaudInitialData {
     };
     pageIsLoading: boolean;
     pageError: string | null;
+    selectedEvaluation:EvaluationChaud | undefined
 }
 
 interface CreateEvaluationChaudPayload {

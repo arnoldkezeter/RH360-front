@@ -548,7 +548,7 @@ const EvaluationManager = () => {
             <div className="space-y-4">
               {/* version mobile */}
               <div className="block lg:hidden">
-                  <button className="px-2.5 py-1 border border-gray text-[12px] mb-2 flex justify-center items-center gap-x-2" onClick={toggleDropdownVisibility}>
+                  <button className="px-2.5 py-1 border border-gray text-[12px] mb-2 flex justify-center items-center gap-x-2 mt-3" onClick={toggleDropdownVisibility}>
                       <FaFilter /><p className="text-[12px]">{t('filtre.filtrer')}</p><FaSort />
                   </button>
                   {isDropdownVisible && (

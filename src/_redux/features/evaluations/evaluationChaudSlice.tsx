@@ -13,6 +13,7 @@ const initialState: EvaluationChaudInitialData = {
     },
     pageIsLoading: false,
     pageError: null,
+    selectedEvaluation : undefined
 };
 
 // Création du slice
@@ -20,6 +21,9 @@ const evaluationChaudSlice = createSlice({
     name: "evaluationChaudSlice",
     initialState,
     reducers: {
+        setEvaluationSelected(state, action: PayloadAction<EvaluationChaud | undefined>) {
+            state.selectedEvaluation = action.payload;
+        },
         setEvaluationChaudLoading(state, action: PayloadAction<boolean>) {
             state.pageIsLoading = action.payload;
         },
@@ -48,6 +52,7 @@ const evaluationChaudSlice = createSlice({
 
 // Actions exportées
 export const {
+    setEvaluationSelected,
     setEvaluationChaudLoading,
     setErrorPageEvaluationChaud,
     setEvaluationChauds,

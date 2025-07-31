@@ -42,10 +42,11 @@ import AutoEvaluationBesoins from '../pages/Elaboration/BesoinFormation/AutoEval
 import RapportAutoEvaluation from '../pages/Elaboration/BesoinFormation/RapportBesoinFormation';
 import BesoinAjouteUtilisateur from '../pages/Elaboration/BesoinFormation/BesoinAjouteUtilisateur';
 import EvaluationResults from '../pages/Evaluation/EvaluationAChaudRapport';
-import EvaluationForm from '../pages/Evaluation/EvaluationAChaud';
 import EvaluationManager from '../pages/Evaluation/CreeEvaluationAChaud';
 import EchelleReponses from '../pages/Evaluation/EchelleReponse';
 import TypeEchelleReponses from '../pages/Evaluation/TypeEchelleReponse';
+import EvaluationAChaud from '../pages/Evaluation/EvaluationAChaud';
+import EvaluationForm from '../pages/Evaluation/EvaluationAChaudForm';
 
 
 
@@ -190,7 +191,13 @@ const coreRoutes = [
   },
 
   {
-    path: '/evaluations/effectue-evaluation-a-chaud',
+    path: '/evaluations/evaluation-a-chaud',
+    title: 'Liste des évaluations à chaud',
+    component: EvaluationAChaud,
+  },
+
+  {
+    path: '/evaluations/evaluation-a-chaud/effectuer',
     title: 'Effectuer une evaluation à chaud',
     component: EvaluationForm,
   },

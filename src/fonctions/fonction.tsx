@@ -13,6 +13,16 @@ export function capitalizeFirstLetter(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
+export const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
 
 export async function decrypt(encryptedValue: String) {
   const iv = encryptedValue.substr(0, 32);

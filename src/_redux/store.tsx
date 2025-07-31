@@ -36,6 +36,7 @@ import groupedBesoinReducer from "./features/elaborations/groupedBesoinSlice.tsx
 import groupedCompetenceReducer from "./features/elaborations/groupedCompetenceSlice.tsx"
 import echelleReponseReducer from "./features/evaluations/echelleReponseSlice.tsx"
 import evaluationChaudReducer from "./features/evaluations/evaluationChaudSlice.tsx"
+import evaluationAChaudReponseReducer from "./features/evaluations/evaluationChaudReponseSlice.tsx"
 import typeEchelleReponseReducer from "./features/evaluations/typeEchelleResponseSlice.tsx"
 
 
@@ -78,6 +79,7 @@ const store = configureStore({
     groupedCompetenceSlice:groupedCompetenceReducer,
     echelleReponseSlice:echelleReponseReducer,
     evaluationChaudSlice:evaluationChaudReducer,
+    evaluationAChaudReponseSlice:evaluationAChaudReponseReducer,
     typeEchelleReponseSlice:typeEchelleReponseReducer
   }
 });

@@ -3,8 +3,7 @@ import { apiUrl, wstjqer } from '../../config';
 
 
 
-// Configuration de base
-const api = `${apiUrl}/evaluations-a-chaud`; // Adapter selon votre config
+const api = `${apiUrl}/evaluations-a-chaud`; 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 // Créer une évaluation à chaud
@@ -78,6 +77,32 @@ export async function getFilteredEvaluations({page, lang, search }: {page: numbe
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+                params: {
+                    page: page,
+                    limit: pageSize,
+                    search: search
+                },
+            },
+        );
+        console.log(response.data)
+        return response.data.data;
+    } catch (error) {
+        console.error('Error getting filtered evaluations:', error);
+        throw error;
+    }
+}
+
+export async function getUserEvaluations({page, lang, search, userId }: {page: number, lang: string, search?: string, userId:string }): Promise<EvaluationChaudReturnGetType> {
+    const pageSize: number = 10;
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/user-evaluations/${userId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',

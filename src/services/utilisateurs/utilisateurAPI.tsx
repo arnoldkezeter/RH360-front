@@ -68,7 +68,7 @@ export async function deleteUtilisateur(utilisateurId: string, lang:string): Pro
 }
 
 export async function getUtilisateurs({page, lang }: {page: number, lang:string }): Promise<UtilisateurReturnGetType> {
-    const pageSize: number = 10;
+    const pageSize: number = 20;
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/`,
@@ -168,7 +168,7 @@ export async function getUtilisateurForDropDown({lang }: {lang:string }): Promis
 }
 
 export async function getUtilisateursByFiltres({page, service, role, lang }: {page:number, role?: string, service?:string, lang:string }): Promise<UtilisateurReturnGetType> {
-    const pageSize = 10;
+    const pageSize = 20;
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/filtre`,
