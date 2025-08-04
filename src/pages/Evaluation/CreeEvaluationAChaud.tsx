@@ -14,7 +14,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import createToast from '../../hooks/toastify';
 import FilterList from '../../components/ui/AutoComplete';
 import { getFilteredThemeFormations } from '../../services/elaborations/themeFormationAPI';
-import { truncateText } from '../../fonctions/fonction';
+import { getEchellesMinMax, truncateText } from '../../fonctions/fonction';
 import { NoData } from '../../components/NoData';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
 import FormDelete from '../../components/Modals/Evaluation/ModalEvaluationAChaud/FormDelete';
@@ -914,7 +914,7 @@ const EvaluationManager = () => {
                                                   <div className="text-xs">
                                                     <div className="font-medium">{typeEchelle.nomType}</div>
                                                     <div className="text-[#64748b]">
-                                                      {typeEchelle.echelles[typeEchelle.echelles.length - 1]?.nomEchelle} → {typeEchelle.echelles[0]?.nomEchelle}
+                                                      {`${getEchellesMinMax(typeEchelle.echelles).min?.nomEchelle} → ${getEchellesMinMax(typeEchelle.echelles).max?.nomEchelle}`}
                                                     </div>
                                                   </div>
                                                 </label>

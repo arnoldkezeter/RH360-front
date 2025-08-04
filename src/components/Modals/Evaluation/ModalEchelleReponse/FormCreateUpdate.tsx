@@ -16,11 +16,13 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
+    const [ordre, setOrdre] = useState<number|undefined>(undefined)
     
     
 
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
+    const [errorOrdre, setErrorOrdre] = useState("")
     
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -34,12 +36,14 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
             
             setNomFr(echelleReponse.nomFr);
             setNomEn(echelleReponse.nomEn)
+            setOrdre(echelleReponse.ordre)
             
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.echelle_reponse'));
             
             setNomFr("");
             setNomEn("")
+            setOrdre(undefined)
             
         }
 
@@ -47,7 +51,7 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
         if (isFirstRender) {
             setErrorNomFr("");
             setErrorNomEn("")
-           
+            setErrorOrdre("");
             
             setIsFirstRender(false);
         }
@@ -56,6 +60,7 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
     const closeModal = () => {
         setErrorNomFr("");
         setErrorNomEn("");
+        setErrorOrdre("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -63,13 +68,17 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
 
 
     const handleCreateEchelleReponse = async () => {
-        if (!nomFr || !nomEn) {
+        if (!nomFr || !nomEn || !ordre) {
             if (!nomFr) {
                 setErrorNomFr(t('error.nom_chose_fr'));
             }
 
             if(!nomEn){
                 setErrorNomEn(t("error.nom_chose_en"))
+            }
+
+            if(!ordre){
+                setErrorOrdre(t("error.ordre"));
             }
 
             return;
@@ -79,7 +88,8 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
             await createEchelleReponse(
                 {
                     nomFr,
-                    nomEn
+                    nomEn,
+                    ordre
                 }, typeEchelleId,lang
             ).then((e: ReponseApiPros) => {
                 
@@ -91,6 +101,7 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
                             _id: e.data._id,
                             nomFr: e.data.nomFr,
                             nomEn: e.data.nomEn,
+                            ordre: e.data.ordre
                         }
 
                     }));
@@ -111,7 +122,8 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
                 {
                     _id: echelleReponse._id,
                     nomFr,
-                    nomEn
+                    nomEn,
+                    ordre
                 }, typeEchelleId,lang).then((e: ReponseApiPros) => {
                     if (e.success) {
                         createToast(e.message, '', 0);
@@ -121,6 +133,7 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
                                 _id: e.data._id,
                                 nomFr: e.data.nomFr,
                                 nomEn: e.data.nomEn,
+                                ordre: e.data.ordre,
                             }
 
                         }));
@@ -150,6 +163,15 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
                 handleConfirm={handleCreateEchelleReponse}
             >
                 
+                
+                <label>{t('label.ordre')}</label><label className="text-red-500"> *</label>
+                <input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="number"
+                    value={ordre}
+                    onChange={(e) => { setOrdre(parseInt(e.target.value)); setErrorOrdre("") }}
+                />
+                {errorOrdre && <p className="text-red-500" >{errorOrdre}</p>}
                 <label>{t('label.nom_chose_fr')}</label><label className="text-red-500"> *</label>
                 <input
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"

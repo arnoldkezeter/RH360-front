@@ -157,6 +157,22 @@
   },
   
   "label": {
+    "limite":"Limite",
+    "tous":"Tous",
+    "reduire_tout":"Réduire tout",
+    "limite_a":"limité à",
+    "developper_tout":"Développer tout",
+    "au_total":"au total",
+    "avec_commentaires":"avec commentaires",
+    "detail_aspect":"Détail par aspect",
+    "repartition_reponse":"Répartition des réponses",
+    "title_commentaires":"Commentaires des participants",
+    "commentaires":"Commentaires",
+    "commentaire":"commentaire",
+    "reponses":"Réponses",
+    "moyenne_globale":"Moyenne globale",
+    "ordre":"Ordre",
+    "de_taux_reponse":"de taux de réponse",
     "soumission_en_cours":"Soumission en cours",
     "brouillon":"Brouillon",
     "mode_hors_ligne":"Mode hors ligne",
@@ -971,9 +987,11 @@
     "tache_stagiaire":"de la tâche"
   },
   "error": {
+
     "veuillez_completer_tous_champs":"Veuillez completer tous champs",
     "selectionnez_reponse":"Veuillez sélectionner une réponse",
     "fichier": "Veuillez choisir un fichier.",
+    "ordre":"Le champ ordre est obligatoire.",
     "nature_depense_fr":"Le champ nature de la dépense en français est obligatoire.",
     "nature_depense_en":"Le champ nature de la dépense en anglais est obligatoire.",
     "type_depense":"Le champ type dépense est obligatoire.",

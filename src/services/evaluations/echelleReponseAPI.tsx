@@ -6,11 +6,11 @@ const api = `${apiUrl}/type-echelle-reponse/echelles-reponses`;
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
-export async function createEchelleReponse({nomFr, nomEn}:EchelleReponse,typeEchelleId:string, lang:string): Promise<ReponseApiPros> {
+export async function createEchelleReponse({nomFr, nomEn, ordre}:EchelleReponse,typeEchelleId:string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/${typeEchelleId}`,
-            { nomFr, nomEn },
+            { nomFr, nomEn, ordre },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,11 +28,11 @@ export async function createEchelleReponse({nomFr, nomEn}:EchelleReponse,typeEch
 }
 
 
-export async function updateEchelleReponse({_id, nomFr, nomEn}:EchelleReponse,typeEchelleId:string,lang: string): Promise<ReponseApiPros> {
+export async function updateEchelleReponse({_id, nomFr, nomEn, ordre}:EchelleReponse,typeEchelleId:string,lang: string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${typeEchelleId}/${_id}`,
-            { nomFr, nomEn },
+            { nomFr, nomEn, ordre },
             {
                 headers: {
                     'Content-Type': 'application/json',

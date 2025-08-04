@@ -4,6 +4,7 @@ interface EchelleReponse {
     _id?: string;
     nomFr: string;
     nomEn: string;
+    ordre: number;
     typeEchelle?:TypeEchelleReponse;
 }
 

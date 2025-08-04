@@ -98,6 +98,25 @@ export async function getFilteredEvaluations({page, lang, search }: {page: numbe
     }
 }
 
+export async function getEvaluationChaudForDropDown({lang, themeId }: {lang: string, themeId: string }): Promise<EvaluationChaudReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/dropdown-all/${themeId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                }
+            },
+        );
+        return response.data.data;
+    } catch (error) {
+        console.error('Error getting filtered evaluations:', error);
+        throw error;
+    }
+}
+
 export async function getUserEvaluations({page, lang, search, userId }: {page: number, lang: string, search?: string, userId:string }): Promise<EvaluationChaudReturnGetType> {
     const pageSize: number = 10;
     try {

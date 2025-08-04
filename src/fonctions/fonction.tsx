@@ -23,6 +23,26 @@ export const formatDate = (dateString: string): string => {
   });
 };
 
+export const getEchellesMinMax = (echelles: EchelleReponse[]):any=> {
+  if (!echelles || echelles.length === 0) {
+    return { min: null, max: null };
+  }
+
+  let min = echelles[0];
+  let max = echelles[0];
+
+  for (const echelle of echelles) {
+    if (echelle.ordre < min.ordre) {
+      min = echelle;
+    }
+    if (echelle.ordre > max.ordre) {
+      max = echelle;
+    }
+  }
+  
+  return { min, max };
+}
+
 
 export async function decrypt(encryptedValue: String) {
   const iv = encryptedValue.substr(0, 32);

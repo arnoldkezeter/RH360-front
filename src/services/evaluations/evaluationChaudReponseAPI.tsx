@@ -156,8 +156,7 @@ export async function getEvaluationStats(evaluationId: string, lang: string): Pr
                 },
             }
         );
-
-        return response.data;
+        return response.data.data;
     } catch (error) {
         console.error('Error getting evaluation stats:', error);
         throw error;
@@ -177,8 +176,8 @@ export async function getResultatsByRubrique(evaluationId: string, lang: string)
                 },
             }
         );
-
-        return response.data;
+        
+        return response.data.data;
     } catch (error) {
         console.error('Error getting results by rubrique:', error);
         throw error;
@@ -207,25 +206,24 @@ export async function getQuestionDetails(evaluationId: string, questionId: strin
 }
 
 // 6. Obtenir les commentaires d'une évaluation
-export async function getCommentaires(evaluationId: string, lang: string, page?: number, limit?: number, questionId?: string): Promise<ReponseApiPros> {
-    try {
-        const params = new URLSearchParams();
-        if (page) params.append('page', page.toString());
-        if (limit) params.append('limit', limit.toString());
-        if (questionId) params.append('questionId', questionId);
+export async function getCommentaires(evaluationId: string, lang: string, limit?: number): Promise<ReponseApiPros> {
+    try {       
 
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/${evaluationId}/commentaires?${params.toString()}`,
+            `${api}/${evaluationId}/commentaires`,
             {
                 headers: {
                     'Content-Type': 'application/json',
                     'accept-language': lang,
                     'authorization': token,
                 },
+                params:{
+                    limit
+                }
             }
         );
 
-        return response.data;
+        return response.data.data;
     } catch (error) {
         console.error('Error getting commentaires:', error);
         throw error;
