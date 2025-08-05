@@ -8,8 +8,8 @@ const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 export async function createTacheThemeFormation({tache, dateDebut, dateFin}: TacheThemeFormation,themeId:string,  lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
-            `${api}/${themeId}/`,
-            {tache:tache._id, dateDebut, dateFin},
+            `${api}/`,
+            {themeId, tacheId:tache._id, dateDebut, dateFin},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export async function getFilteredTacheThemeFormations({page, lang,themeId, dateD
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/theme/${themeId}/filtre`,
+            `${api}/theme/${themeId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,14 +84,14 @@ export async function getFilteredTacheThemeFormations({page, lang,themeId, dateD
                     estExecutee:executee,
                     dateDebut, 
                     dateFin, 
-                    query:search
+                    nom:search
                 },
             },
         );
 
         // Extraction de tous les objets de paramètres de la réponse
         const tacheThemeFormations: TacheThemeFormationReturnGetType = response.data.data;
-        
+        console.log(tacheThemeFormations)
         return tacheThemeFormations;
     } catch (error) {
         console.error('Error getting all settings:', error);

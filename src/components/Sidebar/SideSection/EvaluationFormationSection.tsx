@@ -25,7 +25,7 @@ const EvaluationSidebarLink: React.FC<EvaluationSidebarLinkProps> = ({
         {path: '/evaluations/cree-evaluation', label: t('sub_menu.cree_evaluation')},
         {path: '/evaluations/evaluation-a-chaud', label: t('sub_menu.evaluation_a_chaud')},
         {path: '/evaluations/rapport/evaluation-a-chaud', label: t('sub_menu.rapport_evaluation_a_chaud')},
-        {path: '/evaluations/rapport/evaluation-formateur', label: t('sub_menu.rapport_evaluation_formateur')},
+        // {path: '/evaluations/rapport/evaluation-formateur', label: t('sub_menu.rapport_evaluation_formateur')},
 
     ];
 
