@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, CheckCircle, Clock, TrendingUp, XCircle, Calendar, BarChart3 } from "lucide-react";
-import { STATUT_TACHE } from '../../../../config';
+import { STATUT_TACHE_STAGIAIRE } from '../../../../config';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 
@@ -27,21 +27,21 @@ const getBarProps = (dayData: DayData) => {
       height: height,
       color: 'from-[#EF4444] via-[#F87171] to-[#FCA5A5]',
       shadowColor: 'shadow-[#FCA5A5]/50',
-      status: STATUT_TACHE.ABSENT.key
+      status: STATUT_TACHE_STAGIAIRE.ABSENT.key
     };
   } else if (dayData.enCours > 0) {
     return {
       height: height,
       color: 'from-[#3B82F6] via-[#60A5FA] to-[#93C5FD]',
       shadowColor: 'shadow-[#93C5FD]/50',
-      status: STATUT_TACHE.EN_COURS.key
+      status: STATUT_TACHE_STAGIAIRE.EN_COURS.key
     };
   } else {
     return {
       height: height,
       color: 'from-[#10B981] via-[#34D399] to-[#6EE7B7]',
       shadowColor: 'shadow-[#6EE7B7]/50',
-      status: STATUT_TACHE.COMPLETE.key
+      status: STATUT_TACHE_STAGIAIRE.COMPLETE.key
     };
   }
 };
@@ -142,9 +142,9 @@ const WeeklySection: React.FC<WeeklySectionTacheStagiaireProps> = ({
             {/* Legend */}
             <div className="flex flex-wrap gap-3 mb-4 p-3 bg-[#F9FAFB]/80 rounded-xl border border-[#E5E7EB]">
               {[
-                { status: STATUT_TACHE.COMPLETE, color: 'from-[#10B981] to-[#6EE7B7]', label: lang==='fr'? STATUT_TACHE.COMPLETE.nomFr : STATUT_TACHE.COMPLETE.nomEn },
-                { status: STATUT_TACHE.EN_COURS, color: 'from-[#3B82F6] to-[#93C5FD]', label: lang==='fr'? STATUT_TACHE.EN_COURS.nomFr : STATUT_TACHE.EN_COURS.nomEn },
-                { status: STATUT_TACHE.ABSENT, color: 'from-[#EF4444] to-[#FCA5A5]', label: lang==='fr'? STATUT_TACHE.ABSENT.nomFr : STATUT_TACHE.ABSENT.nomEn }
+                { status: STATUT_TACHE_STAGIAIRE.COMPLETE, color: 'from-[#10B981] to-[#6EE7B7]', label: lang==='fr'? STATUT_TACHE_STAGIAIRE.COMPLETE.nomFr : STATUT_TACHE_STAGIAIRE.COMPLETE.nomEn },
+                { status: STATUT_TACHE_STAGIAIRE.EN_COURS, color: 'from-[#3B82F6] to-[#93C5FD]', label: lang==='fr'? STATUT_TACHE_STAGIAIRE.EN_COURS.nomFr : STATUT_TACHE_STAGIAIRE.EN_COURS.nomEn },
+                { status: STATUT_TACHE_STAGIAIRE.ABSENT, color: 'from-[#EF4444] to-[#FCA5A5]', label: lang==='fr'? STATUT_TACHE_STAGIAIRE.ABSENT.nomFr : STATUT_TACHE_STAGIAIRE.ABSENT.nomEn }
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-1.5">
                   <div className={`w-3 h-3 rounded-lg bg-gradient-to-r ${item.color} shadow-sm`}></div>

@@ -47,6 +47,7 @@ import EchelleReponses from '../pages/Evaluation/EchelleReponse';
 import TypeEchelleReponses from '../pages/Evaluation/TypeEchelleReponse';
 import EvaluationAChaud from '../pages/Evaluation/EvaluationAChaud';
 import EvaluationForm from '../pages/Evaluation/EvaluationAChaudForm';
+import TachesExecutees from '../pages/Execution/TachesExecutees';
 
 
 
@@ -151,7 +152,7 @@ const coreRoutes = [
   {
     path: '/execution-programme/tache-executee',
     title: 'Tache a executé durant une formation',
-    component: undefined,
+    component: TachesExecutees,
   },
 
   {

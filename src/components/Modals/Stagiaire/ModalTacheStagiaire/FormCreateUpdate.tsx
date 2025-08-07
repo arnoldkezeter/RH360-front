@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { createTacheStagiaireSlice, updateTacheStagiaireSlice } from '../../../../_redux/features/stagiaire/tacheStagiaireSlice';
-import { STATUT_TACHE } from '../../../../config';
+import { STATUT_TACHE_STAGIAIRE } from '../../../../config';
 import { createTacheStagiaire, updateTacheStagiaire } from '../../../../services/stagiaires/tacheStagiaireAPI';
 import { formatDateForInput } from '../../../../fonctions/fonction';
 
@@ -16,14 +16,14 @@ function FormCreateUpdate({ tacheStagiaire, onAdd, onUpdate }: { tacheStagiaire:
     const { t } = useTranslation();
     const selectedStagiaire = useSelector((state: RootState) => state.stagiaireSlice.selectedStagiaire);
 
-    const statuts = Object.values(STATUT_TACHE)
+    const statuts = Object.values(STATUT_TACHE_STAGIAIRE)
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
     const [date, setDate] = useState("");
-    const [statut, setStatut] = useState<StatutTache | undefined>(statuts[0] || undefined);
+    const [statut, setStatut] = useState<StatutTacheStagiaire | undefined>(statuts[0] || undefined);
     
     
 

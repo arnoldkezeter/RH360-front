@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import { STATUT_TACHE } from "../../config";
+import { STATUT_TACHE_STAGIAIRE } from "../../config";
 import { useFetchData } from "../../hooks/fechDataOptions";
 import { RootState } from "../../_redux/store";
 import { useHeader } from "../../components/Context/HeaderConfig";
@@ -26,7 +26,7 @@ const CarnetsStage = () => {
     const lang = useSelector((state: RootState) => state.setting.language);
     const { data: { tachesStagiaire } } = useSelector((state: RootState) => state.tacheStagiaireSlice);
     const selectedStagiaire = useSelector((state: RootState) => state.stagiaireSlice.selectedStagiaire);
-    const statuts = Object.values(STATUT_TACHE)
+    const statuts = Object.values(STATUT_TACHE_STAGIAIRE)
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [currentStatut, setCurrentStatut] = useState<Statut | undefined>();

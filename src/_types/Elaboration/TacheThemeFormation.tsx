@@ -2,12 +2,15 @@ interface TacheThemeFormation{
     _id?:string
     theme?: ThemeFormation
     tache: TacheGenerique
-    dateDebut: string
-    dateFin: string
+    dateDebut?: string
+    dateFin?: string
     estExecutee?: boolean
     fichierJoint?: string
-    donneesEnregistrees?: Record<string, any>,
+    donnees?: Record<string, any>,
     dateExecution?: string
+    responsable: Utilisateur, // Celui qui exécute
+    statut: string,
+    commentaires?: string,
 }
 
 interface TacheThemeFormationInitialData {

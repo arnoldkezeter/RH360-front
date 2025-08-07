@@ -157,6 +157,9 @@
   },
   
   "label": {
+    "progression_globale":"Progression globale",
+    "a_faire":"A faire",
+    "executer":"Exécuter",
     "limite":"Limite",
     "tous":"Tous",
     "reduire_tout":"Réduire tout",

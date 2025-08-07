@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../../_redux/store";
 import ButtonCrudTable from "../../common/ButtonActionTable";
 import { setShowModal, setShowModalDelete } from "../../../../_redux/features/setting";
-import { STATUT_TACHE } from "../../../../config";
+import { STATUT_TACHE_STAGIAIRE } from "../../../../config";
 
 const BodyTable = ({ data, onEdit}: { data: TacheStagiaire[], onEdit: (tacheStagiaire: TacheStagiaire) => void }) => {
     const lang = useSelector((state: RootState) => state.setting.language); 
     const dispatch = useDispatch();
     const {t}=useTranslation()
-    const statuts = Object.values(STATUT_TACHE);
+    const statuts = Object.values(STATUT_TACHE_STAGIAIRE);
     return <tbody>
         {data && data.map((item, index) => (
             <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">

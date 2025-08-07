@@ -7,6 +7,8 @@ interface TacheGenerique {
     descriptionFr?:string;
     descriptionEn?:string;
     methodeValidation:string;
+    type?: string,
+    obligatoire?:boolean,
 }
 
 interface TacheGeneriqueInitialData {

@@ -18,9 +18,9 @@ import { ChevronDown, ChevronUp, Filter } from "lucide-react";
 
 interface TableTacheStagiaireProps {
     data: TacheStagiaire[];
-    statuts:StatutTache[];
+    statuts:StatutTacheStagiaire[];
     currentPage: number;
-    currentStatut?:StatutTache;
+    currentStatut?:StatutTacheStagiaire;
     onPageChange: (page: number) => void;
     onStatutChange:(statut:Statut)=>void;
     onDateChange:(startDate:Date | null, endDate:Date |null)=>void;
@@ -152,7 +152,7 @@ const Table = ({ data, statuts, currentPage, currentStatut, isLoading, onPageCha
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {t('label.statut')}
                             </label>
-                            <CustomDropDown2<StatutTache>
+                            <CustomDropDown2<StatutTacheStagiaire>
                                 title=""
                                 selectedItem={currentStatut}
                                 items={statuts}

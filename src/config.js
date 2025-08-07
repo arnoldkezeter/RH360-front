@@ -62,10 +62,16 @@ export const STATUT_BESOIN = {
     NON_EVALUE: {nomFr:"Non évalué", nomEn:"Not rated", key:"NON_EVALUE"}
 };
 
-export const STATUT_TACHE={
+export const STATUT_TACHE_STAGIAIRE={
     COMPLETE: { nomFr: "Complétée", nomEn: "Completed", key:"COMPLETE" },
     EN_COURS: { nomFr: "En cours", nomEn: "In progress", key:"EN_COURS" },
     ABSENT: { nomFr: "Absent", nomEn: "Absent", key:"ABSENT" },
+}
+
+export const STATUT_TACHE_THEME={
+    TERMINE: { nomFr: "Terminée", nomEn: "Completed", key:"termine" },
+    EN_COURS: { nomFr: "En cours", nomEn: "In progress", key:"en_cours" },
+    A_FAIRE: { nomFr: "À faire", nomEn: "To do", key:"a_faire" },
 }
 
 export const NIVEAU_AUTO_EVALUATION = {
@@ -91,6 +97,15 @@ export const NIVEAU_AUTO_EVALUATION = {
   },
 };
 
+export const TYPE_TACHE = {
+  form:{nomFr:'Formulaire', nomEn:'Form', key:'form'},
+  checkbox:{nomFr:'Case à cocher', nomEn:'Checkbox', key:'checkbox'},
+  upload:{nomFr:'Sauvegarde de fichier', nomEn:'upload file', key:'upload'}, 
+  autoGenerate:{nomFr:'Génération de fichier', nomEn:'Generate file', key:'autoGenerate'}, 
+  email:{nomFr:'Envoie de message', nomEn:'Send mail', key:'email'},
+  evaluation:{nomFr:'Evaluation', nomEn:'Evaluation', key:'evaluation'}, 
+  table_form:{nomFr:'Tableau', nomEn:'Table', key:'table-form'}
+};
 export const monthsFullFr = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin','Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 export const monthsFullEn = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December'];
 
