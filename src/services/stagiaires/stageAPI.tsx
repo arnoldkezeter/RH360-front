@@ -5,6 +5,24 @@ const api = `${apiUrl}/stages`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
+
+
+export async function createStage(data: CreateStageInput): Promise<any> {
+  try {
+    const response = await axios.post(`${api}`, data);
+    console.log(response.data)
+    return response.data; // { success: true, data: {...} }
+  } catch (error: any) {
+    // Gestion d'erreur simple
+    if (error.response) {
+      throw new Error(error.response.data.message || 'Erreur API lors de la création du stage');
+    } else {
+      throw new Error(error.message || 'Erreur réseau');
+    }
+  }
+}
+
+
 export async function getTotalStagiaires(dateDebut:string, dateFin:string): Promise<number> {
   try {
     const response = await axios.get(`${api}/total-stagiaires`, {
@@ -26,7 +44,7 @@ export async function getTotalStagiaires(dateDebut:string, dateFin:string): Prom
 
 export async function getTotalStagesTermines(dateDebut:string, dateFin:string): Promise<number> {
   try {
-    const response = await axios.get(`${api}/total-stages-termines`, {
+    const response = await axios.get(`${api}/total-stagiaires-termines`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +166,7 @@ export async function getRepartitionStagiairesParSuperviseur(dateDebut:string, d
 
 export async function getNombreStagiairesParEtablissement(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/stats/stagiaires-par-etablissement`, {
+    const response = await axios.get(`${api}/repartition-stagiaires-par-etablissement`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -169,7 +187,7 @@ export async function getNombreStagiairesParEtablissement(dateDebut:string, date
 
 export async function getNombreStagiairesParStatutEtEtablissement(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/stats/stagiaires-par-statut-et-etablissement`, {
+    const response = await axios.get(`${api}/stats/stages-par-statut-et-etablissement`, {
       
       headers: {
         'Content-Type': 'application/json',

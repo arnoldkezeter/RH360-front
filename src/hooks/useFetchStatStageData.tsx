@@ -28,7 +28,7 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
     tauxStatutStages?: any;
     repartitionParService?: any;
     repartitionParSuperviseur?: any;
-    // stagiairesParEtablissement?: any;
+    stagiairesParEtablissement?: any;
     stagiairesParStatutEtEtablissement?: any;
   }>({});
 
@@ -45,37 +45,38 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
         const [
           totalStagiaires,
           totalStagesTermines,
-          moyenneStagiairesParSuperviseur,
+          // moyenneStagiairesParSuperviseur,
           dureeMoyenneStages,
           tauxStatutStages,
           repartitionParService,
           repartitionParSuperviseur,
-        //   stagiairesParEtablissement,
-          stagiairesParStatutEtEtablissement
+          stagiairesParEtablissement,
+        //   stagiairesParStatutEtEtablissement
         ] = await Promise.all([
           getTotalStagiaires(dateDebut, dateFin),
           getTotalStagesTermines(dateDebut, dateFin),
-          getMoyenneStagiairesParSuperviseur(dateDebut, dateFin),
+          // getMoyenneStagiairesParSuperviseur(dateDebut, dateFin),
           getDureeMoyenneStages(dateDebut, dateFin),
           getTauxStatutStages(dateDebut, dateFin),
           getRepartitionStagiairesParService(dateDebut, dateFin),
           getRepartitionStagiairesParSuperviseur(dateDebut, dateFin),
-        //   getNombreStagiairesParEtablissement(dateDebut, dateFin),
-          getNombreStagiairesParStatutEtEtablissement(dateDebut, dateFin),
+          getNombreStagiairesParEtablissement(dateDebut, dateFin),
+          // getNombreStagiairesParStatutEtEtablissement(dateDebut, dateFin),
         ]);
         if (isMounted) {
           setData({
             totalStagiaires,
             totalStagesTermines,
-            moyenneStagiairesParSuperviseur,
+            // moyenneStagiairesParSuperviseur,
             dureeMoyenneStages,
             tauxStatutStages,
             repartitionParService,
             repartitionParSuperviseur,
-            // stagiairesParEtablissement,
-            stagiairesParStatutEtEtablissement
+            stagiairesParEtablissement,
+            // stagiairesParStatutEtEtablissement
           });
         }
+        console.log(stagiairesParEtablissement)
       } catch (err) {
         if (isMounted) setError(err);
       } finally {

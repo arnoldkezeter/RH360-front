@@ -12,6 +12,7 @@ import { setErrorPageTacheThemeFormation, setTacheThemeFormationLoading, setTach
 import { ETAT_TACHE } from '../../config';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
 import RendererTacheExecutee from '../../components/Tables/Execution/TachesExecutees/RendererTacheExecutee';
+import { useHeader } from '../../components/Context/HeaderConfig';
 
 
 const TachesExecutees = () => {
@@ -34,7 +35,17 @@ const TachesExecutees = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentEtatTache, setCurrentEtatTache] = useState<EtatTache | undefined>();
   const etats = Object.values(ETAT_TACHE)
+  const { setHeaderConfig } = useHeader();
   
+  useEffect(() => {
+    setHeaderConfig({
+      title: undefined,
+      showAddButton: false,
+      exportOptions: ['PDF', 'Excel'],
+      onAdd: () => {},
+      onExport: handleExportUsers,
+    });
+  }, [t]);
 
   useEffect(() => {
     if (!currentProgrammeFormation && programmeFormations.length > 0) {
@@ -127,6 +138,10 @@ const TachesExecutees = () => {
               },
           });
   }, [currentPage, currentTheme, currentEtatTache, lang, dispatch]);
+
+  const handleExportUsers = (format: string) => {
+    console.log(`Export des depenses en ${format}`);
+  };
 
   // Handlers pour les dropdowns
   const handlePageChange = (page: number) => setCurrentPage(page);

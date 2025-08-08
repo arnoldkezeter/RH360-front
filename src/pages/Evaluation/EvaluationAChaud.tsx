@@ -12,6 +12,7 @@ import { FaFilter, FaSort } from 'react-icons/fa';
 import InputSearch from '../../components/Tables/common/SearchTable';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
+import { NoData } from '../../components/NoData';
 
 
 
@@ -194,7 +195,8 @@ const EvaluationAChaud = () => {
 
         {loading ? (
           <Skeleton height={350}/>
-        ) : (
+        ) : evaluationChauds && evaluationChauds.length>0
+        ?(
           <div className="grid gap-6">
             {evaluationChauds.map((evalItem) => (
               <div
@@ -239,7 +241,7 @@ const EvaluationAChaud = () => {
               </div>
             ))}
           </div>
-        )}
+        ):<NoData/>}
 
         
       </div>

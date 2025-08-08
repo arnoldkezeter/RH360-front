@@ -14,6 +14,7 @@ import {
 } from '../../components/ui/selects';
 import { IndividualStageTab } from '../../components/Tables/Stagiaire/BodyStage/TabStageIndividuel';
 import GroupStageInterface from '../../components/Tables/Stagiaire/BodyStage/TabStageGroupe';
+import { createStage } from '../../services/stagiaires/stageAPI';
 
 const StageManagement = () => {
     const [stagiaire, setStagiaire] = useState<Stagiaire>();
@@ -41,14 +42,54 @@ const StageManagement = () => {
         setServices(updatedServices);
     };
 
-    
-  
-    const handleSubmit = () => {
-      console.log("Données soumises:", {
-        stagiaire,
-        services
-      });
-    };
+    const handleCreateStage = async () => {
+      try {
+        // Filtrer services valides
+        const validServices = services.filter(s => s.serviceId && s.superviseurId && s.dateDebut && s.dateFin);
+        if (validServices.length === 0) throw new Error("Au moins un service complet requis.");
+
+        // Créer les rotations, une par service
+        const rotations = validServices.map(s => ({
+          stagiaire: stagiaire?._id,
+          service: s.serviceId||"",
+          superviseur: s.superviseurId||"",
+          dateDebut: s.dateDebut||"",
+          dateFin: s.dateFin||"",
+        }));
+
+        // Créer une affectation finale par service parcouru (correspondant à une rotation)
+        const affectationsFinales = validServices.map(s => ({
+          stagiaire: stagiaire?._id,
+          service: s.serviceId||"",
+          superviseur: s.superviseurId||"",
+          dateDebut: s.dateDebut||"",
+          dateFin: s.dateFin||"",
+        }));
+
+        // Déterminer dateDebut globale = plus tôt, dateFin globale = plus tard
+        const dateDebutGlobale = new Date(Math.min(...validServices.map(s => new Date(s.dateDebut||"").getTime()))).toISOString();
+        const dateFinGlobale = new Date(Math.max(...validServices.map(s => new Date(s.dateFin||"").getTime()))).toISOString();
+
+        const stageData = {
+          type: 'INDIVIDUEL',
+          stagiaire: stagiaire?._id,
+          rotations,
+          affectationsFinales,
+          dateDebut: dateDebutGlobale||"",
+          dateFin: dateFinGlobale||"",
+          anneeStage: new Date(dateDebutGlobale).getFullYear(),
+          statut: 'EN_ATTENTE',
+        };
+
+         await createStage(stageData).then((e: ReponseApiPros) => {
+          console.log('Stage individuel créé:',e);
+         })
+        
+      } catch (err: any) {
+        console.error('Erreur création stage individuel:', err.message);
+      }
+    }
+
 
   return (
     <div className="p-6 space-y-6 bg-white">
@@ -68,7 +109,7 @@ const StageManagement = () => {
                 onServiceAdd={handleServiceAdd}
                 onServiceRemove={handleServiceRemove}
                 onServicesChange={handleServiceChange}
-                onSubmit={handleSubmit}
+                onSubmit={handleCreateStage}
             />
         </TabsContent>
         

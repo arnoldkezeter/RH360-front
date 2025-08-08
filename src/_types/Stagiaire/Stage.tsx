@@ -1,42 +1,58 @@
 
-interface Services {
-    service:Service,
-    annee:number,
-    dateDebut:string,
-    dateFin:string,
-    superviseurs:[Utilisateur]
+// Affectation finale pour un stagiaire (dans un stage individuel)
+interface AffectationFinale {
+  stagiaire: Stagiaire;        // _id du stagiaire
+  dateDebut: string;        // ISO string
+  dateFin: string;          // ISO string
+  superviseur?: Utilisateur;     // _id du superviseur
+  service?: Service;         // _id du service (optionnel)
 }
 
-interface Stagiaires {
-    stagiaire : Stagiaire;
-    servicesAffectes:[Services]
+// Rotation : affectation temporaire d'un stagiaire ou groupe à un service et superviseur pendant une période donnée
+interface Rotation {
+  _id: string;
+  stage: Stage;          // _id du stage (INDIVIDUEL ou GROUPE)
+  service: Service;        // _id du service
+  superviseur: Utilisateur;    // _id du superviseur
+
+  // Soit stagiaire (stage individuel), soit groupe (stage groupe)
+  stagiaire?: Stagiaire;     // _id du stagiaire (optionnel, uniquement stage individuel)
+  groupe?: Groupe;        // _id du groupe (optionnel, uniquement stage groupe)
+
+  dateDebut: string;      // ISO string
+  dateFin: string;        // ISO string
 }
 
-interface ServiceFinal{
-    service?:Service,
-    superviseur?: Utilisateur,
-    dateDebut: string,
-    dateFin: string,
+
+// Service final pour un groupe (période + superviseur + service)
+interface ServiceFinal {
+  service: Service;          // _id du service
+  superviseur?: Utilisateur;     // _id du superviseur
+  dateDebut: string;        // ISO string
+  dateFin: string;          // ISO string
 }
+
+// Groupe (stages groupe)
 interface Groupe {
-    id: number;
-    nom: string;
-    stagiaires: Stagiaire[];
-    serviceFinal?: ServiceFinal
+  _id: string;
+  nom: string;
+  stagiaires: Stagiaire[];     // Liste des _id des stagiaires dans ce groupe
+  stage?: Stage;            // _id du stage parent
+  serviceFinal: ServiceFinal;
 }
 
-interface GroupeParams {
-  dateDebut: string;
-  dateFin: string;
-  stagiaireParGroupe: string;
-  joursRotation: string;
-}
 
+
+// Stage
 interface Stage {
-    typeStage: string,
-    stagiaires: [Stagiaires],//Utilisé uniquement pour des stages individuels
-    noteService: NoteDeService,
-    statut:string,
+  _id: string;
+  type: string;
+  statut: string;  // selon ton enum backend
+  affectationsFinales: AffectationFinale[];  // seulement pour INDIVIDUEL
+  groupes?: Groupe[];                        // uniquement pour GROUPE
+  dateDebut:string,
+  dateFin:string,
+  anneeStage:number,
 }
 
 
@@ -81,4 +97,33 @@ interface PropsStagesMinState {
     role: string;
     nom: string;
     prenom: string | null;
+}
+
+interface CreateStageInput {
+  type: string;
+  stagiaire?: string; // _id pour individuel
+  groupes?: Array<{
+    numero: number;
+    stagiaires: string[]; // liste _id stagiaires
+  }>;
+  rotations?: Array<{
+    groupe?: string;       // _id groupe (pour groupe)
+    stagiaire?: string;    // _id stagiaire (pour individuel)
+    service: string;       // _id service
+    superviseur: string;   // _id superviseur
+    dateDebut: string;     // ISO date string
+    dateFin: string;       // ISO date string
+  }>;
+  affectationsFinales?: Array<{
+    groupe?: string;
+    stagiaire?: string;
+    service: string;
+    superviseur?: string;
+    dateDebut: string;
+    dateFin: string;
+  }>;
+  dateDebut: string;
+  dateFin: string;
+  anneeStage: number;
+  statut: string;
 }

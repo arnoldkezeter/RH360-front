@@ -21,7 +21,19 @@ const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
         '/elaboration-programme/axes-strategique',
         '/elaboration-programme/competences',
         '/elaboration-programme/familles-metier',
-        '/execution-programme/calendrier-formation',
+        '/elaboration-programme/besoins-formation/rapports',
+        '/elaboration-programme/besoins-formation/exprimer',
+        '/elaboration-programme/besoins-formation/exprimer/nouvelle-competence',
+        
+        '/execution-programme/rapports-formation',
+
+        '/evaluations/cree-evaluation',
+        '/evaluations/evaluation-a-chaud',
+        '/evaluations/rapport/evaluation-a-chaud',
+
+        '/stagiaires/rapports',
+        '/stagiaires/stages',
+        
         '/parametres/profile',
         '/parametres/besoins-formation/manage',
         '/parametres/etablissements',

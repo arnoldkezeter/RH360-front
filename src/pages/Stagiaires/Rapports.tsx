@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import { format } from 'date-fns';
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line
-} from 'recharts';
 import { useStatsStages } from '../../hooks/useFetchStatStageData';
-import DateRangePicker from '../../components/ui/RangeDatePicker';
-import { Card } from '../../components/ui/Support/Card';
-import { CardContent } from '../../components/ui/CardContent';
-import { CheckCircle, ChevronDown, ChevronUp, Clock, Filter, TrendingUp, Users, XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../_redux/store';
