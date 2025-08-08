@@ -45,7 +45,7 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
         const [
           totalStagiaires,
           totalStagesTermines,
-          // moyenneStagiairesParSuperviseur,
+          moyenneStagiairesParSuperviseur,
           dureeMoyenneStages,
           tauxStatutStages,
           repartitionParService,
@@ -55,7 +55,7 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
         ] = await Promise.all([
           getTotalStagiaires(dateDebut, dateFin),
           getTotalStagesTermines(dateDebut, dateFin),
-          // getMoyenneStagiairesParSuperviseur(dateDebut, dateFin),
+          getMoyenneStagiairesParSuperviseur(dateDebut, dateFin),
           getDureeMoyenneStages(dateDebut, dateFin),
           getTauxStatutStages(dateDebut, dateFin),
           getRepartitionStagiairesParService(dateDebut, dateFin),
@@ -67,7 +67,7 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
           setData({
             totalStagiaires,
             totalStagesTermines,
-            // moyenneStagiairesParSuperviseur,
+            moyenneStagiairesParSuperviseur,
             dureeMoyenneStages,
             tauxStatutStages,
             repartitionParService,
