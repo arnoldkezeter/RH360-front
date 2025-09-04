@@ -109,10 +109,9 @@ const GroupStageInterface = () => {
         for (let i = 0; i < shuffledStagiaires.length; i += stagiaireParGroupe) {
         const groupStagiaires = shuffledStagiaires.slice(i, i + stagiaireParGroupe);
         groups.push({
-            id: groups.length + 1,
-            nom: `Groupe ${groups.length + 1}`,
-            stagiaires: groupStagiaires
-        });
+                nom: `Groupe ${groups.length + 1}`,
+                stagiaires: groupStagiaires,
+            });
         }
         
         setGeneratedGroups(groups);
@@ -141,13 +140,13 @@ const GroupStageInterface = () => {
         });
     };
 
-    const removeFromGroup = (groupId: number, stagiaireId: string) => {
-        const group = generatedGroups.find(g => g.id === groupId);
+    const removeFromGroup = (stagiaireId: string, groupId?: string) => {
+        const group = generatedGroups.find(g => g._id === groupId);
         const stagiaire = group?.stagiaires.find(t => t._id === stagiaireId);
         
         setGeneratedGroups(groups =>
         groups.map(group =>
-            group.id === groupId
+            group._id === groupId
             ? { ...group, stagiaires: group.stagiaires.filter(t => t._id !== stagiaireId) }
             : group
         ).filter(group => group.stagiaires.length > 0)
@@ -158,10 +157,10 @@ const GroupStageInterface = () => {
         }
     };
 
-    const editGroupName = (groupId: number, newName: string) => {
+    const editGroupName = (newName: string, groupId?: string) => {
         setGeneratedGroups(groups =>
         groups.map(group =>
-            group.id === groupId ? { ...group, name: newName } : group
+            group._id === groupId ? { ...group, name: newName } : group
         )
         );
     };
@@ -210,7 +209,7 @@ const GroupStageInterface = () => {
     const handleUpdateGroupe = async (groupe: Groupe) => {
         setGeneratedGroups(prevGroups =>
             prevGroups.map(group =>
-            group.id === groupe.id ? groupe : group
+            group._id === groupe._id ? groupe : group
             )
         );
     }
@@ -502,12 +501,12 @@ const GroupStageInterface = () => {
                     </thead>
                     <tbody className="bg-[#ffffff] divide-y divide-[#e5e7eb]">
                     {generatedGroups.map(group => (
-                        <tr key={group.id} className="hover:bg-[#f9fafb] transition-colors duration-150">
+                        <tr key={group._id} className="hover:bg-[#f9fafb] transition-colors duration-150">
                         <td className="px-6 py-4 whitespace-nowrap">
                             <input
                             type="text"
                             value={group.nom}
-                            onChange={(e) => editGroupName(group.id, e.target.value)}
+                            onChange={(e) => editGroupName(e.target.value, group._id)}
                             className="font-medium text-[#1f2937] bg-transparent border-none focus:ring-2 focus:ring-[#3b82f6] rounded px-2 py-1 transition-all duration-200"
                             />
                         </td>
@@ -521,7 +520,7 @@ const GroupStageInterface = () => {
                                 {stagiaire.nom}
                                 <X
                                     className="h-3 w-3 cursor-pointer hover:text-[#dc2626] transition-colors duration-150"
-                                    onClick={() => removeFromGroup(group.id, stagiaire._id||"")}
+                                    onClick={() => removeFromGroup(stagiaire._id||"", group._id)}
                                 />
                                 </div>
                             ))}
@@ -538,7 +537,7 @@ const GroupStageInterface = () => {
                             </button>
                             <button 
                                 onClick={() => {
-                                setGeneratedGroups(groups => groups.filter(g => g.id !== group.id));
+                                setGeneratedGroups(groups => groups.filter(g => g._id !== group._id));
                                 addNotification(`${group.nom} supprimé`, 'success');
                                 }}
                                 className="text-[#dc2626] hover:text-[#991b1b] transition-colors duration-150"

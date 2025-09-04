@@ -50,6 +50,8 @@ interface ServiceAssignment {
   superviseurId?: string;
   dateDebut?: string;
   dateFin?: string;
+  _serviceRef?:Service;
+  _superviseurRef?:Utilisateur;
 }
 
 

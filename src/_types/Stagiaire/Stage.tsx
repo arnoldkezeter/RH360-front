@@ -34,11 +34,18 @@ interface ServiceFinal {
 
 // Groupe (stages groupe)
 interface Groupe {
-  _id: string;
+  _id?: string;
   nom: string;
   stagiaires: Stagiaire[];     // Liste des _id des stagiaires dans ce groupe
   stage?: Stage;            // _id du stage parent
-  serviceFinal: ServiceFinal;
+  serviceFinal?: ServiceFinal;
+}
+
+interface GroupeParams {
+  dateDebut: string,
+  dateFin: string,
+  stagiaireParGroupe:string,
+  joursRotation: string
 }
 
 
@@ -46,13 +53,21 @@ interface Groupe {
 // Stage
 interface Stage {
   _id: string;
+  nomFr:string;
+  nomEn:string;
+  nom?:string;
   type: string;
   statut: string;  // selon ton enum backend
-  affectationsFinales: AffectationFinale[];  // seulement pour INDIVIDUEL
+  affectationsFinales?: AffectationFinale[];  // seulement pour INDIVIDUEL
   groupes?: Groupe[];                        // uniquement pour GROUPE
+  rotations?:Rotation[];
+  stagiaire?:Stagiaire;
   dateDebut:string,
   dateFin:string,
   anneeStage:number,
+  nombreStagiaires?: number,
+  nombreGroupes?: number,
+  createdAt?:string
 }
 
 
@@ -64,6 +79,7 @@ interface StageInitialData {
         totalItems: number;
         pageSize: number;
     };
+    selectedStage:Stage|undefined;
     pageIsLoading: boolean;
     pageError: string | null;
 }
@@ -100,6 +116,8 @@ interface PropsStagesMinState {
 }
 
 interface CreateStageInput {
+  nomFr:string;
+  nomEn:string;
   type: string;
   stagiaire?: string; // _id pour individuel
   groupes?: Array<{

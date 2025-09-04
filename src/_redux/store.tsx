@@ -17,6 +17,7 @@ import competenceReducer from "./features/elaborations/competenceSlice.tsx";
 import axeStrategiqueReducer from "./features/elaborations/axeStrategiqueSlice.tsx";
 import utilisateurReducer from "./features/utilisateurs/utilisateurSlice.tsx";
 import stagiaireReducer from "./features/stagiaire/stagiaireSlice.tsx";
+import stageReducer from "./features/stagiaire/stageSlice.tsx";
 import chercheurRededucer from "./features/chercheurSlice.tsx";
 import programmeFormationReducer from "./features/elaborations/programmeFormationSlice.tsx";
 import formationReducer from "./features/elaborations/formationSlice.tsx";
@@ -60,6 +61,7 @@ const store = configureStore({
     axeStrategiqueSlice:axeStrategiqueReducer,
     utilisateurSlice:utilisateurReducer,
     stagiaireSlice:stagiaireReducer,
+    stageSlice:stageReducer,
     chercheurSlice:chercheurRededucer,
     programmeFormationSlice:programmeFormationReducer,
     formationSlice:formationReducer,
