@@ -13,11 +13,11 @@ import { setShowModalDelete } from '../../../../_redux/features/setting';
 import FormDelete from '../../../Modals/Stage/ModalStage/FormDelete';
 import Skeleton from 'react-loading-skeleton';
 
-interface HistoriqueStagesTabProps {
+interface StageTabProps {
   onEditStage?: (stage: Stage) => void;
 }
 
-const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
+const StageTab = ({ onEditStage }: StageTabProps) => {
     const lang = useSelector((state: RootState) => state.setting.language);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filterStatus, setFilterStatus] = useState<string>('ALL');
@@ -183,11 +183,8 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
   const ActionMenu: React.FC<{ stage: Stage }> = ({ stage }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const handleEdit = () => {
-      if (onEditStage) {
-        onEditStage(stage);
-      }
-      setIsOpen(false);
+    const handleGenerate = () => {
+     
     };
 
     return (
@@ -210,20 +207,20 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 
                 <button 
                   className="flex items-center w-full px-4 py-2 text-sm text-[#374151] hover:bg-[#F9FAFB]"
-                  onClick={handleEdit}
+                  onClick={handleGenerate}
                 >
-                  <Edit className="w-4 h-4 mr-3" />
-                  Modifier
+                  <Download className="w-4 h-4 mr-3" />
+                  Générer la note
                 </button>
                 
-                <hr className="my-1 border-[#E5E7EB]" />
+                {/* <hr className="my-1 border-[#E5E7EB]" />
                 <button 
                   className="flex items-center w-full px-4 py-2 text-sm text-[#DC2626] hover:bg-[#FEF2F2]"
                   onClick={() => {setSelectedStage(stage);dispatch(setShowModalDelete()); setIsOpen(false)}}
                 >
                   <Trash2 className="w-4 h-4 mr-3" />
                   Supprimer
-                </button>
+                </button> */}
               </div>
             </div>
           </>
@@ -241,8 +238,8 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 <div className="mb-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">Historique des Affectations</h1>
-                    <p className="text-[#6B7280]">Gérez et suivez tous vos stages de formation</p>
+                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">Note de service des stages</h1>
+                    <p className="text-[#6B7280]">Générer des notes de service pour les stages individuels et groupés</p>
                     </div>
                 </div>
                 </div>
@@ -399,9 +396,8 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 />}
             </div>
         </div>
-        <FormDelete stage={selectedStage} />
     </>
   );
 };
 
-export default HistoriqueStages;
+export default StageTab;

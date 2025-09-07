@@ -4,12 +4,12 @@ import { RootState } from '../../../../_redux/store.tsx';
 import CustomDialogModal from '../../CustomDialogModal.tsx';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify.tsx';
-import { deleteChercheur } from '../../../../services/chercheurs/chercheurAPI.tsx';
-import { deleteChercheurSlice } from '../../../../_redux/features/chercheurs/chercheurSlice.tsx';
+import { deleteStageRechercheSlice } from '../../../../_redux/features/chercheurs/stageRechercheSlice.tsx';
+import { deleteStageRecherche } from '../../../../services/chercheurs/stageRechercheAPI.tsx';
 
 
 
-function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
+function FormDelete({ stageRecherche }: { stageRecherche : StageRecherche|undefined}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
 
@@ -18,13 +18,13 @@ function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
-        if (chercheur?._id != undefined) {
-            await deleteChercheur(chercheur._id, lang).then((e: ReponseApiPros) => {
+        if (stageRecherche?._id != undefined) {
+            await deleteStageRecherche(stageRecherche._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
 
-                    if (chercheur._id) {
-                        dispatch(deleteChercheurSlice({ id: chercheur._id }));
+                    if (stageRecherche._id) {
+                        dispatch(deleteStageRechercheSlice({ id: stageRecherche._id }));
                     }
 
                     closeModal();
@@ -47,7 +47,7 @@ function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
             >
-                <h1>{t('form_delete.suppression')+t('form_delete.chercheur')} : {chercheur?chercheur.nom:""} {chercheur?chercheur.prenom:""}</h1>
+                <h1>{t('form_delete.suppression')+t('form_delete.stage_recherche')} : {lang==='fr'?(stageRecherche?.nomFr||""):(stageRecherche?.nomEn||"")}</h1>
             </CustomDialogModal>
         </>
     );

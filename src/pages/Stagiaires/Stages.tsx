@@ -66,8 +66,9 @@ const StageManagement = () => {
         
         <TabsContent value="groupe">
           <GroupStageInterface 
-            // stageToEdit={stageToEdit}
-            // onEditComplete={() => setStageToEdit(null)}
+            stageToEdit={stageToEdit}
+            onEditComplete={() => setStageToEdit(null)}
+            pageIsLoading={pageIsLoading}
           />
         </TabsContent>
         

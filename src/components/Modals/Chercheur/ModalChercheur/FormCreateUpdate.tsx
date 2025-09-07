@@ -11,7 +11,7 @@ import { getCommunesForDropDown } from '../../../../services/settings/communeAPI
 import { createChercheur, updateChercheur } from '../../../../services/chercheurs/chercheurAPI';
 import { formatDateForInput } from '../../../../fonctions/fonction';
 import { ROLES } from '../../../../config';
-import { createChercheurSlice, updateChercheurSlice } from '../../../../_redux/features/chercheurSlice';
+import { createChercheurSlice, updateChercheurSlice } from '../../../../_redux/features/chercheurs/chercheurSlice';
 import FilterList from '../../../ui/AutoComplete';
 
 

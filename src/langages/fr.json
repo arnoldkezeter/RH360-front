@@ -123,6 +123,7 @@
     "support_formation": "Stockez et partagez les supports associés à chaque formation.",
     "carnet_stage": "Consignez les tâches quotidiennes des stagiaires, gérez les absences et générez les carnets de stage.",
     "rapport_stage": "Obtenez une vue analytique complète des stagiaires et de leurs stages, incluant la répartition par superviseur.",
+    "rapport_stage_recherche": "Obtenez une vue analytique complète des chercheurs et de leurs stages, incluant la répartition par superviseur.",
     "auto_evaluation_besoin": "Exprimez vos besoins en formation de manière autonome.",
     "nouvelle_competence": "Indiquez les nouvelles compétences que vous souhaitez acquérir.",
     "besoins_formation_rapport": "",
@@ -440,14 +441,19 @@
     "taux_absence":"Taux d'absence",
     "observation_superviseur":"Observations superviseur",
     "total_stagiaires":"Total stagiaires",
+    "total_chercheurs":"Total chercheurs",
     "stages_termines":"Stages terminés",
     "stagiaires_par_superviseur":"Stagiaires par superviseur",
+    "chercheurs":"Chercheurs par superviseur",
     "duree_moyenne_mois":"Durée moyenne de stage (Mois)",
     "taux_acceptation":"Taux d'acceptation",
     "taux_refus":"Taux de refus",
     "repartition_par_superviseur":"Répartition des stagiaires par superviseur",
+    "repartition_chercheur_par_superviseur":"Répartition des chercheurs par superviseur",
     "repartition_par_service":"Répartition des stagiaires par service",
+    "repartition_par_structure":"Répartition des chercheurs par structure",
     "repartition_par_etablissement":"Répartition des stagiaires par établissement",
+    "repartition_chercheur_par_etablissement":"Répartition des chercheurs par établissement",
     "acceptes":"Acceptés",
     "refuses":"Refusés",
     "termines":"Terminés",
@@ -929,6 +935,7 @@
     "utilisateur":"de l'utilisateur",
     "stagiaire":"du stagiaire",
     "chercheur":"du chercheur",
+    
 
     "programme_formation":"du programme de formation",
 
@@ -973,6 +980,8 @@
     "utilisateur":"de l'utilisateur",
     "stagiaire":"du stagiaire",
     "chercheur":"du chercheur",
+    "stage":"du stage",
+    "stage_recherche":"du stage de recherche",
 
     "programme_formation":"du programme de formation",
 

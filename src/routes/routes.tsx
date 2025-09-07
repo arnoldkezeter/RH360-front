@@ -48,6 +48,9 @@ import TypeEchelleReponses from '../pages/Evaluation/TypeEchelleReponse';
 import EvaluationAChaud from '../pages/Evaluation/EvaluationAChaud';
 import EvaluationForm from '../pages/Evaluation/EvaluationAChaudForm';
 import TachesExecutees from '../pages/Execution/TachesExecutees';
+import StageRechercheManagement from '../pages/Chercheurs/StageRecherches';
+import RapportStage from '../pages/Chercheurs/RapportsStageRecherche';
+import GenerationNoteDeServiceManager from '../pages/NotesDeService/GenerationNoteDeService';
 
 
 
@@ -258,13 +261,13 @@ const coreRoutes = [
   {
     path: '/chercheurs/mandats',
     title: 'Enregistremenet des mandats',
-    component: undefined,
+    component: StageRechercheManagement,
   },
 
   {
     path: '/chercheurs/rapports',
     title: 'rapports sur les mandats',
-    component: undefined,
+    component: RapportStage,
   },
 
 
@@ -286,7 +289,7 @@ const coreRoutes = [
   {
     path: '/notes-service/generer_notes',
     title: 'Générer une note de service',
-    component: undefined,
+    component: GenerationNoteDeServiceManager,
   },
 
   {

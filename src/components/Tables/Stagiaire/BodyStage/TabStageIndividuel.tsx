@@ -19,6 +19,7 @@ import { createStage, updateStage } from '../../../../services/stagiaires/stageA
 import createToast from '../../../../hooks/toastify';
 import { createStageSlice, updateStageSlice } from '../../../../_redux/features/stagiaire/stageSlice';
 import Skeleton from 'react-loading-skeleton';
+import { Spinner } from '../../../ui/loading';
 
 interface IndividualStageTabProps {
   stageToEdit?: Stage | null;
@@ -37,6 +38,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
     const [services, setServices] = React.useState<ServiceAssignment[]>([
         { serviceId: "", superviseurId: "", dateDebut: "", dateFin: "" } // Au moins un élément par défaut
     ]);
+    const [isCreating, setIsCreation] = useState<boolean>(false);
 
     // Effect pour remplir le formulaire quand on reçoit un stage à éditer
     useEffect(() => {
@@ -134,6 +136,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
 
     const handleCreateStage = async () => {
         try {
+            setIsCreation(true);
             // Filtrer services valides
             const validServices = services.filter(s => s.serviceId && s.superviseurId && s.dateDebut && s.dateFin);
             if (validServices.length === 0) throw new Error("Au moins un service complet requis.");
@@ -232,6 +235,8 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
             }
         } catch (err: any) {
             console.error('Erreur création stage individuel:', err.message);
+        }finally{
+            setIsCreation(false)
         }
     }
 
@@ -435,13 +440,28 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
             <div className="flex justify-center pt-4">
                 <button 
                     onClick={handleCreateStage}
-                    className="px-8 py-3 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] 
+                    className={`px-8 py-3 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] 
                                 hover:from-[#1d4ed8] hover:to-[#1e40af] text-white font-semibold rounded-xl
                                 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 
-                                transition-all duration-200 flex items-center justify-center gap-2"
+                                transition-all duration-200 flex items-center justify-center gap-2
+                                 ${(isCreating || !stagiaire || !services) 
+                                ? 'opacity-75 cursor-not-allowed' 
+                                : 'hover:shadow-lg'}`}
+                               
+                    disabled={isCreating || !stagiaire || !services}
                 >
-                    <UserPlus className="w-5 h-5" />
-                    {stageToEdit ? 'Modifier le stagiaire' : 'Ajouter le stagiaire'}
+                    
+                     {isCreating ? (
+                        <>
+                            <Spinner />
+                            {stageToEdit ? 'Modification en cours...' : 'Création en cours...'}
+                        </>
+                    ) : (
+                        <>
+                            <UserPlus className="w-5 h-5" />
+                            {stageToEdit ? 'Modifier le stage' : 'Crée le stage'}
+                        </>
+                    )}
                 </button>
             </div>
 

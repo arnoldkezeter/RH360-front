@@ -1,17 +1,17 @@
 import axios, { AxiosResponse } from 'axios';
 import { apiUrl, wstjqer } from '../../config.js';
 
-const api = `${apiUrl}/stages`;
+const api = `${apiUrl}/stages-recherche`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
 
-export async function createStage({ nomFr,nomEn,type,stagiaire, groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut}:CreateStageInput, lang:string): Promise<ReponseApiPros> {
+export async function createStageRecherche({ nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut}:CreateStageRechercheInput, lang:string): Promise<ReponseApiPros> {
   try {
     const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr,nomEn,type,stagiaire,groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut},
+            {nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,18 +25,18 @@ export async function createStage({ nomFr,nomEn,type,stagiaire, groupes, rotatio
     // Gestion d'erreur simple
     if (error.response) {
       console.log(error)
-      throw new Error(error.response.data.message || 'Erreur API lors de la création du stage');
+      throw new Error(error.response.data.message || 'Erreur API lors de la création du stagerecherche');
     } else {
       throw new Error(error.message || 'Erreur réseau');
     }
   }
 }
 
-export async function updateStage({ nomFr,nomEn,type,stagiaire,groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut}:CreateStageInput,id:string, lang:string): Promise<ReponseApiPros> {
+export async function updateStageRecherche({ nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut}:CreateStageRechercheInput,id:string, lang:string): Promise<ReponseApiPros> {
   try {
     const response: AxiosResponse<any> = await axios.put(
             `${api}/${id}`,
-            {nomFr,nomEn,type,stagiaire,groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut},
+            {nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,17 +50,17 @@ export async function updateStage({ nomFr,nomEn,type,stagiaire,groupes, rotation
     // Gestion d'erreur simple
     if (error.response) {
       console.log(error)
-      throw new Error(error.response.data.message || 'Erreur API lors de la création du stage');
+      throw new Error(error.response.data.message || 'Erreur API lors de la création du stagerecherche');
     } else {
       throw new Error(error.message || 'Erreur réseau');
     }
   }
 }
 
-export async function deleteStage(stageId: string, lang:string): Promise<ReponseApiPros> {
+export async function deleteStageRecherche(stagerechercheId: string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.delete(
-            `${api}/${stageId}`,
+            `${api}/${stagerechercheId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,15 +72,15 @@ export async function deleteStage(stageId: string, lang:string): Promise<Reponse
 
         return response.data;
     } catch (error) {
-        console.error('Error deleting stage:', error);
+        console.error('Error deleting stagerecherche:', error);
         throw error;
     }
 }
 
-export async function getStageByIdAndType({id, type, lang }: {id:string, type:string, lang:string }): Promise<Stage> {
+export async function getStageRechercheById({id, lang }: {id:string, lang:string }): Promise<StageRecherche> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/${id}/${type}`,
+            `${api}/${id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,15 +91,15 @@ export async function getStageByIdAndType({id, type, lang }: {id:string, type:st
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const stages: Stage = response.data.data;
+        const stagerecherches: StageRecherche = response.data.data;
         
-        return stages;
+        return stagerecherches;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;
     }
 }
-export async function getFilteredStages({page, search, type, statut, lang }: {search?:string, type?:string, statut?:string, page: number, lang:string }): Promise<StageReturnGetType> {
+export async function getFilteredStageRecherches({page, search,statut, lang }: {search?:string, type?:string, statut?:string, page: number, lang:string }): Promise<StageRechercheReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
@@ -114,25 +114,24 @@ export async function getFilteredStages({page, search, type, statut, lang }: {se
                     page: page,
                     limit: pageSize,
                     search,
-                    type,
                     statut
                 },
             },
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const stages: StageReturnGetType = response.data.data;
+        const stagerecherches: StageRechercheReturnGetType = response.data.data;
         
-        return stages;
+        return stagerecherches;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;
     }
 }
 
-export async function getTotalStagiaires(dateDebut:string, dateFin:string): Promise<number> {
+export async function getTotalChercheurs(dateDebut:string, dateFin:string): Promise<number> {
   try {
-    const response = await axios.get(`${api}/total-stagiaires`, {
+    const response = await axios.get(`${api}/total-chercheurs`, {
       headers: {
         'Content-Type': 'application/json',
         'authorization': token,
@@ -142,16 +141,16 @@ export async function getTotalStagiaires(dateDebut:string, dateFin:string): Prom
         dateFin
       }
     });
-    return response.data.totalStagiaires;
+    return response.data.totalChercheurs;
   } catch (error) {
-    console.error("Erreur getTotalStagiaires:", error);
+    console.error("Erreur getTotalChercheurs:", error);
     throw error;
   }
 }
 
-export async function getTotalStagesTermines(dateDebut:string, dateFin:string): Promise<number> {
+export async function getTotalStageRecherchesTermines(dateDebut:string, dateFin:string): Promise<number> {
   try {
-    const response = await axios.get(`${api}/total-stagiaires-termines`, {
+    const response = await axios.get(`${api}/total-chercheurs-termines`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -163,16 +162,16 @@ export async function getTotalStagesTermines(dateDebut:string, dateFin:string): 
       }
     });
     
-    return response.data.totalStagesTermines;
+    return response.data.totalStageRecherchesTermines;
   } catch (error) {
-    console.error("Erreur getTotalStagesTermines:", error);
+    console.error("Erreur getTotalStageRecherchesTermines:", error);
     throw error;
   }
 }
 
-export async function getMoyenneStagiairesParSuperviseur(dateDebut:string, dateFin:string): Promise<number> {
+export async function getMoyenneChercheursParSuperviseur(dateDebut:string, dateFin:string): Promise<number> {
   try {
-    const response = await axios.get(`${api}/moyenne-stagiaires-par-superviseur`, {
+    const response = await axios.get(`${api}/moyenne-chercheurs-par-superviseur`, {
       headers: {
         'Content-Type': 'application/json',
         'authorization': token,
@@ -183,16 +182,16 @@ export async function getMoyenneStagiairesParSuperviseur(dateDebut:string, dateF
       }
     });
      
-    return response.data.moyenneStagiairesParSuperviseur;
+    return response.data.moyenneChercheursParSuperviseur;
   } catch (error) {
-    console.error("Erreur getMoyenneStagiairesParSuperviseur:", error);
+    console.error("Erreur getMoyenneChercheursParSuperviseur:", error);
     throw error;
   }
 }
 
-export async function getDureeMoyenneStages(dateDebut:string, dateFin:string): Promise<any> {
+export async function getDureeMoyenneStageRecherches(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/duree-moyenne-stages`, {
+    const response = await axios.get(`${api}/duree-moyenne-stagerecherches`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -205,14 +204,14 @@ export async function getDureeMoyenneStages(dateDebut:string, dateFin:string): P
     });
     return response.data.dureeMoyenneMois;
   } catch (error) {
-    console.error("Erreur getDureeMoyenneStages:", error);
+    console.error("Erreur getDureeMoyenneStageRecherches:", error);
     throw error;
   }
 }
 
-export async function getTauxStatutStages(dateDebut:string, dateFin:string): Promise<number> {
+export async function getTauxStatutStageRecherches(dateDebut:string, dateFin:string): Promise<number> {
   try {
-    const response = await axios.get(`${api}/taux-statut-stages`, {
+    const response = await axios.get(`${api}/taux-statut-stage-recherches`, {
       headers: {
         'Content-Type': 'application/json',
         'authorization': token,
@@ -223,16 +222,16 @@ export async function getTauxStatutStages(dateDebut:string, dateFin:string): Pro
       }
     });
     
-    return response.data.tauxStatutStages;
+    return response.data.tauxStatutStageRecherches;
   } catch (error) {
-    console.error("Erreur getTauxStatutStages:", error);
+    console.error("Erreur getTauxStatutStageRecherches:", error);
     throw error;
   }
 }
 
-export async function getRepartitionStagiairesParService(dateDebut:string, dateFin:string): Promise<any> {
+export async function getRepartitionChercheursParStructure(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/repartition-stagiaires-par-service`, {
+    const response = await axios.get(`${api}/repartition-chercheurs-par-structure`, {
       headers: {
         'Content-Type': 'application/json',
         'authorization': token,
@@ -243,17 +242,17 @@ export async function getRepartitionStagiairesParService(dateDebut:string, dateF
       }
     });
     
-    return response.data.repartitionParService
+    return response.data.repartitionParStructure
 ;
   } catch (error) {
-    console.error("Erreur getRepartitionStagiairesParService:", error);
+    console.error("Erreur getRepartitionChercheursParStructure:", error);
     throw error;
   }
 }
 
-export async function getRepartitionStagiairesParSuperviseur(dateDebut:string, dateFin:string): Promise<any> {
+export async function getRepartitionChercheursParSuperviseur(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/repartition-stagiaires-par-superviseur`, {
+    const response = await axios.get(`${api}/repartition-chercheurs-par-superviseur`, {
       headers: {
         'Content-Type': 'application/json',
         'authorization': token,
@@ -266,14 +265,14 @@ export async function getRepartitionStagiairesParSuperviseur(dateDebut:string, d
     
     return response.data.repartitionParSuperviseur;
   } catch (error) {
-    console.error("Erreur getRepartitionStagiairesParSuperviseur:", error);
+    console.error("Erreur getRepartitionChercheursParSuperviseur:", error);
     throw error;
   }
 }
 
-export async function getNombreStagiairesParEtablissement(dateDebut:string, dateFin:string): Promise<any> {
+export async function getNombreChercheursParEtablissement(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/repartition-stagiaires-par-etablissement`, {
+    const response = await axios.get(`${api}/repartition-chercheurs-par-etablissement`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -287,14 +286,14 @@ export async function getNombreStagiairesParEtablissement(dateDebut:string, date
      
     return response.data.data;
   } catch (error) {
-    console.error("Erreur getNombreStagiairesParEtablissement:", error);
+    console.error("Erreur getNombreChercheursParEtablissement:", error);
     throw error;
   }
 }
 
-export async function getNombreStagiairesParStatutEtEtablissement(dateDebut:string, dateFin:string): Promise<any> {
+export async function getNombreChercheursParStatutEtEtablissement(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/stats/stages-par-statut-et-etablissement`, {
+    const response = await axios.get(`${api}/stats/stage-recherches-par-statut-et-etablissement`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -308,14 +307,14 @@ export async function getNombreStagiairesParStatutEtEtablissement(dateDebut:stri
      
     return response.data.data;
   } catch (error) {
-    console.error("Erreur getNombreStagiairesParStatutEtEtablissement:", error);
+    console.error("Erreur getNombreChercheursParStatutEtEtablissement:", error);
     throw error;
   }
 }
 
-export async function getNombreStagesEnCours(dateDebut?:string, dateFin?:string): Promise<number> {
+export async function getNombreStageRecherchesEnCours(dateDebut?:string, dateFin?:string): Promise<number> {
   try {
-    const response = await axios.get(`${api}/stages-en-cours`, {
+    const response = await axios.get(`${api}/stage-recherches-en-cours`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -329,7 +328,7 @@ export async function getNombreStagesEnCours(dateDebut?:string, dateFin?:string)
      
     return response.data.data;
   } catch (error) {
-    console.error("Erreur getNombreStagesEnCours:", error);
+    console.error("Erreur getNombreStageRecherchesEnCours:", error);
     throw error;
   }
 }

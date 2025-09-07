@@ -5,19 +5,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../_redux/store';
 import { useFetchData } from '../../../../hooks/fechDataOptions';
 import { useTranslation } from 'react-i18next';
-import { getFilteredStages } from '../../../../services/stagiaires/stageAPI';
-import { setErrorPageStage, setStages, setStagesLoading } from '../../../../_redux/features/stagiaire/stageSlice';
+import { getFilteredStageRecherches } from '../../../../services/chercheurs/stageRechercheAPI';
+import { setErrorPageStageRecherche, setStageRecherches, setStageRecherchesLoading } from '../../../../_redux/features/chercheurs/stageRechercheSlice';
 import { NoData } from '../../../NoData';
 import Pagination from '../../../Pagination/Pagination';
 import { setShowModalDelete } from '../../../../_redux/features/setting';
-import FormDelete from '../../../Modals/Stage/ModalStage/FormDelete';
+import FormDelete from '../../../Modals/StageRecherche/ModalStageRecherche/FormDelete';
 import Skeleton from 'react-loading-skeleton';
 
-interface HistoriqueStagesTabProps {
-  onEditStage?: (stage: Stage) => void;
+interface MandatTabProps {
+  onEditStageRecherche?: (stageRecherche: StageRecherche) => void;
 }
 
-const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
+const MandatTab = ({ onEditStageRecherche }: MandatTabProps) => {
     const lang = useSelector((state: RootState) => state.setting.language);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filterStatus, setFilterStatus] = useState<string>('ALL');
@@ -27,13 +27,13 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
     const { t } = useTranslation();
     const fetchData = useFetchData();
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [selectedStage, setSelectedStage] = useState<Stage|undefined>(undefined)
-    const { data: { stages } } = useSelector((state: RootState) => state.stageSlice);
-    const pageIsLoading = useSelector((state: RootState) => state.stageSlice.pageIsLoading);
+    const [selectedStageRecherche, setSelectedStageRecherche] = useState<StageRecherche|undefined>(undefined)
+    const { data: { stageRecherches } } = useSelector((state: RootState) => state.stageRechercheSlice);
+    const pageIsLoading = useSelector((state: RootState) => state.stageRechercheSlice.pageIsLoading);
 
      // variable pour la pagination
-    const itemsPerPage =  useSelector((state: RootState) => state.stageSlice.data.pageSize); // nombre d'éléments maximum par page
-    const count = useSelector((state: RootState) => state.stageSlice.data.totalItems);
+    const itemsPerPage =  useSelector((state: RootState) => state.stageRechercheSlice.data.pageSize); // nombre d'éléments maximum par page
+    const count = useSelector((state: RootState) => state.stageRechercheSlice.data.totalItems);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
 
@@ -50,20 +50,19 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
     const endItem = Math.min(count, indexOfLastItem);
 
     useEffect(() => {
-          dispatch(setStagesLoading(true));
+          dispatch(setStageRecherchesLoading(true));
   
           fetchData({
-              apiFunction: getFilteredStages,
+              apiFunction: getFilteredStageRecherches,
               params: {
                   page: currentPage,
-                  type:filterType,
                   statut:filterStatus,
                   lang,
               },
               onSuccess: (data) => {
                   
-                  dispatch(setStages(data || {
-                      stagiaires: [],
+                  dispatch(setStageRecherches(data || {
+                      chercheurs: [],
                       currentPage: 0,
                       totalItems: 0,
                       totalPages: 0,
@@ -71,33 +70,33 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                   }));
               },
               onError: () => {
-                  dispatch(setErrorPageStage(t('message.erreur')));
+                  dispatch(setErrorPageStageRecherche(t('message.erreur')));
               },
               onLoading: (isLoading) => {
-                  dispatch(setStagesLoading(isLoading));
+                  dispatch(setStageRecherchesLoading(isLoading));
               },
           });
     }, [currentPage, filterStatus, filterType, lang, dispatch]);
   
 
-    const [filteredData, setFilteredData] = useState<Stage[]>(stages);
+    const [filteredData, setFilteredData] = useState<StageRecherche[]>(stageRecherches);
         
     
-    const latestQueryStage = useRef('');
+    const latestQueryStageRecherche = useRef('');
     useEffect(() => {
-        dispatch(setStagesLoading(true));
-        latestQueryStage.current = searchTerm;
+        dispatch(setStageRecherchesLoading(true));
+        latestQueryStageRecherche.current = searchTerm;
         
         try{
             
-            const filterStagiaireByContent = async () => {
+            const filterChercheurByContent = async () => {
                 if (searchTerm === '') {
                     // if(isSearch){
                         // sections.length>0?setSection(sections[0]):setSection(undefined);
                         // filterCycleBySection(section?._id);
                         // filterNiveauxByCycle(cycle?._id);
                         
-                        const result: Stage[] = stages;
+                        const result: StageRecherche[] = stageRecherches;
                         setFilteredData(result); 
                         
                     // }
@@ -107,12 +106,12 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                     // setNiveau(undefined);
                     // setFilteredCycle([]);
                     // setFilteredNiveaux([]);
-                    let stagesResult : Stage[] = [];
+                    let stagesResult : StageRecherche[] = [];
                     
-                    await getFilteredStages({page:1, search:searchTerm, lang}).then(result=>{
-                        if (latestQueryStage.current === searchTerm) {
+                    await getFilteredStageRecherches({page:1, search:searchTerm, lang}).then(result=>{
+                        if (latestQueryStageRecherche.current === searchTerm) {
                             if(result){
-                                stagesResult = result.stages;
+                                stagesResult = result.stageRecherches;
                                 setFilteredData(stagesResult);
                             }
                             }
@@ -123,19 +122,19 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 
             };
             
-            filterStagiaireByContent();
+            filterChercheurByContent();
         }catch(e){
-            dispatch(setErrorPageStage(t('message.erreur')));
+            dispatch(setErrorPageStageRecherche(t('message.erreur')));
         }finally{
-            if (latestQueryStage.current === searchTerm) {
-                dispatch(setStagesLoading(false)); // Définissez le loading à false après le chargement
+            if (latestQueryStageRecherche.current === searchTerm) {
+                dispatch(setStageRecherchesLoading(false)); // Définissez le loading à false après le chargement
             }
         }
-    }, [searchTerm, isSearch, stages]);
+    }, [searchTerm, isSearch, stageRecherches]);
   
 
-  const getStatusBadge = (statut: Stage['statut']): JSX.Element => {
-    const statusConfig: Record<Stage['statut'], { bg: string; text: string; label: string }> = {
+  const getStatusBadge = (statut: StageRecherche['statut']): JSX.Element => {
+    const statusConfig: Record<StageRecherche['statut'], { bg: string; text: string; label: string }> = {
       'EN_ATTENTE': { bg: 'bg-[#FEF3C7]', text: 'text-[#92400E]', label: 'En attente' },
       'ACCEPTE': { bg: 'bg-[#D1FAE5]', text: 'text-[#065F46]', label: 'Accepté' },
       'REFUSE': { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', label: 'Refusé' }
@@ -150,15 +149,10 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
     );
   };
 
-  const getTypeBadge = (type: Stage['type']): JSX.Element => {
-    return type === 'GROUPE' ? (
-      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#EDE9FE] text-[#5B21B6]">
-        <Users className="w-3 h-3 mr-1" />
-        Groupe
-      </span>
-    ) : (
+  const getTypeBadge = (): JSX.Element => {
+    return  (
       <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#DBEAFE] text-[#1E40AF]">
-        Individuel
+        Mandate de recherche
       </span>
     );
   };
@@ -180,14 +174,12 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
 
  
 
-  const ActionMenu: React.FC<{ stage: Stage }> = ({ stage }) => {
+  const ActionMenu: React.FC<{ stageRecherche: StageRecherche }> = ({ stageRecherche }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const handleEdit = () => {
-      if (onEditStage) {
-        onEditStage(stage);
-      }
-      setIsOpen(false);
+    const handleGenerate = () => {
+     
+
     };
 
     return (
@@ -210,20 +202,20 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 
                 <button 
                   className="flex items-center w-full px-4 py-2 text-sm text-[#374151] hover:bg-[#F9FAFB]"
-                  onClick={handleEdit}
+                  onClick={handleGenerate}
                 >
-                  <Edit className="w-4 h-4 mr-3" />
-                  Modifier
+                  <Download className="w-4 h-4 mr-3" />
+                  Générer
                 </button>
                 
-                <hr className="my-1 border-[#E5E7EB]" />
+                {/* <hr className="my-1 border-[#E5E7EB]" />
                 <button 
                   className="flex items-center w-full px-4 py-2 text-sm text-[#DC2626] hover:bg-[#FEF2F2]"
-                  onClick={() => {setSelectedStage(stage);dispatch(setShowModalDelete()); setIsOpen(false)}}
+                  onClick={() => {setSelectedStageRecherche(stageRecherche);dispatch(setShowModalDelete()); setIsOpen(false)}}
                 >
                   <Trash2 className="w-4 h-4 mr-3" />
                   Supprimer
-                </button>
+                </button> */}
               </div>
             </div>
           </>
@@ -241,8 +233,8 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 <div className="mb-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">Historique des Affectations</h1>
-                    <p className="text-[#6B7280]">Gérez et suivez tous vos stages de formation</p>
+                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">Note de service mandant de recherche</h1>
+                    <p className="text-[#6B7280]">Générer des notes de service pour des mandats de recherche</p>
                     </div>
                 </div>
                 </div>
@@ -257,7 +249,7 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9CA3AF] w-4 h-4" />
                         <input
                         type="text"
-                        placeholder="Rechercher un stage..."
+                        placeholder="Rechercher un stageRecherche..."
                         value={searchTerm}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
@@ -279,18 +271,7 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                     </select>
                     </div>
 
-                    {/* Type Filter */}
-                    <div className="lg:w-48">
-                    <select
-                        value={filterType}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value)}
-                        className="w-full px-3 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
-                    >
-                        <option value="ALL">Tous les types</option>
-                        <option value="GROUPE">Groupe</option>
-                        <option value="INDIVIDUEL">Individuel</option>
-                    </select>
-                    </div>
+                    
 
                     <button className="inline-flex items-center px-4 py-2 bg-[#F3F4F6] text-[#374151] rounded-lg hover:bg-[#E5E7EB] transition-colors">
                     <Filter className="w-4 h-4 mr-2" />
@@ -299,13 +280,13 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 </div>
                 </div>
 
-                {/* Stages Grid */}
+                {/* StageRecherches Grid */}
                 {pageIsLoading?
                 <Skeleton height={350}/>:(
                     <>
                         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {filteredData.map((stage: Stage) => (
-                            <div key={stage._id} className="bg-white rounded-xl shadow-sm border border-[#E5E7EB] overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full">
+                        {filteredData.map((stageRecherche: StageRecherche) => (
+                            <div key={stageRecherche._id} className="bg-white rounded-xl shadow-sm border border-[#E5E7EB] overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full">
                             
                             {/* Card Header */}
                             <div className="p-6 pb-4 flex-1 flex flex-col">
@@ -313,44 +294,29 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                                 <div className="flex-1">
                                     <h3 className="text-lg font-semibold text-[#1F2937] mb-2 overflow-hidden">
                                     <div className="line-clamp-2">
-                                        {stage.nomFr}
+                                        {stageRecherche.nomFr}
                                     </div>
                                     </h3>
                                 </div>
-                                <ActionMenu stage={stage} />
+                                <ActionMenu stageRecherche={stageRecherche} />
                                 </div>
 
                                 {/* Content qui s'étend */}
                                 <div className="flex-1">
-                                {/* Participants Info */}
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="flex items-center text-[#6B7280]">
-                                    <Users className="w-4 h-4 mr-2" />
-                                    <span className="text-sm">
-                                        {stage.nombreStagiaires} stagiaire{(stage?.nombreStagiaires||0) > 1 ? 's' : ''}
-                                    </span>
-                                    </div>
-                                    {stage.type === 'GROUPE' && (
-                                    <div className="flex items-center text-[#6B7280]">
-                                        <span className="text-sm">
-                                        {stage.nombreGroupes} groupe{(stage?.nombreGroupes||0) > 1 ? 's' : ''}
-                                        </span>
-                                    </div>
-                                    )}
-                                </div>
+                                
 
                                 {/* Dates */}
                                 <div className="space-y-2">
                                     <div className="flex items-center text-[#6B7280]">
                                     <Calendar className="w-4 h-4 mr-2" />
                                     <span className="text-sm">
-                                        {formatDate(stage.dateDebut)} - {formatDate(stage.dateFin)}
+                                        {formatDate(stageRecherche.dateDebut)} - {formatDate(stageRecherche.dateFin)}
                                     </span>
                                     </div>
                                     <div className="flex items-center text-[#6B7280]">
                                     <Clock className="w-4 h-4 mr-2" />
                                     <span className="text-sm">
-                                        Durée: {calculateDuration(stage.dateDebut, stage.dateFin)}
+                                        Durée: {calculateDuration(stageRecherche.dateDebut, stageRecherche.dateFin)}
                                     </span>
                                     </div>
                                 </div>
@@ -358,8 +324,8 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
 
                                 {/* Badges alignés en bas */}
                                 <div className="flex items-center gap-2 mt-4">
-                                {getTypeBadge(stage.type)}
-                                {getStatusBadge(stage.statut)}
+                                {getTypeBadge()}
+                                {getStatusBadge(stageRecherche.statut)}
                                 </div>
                             </div>
 
@@ -367,10 +333,10 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                             <div className="px-6 py-4 bg-[#F9FAFB] border-t border-[#E5E7EB] mt-auto">
                                 <div className="flex items-center justify-between">
                                 <span className="text-xs text-[#6B7280]">
-                                    Année {stage.anneeStage}
+                                    Année {stageRecherche.anneeStage}
                                 </span>
                                 <span className="text-xs text-[#6B7280]">
-                                    Créé le {formatDate(stage?.createdAt||"")}
+                                    Créé le {formatDate(stageRecherche?.createdAt||"")}
                                 </span>
                                 </div>
                             </div>
@@ -399,9 +365,9 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 />}
             </div>
         </div>
-        <FormDelete stage={selectedStage} />
+        <FormDelete stageRecherche={selectedStageRecherche} />
     </>
   );
 };
 
-export default HistoriqueStages;
+export default MandatTab;

@@ -1,19 +1,25 @@
 
 
-interface MandatRecherche {
+interface StageRecherche {
+    _id?:string,
+    nomFr:string;
+    nomEn:string;
+    nom?:string;
     chercheur:Chercheur,
     statut: string,
     superviseur:Utilisateur;
     structure:Structure;
     dateDebut:string;
     dateFin: string;
-    noteService:Service
+    anneeStage:number;
+    noteService?:Service,
+    createdAt?:string
 }
 
 
-interface MandatRechercheInitialData {
+interface StageRechercheInitialData {
     data: {
-        mandatRecherches: MandatRecherche[];
+        stageRecherches: StageRecherche[];
         currentPage: number;
         totalPages: number;
         totalItems: number;
@@ -23,33 +29,45 @@ interface MandatRechercheInitialData {
     pageError: string | null;
 }
 
-interface CreateMandatRecherchePayload {
-    mandatRecherche: MandatRecherche; // Données de l'événement à créer
+interface CreateStageRecherchePayload {
+    stageRecherche: StageRecherche; // Données de l'événement à créer
 }
 
-interface UpdateMandatRecherchePayload {
+interface UpdateStageRecherchePayload {
     id: string; // ID de l'événement à mettre à jour
-    mandatRechercheData: Partial<MandatRecherche>; // Données mises à jour de l'événement
+    stageRechercheData: Partial<StageRecherche>; // Données mises à jour de l'événement
 }
-interface DeleteMandatRecherchePayload {
+interface DeleteStageRecherchePayload {
     id: string; // ID de l'événement à supprimer
 }
 interface UpdateRolePayload {
     id: string; // ID de l'événement à mettre à jour
-    mandatRechercheData: Partial<MandatRecherche>; // Données mises à jour de l'événement
+    stageRechercheData: Partial<StageRecherche>; // Données mises à jour de l'événement
 }
-interface MandatRechercheReturnGetType {
-    mandatRecherches: MandatRecherche[];
+interface StageRechercheReturnGetType {
+    stageRecherches: StageRecherche[];
     currentPage: number;
     totalItems: number;
     totalPages: number;
     pageSize: number;
 }
 
-// Interface pour les propriétés minimales de l'mandatRecherche
-interface PropsMandatRecherchesMinState {
+// Interface pour les propriétés minimales de l'stageRecherche
+interface PropsStageRecherchesMinState {
     _id: string;
     role: string;
     nom: string;
     prenom: string | null;
+}
+
+interface CreateStageRechercheInput {
+    nomFr:string;
+    nomEn:string;
+    chercheur?: string; // _id pour individuel
+    dateDebut: string;
+    dateFin: string;
+    anneeStage: number;
+    statut: string;
+    superviseur:string;
+    structure:string;
 }

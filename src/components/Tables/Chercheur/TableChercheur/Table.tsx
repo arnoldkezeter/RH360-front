@@ -7,7 +7,7 @@ import BodyTable from "./BodyTable";
 
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../_redux/store";
-import { setErrorPageChercheur, setChercheursLoading } from "../../../../_redux/features/chercheurSlice";
+import { setErrorPageChercheur, setChercheursLoading } from "../../../../_redux/features/chercheurs/chercheurSlice";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import Pagination from "../../../Pagination/Pagination";
 import { getChercheursByFiltres } from "../../../../services/chercheurs/chercheurAPI";

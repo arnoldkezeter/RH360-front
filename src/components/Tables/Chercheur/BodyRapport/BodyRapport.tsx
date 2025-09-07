@@ -19,19 +19,19 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
 
   // Prépare les données des établissements avec label dynamique
   const etablissementsData = useMemo(() => {
-    return (data.chercheursParEtablissement || []).map((item: any) => ({
+    return (data.stagiairesParEtablissement || []).map((item: any) => ({
       ...item,
       label: lang === 'fr' ? item.etablissement.nomFr : item.etablissement.nomEn,
     }));
-  }, [data.chercheursParEtablissement, lang]);
+  }, [data.stagiairesParEtablissement, lang]);
 
-  // Prépare les données des structures avec label dynamique
-  const structuresData = useMemo(() => {
-    return (data.repartitionParStructure || []).map((item: any) => ({
+  // Prépare les données des services avec label dynamique
+  const servicesData = useMemo(() => {
+    return (data.repartitionParService || []).map((item: any) => ({
       ...item,
       label: lang === 'fr' ? item.nomFr : item.nomEn,
     }));
-  }, [data.repartitionParStructure, lang]);
+  }, [data.repartitionParService, lang]);
 
   // Prépare les données des superviseurs avec nom + prenom concaténés
   const superviseursData = useMemo(() => {
@@ -44,7 +44,7 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
   // Largeurs dynamiques pour scroll horizontal si beaucoup d'éléments
   const chartWidthEtablissement = Math.min(Math.max(etablissementsData.length * 120, 600), 1500);
   const chartWidthSuperviseur = Math.min(Math.max(superviseursData.length * 80, 600), 1500);
-  const chartHeightStructure = 300;
+  const chartHeightService = 300;
 
   // Cartes Statistiques
   const StatCard = ({ title, value, icon: Icon, color }: any) => (
@@ -105,8 +105,8 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
       {/* Cartes statistiques */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading?<Skeleton height={100}/>:<StatCard
-          title={t("label.total_chercheurs")}
-          value={data.totalChercheurs ?? 0}
+          title={t("label.total_stagiaires")}
+          value={data.totalStagiaires ?? 0}
           icon={Users}
           color="from-[#6366F1] to-[#8B5CF6]"
         />}
@@ -117,8 +117,8 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
           color="from-[#10B981] to-[#059669]"
         />}
         {isLoading?<Skeleton height={100}/>:<StatCard
-          title={t("label.chercheurs_par_superviseur")}
-          value={data.moyenneChercheursParSuperviseur ?? 0}
+          title={t("label.stagiaires_par_superviseur")}
+          value={data.moyenneStagiairesParSuperviseur ?? 0}
           icon={TrendingUp}
           color="from-[#F59E0B] to-[#D97706]"
         />}
@@ -144,7 +144,7 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
 
       {/* Diagramme superviseurs */}
       <div className="bg-white p-4 rounded-2xl shadow-md">
-        <h3 className="text-lg font-semibold mb-2">{t("label.repartition_chercheur_par_superviseur")}</h3>
+        <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_superviseur")}</h3>
         {isLoading?<Skeleton height={320}/>:(superviseursData && superviseursData.length===0)?
           <NoData/>
         : <div style={{ overflowX: 'auto' }}>
@@ -164,22 +164,22 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
         </div>}
       </div>
 
-      {/* Diagramme par structure */}
+      {/* Diagramme par service */}
       <div className="bg-white p-4 rounded-2xl shadow-md">
-        <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_structure")}</h3>
-         {isLoading?<Skeleton height={320}/>:(structuresData && structuresData.length===0)?
+        <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_service")}</h3>
+         {isLoading?<Skeleton height={320}/>:(servicesData && servicesData.length===0)?
           <NoData/>
         : <div className="overflow-x-auto" style={{ width: '100%' }}>
           <div
             style={{
-              width: structuresData.length > 10 ? `${structuresData.length * 120}px` : '100%',
-              height: chartHeightStructure,
+              width: servicesData.length > 10 ? `${servicesData.length * 120}px` : '100%',
+              height: chartHeightService,
             }}
           >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 layout="vertical"
-                data={structuresData}
+                data={servicesData}
                 margin={{ top: 20, right: 30, left: 100, bottom: 20 }}
               >
                 <XAxis type="number" />
@@ -191,16 +191,16 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
                 />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="nombreChercheurs" fill="#8884d8" name={t("label.nombre_chercheurs")} />
+                <Bar dataKey="nombreStagiaires" fill="#8884d8" name={t("label.nombre_stagiaires")} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>}
       </div>
 
-      {/* Diagramme chercheurs par établissement */}
+      {/* Diagramme stagiaires par établissement */}
       <div className="bg-white p-4 rounded-2xl shadow-md">
-        <h3 className="text-lg font-semibold mb-2">{t("label.repartition_chercheur_par_etablissement")}</h3>
+        <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_etablissement")}</h3>
          {isLoading?<Skeleton height={320}/>:(etablissementsData && etablissementsData.length===0)?
           <NoData/>
         : <div style={{ overflowX: 'auto' }}>

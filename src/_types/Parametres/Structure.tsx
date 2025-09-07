@@ -40,3 +40,17 @@ interface StructureReturnGetType {
     totalPages: number;
     pageSize : number;
 }
+
+interface StructureAssignment {
+  structureId?: string;
+  superviseurId?: string;
+  dateDebut?: string;
+  dateFin?: string;
+  _structureRef?:Structure;
+  _superviseurRef?:Utilisateur;
+}
+
+
+interface StructureGroupAssignment extends Structure {
+  superviseur?: Utilisateur;
+}

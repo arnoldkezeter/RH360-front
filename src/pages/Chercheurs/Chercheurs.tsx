@@ -11,7 +11,7 @@ import {
     setErrorPageChercheur, 
     setChercheurs, 
     setChercheursLoading 
-} from "../../_redux/features/chercheurSlice";
+} from "../../_redux/features/chercheurs/chercheurSlice";
 import { setShowModal } from "../../_redux/features/setting";
 import { useFetchData } from "../../hooks/fechDataOptions";
 import FormCreateUpdate from "../../components/Modals/Chercheur/ModalChercheur/FormCreateUpdate";

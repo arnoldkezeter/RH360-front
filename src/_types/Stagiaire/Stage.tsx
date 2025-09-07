@@ -6,11 +6,12 @@ interface AffectationFinale {
   dateFin: string;          // ISO string
   superviseur?: Utilisateur;     // _id du superviseur
   service?: Service;         // _id du service (optionnel)
+  groupe?:Groupe;
 }
 
 // Rotation : affectation temporaire d'un stagiaire ou groupe à un service et superviseur pendant une période donnée
 interface Rotation {
-  _id: string;
+  _id?: string;
   stage: Stage;          // _id du stage (INDIVIDUEL ou GROUPE)
   service: Service;        // _id du service
   superviseur: Utilisateur;    // _id du superviseur
@@ -35,7 +36,7 @@ interface ServiceFinal {
 // Groupe (stages groupe)
 interface Groupe {
   _id?: string;
-  nom: string;
+  numero:number;
   stagiaires: Stagiaire[];     // Liste des _id des stagiaires dans ce groupe
   stage?: Stage;            // _id du stage parent
   serviceFinal?: ServiceFinal;
@@ -125,7 +126,7 @@ interface CreateStageInput {
     stagiaires: string[]; // liste _id stagiaires
   }>;
   rotations?: Array<{
-    groupe?: string;       // _id groupe (pour groupe)
+    groupe?: number;       // _id groupe (pour groupe)
     stagiaire?: string;    // _id stagiaire (pour individuel)
     service: string;       // _id service
     superviseur: string;   // _id superviseur
@@ -133,7 +134,7 @@ interface CreateStageInput {
     dateFin: string;       // ISO date string
   }>;
   affectationsFinales?: Array<{
-    groupe?: string;
+    groupe?: number;
     stagiaire?: string;
     service: string;
     superviseur?: string;
