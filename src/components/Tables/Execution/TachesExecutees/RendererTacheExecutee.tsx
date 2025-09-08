@@ -13,6 +13,7 @@ import TacheCard from "../../../ui/TacheExecute/TaskCard";
 import { TYPE_TACHE } from "../../../../config";
 import Skeleton from "react-loading-skeleton";
 import { NoData } from "../../../NoData";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -40,6 +41,7 @@ interface RendererTacheExecuteeProps {
 const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, etats, progression, currentPage, currentFormation, currentProgrammeFormation, currentTheme, currentEtat, onPageChange, onFormationChange, onProgrammeFormationChange, onThemeChange, onEtatTacheChange, onEdit}: RendererTacheExecuteeProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const typeTaches = Object.values(TYPE_TACHE);
     
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
@@ -76,6 +78,15 @@ const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, 
         if (selected) {
             onEtatTacheChange(selected);  
         }
+    };
+
+  
+
+    const handleOpenChat = (tache: TacheThemeFormation) => {
+        console.log(`Ouverture du chat pour la tâche : ${tache.tache.nomFr} avec l'ID d'entité : ${tache.tache._id}`);
+        // Ici, vous pouvez rediriger l'utilisateur vers la page de chat
+        // en passant l'ID de la tâche comme paramètre d'URL.
+        navigate(`/chat?tacheId=${tache.tache._id}&entityType=TacheExecutee`);
     };
 
    
@@ -269,6 +280,7 @@ const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, 
                                         typeTaches={typeTaches} 
                                         lang={lang} 
                                         onExecute={()=>onEdit(t)} 
+                                        onOpenChat={()=>handleOpenChat(t)}
                                     />
                                 ))}
                             </div>

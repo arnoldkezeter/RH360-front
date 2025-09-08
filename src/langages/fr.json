@@ -158,6 +158,8 @@
   },
   
   "label": {
+    "cree_chat":"Créer un nouveau chat",
+    "chat":"Chat",
     "progression_globale":"Progression globale",
     "a_faire":"A faire",
     "executer":"Exécuter",

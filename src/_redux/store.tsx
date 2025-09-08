@@ -28,6 +28,7 @@ import objectifThemeReducer from "./features/elaborations/objectifThemeSlice.tsx
 import formateurReducer from "./features/elaborations/formateurSlice.tsx"
 import tacheGeneriqueReducer from "./features/parametres/tacheGeneriqueSlice.tsx"
 import tacheThemeFormationReducer from "./features/elaborations/tacheThemeFormationSlice.tsx"
+import chatReducer from "./features/execution/chatSlice.tsx"
 import budgetFormationReducer from "./features/elaborations/budgetFormationSlice.tsx"
 import depenseReducer from "./features/execution/depenseSlice.tsx"
 import supportFormationReducer from "./features/execution/supportFormationSlice.tsx"
@@ -73,6 +74,7 @@ const store = configureStore({
     formateurSlice:formateurReducer,
     tacheGeneriqueSlice:tacheGeneriqueReducer,
     tacheThemeFormationSlice:tacheThemeFormationReducer,
+    chatSlice:chatReducer,
     budgetFormationSlice:budgetFormationReducer,
     depenseSlice:depenseReducer,
     supportFormationSlice:supportFormationReducer,

@@ -10,7 +10,7 @@ interface Chercheur {
     photoDeProfil?:string;
     domaineRecherche:string;
     etablissement: Etablissement,
-    mandats?:MandatRecherche
+    stage?:StageRecherche
     commune?:Commune;
     actif: boolean,
 }

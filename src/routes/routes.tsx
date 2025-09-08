@@ -51,6 +51,7 @@ import TachesExecutees from '../pages/Execution/TachesExecutees';
 import StageRechercheManagement from '../pages/Chercheurs/StageRecherches';
 import RapportStage from '../pages/Chercheurs/RapportsStageRecherche';
 import GenerationNoteDeServiceManager from '../pages/NotesDeService/GenerationNoteDeService';
+import ChatManager from '../pages/Execution/Chat';
 
 
 
@@ -156,6 +157,12 @@ const coreRoutes = [
     path: '/execution-programme/tache-executee',
     title: 'Tache a executé durant une formation',
     component: TachesExecutees,
+  },
+
+  {
+    path: '/chat',
+    title: 'Chat',
+    component: ChatManager,
   },
 
   {
