@@ -8,6 +8,9 @@ import createToast from '../../../../../hooks/toastify';
 import { createObjectifTheme, updateObjectifTheme } from '../../../../../services/elaborations/objectifThemeAPI';
 import { createObjectifThemeSlice, updateObjectifThemeSlice } from '../../../../../_redux/features/elaborations/objectifThemeSlice';
 import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
+import { checkQueryParam, getTacheAndUserId, hasTacheExecution } from '../../../../../fonctions/fonction';
+import { useLocation } from 'react-router-dom';
+import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
 
 
 function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifTheme | null, themeId:string }) {
@@ -18,7 +21,8 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     
-    
+    const {tacheId, userId}=getTacheAndUserId();
+                        console.log(tacheId)
 
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
@@ -91,7 +95,7 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
                     nomFr,
                     nomEn
                 }, themeId,lang
-            ).then((e: ReponseApiPros) => {
+            ).then(async (e: ReponseApiPros) => {
                 
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -105,6 +109,10 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
 
                     }));
 
+                    if(hasTacheExecution()){
+                        const {tacheId, userId}=getTacheAndUserId();
+                        await updateStatutTacheThemeFormation({tacheId:tacheId||"", currentUser:userId||"", statut:"EN_ATTENTE",donnees:'check', lang})
+                    }
                     closeModal();
 
                 } else {

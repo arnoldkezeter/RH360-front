@@ -143,7 +143,7 @@ export async function addMessage(chatId: string, senderId:string, content: strin
  * @param limit - Le nombre de messages par page.
  * @returns Une promesse avec les messages paginés.
  */
-export async function getChatMessages({chatId,userId, lang, page, limit}:{chatId: string,userId:string, lang: string, page: number, limit: number}): Promise<ApiResponse<any>> {
+export async function getChatMessages({chatId,userId, lang, page, limit}:{chatId: string,userId:string, lang: string, page: number, limit: number}): Promise<any> {
   try {
     const response = await axios.get(`${api}/${chatId}/${userId}/messages?page=${page}&limit=${limit}`, {
       headers: {
@@ -164,9 +164,9 @@ export async function getChatMessages({chatId,userId, lang, page, limit}:{chatId
  * @param lang - La langue de la requête.
  * @returns Une promesse avec la réponse de l'API.
  */
-export async function markMessagesAsRead(chatId: string, lang: string): Promise<ApiResponse<any>> {
+export async function markMessagesAsRead({chatId, userId, lang}:{chatId: string, userId:string, lang: string}): Promise<ApiResponse<any>> {
   try {
-    const response = await axios.patch(`${api}/${chatId}/messages/read`, {}, {
+    const response = await axios.patch(`${api}/${chatId}/messages/read/${userId}`, {}, {
       headers: {
         'accept-language': lang,
         'authorization': token,

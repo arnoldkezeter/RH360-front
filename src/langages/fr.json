@@ -158,6 +158,20 @@
   },
   
   "label": {
+    "type_tache_executee":"Tache executée",
+    "participants_ajoutes":"Participant ajoutés",
+    "tache_en_attente":"Pourcentage des tâches en attente",
+    "tache_executee":"Pourcentage des tâches exécuté",
+    "participant":"Participant",
+    "sujet":"Sujet",
+    "envoyer_message":"Envoyer un message ?",
+    "votre_message": "Votre message",
+    "saisir_message": "Saisissez votre message ici...",
+    "marquer_tache":"Marquer la tâche comme terminée ?",
+    "marquer":"Marquer la tâche ",
+    "comme_achever": "comme achevée pour le thème : ",
+    "generer_fichier":"Générer le fichier ?",
+    "upload_fichier":"Uploader le fichier ?",
     "cree_chat":"Créer un nouveau chat",
     "chat":"Chat",
     "progression_globale":"Progression globale",
@@ -733,6 +747,7 @@
   },
 
   "button":{
+    "marquer_executer":"Marquer comme exécutée",
     "mettre_a_jour":"Mettre à jour",
     "sauvegarder":"Sauvegarder",
     "annuler":"Annuler",

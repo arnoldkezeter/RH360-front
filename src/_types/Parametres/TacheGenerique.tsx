@@ -2,6 +2,7 @@
 // Définir le type de données pour une tacheGenerique
 interface TacheGenerique {
     _id?: string;
+    code?:string;
     nomFr: string;
     nomEn: string;
     descriptionFr?:string;

@@ -26,6 +26,11 @@ interface SettingState {
         openEnseignement:boolean,
         openPeriode:boolean,
         toDoSondage: boolean,
+
+        openCheckTask:boolean,
+        openGenerateDoc:boolean,
+        openUploadDoc:boolean,
+        openEmail:boolean
     };
     currentIndexUserRole: number,
 }
@@ -55,6 +60,11 @@ const initialState: SettingState = {
         openEnseignement:false,
         openPeriode:false,
         toDoSondage: false,
+
+        openCheckTask:false,
+        openGenerateDoc:false,
+        openUploadDoc:false,
+        openEmail:false
     },
     currentIndexUserRole: 0,
 };
@@ -116,6 +126,23 @@ export const settingSlice = createSlice({
             state.showModal.open = !state.showModal.open;
         },
 
+        setShowModalCheckTask: (state) => {
+            state.showModal.openCheckTask = !state.showModal.openCheckTask;
+        },
+
+        setShowModalGenerateDoc: (state) => {
+            state.showModal.openGenerateDoc= !state.showModal.openGenerateDoc;
+        },
+
+        setShowModalUploadDoc: (state) => {
+            state.showModal.openUploadDoc= !state.showModal.openUploadDoc;
+        },
+
+        setShowModalEmail: (state) => {
+            state.showModal.openEmail= !state.showModal.openEmail;
+        },
+
+
         setShowModalEvaluation: (state) => {
             state.showModal.openEvaluation = !state.showModal.openEvaluation;
         },
@@ -174,6 +201,10 @@ export const {
     setPeriodeIndex,
     setShowModalDeleteCustom,
     setShowModalCustom,
+    setShowModalCheckTask,
+    setShowModalGenerateDoc,
+    setShowModalUploadDoc,
+    setShowModalEmail,
     setShowLanguage, setShowModalCreate, setShowModalUpdate, setShowModalDelete, setShowModalDetails, setShowModal, setShowModalToDOSondage
     , setSaveDeviceType,setShowRoleModal, setShowModalPeriode, setShowModalElement, setShowModalPresence, setShowModalOpenScan, setShowModalCompetence, setShowModalNotificationDetails,
     setCurrentIndexUserRole,setShowModalEvaluation, setShowModalPresenceManuelle, setUserPermission, addUserPemission, removeUserPemission, setSelectedUserPermission, setSelectedUserRole

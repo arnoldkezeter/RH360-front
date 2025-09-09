@@ -5,6 +5,50 @@ const api = `${apiUrl}/formations`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
+
+export async function sendInvitations({formationId, sujet, content, lang, participant }: {formationId:string, sujet:string, content:string, lang:string, participant:boolean}): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/invitation/${formationId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+                params:{
+                  subject:sujet,
+                  content,
+                  participant
+                }
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating Formation:', error);
+        throw error;
+    }
+}
+
+export async function uploadFile(fichier: File|null,lang: string): Promise<ReponseApiPros> {
+    try {
+        const formData = new FormData();
+        
+        if(fichier) formData.append('fichier', fichier);
+
+        const response = await axios.post(`${api}/upload-file`, formData, {
+            headers: {
+                'accept-language': lang,
+                'authorization': token,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erreur création support formation :', error);
+        throw error;
+    }
+}
 export async function createFormation({titreFr, titreEn, descriptionFr, descriptionEn, axeStrategique, programmeFormation }: Formation, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(

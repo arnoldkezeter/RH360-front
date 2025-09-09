@@ -115,6 +115,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                     dateDebut,
                     dateFin,
                     tache:tacheGenerique,
+                    statut:"A_FAIRE",
                 },selectedTheme?._id||"", lang
             ).then((e: ReponseApiPros) => {
                 
@@ -128,6 +129,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                             dateFin: e.data.dateFin,
                             theme: e.data.theme,
                             tache: e.data.tache,
+                            statut: e.data.statut
                         }
 
                     }));
@@ -150,6 +152,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                     dateDebut,
                     dateFin,
                     tache:tacheGenerique,
+                    statut:"A_FAIRE"
                 }, lang).then((e: ReponseApiPros) => {
                     if (e.success) {
                         createToast(e.message, '', 0);

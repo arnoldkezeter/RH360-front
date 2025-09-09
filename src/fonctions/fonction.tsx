@@ -13,6 +13,30 @@ export function capitalizeFirstLetter(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
+export function checkQueryParam(url: string, paramName: string, expectedValue: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    const params = new URLSearchParams(urlObj.search);
+    return params.get(paramName) === expectedValue;
+  } catch (error) {
+    console.error('URL invalide:', error);
+    return false;
+  }
+}
+
+export function hasTacheExecution(): boolean {
+  return new URLSearchParams(window.location.search).get('tache') === 'execution';
+}
+
+export function getTacheAndUserId(): { tacheId: string | null; userId: string | null } {
+
+  const params = new URLSearchParams(window.location.search);
+  return {
+    tacheId: params.get('tacheId'),
+    userId: params.get('userId')
+  };
+}
+
 export const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     day: 'numeric',

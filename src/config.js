@@ -69,9 +69,10 @@ export const STATUT_TACHE_STAGIAIRE={
 }
 
 export const STATUT_TACHE_THEME={
-    TERMINE: { nomFr: "Terminée", nomEn: "Completed", key:"termine" },
-    EN_COURS: { nomFr: "En cours", nomEn: "In progress", key:"en_cours" },
-    A_FAIRE: { nomFr: "À faire", nomEn: "To do", key:"a_faire" },
+    TERMINE: { nomFr: "Terminée", nomEn: "Completed", key:"TERMINE" },
+    EN_COURS: { nomFr: "En cours", nomEn: "In progress", key:"EN_COURS" },
+    EN_ATTENTE: { nomFr: "En cours de vérification", nomEn: "Being validated", key:"EN_ATTENTE" },
+    A_FAIRE: { nomFr: "À faire", nomEn: "To do", key:"A_FAIRE" },
 }
 
 export const NIVEAU_AUTO_EVALUATION = {

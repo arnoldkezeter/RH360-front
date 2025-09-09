@@ -9,6 +9,8 @@ import { createLieuFormation, updateLieuFormation } from '../../../../../service
 import { createLieuFormationSlice, updateLieuFormationSlice } from '../../../../../_redux/features/elaborations/lieuFormationSlice';
 import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
 import { SearchSelectComponent } from '../../../../ui/SearchSelectComponent';
+import { hasTacheExecution, getTacheAndUserId } from '../../../../../fonctions/fonction';
+import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
 
 
 function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuFormation | null, themeId:string }) {
@@ -93,7 +95,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                     lieu,
                     cohortes:selectedCohortes
                 }, themeId,lang
-            ).then((e: ReponseApiPros) => {
+            ).then(async (e: ReponseApiPros) => {
                 
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -106,7 +108,10 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                         }
 
                     }));
-
+                    if(hasTacheExecution()){
+                        const {tacheId, userId}=getTacheAndUserId();
+                        await updateStatutTacheThemeFormation({tacheId:tacheId||"", currentUser:userId||"", statut:"EN_ATTENTE",donnees:'check', lang})
+                    }
                     closeModal();
 
                 } else {

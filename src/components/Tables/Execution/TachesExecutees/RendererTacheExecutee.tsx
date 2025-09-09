@@ -29,7 +29,8 @@ interface RendererTacheExecuteeProps {
     currentFormation?:Formation;
     currentTheme?:ThemeFormation;
     currentEtat?:EtatTache; 
-    progression:number;
+    progressionExecuter:number;
+    progressionEnAttente:number;
     onPageChange: (page: number) => void;
     onFormationChange:(formation:Formation)=>void;
     onProgrammeFormationChange:(programmeFormation:ProgrammeFormation)=>void;
@@ -38,7 +39,7 @@ interface RendererTacheExecuteeProps {
     onEdit: (tacheThemeFormation : TacheThemeFormation) => void;
 }
 
-const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, etats, progression, currentPage, currentFormation, currentProgrammeFormation, currentTheme, currentEtat, onPageChange, onFormationChange, onProgrammeFormationChange, onThemeChange, onEtatTacheChange, onEdit}: RendererTacheExecuteeProps) => {
+const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, etats, progressionExecuter, progressionEnAttente, currentPage, currentFormation, currentProgrammeFormation, currentTheme, currentEtat, onPageChange, onFormationChange, onProgrammeFormationChange, onThemeChange, onEtatTacheChange, onEdit}: RendererTacheExecuteeProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -263,10 +264,20 @@ const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, 
 
 
                 {/* <div className="bg-white rounded-xl shadow p-6"> */}
-                    <div className="mt-10">
-                        <h4 className="text-sm font-medium text-[#374151] mb-2">{t('label.progression_globale')}</h4>
-                        <ProgressBar value={progression}  />
-                        <p className="text-right text-sm text-[#6B7280] mt-1">{progression}%</p>
+                    <div className="mt-10 flex justify-between gap-8">
+                        {/* Conteneur de la barre de progression gauche */}
+                        <div className="flex-1">
+                            <h4 className="text-sm font-medium text-[#374151] mb-2">{t('label.tache_en_attente')}</h4>
+                            <ProgressBar value={progressionEnAttente} />
+                            <p className="text-right text-sm text-[#6B7280] mt-1">{progressionEnAttente}%</p>
+                        </div>
+
+                        {/* Conteneur de la barre de progression droite */}
+                        <div className="flex-1">
+                            <h4 className="text-sm font-medium text-[#374151] mb-2">{t('label.tache_executee')}</h4>
+                            <ProgressBar value={progressionExecuter} />
+                            <p className="text-right text-sm text-[#6B7280] mt-1">{progressionExecuter}%</p>
+                        </div>
                     </div>
                     <h2 className="text-lg font-semibold mb-4">{t('label.liste_tache')}</h2>
                     {pageIsLoading?

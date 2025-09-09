@@ -14,12 +14,13 @@ import Pagination from '../../components/Pagination/Pagination';
 import createToast from '../../hooks/toastify';
 import FilterList from '../../components/ui/AutoComplete';
 import { getFilteredThemeFormations } from '../../services/elaborations/themeFormationAPI';
-import { getEchellesMinMax, truncateText } from '../../fonctions/fonction';
+import { getEchellesMinMax, getTacheAndUserId, hasTacheExecution, truncateText } from '../../fonctions/fonction';
 import { NoData } from '../../components/NoData';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
 import FormDelete from '../../components/Modals/Evaluation/ModalEvaluationAChaud/FormDelete';
 import { setShowModalDelete } from '../../_redux/features/setting';
 import Skeleton from 'react-loading-skeleton';
+import { updateStatutTacheThemeFormation } from '../../services/elaborations/tacheThemeFormationAPI';
 
 const EvaluationManager = () => {
   const dispatch = useDispatch();
@@ -400,7 +401,10 @@ const EvaluationManager = () => {
         // Mode édition
         const evaluation = newEvaluation as EvaluationChaud;
         const response = await updateEvaluationAChaud(editingEvaluation, evaluation, lang);
-        
+        if(hasTacheExecution()){
+            const {tacheId, userId}=getTacheAndUserId();
+            await updateStatutTacheThemeFormation({tacheId:tacheId||"", currentUser:userId||"", statut:"EN_ATTENTE",donnees:'check', lang})
+        }
         if (response.success) {
           createToast(response.message, '', 0);
           dispatch(updateEvaluationChaudSlice({

@@ -6,9 +6,9 @@ interface TacheThemeFormation{
     dateFin?: string
     estExecutee?: boolean
     fichierJoint?: string
-    donnees?: Record<string, any>,
+    donnees?: any,
     dateExecution?: string
-    responsable: Utilisateur, // Celui qui exécute
+    responsable?: Utilisateur, // Celui qui exécute
     statut: string,
     commentaires?: string,
 }
