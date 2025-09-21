@@ -165,7 +165,7 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
       </div>
 
       {/* Diagramme par structure */}
-      <div className="bg-white p-4 rounded-2xl shadow-md">
+      {/* <div className="bg-white p-4 rounded-2xl shadow-md">
         <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_structure")}</h3>
          {isLoading?<Skeleton height={320}/>:(structuresData && structuresData.length===0)?
           <NoData/>
@@ -196,7 +196,7 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
             </ResponsiveContainer>
           </div>
         </div>}
-      </div>
+      </div> */}
 
       {/* Diagramme chercheurs par établissement */}
       <div className="bg-white p-4 rounded-2xl shadow-md">

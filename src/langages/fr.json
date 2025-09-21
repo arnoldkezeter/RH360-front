@@ -158,6 +158,8 @@
   },
   
   "label": {
+    "superviseur":"Superviseur",
+    "chercheurs_par_superviseur":"Chercheurs par superviseur",
     "type_tache_executee":"Tache executée",
     "participants_ajoutes":"Participant ajoutés",
     "tache_en_attente":"Pourcentage des tâches en attente",
@@ -388,6 +390,9 @@
     "aucune_famille_metier":"Aucune famille trouvée",
     "aucune_cohorte":"Aucune cohorte trouvé",
     "aucun_formateur":"Aucun formateur trouvé",
+    "aucun_stagiaire":"Aucun stagiaire trouvé",
+    "aucun_superviseur":"Aucun superviseur trouvé",
+    "aucun_chercheur":"Aucun chercheur trouvé",
     "recherche_theme_formation":"Recherche des thèmes de formation...",
     "recherche_responsable":"Recherche des responsables...",
     "recherche_tache_formation":"Recherche des tâches de formation...",
@@ -397,6 +402,9 @@
     "recherche_famille_metier":"Recherche des familles...",
     "recherche_cohorte":"Recherche des cohortes...",
     "recherche_formateur":"Recherche des formateurs...",
+    "recherche_stagiaire":"Recherche des stagiaires...",
+    "recherche_superviseur":"Recherche des superviseur...",
+    "recherche_chercheur":"Recherche d'un chercheur...",
     "tapez_car_deb":"Tapez au moins",
     "tapez_car_fin":"caractères pour lancer la recherche.",
     
@@ -705,7 +713,7 @@
   "recherche": {
     "rechercher": "Rechercher ",
 
-    
+    "mandat":"un mandat",
     "evaluation_a_chaud":"une évaluation",
     "type_echelle_reponse":"un type de réponse",
     "echelle_reponse":"une échelle de réponse",
@@ -732,6 +740,7 @@
     "stagiaire":"un stagiaire",
     "chercheur":"un chercheur",
     "responsable":"un responsable",
+    "superviseur":"un superviseur",
 
     "formation":"une formation",
     "theme_formation":"un thème de formation",

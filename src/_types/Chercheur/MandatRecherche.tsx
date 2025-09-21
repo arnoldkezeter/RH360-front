@@ -8,7 +8,6 @@ interface StageRecherche {
     chercheur:Chercheur,
     statut: string,
     superviseur:Utilisateur;
-    structure:Structure;
     dateDebut:string;
     dateFin: string;
     anneeStage:number;
@@ -69,5 +68,4 @@ interface CreateStageRechercheInput {
     anneeStage: number;
     statut: string;
     superviseur:string;
-    structure:string;
 }

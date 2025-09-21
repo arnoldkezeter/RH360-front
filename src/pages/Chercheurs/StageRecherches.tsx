@@ -48,7 +48,7 @@ const StageRechercheManagement = () => {
     <div className="p-6 space-y-6 bg-white">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value="recherche">Stage de Recherche</TabsTrigger>
+          <TabsTrigger value="recherche">Mandat de Recherche</TabsTrigger>
           <TabsTrigger value="historique">Historique</TabsTrigger>
         </TabsList>
         

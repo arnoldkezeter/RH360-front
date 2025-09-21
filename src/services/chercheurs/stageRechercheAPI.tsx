@@ -7,11 +7,11 @@ const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
 
-export async function createStageRecherche({ nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut}:CreateStageRechercheInput, lang:string): Promise<ReponseApiPros> {
+export async function createStageRecherche({ nomFr,nomEn, chercheur, superviseur,  dateDebut, dateFin, anneeStage, statut}:CreateStageRechercheInput, lang:string): Promise<ReponseApiPros> {
   try {
     const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut},
+            {nomFr,nomEn, chercheur, superviseur,  dateDebut, dateFin, anneeStage, statut},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,11 +32,11 @@ export async function createStageRecherche({ nomFr,nomEn, chercheur, superviseur
   }
 }
 
-export async function updateStageRecherche({ nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut}:CreateStageRechercheInput,id:string, lang:string): Promise<ReponseApiPros> {
+export async function updateStageRecherche({ nomFr,nomEn, chercheur, superviseur,  dateDebut, dateFin, anneeStage, statut}:CreateStageRechercheInput,id:string, lang:string): Promise<ReponseApiPros> {
   try {
     const response: AxiosResponse<any> = await axios.put(
             `${api}/${id}`,
-            {nomFr,nomEn, chercheur, superviseur, structure,  dateDebut, dateFin, anneeStage, statut},
+            {nomFr,nomEn, chercheur, superviseur,  dateDebut, dateFin, anneeStage, statut},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -191,7 +191,7 @@ export async function getMoyenneChercheursParSuperviseur(dateDebut:string, dateF
 
 export async function getDureeMoyenneStageRecherches(dateDebut:string, dateFin:string): Promise<any> {
   try {
-    const response = await axios.get(`${api}/duree-moyenne-stagerecherches`, {
+    const response = await axios.get(`${api}/duree-moyenne-stage-recherches`, {
       
       headers: {
         'Content-Type': 'application/json',
@@ -229,26 +229,26 @@ export async function getTauxStatutStageRecherches(dateDebut:string, dateFin:str
   }
 }
 
-export async function getRepartitionChercheursParStructure(dateDebut:string, dateFin:string): Promise<any> {
-  try {
-    const response = await axios.get(`${api}/repartition-chercheurs-par-structure`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': token,
-      },
-      params:{
-        dateDebut,
-        dateFin
-      }
-    });
+// export async function getRepartitionChercheursParStructure(dateDebut:string, dateFin:string): Promise<any> {
+//   try {
+//     const response = await axios.get(`${api}/repartition-chercheurs-par-structure`, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'authorization': token,
+//       },
+//       params:{
+//         dateDebut,
+//         dateFin
+//       }
+//     });
     
-    return response.data.repartitionParStructure
-;
-  } catch (error) {
-    console.error("Erreur getRepartitionChercheursParStructure:", error);
-    throw error;
-  }
-}
+//     return response.data.repartitionParStructure
+// ;
+//   } catch (error) {
+//     console.error("Erreur getRepartitionChercheursParStructure:", error);
+//     throw error;
+//   }
+// }
 
 export async function getRepartitionChercheursParSuperviseur(dateDebut:string, dateFin:string): Promise<any> {
   try {

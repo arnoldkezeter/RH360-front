@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
-import { getDureeMoyenneStageRecherches, getMoyenneChercheursParSuperviseur, getNombreChercheursParEtablissement, getRepartitionChercheursParStructure, getRepartitionChercheursParSuperviseur, getTauxStatutStageRecherches, getTotalChercheurs, getTotalStageRecherchesTermines } from '../services/chercheurs/stageRechercheAPI';
+import { 
+  getDureeMoyenneStageRecherches, 
+  getMoyenneChercheursParSuperviseur, 
+  getNombreChercheursParEtablissement, 
+  getRepartitionChercheursParSuperviseur, 
+  getTauxStatutStageRecherches, 
+  getTotalChercheurs, 
+  getTotalStageRecherchesTermines } from '../services/chercheurs/stageRechercheAPI';
 
 
 type StatsStageRecherchesParams = {
@@ -38,7 +45,7 @@ export function useStatsStageRecherches({ dateDebut, dateFin }: StatsStageRecher
           moyenneChercheursParSuperviseur,
           dureeMoyenneStageRecherches,
           tauxStatutStageRecherches,
-          repartitionParStructure,
+          // repartitionParStructure,
           repartitionParSuperviseur,
           chercheursParEtablissement,
         //   chercheursParStatutEtEtablissement
@@ -48,7 +55,7 @@ export function useStatsStageRecherches({ dateDebut, dateFin }: StatsStageRecher
           getMoyenneChercheursParSuperviseur(dateDebut, dateFin),
           getDureeMoyenneStageRecherches(dateDebut, dateFin),
           getTauxStatutStageRecherches(dateDebut, dateFin),
-          getRepartitionChercheursParStructure(dateDebut, dateFin),
+          // getRepartitionChercheursParStructure(dateDebut, dateFin),
           getRepartitionChercheursParSuperviseur(dateDebut, dateFin),
           getNombreChercheursParEtablissement(dateDebut, dateFin),
           // getNombreChercheursParStatutEtEtablissement(dateDebut, dateFin),
@@ -60,7 +67,7 @@ export function useStatsStageRecherches({ dateDebut, dateFin }: StatsStageRecher
             moyenneChercheursParSuperviseur,
             dureeMoyenneStageRecherches,
             tauxStatutStageRecherches,
-            repartitionParStructure,
+            // repartitionParStructure,
             repartitionParSuperviseur,
             chercheursParEtablissement,
             // chercheursParStatutEtEtablissement

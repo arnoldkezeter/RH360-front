@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useStatsStages } from '../../hooks/useFetchStatStageData';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../_redux/store';
 import RapportStageBody from '../../components/Tables/Stagiaire/BodyRapport/BodyRapport';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
+import { useStatsStageRecherches } from '../../hooks/useFetchStatStageRechercheData';
 
 
 const RapportStage=()=> {
@@ -21,7 +21,7 @@ const RapportStage=()=> {
 
  
 
-  const { loading, error, data } = useStatsStages({ dateDebut:startDate?.toString()||"", dateFin:endDate?.toString()||"" });
+  const { loading, error, data } = useStatsStageRecherches({ dateDebut:startDate?.toString()||"", dateFin:endDate?.toString()||"" });
 
   
   if (error) return <div className="p-4 text-red-500">Erreur de chargement des statistiques</div>;

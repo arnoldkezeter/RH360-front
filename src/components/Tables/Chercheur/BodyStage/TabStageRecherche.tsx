@@ -48,11 +48,9 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
             setNomEn(stageRechercheToEdit.nomEn || "");
             setChercheur(stageRechercheToEdit.chercheur);
             setStructure({
-                structureId:stageRechercheToEdit.structure._id,
                 superviseurId: stageRechercheToEdit.superviseur._id,
                 dateDebut: new Date(stageRechercheToEdit.dateDebut).toISOString().split('T')[0],
                 dateFin: new Date(stageRechercheToEdit.dateFin).toISOString().split('T')[0],
-                _structureRef:stageRechercheToEdit.structure,
                 _superviseurRef:stageRechercheToEdit.superviseur
             })
             
@@ -80,16 +78,7 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
         return data?.structures || [];
     };
 
-    const handleStructureSelect = (selected: Structure | string) => {
-        if (typeof selected === "string") return
-        const updatedStructure = { 
-                ...structure, 
-                'structureId': selected?._id || "",
-                '_structureRef': selected // Conserver la référence pour l'affichage
-            } 
     
-        setStructure(updatedStructure);
-    };
 
     const handleSuperviseurSelect = (selected: Utilisateur | string) => {
         if (typeof selected === "string") return
@@ -139,7 +128,6 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                     dateFin: structure.dateFin||"",
                     anneeStage: new Date(structure.dateDebut||"").getFullYear(),
                     superviseur:structure.superviseurId||"",
-                    structure:structure.structureId||"",
                     statut: 'EN_ATTENTE',
                 }, lang).then((e: ReponseApiPros) => {
                     if (e.success) {
@@ -155,7 +143,6 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                                 anneeStage: e.data.anneStage,
                                 chercheur: e.data.chercheur,
                                 superviseur: e.data.superviseur,
-                                structure: e.data.structure
                             }
                         }));
                     } else {
@@ -174,7 +161,6 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                     dateFin: structure.dateFin||"",
                     anneeStage: new Date(structure.dateDebut||"").getFullYear(),
                     superviseur:structure.superviseurId||"",
-                    structure:structure.structureId||"",
                     statut: 'EN_ATTENTE',
                 }, stageRechercheToEdit._id||"", lang).then((e: ReponseApiPros) => {
                     if (e.success) {
@@ -191,7 +177,6 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                                 anneeStage: e.data.anneStage,
                                 chercheur: e.data.chercheur,
                                 superviseur: e.data.superviseur,
-                                structure: e.data.structure
                             }
                         }));
                     } else {
@@ -215,7 +200,7 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
             <div className="bg-gradient-to-r from-[#eff6ff] to-[#eef2ff] dark:from-[#1f2937] dark:to-[#374151] rounded-lg p-6">
                 <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-2 flex items-center gap-2">
                     <User className="w-6 h-6 text-[#2563eb]" />
-                    {stageRechercheToEdit ? 'Modifier le Stage' : 'Stage de recherche'}
+                    {stageRechercheToEdit ? 'Modifier le Mandat' : 'Mandat de recherche'}
                 </h3>
                 <p className="text-[#4b5563] dark:text-[#d1d5db] text-sm">
                     Gérez l'affectation d'un chercheur à des structure
@@ -300,33 +285,13 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                         className="p-4 bg-[#f9fafb] dark:bg-[#374151] rounded-lg border-l-4 border-[#3b82f6] space-y-4"
                     >
                         {/* Première ligne : Structure et Superviseur */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Structure */}
-                            <div className="space-y-2">
-                                <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                    Structure
-                                </label>
-                                {pageIsLoading?<Skeleton height={40} />:<div className="relative">
-                                    <FilterList
-                                        items={[]}
-                                        placeholder={t('recherche.rechercher')+t('recherche.structure')}
-                                        displayProperty={(item) => `${lang==='fr'?item.nomFr:item.nomEn}`}
-                                        onSelect={(selected) => handleStructureSelect(selected)}
-                                        enableBackendSearch={true}
-                                        onSearch={onSearchStructure}
-                                        searchDelay={300}
-                                        minSearchLength={2}
-                                        defaultValue={structure._structureRef}
-                                        noResultsMessage={t('label.aucun_structure')}
-                                        loadingMessage={t('label.recherche_structure')}
-                                    />
-                                </div>}
-                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                           
 
                             {/* Superviseur */}
                             <div className="space-y-2">
                                 <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                    Superviseur
+                                    {t('label.superviseur')}
                                 </label>
                                 {pageIsLoading?<Skeleton height={40} />:<div className="relative">
                                     <FilterList
@@ -344,14 +309,43 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                                     />
                                 </div>}
                             </div>
-                        </div>
 
-                        {/* Deuxième ligne : Dates et bouton supprimer */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Date début */}
                             <div className="space-y-2">
                                 <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                    Date début
+                                    {t('label.date_debut')}
+                                </label>
+                                {pageIsLoading?<Skeleton height={40} />:<input 
+                                    type="date" 
+                                    value={structure?.dateDebut || ''}
+                                    onChange={(e) => handleStructureChange('dateDebut', e.target.value)}
+                                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" 
+                                />}
+                            </div>
+
+                            {/* Date fin avec bouton supprimer */}
+                            <div className="space-y-2">
+                                <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
+                                    {t('label.date_fin')}
+                                </label>
+                                {pageIsLoading?<Skeleton height={40} />:<div className="flex gap-2">
+                                    <input 
+                                        type="date" 
+                                        value={structure?.dateFin || ''}
+                                        onChange={(e) => handleStructureChange('dateFin', e.target.value)}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" 
+                                    />
+                                    
+                                </div>}
+                            </div>
+                        </div>
+
+                        {/* Deuxième ligne : Dates et bouton supprimer */}
+                        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Date début *
+                            <div className="space-y-2">
+                                <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
+                                    {t('label.date_debut')}
                                 </label>
                                 {pageIsLoading?<Skeleton height={40} />:<input 
                                     type="date" 
@@ -363,10 +357,10 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                                 />}
                             </div>
 
-                            {/* Date fin avec bouton supprimer */}
+                            {/* Date fin avec bouton supprimer 
                             <div className="space-y-2">
                                 <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                    Date fin
+                                    {t('label.date_fin')}
                                 </label>
                                 {pageIsLoading?<Skeleton height={40} />:<div className="flex gap-2">
                                     <input 
@@ -380,7 +374,7 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                                     
                                 </div>}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                   
                 </div>
