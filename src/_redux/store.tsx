@@ -24,6 +24,7 @@ import programmeFormationReducer from "./features/elaborations/programmeFormatio
 import formationReducer from "./features/elaborations/formationSlice.tsx";
 import themeFormationReducer from "./features/elaborations/themeFormationSlice.tsx";
 import lieuFormationReducer from "./features/elaborations/lieuFormationSlice.tsx"
+import participantFormationReducer from "./features/elaborations/participantFormationSlice.tsx"
 import objectifThemeReducer from "./features/elaborations/objectifThemeSlice.tsx"
 import formateurReducer from "./features/elaborations/formateurSlice.tsx"
 import tacheGeneriqueReducer from "./features/parametres/tacheGeneriqueSlice.tsx"
@@ -70,6 +71,7 @@ const store = configureStore({
     formationSlice:formationReducer,
     themeFormationSlice:themeFormationReducer,
     lieuFormationSlice:lieuFormationReducer,
+    participantFormationSlice:participantFormationReducer,
     objectifThemeSlice:objectifThemeReducer,
     formateurSlice:formateurReducer,
     tacheGeneriqueSlice:tacheGeneriqueReducer,

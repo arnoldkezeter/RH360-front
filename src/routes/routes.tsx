@@ -52,6 +52,7 @@ import StageRechercheManagement from '../pages/Chercheurs/StageRecherches';
 import RapportStage from '../pages/Chercheurs/RapportsStageRecherche';
 import GenerationNoteDeServiceManager from '../pages/NotesDeService/GenerationNoteDeService';
 import ChatManager from '../pages/Execution/Chat';
+import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
 
 
 
@@ -100,6 +101,14 @@ const coreRoutes = [
     title: 'Liste des objectifs de formation',
     component: ObjectifThemes,
   },
+
+  {
+    path: '/elaboration-programme/formation/theme-formation/participants',
+    title: 'Liste des participants de la formation',
+    component: ParticipantsTheme,
+  },
+
+  
 
   {
     path: '/elaboration-programme/formation/theme-formation/lieux-formation',

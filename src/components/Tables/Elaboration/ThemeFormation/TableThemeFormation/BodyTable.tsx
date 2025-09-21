@@ -115,6 +115,14 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                                 },
                             });
 
+                            listPage.push({
+                                name: t('label.participants'),
+                                handleClick: () => {
+                                    dispatch(setThemeFormationSelected(item));
+                                    navigate('/elaboration-programme/formation/theme-formation/participants');
+                                },
+                            });
+
                             // listPage.push({
                             //     name: t('label.budget'),
                             //     handleClick: () => {

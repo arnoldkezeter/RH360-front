@@ -24,6 +24,7 @@ const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
         '/elaboration-programme/besoins-formation/rapports',
         '/elaboration-programme/besoins-formation/exprimer',
         '/elaboration-programme/besoins-formation/exprimer/nouvelle-competence',
+        '/elaboration-programme/formation/theme-formation/participants',
         
         '/execution-programme/rapports-formation',
 

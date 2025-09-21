@@ -44,6 +44,7 @@
   },
 
   "sub_menu": {
+    "participants_formation":"Participants à la formation",
     "axes_strategique": "Axes stratégiques",
     "competences": "Compétences",
     "familles_metier": "Familles de métiers",
@@ -107,6 +108,7 @@
 
   
   "page_description": {
+    "participant_formation":"Gestion des participants de la formation",
     "utilisateur": "Gérez tous les utilisateurs de manière centralisée (ajout, modification, suppression).",
     "stagiaire": "Suivez les stagiaires avec une vue d'ensemble de leurs affectations.",
     "chercheur": "Suivez les chercheurs avec une vue d'ensemble de leurs affectations.",
@@ -158,6 +160,14 @@
   },
   
   "label": {
+    "aucun_utilisateur_trouve":"Aucun utilisateur trouvé",
+    "commencez_recherche":"Commencez votre recherche",
+    "recherche_en_cours":"Recherche en cours...",
+    "essayez_mot_cle":"Essayez avec d'autres mots-clés ou vérifiez l'orthographe.",
+    "tapez_car_min":"Tapez au moins 2 caractères pour débuter la recherche.",
+    "inscrits":"inscrit(s)",
+    "aucun_participant_inscrit":"Aucun participant inscrit",
+    "participant_inscrits":"Participants inscrits",
     "superviseur":"Superviseur",
     "chercheurs_par_superviseur":"Chercheurs par superviseur",
     "type_tache_executee":"Tache executée",
@@ -713,6 +723,7 @@
   "recherche": {
     "rechercher": "Rechercher ",
 
+    "participant":"un participant",
     "mandat":"un mandat",
     "evaluation_a_chaud":"une évaluation",
     "type_echelle_reponse":"un type de réponse",
@@ -756,6 +767,8 @@
   },
 
   "button":{
+    "ajouter":"Ajouter ",
+    "retirer":"Retirer",
     "marquer_executer":"Marquer comme exécutée",
     "mettre_a_jour":"Mettre à jour",
     "sauvegarder":"Sauvegarder",
