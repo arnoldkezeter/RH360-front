@@ -117,6 +117,7 @@
     "theme_formation": "Organisez les thèmes liés à chaque formation.",
     "lieu_formation": "Gérez les différents lieux de formation par cohorte.",
     "tache_formation": "Gérez les différentes tâches à exécuter durant la formation.",
+    "tache_executee":"Gérez l'exécution de vos différentes tâches.",
     "objectif_theme": "Définissez les objectifs pédagogiques de chaque thème de formation.",
     "formateur": "Gérez les différents formateurs, internes comme externes.",
     "suivi_budgetaire": "Analysez les dépenses prévues et réelles de chaque formation.",

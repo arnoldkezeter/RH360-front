@@ -44,7 +44,6 @@ const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const typeTaches = Object.values(TYPE_TACHE);
-    
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const pageIsLoading = useSelector((state: RootState) => state.tacheThemeFormationSlice.pageIsLoading);
     const [isFiltersVisible, setIsFiltersVisible] = useState(false);

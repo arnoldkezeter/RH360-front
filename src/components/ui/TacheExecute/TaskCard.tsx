@@ -202,10 +202,10 @@ const TacheCard: React.FC<TacheCardProps> = ({
 
           {/* Informations complémentaires */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-sm">
-            {tache.responsable?.nom && (
+            {tache.theme?.responsable?.nom && (
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-[#9CA3AF] flex-shrink-0" />
-                <span className="text-[#4B5563] truncate">{tache.responsable.nom}</span>
+                <span className="text-[#4B5563] truncate">{`${tache.theme?.responsable?.nom||""} ${tache.theme?.responsable?.prenom||""}`}</span>
               </div>
             )}
             {tache.dateFin && (
@@ -237,16 +237,16 @@ const TacheCard: React.FC<TacheCardProps> = ({
                   </div>
                   
                   {/* Nouveau bouton, aligné à droite par justify-between */}
-                  <button
+                 {(currentUser.role.toLowerCase()==="super-admin" || currentUser.role.toLowerCase()==="admin") && (<button
                       onClick={() => { /* Votre logique ici */ }}
                       className="w-full sm:w-auto px-4 py-2.5 bg-[#3B82F6] hover:bg-[#2563EB] text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2"
                   >
                       {/* Remplacez l'icône et le texte */}
                       <span className="hidden sm:inline">{t('button.marquer_executer')}</span>
-                  </button>
+                  </button>)}
               </div>
           )}
-        </div>
+        </div>
         {selectedTache && <FormCheckTask tache={selectedTache} />}
         {selectedTache && <FormUploadFile tache={selectedTache} />}
         {selectedTache && <FormGenerateFile tache={selectedTache} />}
