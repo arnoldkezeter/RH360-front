@@ -135,6 +135,11 @@ const TacheCard: React.FC<TacheCardProps> = ({
             dispatch(setThemeFormationSelected(selected.theme))
             navigate(`/elaboration-programme/formation/theme-formation/pariticipants-formation?tache=execution`)
           break;
+          case 'deroulement_formation' :
+            dispatch(setThemeFormationSelected(selected.theme))
+            navigate(`/elaboration-programme/formation/theme-formation/lieux-formation?tacheId=${selected._id}&userId=${currentUser._id}&tache=execution`)
+          break;
+          
         }
         break;
       

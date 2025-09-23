@@ -336,14 +336,26 @@ export function getTaxeNamesString(taxes?: Taxe[], lang = 'fr', forTable = false
 
 
 export function calculerTotalParticipantsTS(lieu: LieuFormation) {
-    const totalLieu = lieu.cohortes.reduce((totalCohortes, cohorte) => {
-      if (!cohorte.participants || !Array.isArray(cohorte.participants)) {
-        return totalCohortes;
-      }
-      return totalCohortes + cohorte.participants.length;
-    }, 0);
-    return totalLieu
-};
+  if (!lieu) return 0;
+
+  // Total des participants des cohortes
+  const totalCohortes = Array.isArray(lieu.cohortes)
+    ? lieu.cohortes.reduce((total, cohorte) => {
+        if (!cohorte || !Array.isArray(cohorte.participants)) {
+          return total;
+        }
+        return total + cohorte.participants.length;
+      }, 0)
+    : 0;
+
+  // Total des participants individuels
+  const totalIndividuels = Array.isArray(lieu.participants)
+    ? lieu.participants.length
+    : 0;
+
+  return totalCohortes + totalIndividuels;
+}
+
 
 /**
  * Calcule le montant TTC pour une dépense unique

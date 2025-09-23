@@ -21,12 +21,14 @@ export const ROLES = {
     CHERCHEUR: { nomFr: "Chercheur", nomEn: "Researcher", key: "CHERCHEUR" },
 };
 
-
 export const METHODES_VALIDATIONS = {
-    MANUELLE: { nomFr: "Manuelle", nomEn: "Manual", key: "MANUELLE" },
-    DONNEES: { nomFr: "Données", nomEn: "Data", key: "DONNEES" },
-    FICHIER: { nomFr: "Fichier", nomEn: "File", key: "FICHIER" },
-    AUTOMATIQUE: { nomFr: "Automatique", nomEn: "Automatic", key: "AUTOMATIQUE" },
+    FORM: { nomFr: "Formulaire", nomEn: "Form", key: "form" },
+    CHECKBOX: { nomFr: "Case à cocher", nomEn: "Checkbox", key: "checkbox" },
+    UPLOAD: { nomFr: "Sauvegarde de fichier", nomEn: "Upload", key: "upload" },
+    AUTO_GENERATE:{nomFr:"Génération de fichier", nomEn:"Download", key:"autoGenerate"},
+    EMAIL: { nomFr: "Envoie de message", nomEn: "Email", key: "email" },
+    EVALUATION: { nomFr: "Evaluation", nomEn: "Evaluation", key: "evaluation" },
+    TABLE_FORM: { nomFr: "Tableau", nomEn: "Table", key: "table-form" },
 };
 
 export const ETAT_TACHE = {

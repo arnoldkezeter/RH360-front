@@ -2,6 +2,11 @@ interface LieuFormation{
     _id?:string
     lieu:string,
     cohortes:Cohorte[]
+    participants:ParticipantFormation[];
+    dateDebut:string;
+    dateFin:string;
+    dateDebutEffective?:string;
+    dateFinEffective?:string;
 }
 
 

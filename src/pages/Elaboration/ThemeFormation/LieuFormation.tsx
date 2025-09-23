@@ -13,6 +13,7 @@ import Table from "../../../components/Tables/Elaboration/ThemeFormation/TableLi
 import { getFilteredLieuFormations } from "../../../services/elaborations/lieuFormationAPI";
 import { setErrorPageLieuFormation, setLieuFormationLoading, setLieuFormations } from "../../../_redux/features/elaborations/lieuFormationSlice";
 import { useNavigate } from "react-router-dom";
+import FormUpdateDatesEffectives from "../../../components/Modals/Elaboration/Formation/ModalLieuFormation/FormUpdateDatesEffectives";
 
 const LieuFormations = () => {
     const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const LieuFormations = () => {
     const fetchData = useFetchData();
     const navigate = useNavigate()
 
-    const lang = useSelector((state: RootState) => state.setting.language);
+    const lang:string = useSelector((state: RootState) => state.setting.language);
     const { data: { lieuFormations } } = useSelector((state: RootState) => state.lieuFormationSlice);
     const selectedTheme = useSelector((state: RootState) => state.themeFormationSlice.selectedTheme);
 
@@ -62,6 +63,7 @@ const LieuFormations = () => {
                 lang,
             },
             onSuccess: (data) => {
+                console.log(data)
                 dispatch(setLieuFormations(data || {
                     lieuFormations: [],
                     currentPage: 0,
@@ -108,6 +110,7 @@ const LieuFormations = () => {
                 onEdit={setSelectedLieuFormation} 
             />
             <FormCreateUpdate lieuFormation={selectedLieuFormation} themeId={selectedTheme?._id || ""} />
+             <FormUpdateDatesEffectives lieuFormation={selectedLieuFormation} themeId={selectedTheme?._id || ""} />
             <FormDelete lieuFormation={selectedLieuFormation} themeId={selectedTheme?._id || ""} />
         </>
     );

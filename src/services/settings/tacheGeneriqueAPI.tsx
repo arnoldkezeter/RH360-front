@@ -5,11 +5,11 @@ const api = `${apiUrl}/taches-generiques`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createTacheGenerique({nomFr, nomEn, descriptionFr, descriptionEn, methodeValidation }: TacheGenerique, lang:string): Promise<ReponseApiPros> {
+export async function createTacheGenerique({nomFr, nomEn, descriptionFr, descriptionEn, type }: TacheGenerique, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr, nomEn, descriptionFr, descriptionEn, methodeValidation },
+            {nomFr, nomEn, descriptionFr, descriptionEn, type },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ export async function createTacheGenerique({nomFr, nomEn, descriptionFr, descrip
     }
 }
 
-export async function updateTacheGenerique({ _id, nomFr, nomEn, descriptionFr, descriptionEn, methodeValidation }: TacheGenerique, lang:string): Promise<ReponseApiPros> {
+export async function updateTacheGenerique({ _id, nomFr, nomEn, descriptionFr, descriptionEn, type }: TacheGenerique, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {nomFr, nomEn,  descriptionFr, descriptionEn, methodeValidation },
+            {nomFr, nomEn,  descriptionFr, descriptionEn, type },
             {
                 headers: {
                     'Content-Type': 'application/json',

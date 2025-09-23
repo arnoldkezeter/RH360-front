@@ -79,6 +79,33 @@ export async function getFilteredParticipantFormations({page, lang, search, them
 }
 
 
+export async function searchParticipantFormations({lang, search, themeId }: {lang:string, search?:string, themeId:string }): Promise<ParticipantFormationReturnGetType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/filtre/${themeId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+                params: {
+                    query:search
+                },
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const participantFormations: ParticipantFormationReturnGetType = response.data.data;
+        
+        return participantFormations;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
+
 
 
 

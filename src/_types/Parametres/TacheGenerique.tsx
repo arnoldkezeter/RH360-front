@@ -7,8 +7,7 @@ interface TacheGenerique {
     nomEn: string;
     descriptionFr?:string;
     descriptionEn?:string;
-    methodeValidation:string;
-    type?: string,
+    type:string;
     obligatoire?:boolean,
 }
 

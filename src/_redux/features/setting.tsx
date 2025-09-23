@@ -15,6 +15,7 @@ interface SettingState {
         details:boolean,
         open: boolean,
         notificationDetails:boolean,
+        openDatesEffectives:boolean
         openEvaluation:boolean,
         openCompetence:boolean,
         openElement:boolean,
@@ -49,6 +50,7 @@ const initialState: SettingState = {
         details:false,
         open: false,
         notificationDetails:false,
+        openDatesEffectives:false,
         openEvaluation:false,
         openCompetence:false,
         openElement:false,
@@ -124,6 +126,10 @@ export const settingSlice = createSlice({
 
         setShowModal: (state) => {
             state.showModal.open = !state.showModal.open;
+        },
+
+        setShowModalDatesEffectives: (state) => {
+            state.showModal.openDatesEffectives = !state.showModal.openDatesEffectives;
         },
 
         setShowModalCheckTask: (state) => {
@@ -205,6 +211,7 @@ export const {
     setShowModalGenerateDoc,
     setShowModalUploadDoc,
     setShowModalEmail,
+    setShowModalDatesEffectives,
     setShowLanguage, setShowModalCreate, setShowModalUpdate, setShowModalDelete, setShowModalDetails, setShowModal, setShowModalToDOSondage
     , setSaveDeviceType,setShowRoleModal, setShowModalPeriode, setShowModalElement, setShowModalPresence, setShowModalOpenScan, setShowModalCompetence, setShowModalNotificationDetails,
     setCurrentIndexUserRole,setShowModalEvaluation, setShowModalPresenceManuelle, setUserPermission, addUserPemission, removeUserPemission, setSelectedUserPermission, setSelectedUserRole

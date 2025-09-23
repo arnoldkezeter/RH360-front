@@ -6,11 +6,11 @@ const api = `${apiUrl}/theme-formation/lieux-formation`;
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
-export async function createLieuFormation({lieu, cohortes}:LieuFormation, themeId:string, lang:string): Promise<ReponseApiPros> {
+export async function createLieuFormation({lieu, cohortes, participants, dateDebut, dateFin}:LieuFormation, themeId:string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/${themeId}/lieu`,
-            { lieu, cohortes },
+            { lieu, cohortes, participants, dateDebut, dateFin },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,11 +28,11 @@ export async function createLieuFormation({lieu, cohortes}:LieuFormation, themeI
 }
 
 
-export async function updateLieuFormation({_id, lieu, cohortes}:LieuFormation,themeId:string,lang: string): Promise<ReponseApiPros> {
+export async function updateLieuFormation({_id, lieu, cohortes, participants, dateDebut, dateFin, dateDebutEffective, dateFinEffective}:LieuFormation,themeId:string,lang: string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${themeId}/lieu/${_id}`,
-            { lieu, cohortes },
+            { lieu, cohortes, participants, dateDebut, dateFin, dateDebutEffective, dateFinEffective },
             {
                 headers: {
                     'Content-Type': 'application/json',

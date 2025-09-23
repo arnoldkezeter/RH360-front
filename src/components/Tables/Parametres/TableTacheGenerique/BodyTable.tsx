@@ -28,7 +28,7 @@ const BodyTable = ({ data, onEdit }: { data?: TacheGenerique[], onEdit: (structu
 
                  {/* methode validation */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black">
-                    <h5>{lang==="fr"?methodesValidations.find(methode=>methode.key === item?.methodeValidation)?.nomFr || "":methodesValidations.find(methode=>methode.key === item.methodeValidation)?.nomEn || ""}</h5>
+                    <h5>{lang==="fr"?methodesValidations.find(methode=>methode.key === item?.type)?.nomFr || "":methodesValidations.find(methode=>methode.key === item.type)?.nomEn || ""}</h5>
                 </td>
                 
 

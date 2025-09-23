@@ -19,14 +19,14 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
 
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
-    const [methodeValidation, setMethodeValidation] = useState<MethodeValidation>();
+    const [type, setType] = useState<MethodeValidation>();
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
     const methodesValidations = Object.values(METHODES_VALIDATIONS)
 
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
-    const [errorMethodeValidation, setErrorMethodeValidation] = useState("");
+    const [errorType, setErrorType] = useState("");
 
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -44,8 +44,8 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
             setNomEn(tacheGenerique.nomEn);
             setDescriptionFr(tacheGenerique?.descriptionFr || "");
             setDescriptionEn(tacheGenerique?.descriptionEn || "");
-            const methodeValidation = methodesValidations.find(methode=>methode.key === tacheGenerique.methodeValidation);
-            setMethodeValidation(methodeValidation)
+            const type = methodesValidations.find(methode=>methode.key === tacheGenerique.type);
+            setType(type)
 
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.tache_formation'));
@@ -53,46 +53,46 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
             setNomEn("");
             setDescriptionFr("");
             setDescriptionEn("");
-            setMethodeValidation(undefined)
+            setType(undefined)
         }
 
 
         if (isFirstRender) {
             setErrorNomEn("");
             setErrorNomFr("");
-            setErrorMethodeValidation("")
+            setErrorType("")
             setIsFirstRender(false);
         }
     }, [tacheGenerique, isFirstRender, t]);
 
     const closeModal = () => {
         setErrorNomFr("");
-        setErrorMethodeValidation("")
+        setErrorType("")
         setErrorNomEn("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
 
-    const handleMethodeValidationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedMethodeValidationNom = e.target.value;
+    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedTypeNom = e.target.value;
         var selected=null;
 
         if (lang === 'fr') {
-            selected = methodesValidations.find(methodeValidation => methodeValidation.nomFr === selectedMethodeValidationNom);
+            selected = methodesValidations.find(type => type.nomFr === selectedTypeNom);
         }
         else {
-            selected = methodesValidations.find(methodeValidation => methodeValidation.nomEn === selectedMethodeValidationNom);
+            selected = methodesValidations.find(type => type.nomEn === selectedTypeNom);
         }
         
         if(selected){
-            setMethodeValidation(selected)
-            setErrorMethodeValidation("")
+            setType(selected)
+            setErrorType("")
         }
     }
 
 
     const handleCreateUpdate = async () => {
-        if(!nomFr || !nomEn || !methodeValidation){
+        if(!nomFr || !nomEn || !type){
             if (!nomFr) {
                 setErrorNomFr(t('error.nom_fr'));
             }
@@ -100,8 +100,8 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                 setErrorNomEn(t('error.nom_en'));
             }
 
-            if (!methodeValidation) {
-                setErrorMethodeValidation(t('error.methode_validation'));
+            if (!type) {
+                setErrorType(t('error.methode_validation'));
             }
             return;
         }
@@ -114,7 +114,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                     nomEn,
                     descriptionFr,
                     descriptionEn,
-                    methodeValidation:methodeValidation.key
+                    type:type.key
                 },
                 lang
             ).then((e: ReponseApiPros) => {
@@ -127,7 +127,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                             nomEn:e.data.nomEn,
                             descriptionFr:e.data.descriptionFr,
                             descriptionEn:e.data.descriptionEn,
-                            methodeValidation:e.data.methodeValidation
+                            type:e.data.type
                         }
                     }));
 
@@ -153,7 +153,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                     nomEn,
                     descriptionFr:descriptionFr,
                     descriptionEn:descriptionEn,
-                    methodeValidation:methodeValidation.key
+                    type:type.key
                 },
                 lang
             ).then((e: ReponseApiPros) => {
@@ -167,7 +167,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                             nomEn: e.data.nomEn,
                             descriptionFr:e.data.descriptionFr,
                             descriptionEn:e.data.descriptionEn,
-                            methodeValidation:e.data.methodeValidation
+                            type:e.data.type
                             
                         }
                     }));
@@ -234,16 +234,16 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
 
                 <Label text={t('label.methode_validation')} required/>
                 <select
-                    value={methodeValidation? (lang === 'fr' ? methodeValidation.nomFr : methodeValidation.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.methode_validation')}
-                    onChange={handleMethodeValidationChange}
+                    value={type? (lang === 'fr' ? type.nomFr : type.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.methode_validation')}
+                    onChange={handleTypeChange}
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 >
                     <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.methode_validation')}</option>
-                    {methodesValidations.map(methodeValidation => (
-                        <option key={methodeValidation.key} value={(lang === 'fr' ? methodeValidation.nomFr : methodeValidation.nomEn)}>{(lang === 'fr' ? methodeValidation.nomFr : methodeValidation.nomEn)}</option>
+                    {methodesValidations.map(type => (
+                        <option key={type.key} value={(lang === 'fr' ? type.nomFr : type.nomEn)}>{(lang === 'fr' ? type.nomFr : type.nomEn)}</option>
                     ))}
                 </select>
-                {errorMethodeValidation && <p className="text-red-500">{errorMethodeValidation}</p>}
+                {errorType && <p className="text-red-500">{errorType}</p>}
             </CustomDialogModal>
 
         </>

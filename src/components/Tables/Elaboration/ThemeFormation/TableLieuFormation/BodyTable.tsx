@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import ButtonCrudTable from "../../../common/ButtonActionTable"
-import { setShowModal, setShowModalDelete } from "../../../../../_redux/features/setting"
+import { setShowModal, setShowModalDatesEffectives, setShowModalDelete } from "../../../../../_redux/features/setting"
 import { SelectButton } from "../../../common/composants/SelectButton";
 import { RootState } from "../../../../../_redux/store";
 import { calculerTotalParticipantsTS, formatDateWithLang, getCohorteNamesString } from "../../../../../fonctions/fonction";
@@ -66,6 +66,24 @@ const BodyTable = ({ data, onEdit}: { data: LieuFormation[], onEdit: (lieuFormat
                                 dispatch(setShowModalDelete())
                             }}
                         />
+                         {(() => {
+                            // Construire dynamiquement la liste des pages en fonction des permissions
+                                const listPage = [];
+
+                                listPage.push({
+                                    name: t('label.dates_effectives'),
+                                    handleClick: () => {
+                                        onEdit(item);
+                                        dispatch(setShowModalDatesEffectives());
+                                    },
+                                });
+
+                              
+
+                                return listPage.length > 0 ? (
+                                    <SelectButton listPage={listPage} />
+                                ) : null;
+                            })()}
                         
                     </div>
                 </td>

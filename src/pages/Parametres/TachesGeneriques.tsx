@@ -18,7 +18,7 @@ const TachesGeneriques = () => {
     const [selectedTacheGenerique, setSelectedTacheGenerique] = useState<TacheGenerique | null>(null);
 
     const { data: { tacheGeneriques } } = useSelector((state: RootState) => state.tacheGeneriqueSlice);
-    const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
+    const lang:string = useSelector((state: RootState) => state.setting.language); // fr ou en
     const [currentPage, setCurrentPage] = useState<number>(1);
 
    

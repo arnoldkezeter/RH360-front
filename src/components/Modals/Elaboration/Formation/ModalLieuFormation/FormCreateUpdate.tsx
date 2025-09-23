@@ -9,8 +9,10 @@ import { createLieuFormation, updateLieuFormation } from '../../../../../service
 import { createLieuFormationSlice, updateLieuFormationSlice } from '../../../../../_redux/features/elaborations/lieuFormationSlice';
 import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
 import { SearchSelectComponent } from '../../../../ui/SearchSelectComponent';
-import { hasTacheExecution, getTacheAndUserId } from '../../../../../fonctions/fonction';
+import { hasTacheExecution, getTacheAndUserId, formatDateForInput } from '../../../../../fonctions/fonction';
 import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
+import { searchUtilisateur } from '../../../../../services/utilisateurs/utilisateurAPI';
+import { searchParticipantFormations } from '../../../../../services/elaborations/participantFormationAPI';
 
 
 function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuFormation | null, themeId:string }) {
@@ -20,11 +22,16 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
     const dispatch = useDispatch();
     const [lieu, setLieu] = useState("");
     const [selectedCohortes, setSelectedCohortes] = useState<Cohorte[]>([]);
+    const [selectedParticipants, setSelectedParticipants] = useState<ParticipantFormation[]>([]);
+    const [dateDebut, setDateDebut] = useState("");
+    const [dateFin, setDateFin] = useState("");
     
     
 
     const [errorLieu, setErrorLieu] = useState("");
-    const [errorCohortes, setErrorCohortes] = useState("");
+    const [errorCohorteParticipants, setErrorCohorteParticipants] = useState("");
+    const [errorDateDebut, setErrorDateDebut] = useState("");
+    const [errorDateFin, setErrorDateFin] = useState("")
     
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -38,6 +45,9 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
             
             setLieu(lieuFormation.lieu);
             setSelectedCohortes(lieuFormation.cohortes)
+            setSelectedParticipants(lieuFormation.participants)
+            setDateDebut(formatDateForInput(lieuFormation.dateDebut) || "");
+            setDateFin(formatDateForInput(lieuFormation.dateFin) || "");
             
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.lieu_formation'));
@@ -45,14 +55,18 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
             setLieu("");
            
             setSelectedCohortes([]);
+            setSelectedParticipants([])
+            setDateDebut("");
+            setDateFin("");
             
         }
 
 
         if (isFirstRender) {
             setErrorLieu("");
-            setErrorCohortes("")
-           
+            setErrorCohorteParticipants("")
+            setErrorDateDebut("")
+            setErrorDateFin("")
             
             setIsFirstRender(false);
         }
@@ -60,7 +74,9 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
 
     const closeModal = () => {
         setErrorLieu("");
-        setErrorCohortes("");
+        setErrorCohorteParticipants("");
+        setErrorDateDebut("")
+        setErrorDateFin("")
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -68,22 +84,36 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
 
 
     const onSearchCohorte = async (search: string) => {
-        setErrorCohortes("");
+        setErrorCohorteParticipants("");
         const data = await searchCohorte({searchString: search, lang});
         return data?.cohortes || [];
+    };
+
+    const onSearchUtilisateur = async (search: string) => {
+        setErrorCohorteParticipants("");
+        const data = await searchParticipantFormations({search: search, lang:lang, themeId:themeId});
+        return data?.participantFormations || [];
     };
 
    
 
 
     const handleCreateLieuFormation = async () => {
-        if (!lieu || !selectedCohortes) {
+        if (!lieu || (!selectedCohortes && !selectedParticipants) || !dateDebut || !dateFin) {
             if (!lieu) {
                 setErrorLieu(t('error.titre_fr'));
             }
 
-            if(!selectedCohortes){
-                setErrorCohortes(t("error.cohorte"))
+            if(!selectedCohortes || !selectedParticipants){
+                setErrorCohorteParticipants(t("error.cohorte_participant"))
+            }
+
+            if (!dateDebut) {
+                setErrorDateDebut(t('error.date_debut'));
+            }
+
+            if (!dateFin) {
+                setErrorDateFin(t('error.date_fin'));
             }
 
             return;
@@ -93,7 +123,10 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
             await createLieuFormation(
                 {
                     lieu,
-                    cohortes:selectedCohortes
+                    cohortes:selectedCohortes,
+                    participants:selectedParticipants,
+                    dateDebut,
+                    dateFin
                 }, themeId,lang
             ).then(async (e: ReponseApiPros) => {
                 
@@ -105,6 +138,11 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                             _id: e.data._id,
                             lieu: e.data.lieu,
                             cohortes: e.data.cohortes,
+                            participants:e.data.participants,
+                            dateDebut:e.data.dateDebut,
+                            dateFin:e.data.dateFin,
+                            dateDebutEffective:e.data.dateDebutEffective,
+                            dateFinEffective:e.data.dateFinEffectif
                         }
 
                     }));
@@ -128,7 +166,11 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                 {
                     _id: lieuFormation._id,
                     lieu,
-                    cohortes:selectedCohortes
+                    cohortes:selectedCohortes,
+                    participants:selectedParticipants,
+                    dateDebut,
+                    dateFin
+
                 }, themeId,lang).then((e: ReponseApiPros) => {
                     if (e.success) {
                         createToast(e.message, '', 0);
@@ -138,6 +180,11 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                                 _id: e.data._id,
                                 lieu: e.data.lieu,
                                 cohortes: e.data.cohortes,
+                                participants:e.data.participants,
+                                dateDebut:e.data.dateDebut,
+                                dateFin:e.data.dateFin,
+                                dateDebutEffective:e.data.dateDebutEffective,
+                                dateFinEffective:e.data.dateFinEffectif
                             }
 
                         }));
@@ -190,7 +237,42 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                     textDebutCaractere={t('label.tapez_car_deb')}
                     textFinCaractere={t('label.tapez_car_fin')}
                 />
-                {errorCohortes && <p className="text-red-500" >{errorCohortes}</p>}
+                {errorCohorteParticipants && <p className="text-red-500" >{errorCohorteParticipants}</p>}
+                 <label>{t('label.participants')}</label><label className="text-red-500"> *</label>
+                <SearchSelectComponent<ParticipantFormation>
+                    onSearch={onSearchUtilisateur}
+                    selectedItems={selectedParticipants}
+                    onSelectionChange={setSelectedParticipants}
+                    placeholder={t('recherche.rechercher') + t('recherche.participant')}
+                    displayField="participant"
+                    searchDelay={300}
+                    minSearchLength={2}
+                    noResultsMessage={t('label.aucun_participant')}
+                    loadingMessage={t('label.recherche_participant')}
+                    textDebutCaractere={t('label.tapez_car_deb')}
+                    textFinCaractere={t('label.tapez_car_fin')}
+                    renderItem={(item) => (
+                        <span>{item.participant.nom} {item.participant.prenom}</span>
+                    )}
+                />
+
+                {errorCohorteParticipants && <p className="text-red-500" >{errorCohorteParticipants}</p>}
+                 <label>{t('label.date_debut')}</label><label className="text-red-500"> *</label>
+                <input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="date"
+                    value={dateDebut}
+                    onChange={(e) => {setDateDebut(e.target.value); setErrorDateDebut("")}}
+                />
+                {errorDateDebut && <p className="text-red-500" >{errorDateDebut}</p>}
+                 <label>{t('label.date_fin')}</label><label className="text-red-500"> *</label>
+                <input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="date"
+                    value={dateFin}
+                    onChange={(e) => {setDateFin(e.target.value); setErrorDateFin("")}}
+                />
+                {errorDateFin && <p className="text-red-500" >{errorDateFin}</p>}
             </CustomDialogModal>
 
         </>

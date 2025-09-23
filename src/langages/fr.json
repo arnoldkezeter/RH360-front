@@ -394,6 +394,7 @@
     "aucune_tache_formation":"Aucune tâche de formation trouvée.",
     "aucune_taxe":"Aucune taxe trouvée.",
     "aucun_responsable":"Aucun responsable trouvé.",
+    "aucun_participant":"Aucun participant trouvé.",
     "aucun_theme":"Aucun thème de formation trouvé",
     "aucun_poste":"Aucun poste trouvé",
     "aucun_grade":"Aucun grade trouvé",
@@ -415,6 +416,7 @@
     "recherche_stagiaire":"Recherche des stagiaires...",
     "recherche_superviseur":"Recherche des superviseur...",
     "recherche_chercheur":"Recherche d'un chercheur...",
+    "recherche_participant":"Recherche d'un participant...",
     "tapez_car_deb":"Tapez au moins",
     "tapez_car_fin":"caractères pour lancer la recherche.",
     
@@ -644,6 +646,9 @@
     "descrip_en":"Description en anglais",
     "date_debut": "Date de début",
     "date_fin": "Date de fin",
+    "date_debut_effective":"Date de début effective",
+    "date_fin_effective":"Date fin effective",
+    "dates_effectives":"Dates effectives",
     "heure_debut": "Heure de début",
     "heure_fin": "Heure de fin",
     "matieres": "Matières",
@@ -953,6 +958,7 @@
 
     "type_echelle_reponse":"du type de réponse",
     "echelle_reponse":"de l'échelle de réponse",
+    "dates_effective_lieu_formation":"des dates effectives du lieu de formation",
 
     "auto_evaluation":"de l'auto-évaluation",
     "structure":"de la structure",
@@ -1072,6 +1078,7 @@
     "type": "Le champ type est obligatoire.",
     "structure":"Le champ structure est obligatoire.",
     "cohorte":"Le champ cohorte est obligatoire.",
+    "cohorte_participant":"Le choix d'une cohorte ou d'un participant est obligatoire.",
     "departement": "Le champ département est obligatoire.",
     "region": "Le champ région est obligatoire.",
     "date": "Le champ date est obligatoire.",
