@@ -15,7 +15,7 @@ function FormCreateUpdate({ grade }: { grade: Grade | null }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
@@ -78,7 +78,7 @@ function FormCreateUpdate({ grade }: { grade: Grade | null }) {
         }
         // create
         if (!grade) {
-            
+            setIsLoading(true)
             await createGrade(
                 {
                     nomFr,
@@ -108,13 +108,15 @@ function FormCreateUpdate({ grade }: { grade: Grade | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
 
-        
+            setIsLoading(true)
             await updateGrade(
                 {
                     _id: grade._id,
@@ -147,6 +149,8 @@ function FormCreateUpdate({ grade }: { grade: Grade | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -164,6 +168,7 @@ function FormCreateUpdate({ grade }: { grade: Grade | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

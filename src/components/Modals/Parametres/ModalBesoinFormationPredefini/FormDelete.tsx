@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteBesoinFormationPredefini } from '../../../../services/settings/besoinFormationPredefiniAPI';
 import { deleteBesoinFormationPredefiniSlice } from '../../../../_redux/features/parametres/besoinFormationPredefini';
+import { useState } from 'react';
 
 
 function FormDelete({ besoinFormationPredefini }: { besoinFormationPredefini: BesoinFormationPredefini | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -22,6 +23,7 @@ function FormDelete({ besoinFormationPredefini }: { besoinFormationPredefini: Be
     const handleDelete = async () => {
 
         if (besoinFormationPredefini?._id != undefined) {
+            setIsLoading(true)
             await deleteBesoinFormationPredefini(besoinFormationPredefini._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -37,6 +39,8 @@ function FormDelete({ besoinFormationPredefini }: { besoinFormationPredefini: Be
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +54,7 @@ function FormDelete({ besoinFormationPredefini }: { besoinFormationPredefini: Be
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.besoin_formation_predefini')} : {besoinFormationPredefini ? (lang == "fr" ? besoinFormationPredefini.titreFr : besoinFormationPredefini.titreEn) : ""}</h1>
             </CustomDialogModal>

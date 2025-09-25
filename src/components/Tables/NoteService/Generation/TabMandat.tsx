@@ -180,8 +180,10 @@ const MandatTab = ({ onEditStageRecherche }: MandatTabProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleGenerate = () => {
-      setSelectedStageRecherche(stageRecherche)
-      dispatch(setShowModal())
+      setSelectedStageRecherche(stageRecherche
+        
+      )
+     dispatch(setShowModal())
     };
 
     return (

@@ -13,7 +13,7 @@ function FormCreateUpdate({ formation }: { formation: Formation | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const {data:{axeStrategiques}} = useSelector((state: RootState) => state.axeStrategiqueSlice)
     const {data:{programmeFormations}} = useSelector((state: RootState) => state.programmeFormationSlice)
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { t } = useTranslation();
     
 
@@ -147,6 +147,7 @@ function FormCreateUpdate({ formation }: { formation: Formation | null }) {
 
        
         if (!formation) {
+            setIsLoading(true)
             await createFormation(
                 {
                     titreFr,
@@ -182,9 +183,12 @@ function FormCreateUpdate({ formation }: { formation: Formation | null }) {
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false);
             })
 
         } else {
+            setIsLoading(true)
             await updateFormation(
                 {
                     _id:formation._id,
@@ -220,6 +224,8 @@ function FormCreateUpdate({ formation }: { formation: Formation | null }) {
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -234,6 +240,7 @@ function FormCreateUpdate({ formation }: { formation: Formation | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateFormation}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.titre_fr')}</label><label className="text-red-500"> *</label>

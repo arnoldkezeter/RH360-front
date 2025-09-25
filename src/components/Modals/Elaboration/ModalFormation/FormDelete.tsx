@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify.tsx';
 import { deleteFormation } from '../../../../services/elaborations/formationAPI.tsx';
 import { deleteFormationSlice } from '../../../../_redux/features/elaborations/formationSlice.tsx';
+import { useState } from 'react';
 
 
 
@@ -13,13 +14,14 @@ import { deleteFormationSlice } from '../../../../_redux/features/elaborations/f
 function FormDelete({ formation }: { formation : Formation|null}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
         if (formation?._id != undefined) {
+            setIsLoading(true)
             await deleteFormation(formation._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -34,7 +36,8 @@ function FormDelete({ formation }: { formation : Formation|null}) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
-
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
     }
@@ -47,6 +50,7 @@ function FormDelete({ formation }: { formation : Formation|null}) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression')+t('form_delete.formation')} : {lang==='fr'?formation?.titreFr:formation?.titreEn}</h1>
             </CustomDialogModal>

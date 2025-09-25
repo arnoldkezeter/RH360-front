@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteGrade } from '../../../../services/settings/gradeAPI';
 import { deleteGradeSlice } from '../../../../_redux/features/parametres/gradeSlice';
+import { useState } from 'react';
 
 
 function FormDelete({ grade }: { grade: Grade | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -22,6 +23,7 @@ function FormDelete({ grade }: { grade: Grade | null }) {
     const handleDelete = async () => {
 
         if (grade?._id != undefined) {
+            setIsLoading(true)
             await deleteGrade(grade._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -37,6 +39,8 @@ function FormDelete({ grade }: { grade: Grade | null }) {
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +54,7 @@ function FormDelete({ grade }: { grade: Grade | null }) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.grade')} : {grade ? (lang == "fr" ? grade.nomFr : grade.nomEn) : ""}</h1>
             </CustomDialogModal>

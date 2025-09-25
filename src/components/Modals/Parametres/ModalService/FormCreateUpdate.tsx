@@ -14,7 +14,7 @@ import { createServiceSlice, updateServiceSlice } from '../../../../_redux/featu
 function ModalCreateUpdate({ service, onDepartmentUpdated }: { service: Service | null, onDepartmentUpdated: () => void; }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
@@ -104,6 +104,7 @@ function ModalCreateUpdate({ service, onDepartmentUpdated }: { service: Service 
         // create
         if (!service) {
             if (structure._id) {
+                setIsLoading(true)
                 await createService(
                     {
                         nomFr,
@@ -133,10 +134,13 @@ function ModalCreateUpdate({ service, onDepartmentUpdated }: { service: Service 
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         }else {
             if (structure._id) {
+                setIsLoading(true)
                 await updateService(
                     {
                         
@@ -171,6 +175,8 @@ function ModalCreateUpdate({ service, onDepartmentUpdated }: { service: Service 
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         }
@@ -185,6 +191,7 @@ function ModalCreateUpdate({ service, onDepartmentUpdated }: { service: Service 
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

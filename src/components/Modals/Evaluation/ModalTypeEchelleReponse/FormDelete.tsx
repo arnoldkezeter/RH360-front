@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteTypeEchelleReponse } from '../../../../services/evaluations/typeEchelleReponseAPI';
 import { deleteTypeEchelleReponseSlice } from '../../../../_redux/features/evaluations/typeEchelleResponseSlice';
+import { useState } from 'react';
 
 
 function FormDelete({ typeEchelleReponse }: { typeEchelleReponse: TypeEchelleReponse | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -22,6 +23,7 @@ function FormDelete({ typeEchelleReponse }: { typeEchelleReponse: TypeEchelleRep
     const handleDelete = async () => {
 
         if (typeEchelleReponse?._id != undefined) {
+            setIsLoading(true)
             await deleteTypeEchelleReponse(typeEchelleReponse._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -36,7 +38,8 @@ function FormDelete({ typeEchelleReponse }: { typeEchelleReponse: TypeEchelleRep
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
-
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +53,7 @@ function FormDelete({ typeEchelleReponse }: { typeEchelleReponse: TypeEchelleRep
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.type_echelle_reponse')} : {typeEchelleReponse ? (lang == "fr" ? typeEchelleReponse.nomFr : typeEchelleReponse.nomEn) : ""}</h1>
             </CustomDialogModal>

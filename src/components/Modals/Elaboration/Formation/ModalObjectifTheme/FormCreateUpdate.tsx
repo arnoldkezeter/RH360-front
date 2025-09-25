@@ -8,14 +8,14 @@ import createToast from '../../../../../hooks/toastify';
 import { createObjectifTheme, updateObjectifTheme } from '../../../../../services/elaborations/objectifThemeAPI';
 import { createObjectifThemeSlice, updateObjectifThemeSlice } from '../../../../../_redux/features/elaborations/objectifThemeSlice';
 import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
-import { checkQueryParam, getTacheAndUserId, hasTacheExecution } from '../../../../../fonctions/fonction';
-import { useLocation } from 'react-router-dom';
+import { getTacheAndUserId, hasTacheExecution } from '../../../../../fonctions/fonction';
 import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
 
 
 function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifTheme | null, themeId:string }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("");
@@ -90,6 +90,7 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
         }
 
         if (!objectifTheme) {
+            setIsLoading(true)
             await createObjectifTheme(
                 {
                     nomFr,
@@ -122,9 +123,12 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateObjectifTheme(
                 {
                     _id: objectifTheme._id,
@@ -152,6 +156,8 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -166,6 +172,7 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateObjectifTheme}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.nom_chose_fr')}</label><label className="text-red-500"> *</label>

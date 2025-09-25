@@ -12,6 +12,7 @@ import { createBudgetFormation, updateBudgetFormation } from '../../../../../ser
 
 function FormCreateUpdate({ budgetFormation, formation }: { budgetFormation: BudgetFormation | null, formation:Formation|undefined }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { t } = useTranslation();
     const statuts = Object.values(STATUT_BUDGET)
     const dispatch = useDispatch();
@@ -97,6 +98,7 @@ function FormCreateUpdate({ budgetFormation, formation }: { budgetFormation: Bud
         }
 
         if (!budgetFormation ) {
+            setIsLoading(true)
             if(formation){     
                 await createBudgetFormation(
                     {
@@ -130,9 +132,12 @@ function FormCreateUpdate({ budgetFormation, formation }: { budgetFormation: Bud
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         } else {
+            setIsLoading(true);
             await updateBudgetFormation(
                 {
                     _id: budgetFormation._id,
@@ -163,6 +168,8 @@ function FormCreateUpdate({ budgetFormation, formation }: { budgetFormation: Bud
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -177,6 +184,7 @@ function FormCreateUpdate({ budgetFormation, formation }: { budgetFormation: Bud
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateBudgetFormation}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.nom_chose_fr')}</label><label className="text-red-500"> *</label>

@@ -14,7 +14,7 @@ import { createDepartementSlice, updateDepartementSlice } from '../../../../_red
 function ModalCreateUpdate({ departement, onDepartmentUpdated }: { departement: Departement | null, onDepartmentUpdated: () => void; }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [code, setCode] = useState("");
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
@@ -98,6 +98,7 @@ function ModalCreateUpdate({ departement, onDepartmentUpdated }: { departement: 
         // create
         if (!departement) {
             if (region._id) {
+                setIsLoading(true)
                 await createDepartement(
                     {
                         code,
@@ -123,10 +124,13 @@ function ModalCreateUpdate({ departement, onDepartmentUpdated }: { departement: 
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         }else {
             if (region._id) {
+                setIsLoading(true)
                 await updateDepartement(
                     {
                         code,
@@ -156,6 +160,8 @@ function ModalCreateUpdate({ departement, onDepartmentUpdated }: { departement: 
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         }
@@ -170,6 +176,7 @@ function ModalCreateUpdate({ departement, onDepartmentUpdated }: { departement: 
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 {/* input 1 */}

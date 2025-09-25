@@ -161,6 +161,12 @@
   },
   
   "label": {
+    "generer_note":"Générer la note",
+    "duree_inconnue":"Durée inconnue",
+    "individuel":"Individuel",
+    "groupe":"Groupe",
+    "stage":"Stage",
+    "mandat_recherche":"Mandat de recherche",
     "designation_tuteur":"Personnel(s) chargé(s) de la désignation du tuteur ?",
     "mise_oeuvre":"Personnel(s) chargé(s) de la mise en oeuvre",
     "aucun_utilisateur_trouve":"Aucun utilisateur trouvé",

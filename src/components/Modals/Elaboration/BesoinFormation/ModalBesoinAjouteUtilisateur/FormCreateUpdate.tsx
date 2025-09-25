@@ -14,7 +14,7 @@ function FormCreateUpdate({ besoinAjouteUtilisateur, user }: { besoinAjouteUtili
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [titreFr, setTitreFr] = useState<string>('');
     const [titreEn, setTitreEn] = useState<string>('');
     const [pointsAAmeliorerFr, setPointsAAmeliorerFr] = useState<string>('');
@@ -90,7 +90,7 @@ function FormCreateUpdate({ besoinAjouteUtilisateur, user }: { besoinAjouteUtili
         }
         // create
         if (!besoinAjouteUtilisateur) {
-            
+            setIsLoading(true);
             await createBesoinAjoute(
                 {
                     utilisateur:user._id||"",
@@ -125,13 +125,15 @@ function FormCreateUpdate({ besoinAjouteUtilisateur, user }: { besoinAjouteUtili
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
 
-        
+            setIsLoading(true)
             await updateBesoinAjoute(
                 {
                     _id: besoinAjouteUtilisateur?._id || "",
@@ -166,6 +168,8 @@ function FormCreateUpdate({ besoinAjouteUtilisateur, user }: { besoinAjouteUtili
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false);
             })
                 
             
@@ -183,6 +187,7 @@ function FormCreateUpdate({ besoinAjouteUtilisateur, user }: { besoinAjouteUtili
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >                
 
                 <label>{t('label.competence_fr')}</label>

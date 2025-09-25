@@ -20,7 +20,7 @@ function FormCreateUpdateEvaluation({ groupedBesoin, userId }: { groupedBesoin: 
     const [commentaireAdminEn, setCommentaireAdminEn] = useState<string>('');
     const [statut, setStatut] = useState<StatutBesoin>();
     const statuts = Object.values(STATUT_BESOIN)
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const niveauxGroupedBesoin = Object.values(NIVEAU_AUTO_EVALUATION)
 
     

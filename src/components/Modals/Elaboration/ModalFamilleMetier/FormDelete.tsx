@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteFamilleMetierSlice } from '../../../../_redux/features/elaborations/familleMetierSlice';
 import { deleteFamilleMetier } from '../../../../services/elaborations/familleMetierAPI';
+import { useState } from 'react';
 
 
 function FormDelete({ familleMetier }: { familleMetier: FamilleMetier | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -22,6 +23,7 @@ function FormDelete({ familleMetier }: { familleMetier: FamilleMetier | null }) 
     const handleDelete = async () => {
 
         if (familleMetier?._id != undefined) {
+            setIsLoading(true)
             await deleteFamilleMetier(familleMetier._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -37,6 +39,8 @@ function FormDelete({ familleMetier }: { familleMetier: FamilleMetier | null }) 
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +54,7 @@ function FormDelete({ familleMetier }: { familleMetier: FamilleMetier | null }) 
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.famille_metier')} : {familleMetier ? (lang == "fr" ? familleMetier.nomFr : familleMetier.nomEn) : ""}</h1>
             </CustomDialogModal>

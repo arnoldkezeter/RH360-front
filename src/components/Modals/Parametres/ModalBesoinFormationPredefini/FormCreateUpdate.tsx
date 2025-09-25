@@ -17,7 +17,7 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [titreFr, setTitreFr] = useState("");
     const [titreEn, setTitreEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
@@ -93,7 +93,7 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
         }
         // create
         if (!besoinFormationPredefini) {
-            
+            setIsLoading(true)
             await createBesoinFormationPredefini(
                 {
                     titreFr,
@@ -125,6 +125,8 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
@@ -166,6 +168,8 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
             }).catch((e) => {
                 console.log(e)
                 // createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -183,6 +187,7 @@ function FormCreateUpdate({ besoinFormationPredefini }: { besoinFormationPredefi
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.titre_fr')} required />

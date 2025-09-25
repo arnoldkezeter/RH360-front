@@ -27,7 +27,7 @@ interface Rotation {
 
 // Service final pour un groupe (période + superviseur + service)
 interface ServiceFinal {
-  service: Service;          // _id du service
+  service?: Service;          // _id du service
   superviseur?: Utilisateur;     // _id du superviseur
   dateDebut: string;        // ISO string
   dateFin: string;          // ISO string

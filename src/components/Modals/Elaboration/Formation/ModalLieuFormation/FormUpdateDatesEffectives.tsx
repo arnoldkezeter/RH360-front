@@ -13,7 +13,7 @@ import { formatDateForInput } from '../../../../../fonctions/fonction';
 function FormUpdateDatesEffectives({ lieuFormation, themeId }: { lieuFormation: LieuFormation | null, themeId:string }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
    
     const [dateDebut, setDateDebut] = useState("");
@@ -71,7 +71,7 @@ function FormUpdateDatesEffectives({ lieuFormation, themeId }: { lieuFormation: 
             return;
         }
 
-        
+        setIsLoading(true);
         await updateLieuFormation(
             {
                 _id: lieuFormation._id,
@@ -110,6 +110,8 @@ function FormUpdateDatesEffectives({ lieuFormation, themeId }: { lieuFormation: 
         }).catch((e) => {
             console.log(e);
             createToast(e.response.data.message, '', 2);
+        }).finally(()=>{
+            setIsLoading(false)
         })
         
     }
@@ -124,6 +126,7 @@ function FormUpdateDatesEffectives({ lieuFormation, themeId }: { lieuFormation: 
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleUpdateDateEffective}
+                isLoading={isLoading}
             >
                 
                  <label>{t('label.date_debut_effective')}</label><label className="text-red-500"> *</label>

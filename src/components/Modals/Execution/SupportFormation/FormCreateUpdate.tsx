@@ -12,13 +12,8 @@ import { createSupportFormationSlice, updateSupportFormationSlice } from '../../
 
 function FormCreateUpdate({ supportFormation, theme }: { supportFormation: SupportFormation | null, theme:ThemeFormation|undefined }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
-    
-    
-    
-    
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { t } = useTranslation();
-
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
@@ -119,7 +114,7 @@ function FormCreateUpdate({ supportFormation, theme }: { supportFormation: Suppo
         
 
         if (!supportFormation) {  
-            
+            setIsLoading(true)
             await createSupportFormation(
                 {
                     nomFr,
@@ -153,9 +148,11 @@ function FormCreateUpdate({ supportFormation, theme }: { supportFormation: Suppo
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
         } else {
-            
+            setIsLoading(true)
             await updateSupportFormation(
                 {
                     nomFr,
@@ -190,6 +187,8 @@ function FormCreateUpdate({ supportFormation, theme }: { supportFormation: Suppo
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
     }
@@ -202,6 +201,7 @@ function FormCreateUpdate({ supportFormation, theme }: { supportFormation: Suppo
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateSupportFormation}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.nom_chose_fr')}</label><label className="text-red-500"> *</label>

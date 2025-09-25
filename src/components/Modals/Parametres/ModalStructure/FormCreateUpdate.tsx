@@ -15,7 +15,7 @@ function FormCreateUpdate({ structure }: { structure: Structure | null }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
@@ -78,7 +78,7 @@ function FormCreateUpdate({ structure }: { structure: Structure | null }) {
         }
         // create
         if (!structure) {
-            
+            setIsLoading(true);
             await createStructure(
                 {
                     nomFr,
@@ -108,13 +108,14 @@ function FormCreateUpdate({ structure }: { structure: Structure | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
-
-        
+            setIsLoading(true)
             await updateStructure(
                 {
                     _id: structure._id,
@@ -147,6 +148,8 @@ function FormCreateUpdate({ structure }: { structure: Structure | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -164,6 +167,7 @@ function FormCreateUpdate({ structure }: { structure: Structure | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

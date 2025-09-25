@@ -17,7 +17,7 @@ function FormUploadFile({ tache }: { tache: TacheThemeFormation | undefined }) {
     const { t } = useTranslation();
     const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.openUploadDoc);
     const [modalTitle, setModalTitle] = useState("");
 

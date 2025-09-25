@@ -15,7 +15,7 @@ import { getTacheGeneriques } from '../../../../../services/settings/tacheGeneri
 function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheThemeFormation | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const selectedTheme = useSelector((state: RootState) => state.themeFormationSlice.selectedTheme);
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { t } = useTranslation();
 
     const dispatch = useDispatch();
@@ -110,6 +110,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
         }
 
         if (!tacheThemeFormation) {
+            setIsLoading(true)
             await createTacheThemeFormation(
                 {
                     dateDebut,
@@ -143,9 +144,12 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(true)
             })
 
         } else {
+            setIsLoading(true)
             await updateTacheThemeFormation(
                 {
                     _id: tacheThemeFormation._id,
@@ -177,6 +181,8 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(true)
                 })
         }
     }

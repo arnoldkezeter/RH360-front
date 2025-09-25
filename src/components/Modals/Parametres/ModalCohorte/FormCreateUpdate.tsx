@@ -15,7 +15,7 @@ function FormCreateUpdate({ cohorte }: { cohorte: Cohorte | null }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
@@ -78,7 +78,7 @@ function FormCreateUpdate({ cohorte }: { cohorte: Cohorte | null }) {
         }
         // create
         if (!cohorte) {
-            
+            setIsLoading(true)
             await createCohorte(
                 {
                     nomFr,
@@ -108,13 +108,15 @@ function FormCreateUpdate({ cohorte }: { cohorte: Cohorte | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
 
-        
+            setIsLoading(true)
             await updateCohorte(
                 {
                     _id: cohorte._id,
@@ -147,6 +149,8 @@ function FormCreateUpdate({ cohorte }: { cohorte: Cohorte | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -164,6 +168,7 @@ function FormCreateUpdate({ cohorte }: { cohorte: Cohorte | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

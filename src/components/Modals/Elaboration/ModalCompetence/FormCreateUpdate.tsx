@@ -14,7 +14,7 @@ import { createCompetence, updateCompetence } from '../../../../services/elabora
 function ModalCreateUpdate({ competence, onCompetenceUpdated }: { competence: Competence | null, onCompetenceUpdated: () => void; }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [code, setCode] = useState("");
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
@@ -106,6 +106,7 @@ function ModalCreateUpdate({ competence, onCompetenceUpdated }: { competence: Co
         // create
         if (!competence) {
             if (familleMetier._id) {
+                setIsLoading(true)
                 await createCompetence(
                     {
                         code,
@@ -135,10 +136,13 @@ function ModalCreateUpdate({ competence, onCompetenceUpdated }: { competence: Co
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         }else {
             if (familleMetier._id) {
+                setIsLoading(true)
                 await updateCompetence(
                     {
                         code,
@@ -172,6 +176,8 @@ function ModalCreateUpdate({ competence, onCompetenceUpdated }: { competence: Co
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         }
@@ -186,6 +192,7 @@ function ModalCreateUpdate({ competence, onCompetenceUpdated }: { competence: Co
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
                 <Label text={t('label.code')} required />
                 <Input

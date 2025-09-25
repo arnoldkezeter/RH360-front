@@ -5,7 +5,6 @@ import CustomDialogModal from '../../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { useSettingData } from '../../../../hooks/useSettingData';
 import { getServicesForDropDownByStructure } from '../../../../services/settings/serviceAPI';
 import { getDepartementsForDropDown } from '../../../../services/settings/departementAPI';
 import { getCommunesForDropDown } from '../../../../services/settings/communeAPI';
@@ -19,7 +18,7 @@ import { ROLES } from '../../../../config';
 
 function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) {
     const lang:string = useSelector((state: RootState) => state.setting.language); // fr ou en
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
     const {data:{structures}} = useSelector((state: RootState) => state.structureSlice)
     const {data:{grades}}= useSelector((state: RootState) => state.gradeSlice)
@@ -411,6 +410,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
         }
 
         if (!utilisateur) {
+            setIsLoading(true)
             await createUtilisateur(
                 {
                     matricule,
@@ -470,9 +470,12 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateUtilisateur(
                 {
                     _id: utilisateur._id,
@@ -532,6 +535,8 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }

@@ -19,7 +19,7 @@ function FormCreateUpdate(
     const selectedBudget = useSelector((state: RootState) => state.budgetFormationSlice.selectedBugetFormation);
     const typesDepense = Object.values(TYPE_DEPENSE)
     const { t } = useTranslation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("")
     const [nomEn, setNomEn] = useState("")
@@ -140,7 +140,7 @@ function FormCreateUpdate(
         }
 
         if (!depense) {
-            
+            setIsLoading(true)
             await createDepense({
                 nomFr,
                 nomEn,
@@ -180,9 +180,12 @@ function FormCreateUpdate(
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateDepense(
                 {
                     _id: depense._id,
@@ -222,6 +225,8 @@ function FormCreateUpdate(
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -236,6 +241,7 @@ function FormCreateUpdate(
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateDepense}
+                isLoading={isLoading}
             >
                 <label>{t('label.nature_depense_fr')}</label><label className="text-red-500"> *</label>
                 <input

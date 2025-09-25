@@ -16,7 +16,7 @@ import { SearchSelectComponent } from '../../../ui/SearchSelectComponent';
 function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { categorieProfessionnelle: CategorieProfessionnelle | null, onDepartmentUpdated: () => void; }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [code, setCode] = useState("");
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
@@ -91,7 +91,7 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
         } 
         // create
         if (!categorieProfessionnelle) {
-            
+            setIsLoading(true)
             await createCategorieProfessionnelle(
                 {
                     nomFr,
@@ -119,10 +119,12 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
             
         }else {
-            
+            setIsLoading(true)
             await updateCategorieProfessionnelle(
                 {
                     
@@ -155,6 +157,8 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
             
         }
@@ -169,6 +173,7 @@ function ModalCreateUpdate({ categorieProfessionnelle, onDepartmentUpdated }: { 
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

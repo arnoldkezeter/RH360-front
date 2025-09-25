@@ -15,7 +15,7 @@ function FormCreateUpdate({ tacheStagiaire, onAdd, onUpdate }: { tacheStagiaire:
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
     const selectedStagiaire = useSelector((state: RootState) => state.stagiaireSlice.selectedStagiaire);
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const statuts = Object.values(STATUT_TACHE_STAGIAIRE)
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("");
@@ -115,6 +115,7 @@ function FormCreateUpdate({ tacheStagiaire, onAdd, onUpdate }: { tacheStagiaire:
         }
 
         if (!tacheStagiaire ) {
+            setIsLoading(true)
             await createTacheStagiaire(
                 {
                     nomFr,
@@ -152,8 +153,11 @@ function FormCreateUpdate({ tacheStagiaire, onAdd, onUpdate }: { tacheStagiaire:
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
         } else {
+            setIsLoading(true)
             await updateTacheStagiaire(
                 tacheStagiaire._id||"",
                 {
@@ -191,6 +195,8 @@ function FormCreateUpdate({ tacheStagiaire, onAdd, onUpdate }: { tacheStagiaire:
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -205,6 +211,7 @@ function FormCreateUpdate({ tacheStagiaire, onAdd, onUpdate }: { tacheStagiaire:
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateTacheStagiaire}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.nom_chose_fr')}</label><label className="text-red-500"> *</label>

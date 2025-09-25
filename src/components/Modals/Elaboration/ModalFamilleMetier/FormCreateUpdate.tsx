@@ -20,7 +20,7 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
@@ -78,7 +78,7 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
         }
         // create
         if (!familleMetier) {
-            
+            setIsLoading(true)
             await createFamilleMetier(
                 {
                     nomFr,
@@ -108,13 +108,15 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
 
-        
+            setIsLoading(true)
             await updateFamilleMetier(
                 {
                     _id: familleMetier._id,
@@ -147,6 +149,8 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -164,6 +168,7 @@ function FormCreateUpdate({ familleMetier }: { familleMetier: FamilleMetier | nu
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

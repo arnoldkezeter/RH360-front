@@ -6,13 +6,14 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteDepartement } from '../../../../services/settings/departementAPI';
 import { deleteDepartementSlice } from '../../../../_redux/features/parametres/departementSlice';
+import { useState } from 'react';
 
 
 
 function ModalDelete({ departement }: { departement: Departement | null }) {
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const lang = useSelector((state: RootState) => state.setting.language);
 
@@ -20,6 +21,7 @@ function ModalDelete({ departement }: { departement: Departement | null }) {
 
     const handleDelete = async () => {
         if (departement?._id != undefined) {
+            setIsLoading(true)
             await deleteDepartement(departement._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -35,6 +37,8 @@ function ModalDelete({ departement }: { departement: Departement | null }) {
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
     }
@@ -47,6 +51,7 @@ function ModalDelete({ departement }: { departement: Departement | null }) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.departement')} : {departement ? (lang === 'fr' ? departement.nomFr : departement.nomEn) : ""}</h1>
             </CustomDialogModal>

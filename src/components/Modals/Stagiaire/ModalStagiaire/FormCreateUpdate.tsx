@@ -20,6 +20,7 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
     const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
     const {data:{etablissements}} = useSelector((state: RootState) => state.etablissementSlice)
     const roles = Object.values(ROLES)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     // const structures:Structure[] =[];
     // const regions:Region[] =[];
     // const grades:Grade[] =[];
@@ -298,6 +299,7 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
         }
 
         if (!stagiaire) {
+            setIsLoading(true)
             await createStagiaire(
                 {
                     nom,
@@ -343,9 +345,12 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateStagiaire(
                 {
                     _id: stagiaire._id,
@@ -390,6 +395,8 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -404,6 +411,7 @@ function FormCreateUpdate({ stagiaire }: { stagiaire: Stagiaire | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateStagiaire}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.nom')}</label><label className="text-red-500"> *</label>

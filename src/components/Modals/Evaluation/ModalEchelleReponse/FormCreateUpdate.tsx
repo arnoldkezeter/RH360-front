@@ -12,7 +12,7 @@ import CustomDialogModal from '../../CustomDialogModal';
 function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: EchelleReponse | null, typeEchelleId:string }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
@@ -85,6 +85,7 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
         }
 
         if (!echelleReponse) {
+            setIsLoading(true)
             await createEchelleReponse(
                 {
                     nomFr,
@@ -115,9 +116,12 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateEchelleReponse(
                 {
                     _id: echelleReponse._id,
@@ -147,6 +151,8 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -161,6 +167,7 @@ function FormCreateUpdate({ echelleReponse, typeEchelleId }: { echelleReponse: E
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateEchelleReponse}
+                isLoading={isLoading}
             >
                 
                 

@@ -23,7 +23,7 @@ function FormCreateUpdateNoteMandat({note, themeId, mandatId, stageId }: {note:N
     const [copieA, setCopieA] = useState("");
     const [designationTuteur, setDesignationTuteur] = useState("");
     const [miseEnOeuvre, setMiseEnOeuvre] = useState("");
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
 
     const [errorTitreFr, setErrorTitreFr] = useState("");
@@ -101,6 +101,7 @@ function FormCreateUpdateNoteMandat({note, themeId, mandatId, stageId }: {note:N
         }
 
         if (!note) {
+            setIsLoading(true)
             await createNoteService(
                 {
                     titreFr,
@@ -141,9 +142,12 @@ function FormCreateUpdateNoteMandat({note, themeId, mandatId, stageId }: {note:N
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateNoteService(
                 {
                     _id: note._id||"",
@@ -180,6 +184,8 @@ function FormCreateUpdateNoteMandat({note, themeId, mandatId, stageId }: {note:N
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -194,6 +200,7 @@ function FormCreateUpdateNoteMandat({note, themeId, mandatId, stageId }: {note:N
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateNoteService}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.titre_fr')}</label><label className="text-red-500"> *</label>

@@ -6,13 +6,14 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteCategorieProfessionnelle } from '../../../../services/settings/categorieProfessionnelleAPI';
 import { deleteCategorieProfessionnelleSlice } from '../../../../_redux/features/parametres/categorieProfessionnelleSlice';
+import { useState } from 'react';
 
 
 
 function ModalDelete({ categorieProfessionnelle }: { categorieProfessionnelle: CategorieProfessionnelle | null }) {
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const lang = useSelector((state: RootState) => state.setting.language);
 
@@ -20,6 +21,7 @@ function ModalDelete({ categorieProfessionnelle }: { categorieProfessionnelle: C
 
     const handleDelete = async () => {
         if (categorieProfessionnelle?._id != undefined) {
+            setIsLoading(true)
             await deleteCategorieProfessionnelle(categorieProfessionnelle._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -34,7 +36,8 @@ function ModalDelete({ categorieProfessionnelle }: { categorieProfessionnelle: C
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
-
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
     }
@@ -47,6 +50,7 @@ function ModalDelete({ categorieProfessionnelle }: { categorieProfessionnelle: C
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.categorie_professionnelle')} : {categorieProfessionnelle ? (lang === 'fr' ? categorieProfessionnelle.nomFr : categorieProfessionnelle.nomEn) : ""}</h1>
             </CustomDialogModal>

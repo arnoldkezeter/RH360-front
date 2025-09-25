@@ -14,7 +14,7 @@ import { createCommuneSlice, updateCommuneSlice } from '../../../../_redux/featu
 function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | null, onCommuneUpdated: () => void; }) {
     const { data: { regions } } = useSelector((state: RootState) => state.regionSlice) ?? [];
     const { data: { departements } } = useSelector((state: RootState) => state.departementSlice) ?? [];
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [code, setCode] = useState("");
@@ -153,6 +153,7 @@ function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | n
         }
         if (!commune){
             if (departement._id) {
+                setIsLoading(true)
                 await createCommune(
                     {
                         code,
@@ -181,9 +182,12 @@ function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | n
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
-                })
+                }).finally(()=>{
+                setIsLoading(false)
+            })
             }
         }else{
+            setIsLoading(true)
             if (departement._id) {
                 await updateCommune(
                     {
@@ -216,6 +220,8 @@ function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | n
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
             }
         }
@@ -231,6 +237,7 @@ function ModalCreateUpdate({ commune, onCommuneUpdated }: { commune: Commune | n
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <label>{t('label.code')}</label>

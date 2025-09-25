@@ -6,19 +6,21 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify.tsx';
 import { deleteStageSlice } from '../../../../_redux/features/stagiaire/stageSlice.tsx';
 import { deleteStage } from '../../../../services/stagiaires/stageAPI.tsx';
+import { useState } from 'react';
 
 
 
 function FormDelete({ stage }: { stage : Stage|undefined}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
         if (stage?._id != undefined) {
+            setIsLoading(true)
             await deleteStage(stage._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -33,7 +35,8 @@ function FormDelete({ stage }: { stage : Stage|undefined}) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
-
+            }).finally(()=>{
+                setIsLoading(false);
             })
         }
     }
@@ -46,6 +49,7 @@ function FormDelete({ stage }: { stage : Stage|undefined}) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression')+t('form_delete.stage')} : {lang==='fr'?(stage?.nomFr||""):(stage?.nomEn||"")}</h1>
             </CustomDialogModal>

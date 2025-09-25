@@ -12,10 +12,10 @@ import { createTypeEchelleReponseSlice, updateTypeEchelleReponseSlice } from '..
 
 
 function FormCreateUpdate({ typeEchelleReponse }: { typeEchelleReponse: TypeEchelleReponse | null }) {
-
+    
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     const [descriptionFr, setDescriptionFr] = useState("");
@@ -83,7 +83,7 @@ function FormCreateUpdate({ typeEchelleReponse }: { typeEchelleReponse: TypeEche
         }
         // create
         if (!typeEchelleReponse) {
-            
+            setIsLoading(true)
             await createTypeEchelleReponse(
                 {
                     nomFr,
@@ -113,13 +113,15 @@ function FormCreateUpdate({ typeEchelleReponse }: { typeEchelleReponse: TypeEche
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
 
-        
+            setIsLoading(true)
             await updateTypeEchelleReponse(
                 {
                     _id: typeEchelleReponse._id,
@@ -152,6 +154,8 @@ function FormCreateUpdate({ typeEchelleReponse }: { typeEchelleReponse: TypeEche
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -169,6 +173,7 @@ function FormCreateUpdate({ typeEchelleReponse }: { typeEchelleReponse: TypeEche
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
 

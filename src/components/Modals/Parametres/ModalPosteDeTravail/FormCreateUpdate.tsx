@@ -16,7 +16,7 @@ import { searchFamilleMetier } from '../../../../services/elaborations/familleMe
 function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTravail: PosteDeTravail | null, onDepartmentUpdated: () => void; }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [code, setCode] = useState("");
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
@@ -92,6 +92,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
         } 
         // create
         if (!posteDeTravail) {
+            setIsLoading(true)
             await createPosteDeTravail(
                 {
                     nomFr,
@@ -119,8 +120,11 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }else {
+            setIsLoading(true)
             await updatePosteDeTravail(
                 {
                     
@@ -153,6 +157,8 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
     }
@@ -166,6 +172,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

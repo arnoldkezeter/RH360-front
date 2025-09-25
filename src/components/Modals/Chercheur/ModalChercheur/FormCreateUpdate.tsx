@@ -19,6 +19,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
     const {data:{etablissements}} = useSelector((state: RootState) => state.etablissementSlice)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const roles = Object.values(ROLES)
     // const structures:Structure[] =[];
     // const regions:Region[] =[];
@@ -269,6 +270,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
 
 
         if (!chercheur) {
+            setIsLoading(true)
             await createChercheur(
                 {
                     nom,
@@ -314,9 +316,12 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true);
             await updateChercheur(
                 {
                     _id: chercheur._id,
@@ -362,6 +367,8 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                     }
                 }).catch((e) => {
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -375,6 +382,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateChercheur}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.nom')}</label><label className="text-red-500"> *</label>

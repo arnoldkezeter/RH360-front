@@ -15,7 +15,7 @@ function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | nu
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     
@@ -72,7 +72,7 @@ function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | nu
         }
         // create
         if (!etablissement) {
-            
+            setIsLoading(true)
             await createEtablissement(
                 {
                     nomFr,
@@ -98,13 +98,14 @@ function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | nu
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
-
-        
+            setIsLoading(true)
             await updateEtablissement(
                 {
                     _id: etablissement._id,
@@ -132,9 +133,9 @@ function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | nu
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
-                
-            
         }
 
 
@@ -149,6 +150,7 @@ function FormCreateUpdate({ etablissement }: { etablissement: Etablissement | nu
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

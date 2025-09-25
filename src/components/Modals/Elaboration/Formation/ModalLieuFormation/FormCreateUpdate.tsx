@@ -11,14 +11,13 @@ import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
 import { SearchSelectComponent } from '../../../../ui/SearchSelectComponent';
 import { hasTacheExecution, getTacheAndUserId, formatDateForInput } from '../../../../../fonctions/fonction';
 import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
-import { searchUtilisateur } from '../../../../../services/utilisateurs/utilisateurAPI';
 import { searchParticipantFormations } from '../../../../../services/elaborations/participantFormationAPI';
 
 
 function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuFormation | null, themeId:string }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [lieu, setLieu] = useState("");
     const [selectedCohortes, setSelectedCohortes] = useState<Cohorte[]>([]);
@@ -120,6 +119,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
         }
 
         if (!lieuFormation) {
+            setIsLoading(true)
             await createLieuFormation(
                 {
                     lieu,
@@ -159,9 +159,12 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateLieuFormation(
                 {
                     _id: lieuFormation._id,
@@ -198,6 +201,8 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -212,6 +217,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateLieuFormation}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.lieu')}</label><label className="text-red-500"> *</label>

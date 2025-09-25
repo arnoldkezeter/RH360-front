@@ -6,12 +6,13 @@ import createToast from '../../../../hooks/toastify';
 import { setShowModalDelete } from '../../../../_redux/features/setting';
 import { deleteRegion } from '../../../../services/settings/regionAPI';
 import { deleteRegionSlice } from '../../../../_redux/features/parametres/regionSlice';
+import { useState } from 'react';
 
 
 function ModalDelete({ region }: { region: Region | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -23,6 +24,7 @@ function ModalDelete({ region }: { region: Region | null }) {
 
         if (region?._id != undefined) {
             await deleteRegion(region._id, lang).then((e: ReponseApiPros) => {
+                setIsLoading(true)
                 if (e.success) {
                     createToast(e.message, '', 0);
 
@@ -37,6 +39,8 @@ function ModalDelete({ region }: { region: Region | null }) {
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +54,7 @@ function ModalDelete({ region }: { region: Region | null }) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.region')} : {region ? (lang == "fr" ? region.nomFr : region.nomEn) : ""}</h1>
             </CustomDialogModal>

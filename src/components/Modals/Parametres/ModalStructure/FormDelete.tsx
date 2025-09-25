@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteStructure } from '../../../../services/settings/structureAPI';
 import { deleteStructureSlice } from '../../../../_redux/features/parametres/strucutureSlice';
+import { useState } from 'react';
 
 
 function FormDelete({ structure }: { structure: Structure | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -20,8 +21,9 @@ function FormDelete({ structure }: { structure: Structure | null }) {
 
 
     const handleDelete = async () => {
-
+        
         if (structure?._id != undefined) {
+            setIsLoading(true)
             await deleteStructure(structure._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -37,6 +39,8 @@ function FormDelete({ structure }: { structure: Structure | null }) {
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +54,7 @@ function FormDelete({ structure }: { structure: Structure | null }) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.structure')} : {structure ? (lang == "fr" ? structure.nomFr : structure.nomEn) : ""}</h1>
             </CustomDialogModal>

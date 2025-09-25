@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteEtablissement } from '../../../../services/settings/etablissementAPI';
 import { deleteEtablissementSlice } from '../../../../_redux/features/parametres/etablissementSlice';
+import { useState } from 'react';
 
 
 function FormDelete({ etablissement }: { etablissement: Etablissement | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -22,6 +23,7 @@ function FormDelete({ etablissement }: { etablissement: Etablissement | null }) 
     const handleDelete = async () => {
 
         if (etablissement?._id != undefined) {
+            setIsLoading(true)
             await deleteEtablissement(etablissement._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -37,6 +39,8 @@ function FormDelete({ etablissement }: { etablissement: Etablissement | null }) 
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +54,7 @@ function FormDelete({ etablissement }: { etablissement: Etablissement | null }) 
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.etablissement')} : {etablissement ? (lang == "fr" ? etablissement.nomFr : etablissement.nomEn) : ""}</h1>
             </CustomDialogModal>

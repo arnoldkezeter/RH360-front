@@ -10,12 +10,11 @@ import { updateTacheThemeFormationSlice } from '../../../../_redux/features/elab
 
 
 function FormCheckTask({ tache }: { tache: TacheThemeFormation|undefined }) {
-    console.log(tache)
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
     const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
     const dispatch = useDispatch();
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isFirstRender, setIsFirstRender] = useState(true);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.openCheckTask);
@@ -48,6 +47,7 @@ function FormCheckTask({ tache }: { tache: TacheThemeFormation|undefined }) {
 
         // })
         if(tache){
+            setIsLoading(true)
             await updateStatutTacheThemeFormation({tacheId:tache._id||"", currentUser:currentUser._id||"", statut:"EN_ATTENTE",donnees:'check', lang}).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -71,6 +71,8 @@ function FormCheckTask({ tache }: { tache: TacheThemeFormation|undefined }) {
         
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -85,6 +87,7 @@ function FormCheckTask({ tache }: { tache: TacheThemeFormation|undefined }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCheckTask}
+                isLoading={isLoading}
             >     
                         
                <h1>{`${t('label.marquer')} ${lang==='fr'?tache?.tache.nomFr:tache?.tache.nomEn} ${t('label.comme_achever')} ${lang==='fr'?tache?.theme?.titreFr||"":tache?.theme?.titreEn||""}`} </h1>

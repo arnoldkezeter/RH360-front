@@ -12,7 +12,7 @@ import { createAxeStrategiqueSlice, updateAxeStrategiqueSlice } from '../../../.
 
 
 function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique | null }) {
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -78,7 +78,7 @@ function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique |
         }
         // create
         if (!axeStrategique) {
-            
+            setIsLoading(true)
             await createAxeStrategique(
                 {
                     nomFr,
@@ -108,13 +108,13 @@ function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique |
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
-                
-
-            
+              
         }else {
 
-        
+            setIsLoading(true)
             await updateAxeStrategique(
                 {
                     _id: axeStrategique._id,
@@ -147,6 +147,8 @@ function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique |
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -164,6 +166,7 @@ function FormCreateUpdate({ axeStrategique }: { axeStrategique: AxeStrategique |
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

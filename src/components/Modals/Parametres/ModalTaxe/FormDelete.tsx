@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { deleteTaxe } from '../../../../services/settings/taxeAPI';
 import { deleteTaxeSlice } from '../../../../_redux/features/parametres/taxeSlice';
+import { useState } from 'react';
 
 
 function FormDelete({ taxe }: { taxe: Taxe | null }) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
@@ -22,6 +23,7 @@ function FormDelete({ taxe }: { taxe: Taxe | null }) {
     const handleDelete = async () => {
 
         if (taxe?._id != undefined) {
+            setIsLoading(true)
             await deleteTaxe(taxe._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -37,6 +39,8 @@ function FormDelete({ taxe }: { taxe: Taxe | null }) {
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
 
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -50,6 +54,7 @@ function FormDelete({ taxe }: { taxe: Taxe | null }) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression') + t('form_delete.taxe')} : {taxe ? (lang == "fr" ? taxe.natureFr : taxe.natureEn) : ""}</h1>
             </CustomDialogModal>

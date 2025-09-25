@@ -12,7 +12,7 @@ function FormCreateUpdate({ groupedCompetence, besoinId }: { groupedCompetence: 
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [titre, setTitre] = useState<string>('');
     
     const [pointsAAmeliorer, setPointsAAmeliorer] = useState<string>('');

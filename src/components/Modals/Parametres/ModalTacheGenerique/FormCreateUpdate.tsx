@@ -16,7 +16,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
     const [type, setType] = useState<MethodeValidation>();
@@ -107,7 +107,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
         }
         // create
         if (!tacheGenerique) {
-            
+            setIsLoading(true)
             await createTacheGenerique(
                 {
                     nomFr,
@@ -139,12 +139,14 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
-
+            setIsLoading(true)
         
             await updateTacheGenerique(
                 {
@@ -179,6 +181,8 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -196,6 +200,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nom_chose_fr')} required />

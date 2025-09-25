@@ -18,7 +18,7 @@ import { searchUtilisateur } from '../../../../../services/utilisateurs/utilisat
 function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation | null }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const {data:{programmeFormations}} = useSelector((state: RootState) => state.programmeFormationSlice)
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { t } = useTranslation();
     const [filteredFormations, setFilteredFormations]=useState<Formation[]>([])
 
@@ -204,6 +204,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
         }
 
         if (!themeFormation) {
+            setIsLoading(true)
             await createThemeFormation(
                 {
                     titreFr,
@@ -243,9 +244,12 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
+            setIsLoading(true)
             await updateThemeFormation(
                 {
                     _id: themeFormation._id,
@@ -284,6 +288,8 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -298,6 +304,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateThemeFormation}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.titre_fr')}</label><label className="text-red-500"> *</label>

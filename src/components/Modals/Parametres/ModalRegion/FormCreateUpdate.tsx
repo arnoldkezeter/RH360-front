@@ -13,7 +13,7 @@ import { createRegionSlice, updateRegionSlice } from '../../../../_redux/feature
 
 function ModalCreateUpdate({ region }: { region: Region | null }) {
     const { t } = useTranslation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [code, setCode] = useState("");
     const [nomFr, setNomFr] = useState("");
@@ -76,7 +76,7 @@ function ModalCreateUpdate({ region }: { region: Region | null }) {
         }
         // create
         if (!region) {
-            
+            setIsLoading(true)
             await createRegion(
                 {code, nomFr, nomEn}, lang 
             ).then((e: ReponseApiPros) => {
@@ -100,10 +100,12 @@ function ModalCreateUpdate({ region }: { region: Region | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
             
         } else {
-
+            setIsLoading(true)
             await updateRegion(
                 { _id: region._id, code, nomFr, nomEn }, lang
             ).then((e: ReponseApiPros) => {
@@ -128,6 +130,8 @@ function ModalCreateUpdate({ region }: { region: Region | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
 
@@ -142,6 +146,7 @@ function ModalCreateUpdate({ region }: { region: Region | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 {/* input 1 */}

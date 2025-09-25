@@ -14,7 +14,7 @@ function FormCreateUpdate({ autoEvaluation, user }: { autoEvaluation: AutoEvalua
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [niveau, setNiveau] = useState<NiveauAutoEvaluation | undefined>(undefined);
     const [insuffisancesFr, setInsuffisancesFr] = useState<string>('');
     const [insuffisancesEn, setInsuffisancesEn] = useState<string>('');
@@ -116,7 +116,7 @@ function FormCreateUpdate({ autoEvaluation, user }: { autoEvaluation: AutoEvalua
         }
         // create
         if (!autoEvaluation || autoEvaluation.niveau === 0) {
-            
+            setIsLoading(true)
             await createAutoEvaluation(
                 {
                     utilisateur:user._id||"",
@@ -155,13 +155,15 @@ function FormCreateUpdate({ autoEvaluation, user }: { autoEvaluation: AutoEvalua
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
 
-        
+            setIsLoading(true)
             await updateAutoEvaluation(
                 {
                     _id: autoEvaluation?._id || "",
@@ -200,6 +202,8 @@ function FormCreateUpdate({ autoEvaluation, user }: { autoEvaluation: AutoEvalua
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -217,6 +221,7 @@ function FormCreateUpdate({ autoEvaluation, user }: { autoEvaluation: AutoEvalua
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <h2 className="text-xl font-semibold">{lang === 'fr' ? autoEvaluation?.besoin?.titreFr||"" : autoEvaluation?.besoin?.titreEn||""}</h2>

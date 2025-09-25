@@ -7,6 +7,7 @@ import { deleteTacheStagiaire } from '../../../../services/stagiaires/tacheStagi
 import createToast from '../../../../hooks/toastify';
 import { deleteTacheStagiaireSlice } from '../../../../_redux/features/stagiaire/tacheStagiaireSlice';
 import CustomDialogModal from '../../CustomDialogModal.tsx';
+import { useState } from 'react';
 
 
 
@@ -14,13 +15,14 @@ import CustomDialogModal from '../../CustomDialogModal.tsx';
 function FormDelete({ tacheStagiaire, onDelete}: { tacheStagiaire : TacheStagiaire | null, onDelete: (depenseId: string) => void}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
         if (tacheStagiaire?._id != undefined) {
+            setIsLoading(true)
             await deleteTacheStagiaire(tacheStagiaire._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -36,7 +38,8 @@ function FormDelete({ tacheStagiaire, onDelete}: { tacheStagiaire : TacheStagiai
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
-
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
     }
@@ -49,6 +52,7 @@ function FormDelete({ tacheStagiaire, onDelete}: { tacheStagiaire : TacheStagiai
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression')+t('form_delete.tache_stagiaire')} : {lang==='fr'?tacheStagiaire?.nomFr:tacheStagiaire?.nomEn} </h1>
             </CustomDialogModal>

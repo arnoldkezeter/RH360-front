@@ -30,7 +30,6 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
     const [selectedStage, setSelectedStage] = useState<Stage|undefined>(undefined)
     const { data: { stages } } = useSelector((state: RootState) => state.stageSlice);
     const pageIsLoading = useSelector((state: RootState) => state.stageSlice.pageIsLoading);
-
      // variable pour la pagination
     const itemsPerPage =  useSelector((state: RootState) => state.stageSlice.data.pageSize); // nombre d'éléments maximum par page
     const count = useSelector((state: RootState) => state.stageSlice.data.totalItems);
@@ -154,11 +153,11 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
     return type === 'GROUPE' ? (
       <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#EDE9FE] text-[#5B21B6]">
         <Users className="w-3 h-3 mr-1" />
-        Groupe
+        {t('label.groupe')}
       </span>
     ) : (
       <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#DBEAFE] text-[#1E40AF]">
-        Individuel
+        {t('label.individuel')}
       </span>
     );
   };
@@ -174,7 +173,7 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
       const months = Math.floor(diffDays / 30);
       return months > 0 ? `${months} mois` : `${diffDays} jours`;
     } catch (error) {
-      return 'Durée inconnue';
+      return t('label.duree_inconnue');
     }
   };
 
@@ -211,7 +210,7 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                     onClick={handleGenerate}
                   >
                     <Download className="w-4 h-4 mr-3" />
-                    Générer la note
+                    {t('label.generer_note')}
                   </button>
                   
                   {/* <hr className="my-1 border-[#E5E7EB]" />
@@ -241,8 +240,8 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                 <div className="mb-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">Note de service des stages</h1>
-                    <p className="text-[#6B7280]">Générer des notes de service pour les stages individuels et groupés</p>
+                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">{t('label.titre_note')}</h1>
+                    <p className="text-[#6B7280]">{t('label.generer_note_service_ind_grp')}</p>
                     </div>
                 </div>
                 </div>

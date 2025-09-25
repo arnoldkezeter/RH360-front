@@ -15,7 +15,7 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [natureFr, setNatureFr] = useState("");
     const [natureEn, setNatureEn] = useState("");
     const [taux, setTaux] = useState(0);
@@ -82,7 +82,7 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
         }
         // create
         if (!taxe) {
-            
+            setIsLoading(true)
             await createTaxe(
                 {
                     natureFr,
@@ -110,13 +110,15 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
 
             
         }else {
 
-        
+            setIsLoading(true)
             await updateTaxe(
                 {
                     _id: taxe._id,
@@ -147,6 +149,8 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
                 
             
@@ -164,6 +168,7 @@ function FormCreateUpdate({ taxe }: { taxe: Taxe | null }) {
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
 
                 <Label text={t('label.nature_taxe_fr')} required />

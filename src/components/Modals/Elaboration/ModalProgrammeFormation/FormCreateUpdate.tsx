@@ -27,7 +27,7 @@ function FormCreateUpdate({
     const [titreEn, setTitreEn] = useState("");
     const [errorAnnee, setErrorAnnee] = useState("");
     const [isFirstRender, setIsFirstRender] = useState(true);
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.open);
     const [modalTitle, setModalTitle] = useState("");
     const lang = useSelector((state: RootState) => state.setting.language);
@@ -77,6 +77,7 @@ function FormCreateUpdate({
         if (!programmeFormation) {
             // Création
             try {
+                setIsLoading(true)
                 const response = await createProgrammeFormation(newProgramme, lang);
                 if (response.success) {
                     createToast(response.message, '', 0);
@@ -85,12 +86,15 @@ function FormCreateUpdate({
                 } else {
                     createToast(response.message, '', 2);
                 }
+                setIsLoading(false)
             } catch (error: any) {
+                setIsLoading(false)
                 createToast(error.response?.data?.message || t('message.erreur'), '', 2);
             }
         } else {
             // Mise à jour
             try {
+                setIsLoading(true)
                 const response = await updateProgrammeFormation(newProgramme, lang);
                 if (response.success) {
                     createToast(response.message, '', 0);
@@ -99,7 +103,9 @@ function FormCreateUpdate({
                 } else {
                     createToast(response.message, '', 2);
                 }
+                setIsLoading(false)
             } catch (error: any) {
+                setIsLoading(false)
                 createToast(error.response?.data?.message || t('message.erreur'), '', 2);
             }
         }
@@ -113,6 +119,7 @@ function FormCreateUpdate({
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUpdate}
+                isLoading={isLoading}
             >
                 <Label text={t('label.annee')} required />
                 <Input

@@ -20,9 +20,8 @@ function FormCreateUpdate({ formateur, themeId }: { formateur: Formateur | null,
     const dispatch = useDispatch();
     const [origineInterne, setOrigineInterne] = useState<boolean>();
     const [selectedFormateur, setSelectedFormateur] = useState<Utilisateur>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
-    
-
     const [errorOrigine, setErrorOrigine] = useState("");
     const [errorFormateur, setErrorFormateur] = useState("");
     
@@ -97,7 +96,7 @@ function FormCreateUpdate({ formateur, themeId }: { formateur: Formateur | null,
         }
 
         if (!formateur) {
-            
+            setIsLoading(true)
             await createFormateur(
                 {
                     utilisateur:selectedFormateur,
@@ -129,10 +128,12 @@ function FormCreateUpdate({ formateur, themeId }: { formateur: Formateur | null,
             }).catch((e) => {
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
+            }).finally(()=>{
+                setIsLoading(false)
             })
 
         } else {
-            console.log(selectedFormateur)
+            setIsLoading(true)
             await updateFormateur(
                 {
                     _id: formateur._id,
@@ -160,6 +161,8 @@ function FormCreateUpdate({ formateur, themeId }: { formateur: Formateur | null,
                 }).catch((e) => {
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
+                }).finally(()=>{
+                    setIsLoading(false)
                 })
         }
     }
@@ -174,6 +177,7 @@ function FormCreateUpdate({ formateur, themeId }: { formateur: Formateur | null,
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateFormateur}
+                isLoading={isLoading}
             >
                 
                 <label>{t('label.formateur')}</label><label className="text-red-500"> *</label>

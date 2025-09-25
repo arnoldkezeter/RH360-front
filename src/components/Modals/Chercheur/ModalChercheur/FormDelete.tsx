@@ -12,13 +12,14 @@ import { deleteChercheurSlice } from '../../../../_redux/features/chercheurs/che
 function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.delete);
     const closeModal = () => { dispatch(setShowModalDelete()); };
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
         if (chercheur?._id != undefined) {
+            setIsLoading(true)
             await deleteChercheur(chercheur._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
@@ -33,7 +34,8 @@ function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
                 }
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
-
+            }).finally(()=>{
+                setIsLoading(false)
             })
         }
     }
@@ -46,6 +48,7 @@ function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
                 isDelete={true}
                 closeModal={closeModal}
                 handleConfirm={handleDelete}
+                isLoading={isLoading}
             >
                 <h1>{t('form_delete.suppression')+t('form_delete.chercheur')} : {chercheur?chercheur.nom:""} {chercheur?chercheur.prenom:""}</h1>
             </CustomDialogModal>
@@ -56,4 +59,8 @@ function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
 export default FormDelete
 
 
+
+function useState<T>(arg0: boolean): [any, any] {
+    throw new Error('Function not implemented.');
+}
 
