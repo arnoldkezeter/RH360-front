@@ -16,6 +16,7 @@ const GenerationNoteDeServiceManager = () => {
     
   };
   return (
+    
     <div className="p-6 space-y-6 bg-white">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList>

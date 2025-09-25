@@ -188,44 +188,47 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
     };
 
     return (
-      <div className="relative">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors"
-        >
-          <MoreVertical className="w-4 h-4 text-[#6B7280]" />
-        </button>
-        
-        {isOpen && (
-          <>
-            <div 
-              className="fixed inset-0 z-10" 
-              onClick={() => setIsOpen(false)}
-            ></div>
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#E5E7EB] z-20">
-              <div className="py-1">
-                
-                <button 
-                  className="flex items-center w-full px-4 py-2 text-sm text-[#374151] hover:bg-[#F9FAFB]"
-                  onClick={handleGenerate}
-                >
-                  <Download className="w-4 h-4 mr-3" />
-                  Générer la note
-                </button>
-                
-                {/* <hr className="my-1 border-[#E5E7EB]" />
-                <button 
-                  className="flex items-center w-full px-4 py-2 text-sm text-[#DC2626] hover:bg-[#FEF2F2]"
-                  onClick={() => {setSelectedStage(stage);dispatch(setShowModalDelete()); setIsOpen(false)}}
-                >
-                  <Trash2 className="w-4 h-4 mr-3" />
-                  Supprimer
-                </button> */}
+      <>
+        <div className="relative">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors"
+          >
+            <MoreVertical className="w-4 h-4 text-[#6B7280]" />
+          </button>
+          
+          {isOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-10" 
+                onClick={() => setIsOpen(false)}
+              ></div>
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#E5E7EB] z-20">
+                <div className="py-1">
+                  
+                  <button 
+                    className="flex items-center w-full px-4 py-2 text-sm text-[#374151] hover:bg-[#F9FAFB]"
+                    onClick={handleGenerate}
+                  >
+                    <Download className="w-4 h-4 mr-3" />
+                    Générer la note
+                  </button>
+                  
+                  {/* <hr className="my-1 border-[#E5E7EB]" />
+                  <button 
+                    className="flex items-center w-full px-4 py-2 text-sm text-[#DC2626] hover:bg-[#FEF2F2]"
+                    onClick={() => {setSelectedStage(stage);dispatch(setShowModalDelete()); setIsOpen(false)}}
+                  >
+                    <Trash2 className="w-4 h-4 mr-3" />
+                    Supprimer
+                  </button> */}
+                </div>
               </div>
-            </div>
-          </>
-        )}
-      </div>
+            </>
+          )}
+        </div>
+        
+      </>
     );
   };
 

@@ -34,6 +34,8 @@ const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
 
         '/stagiaires/rapports',
         '/stagiaires/stages',
+
+        '/notes-service/generer_notes',
         
         '/parametres/profile',
         '/parametres/besoins-formation/manage',

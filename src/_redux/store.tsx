@@ -23,6 +23,7 @@ import stageRechercheReducer from "./features/chercheurs/stageRechercheSlice.tsx
 import programmeFormationReducer from "./features/elaborations/programmeFormationSlice.tsx";
 import formationReducer from "./features/elaborations/formationSlice.tsx";
 import themeFormationReducer from "./features/elaborations/themeFormationSlice.tsx";
+import noteServiceReducer from "./features/notes/noteServiceSlice.tsx";
 import lieuFormationReducer from "./features/elaborations/lieuFormationSlice.tsx"
 import participantFormationReducer from "./features/elaborations/participantFormationSlice.tsx"
 import objectifThemeReducer from "./features/elaborations/objectifThemeSlice.tsx"
@@ -70,6 +71,7 @@ const store = configureStore({
     programmeFormationSlice:programmeFormationReducer,
     formationSlice:formationReducer,
     themeFormationSlice:themeFormationReducer,
+    noteServiceSlice:noteServiceReducer,
     lieuFormationSlice:lieuFormationReducer,
     participantFormationSlice:participantFormationReducer,
     objectifThemeSlice:objectifThemeReducer,

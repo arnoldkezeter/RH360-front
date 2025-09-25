@@ -161,6 +161,8 @@
   },
   
   "label": {
+    "designation_tuteur":"Personnel(s) chargé(s) de la désignation du tuteur ?",
+    "mise_oeuvre":"Personnel(s) chargé(s) de la mise en oeuvre",
     "aucun_utilisateur_trouve":"Aucun utilisateur trouvé",
     "commencez_recherche":"Commencez votre recherche",
     "recherche_en_cours":"Recherche en cours...",
@@ -723,7 +725,9 @@
     "nb_seance_periode": "Nombre de séance de la période",
     "nb_seance_pratique": "Nombre de séance pratiquée",
     "gap": "Gap",
-    "taux_presence": "Taux de présence relatif"
+    "taux_presence": "Taux de présence relatif",
+    "copie_a":"Copie A",
+    "placeholder_copie_a":"Séparez chaque copie par des ; ou ,"
   },
   
   "recherche": {
@@ -1118,7 +1122,8 @@
     "current_pass": "Le champ mot de passe actuelle est obligatoire.",
     "new_pass": "Le champ mot de nouveau mot de passe est obligatoire.",
     "confirm_pass_field": "Le champ comfirmation du mot de passe est obligatoire.",
-    "confirm_pass": "La confirmation du mot de passe est incorrecte."
+    "confirm_pass": "La confirmation du mot de passe est incorrecte.",
+    "copie_a":"Le champ Copie A est obligatoire."
   },
   "message": {
     "verifier": "Vérifier",

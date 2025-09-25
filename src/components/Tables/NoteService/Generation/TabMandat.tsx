@@ -9,9 +9,11 @@ import { getFilteredStageRecherches } from '../../../../services/chercheurs/stag
 import { setErrorPageStageRecherche, setStageRecherches, setStageRecherchesLoading } from '../../../../_redux/features/chercheurs/stageRechercheSlice';
 import { NoData } from '../../../NoData';
 import Pagination from '../../../Pagination/Pagination';
-import { setShowModalDelete } from '../../../../_redux/features/setting';
+import { setShowModal, setShowModalDelete } from '../../../../_redux/features/setting';
 import FormDelete from '../../../Modals/StageRecherche/ModalStageRecherche/FormDelete';
 import Skeleton from 'react-loading-skeleton';
+import FormCreateUpdateNoteMandat from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteMandat';
+import { getCurrentUserData } from '../../../../services/utilisateurs/utilisateurAPI';
 
 interface MandatTabProps {
   onEditStageRecherche?: (stageRecherche: StageRecherche) => void;
@@ -178,8 +180,8 @@ const MandatTab = ({ onEditStageRecherche }: MandatTabProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleGenerate = () => {
-     
-
+      setSelectedStageRecherche(stageRecherche)
+      dispatch(setShowModal())
     };
 
     return (
@@ -366,6 +368,7 @@ const MandatTab = ({ onEditStageRecherche }: MandatTabProps) => {
             </div>
         </div>
         <FormDelete stageRecherche={selectedStageRecherche} />
+        <FormCreateUpdateNoteMandat note={undefined} mandatId={selectedStageRecherche?._id}/>
     </>
   );
 };
