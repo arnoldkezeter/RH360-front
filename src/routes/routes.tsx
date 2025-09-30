@@ -1,5 +1,4 @@
 
-import MonProfil from '../pages/CommonPage/Profil';
 import Regions from '../pages/Parametres/Regions';
 
 import Permissions from '../pages/Parametres/Permissions';
@@ -53,6 +52,7 @@ import RapportStage from '../pages/Chercheurs/RapportsStageRecherche';
 import GenerationNoteDeServiceManager from '../pages/NotesDeService/GenerationNoteDeService';
 import ChatManager from '../pages/Execution/Chat';
 import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
+import MonProfil from '../pages/Parametres/Profil';
 
 
 

@@ -559,6 +559,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateUtilisateur}
+                isLoading={isLoading}
             >
                 <label>{t('label.matricule')}</label>
                 <input

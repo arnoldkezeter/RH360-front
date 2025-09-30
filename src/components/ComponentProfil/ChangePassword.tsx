@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { RiLockPasswordLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import { useState } from "react";
@@ -12,9 +11,8 @@ import { apiVerifierMotDePasse } from "../../services/auth/api_verifier-password
 import ButtonLoading from "../ui/ButtonLoading";
 import ButtonOutline from "../ui/ButtonOutline";
 
-export function ChangePassword() {
+export function ChangePassword({currentUser}:{currentUser:Utilisateur}) {
     const { t } = useTranslation();
-    const userState: Utilisateur = useSelector((state: RootState) => state.user);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const [currentPassword, setCurrentPassord] = useState('');
     const [newPassword, setNewPassord] = useState('');
@@ -65,16 +63,16 @@ export function ChangePassword() {
         }
 
         setLoadingUpdatePwd(true);
-        await apiUpdatePassword({ userId: userState._id, newPassword: newPassword }).then((e: ReponseApiPros) => {
+        await apiUpdatePassword({ userId: currentUser._id||"", newPassword: newPassword }).then((e: ReponseApiPros) => {
             if (e.success) {
-                createToast(e.message[lang as keyof typeof e.message], '', 0);
+                createToast(e.message, '', 0);
                 setLoadingVerifyPwd(false);
                 setIsPasswordIsVerify(false);
                 handleClean();
 
             } else {
                 setLoadingVerifyPwd(false);
-                createToast(e.message[lang as keyof typeof e.message], '', 2);
+                createToast(e.message, '', 2);
             }
         }).catch((e) => {
             setLoadingVerifyPwd(false);
@@ -98,23 +96,22 @@ export function ChangePassword() {
 
         setLoadingVerifyPwd(true);
 
-        await apiVerifierMotDePasse({ userId: userState._id, motDePasse: currentPassword }).then((e: ReponseApiPros) => {
+        await apiVerifierMotDePasse({ userId: currentUser._id||"", motDePasse: currentPassword }).then((e: ReponseApiPros) => {
             setLoadingVerifyPwd(false);
 
             if (e.success) {
                 handleClean();
-                createToast(e.message[lang as keyof typeof e.message], '', 0);
+                createToast(e.message, '', 0);
                 setIsPasswordIsVerify(true);
-                // setIsPasswordIsVerify(e.data)
 
             } else {
                 setIsPasswordIsVerify(false);
-                createToast(e.message[lang as keyof typeof e.message], '', 2);
+                createToast(e.message, '', 0);
             }
         }).catch((e) => {
             setLoadingVerifyPwd(false);
             setIsPasswordIsVerify(false);
-            createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
+            createToast(e.message, '', 2);
         })
     }
 

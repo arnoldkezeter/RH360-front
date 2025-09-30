@@ -216,3 +216,61 @@ export async function getCurrentUserData({ userId }: { userId: string }): Promis
         throw error;
     }
 }
+
+export async function savePhotoProfil({ formData, userId }: { formData: FormData, userId: string }): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.post(
+            `${api}/save-photo-profil/${userId}`,
+            formData,
+            {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    'token': token,
+                },
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating section : ', error);
+        throw error;
+    }
+}
+
+export async function verifierMotDePasse({ userId, motDePasse }: { userId: String, motDePasse: string }): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/verifier-mot-de-passe/${userId}/${motDePasse}`,
+            {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    'token': token,
+                },
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating section : ', error);
+        throw error;
+    }
+}
+
+export async function updateMotDePasse({ userId, motDePasse }: { userId: String, motDePasse: string }): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.put(
+            `${api}/update-mot-de-passe/${userId}/${motDePasse}`,
+            {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    'token': token,
+                },
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating section : ', error);
+        throw error;
+    }
+}

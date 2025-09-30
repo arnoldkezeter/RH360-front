@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
 import { GoPerson } from "react-icons/go";
-import { Commune } from "../../pages/Parametres/Communes";
 import { MdOutlinePhone } from "react-icons/md";
 import { MdOutlineMail } from "react-icons/md";
 import { RiMapPin2Fill } from "react-icons/ri";
@@ -9,11 +8,16 @@ import { FaBirthdayCake } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import { setMinimumUser, setUser, updateUser } from "../../_redux/features/user_slice";
 import createToast from "../../hooks/toastify";
 import CustomModal from "../Modals/CustomDialogModal";
-import { compareDates } from "../../fonctions/fonction";
-import { config } from "../../config";
+import { formatDateForInput } from "../../fonctions/fonction";
+import { getPosteDeTravailForDropDown } from "../../services/settings/posteDeTravailAPI";
+import { getCategorieProfessionnellesForDropDown } from "../../services/settings/categorieProfessionnelleAPI";
+import { getCommunesForDropDown } from "../../services/settings/communeAPI";
+import { getDepartementsForDropDown } from "../../services/settings/departementAPI";
+import { getServicesForDropDownByStructure } from "../../services/settings/serviceAPI";
+import { updateUtilisateur } from "../../services/utilisateurs/utilisateurAPI";
+import { updateUtilisateurSlice } from "../../_redux/features/utilisateurs/utilisateurSlice";
 
 interface Props {
     icone: ReactNode; // Type de la variable icone
@@ -50,30 +54,28 @@ function LabelInput({ title, required }: LabelInputProps) {
 
 
 
-function ProfileInformation() {
+function ProfileInformation({currentUser}:{currentUser:Utilisateur}) {
 
-    const settingIsLoading = useSelector((state: RootState) => state.dataSetting.loading);
-    const dataUserIsLoading = useSelector((state: RootState) => state.user.nom);
-    const roles = config.roles;
-    const [haveChanged, setHaveChanged] = useState<boolean>(false);
+    const dataUserIsLoading = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.nom);
     const [loading, setLoading] = useState<boolean>(false);
     const [openModalConfirm, setOpenModalConfirm] = useState<boolean>(false);
-    const userState: Utilisateur = useSelector((state: RootState) => state.user);
+    // const currentUser: Utilisateur = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
+    const {data:{regions}} = useSelector((state: RootState) => state.regionSlice)
+    const {data:{structures}} = useSelector((state: RootState) => state.structureSlice)
+    const {data:{grades}}= useSelector((state: RootState) => state.gradeSlice)
+    const {data:{familleMetiers}} = useSelector((state: RootState) => state.familleMetierSlice)
+    
+    const [filteredDepartements, setFilteredDepartements]=useState<Departement[]>([])
+    const [filteredCommunes, setFilteredCommunes]=useState<Commune[]>([])
+    const [filteredServices, setFilteredServices]=useState<Service[]>([])
+    const [filteredPosteDeTravails, setFilteredPosteDeTravails]=useState<PosteDeTravail[]>([])
+    const [filteredCategorieProfessionnelles, setFilteredCategorieProfessionnelles]=useState<CategorieProfessionnelle[]>([])
 
-
-    const regions: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.regions) ?? [];
-    const departements: DepartementProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.departements) ?? [];
-    const communes: CommuneProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.communes) ?? [];
-    const grades: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.grades) ?? [];
-    const fonctions: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.fonctions) ?? [];
-    const categories: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.categories) ?? [];
-    const services: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.services) ?? [];
-    const specialites: CommonSettingProps[] = useSelector((state: RootState) => state.dataSetting.dataSetting.specialites) ?? [];
+   
     const { t } = useTranslation();
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const dispatch = useDispatch();
-    const [filteredDepartement, setFilteredDepartement] = useState<DepartementProps[] | undefined>([]);
-    const [filteredCommune, setFilteredCommune] = useState<CommuneProps[] | undefined>([]);
+    
 
     // filtrer les donnee a partir de l'id de la region selectionner
 
@@ -84,56 +86,47 @@ function ProfileInformation() {
 
     useEffect(() => {
 
-        const currentCommune = communes.find(commune => commune._id === "" + userState.commune);
-        const currentDepartement = currentCommune && departements.find(departement => departement._id === "" + currentCommune.departement);
-        const currentRegion = currentDepartement && regions.find(region => region._id === "" + currentDepartement.region);
-        currentRegion && filterDepartementByRegion(currentRegion._id);
-        currentDepartement && filterCommuneByDepartement(currentDepartement._id)
-        setNom(userState.nom);
-        setPrenom(userState.prenom ? userState.prenom : ""); setGenre(userState.genre);
-        setDateNaiss(userState.date_naiss ? userState.date_naiss.split("T")[0] : "");
-        setLieuNaiss(userState.lieu_naiss ? userState.lieu_naiss : "");
-        setGenre(userState.genre);
-        setEmail(userState.email);
-        setContact(userState.contact ? userState.contact : "");
-        setMatricule(userState.matricule ? userState.matricule : "");
-        setNationalite(userState.nationalite ? userState.nationalite : "");
-        setDiplomeEntre(userState.diplomeEntre ? userState.diplomeEntre : "");
-        setGrade(userState.grade ? grades.find(grade => grade._id === userState.grade) : undefined);
-        setCategorie(userState.categorie ? categories.find(categorie => categorie._id === userState.categorie) : undefined);
-        setFonction(userState.fonction ? fonctions.find(fonction => fonction._id === userState.fonction) : undefined);
-        setService(userState.service ? services.find(service => service._id === userState.service) : undefined);
-        setSpecialite(userState.specialite ? specialites.find(specialite => specialite._id === userState.specialite) : undefined);
-        setRegion(currentRegion);
-        setDepartement(currentDepartement);
-        setCommune(currentCommune);
-        setDateEntreeAdmin(userState.date_entree ? userState.date_entree : "");
-        setPhotoProfil(userState.photo_profil ?? "");
-    }, [userState, regions,
-        departements,
-        communes,
-        grades,
-        fonctions,
-        categories,
-        services]);
+        setNom(currentUser.nom);
+        setPrenom(currentUser?.prenom || ""); 
+        setGenre(currentUser.genre);
+        setDateNaiss(formatDateForInput(currentUser.dateNaissance) || "");
+        setLieuNaiss(currentUser.lieuNaissance || "");
+        
+        setEmail(currentUser.email);
+        setMatricule(currentUser?.matricule || "");
+        setTelephone(currentUser?.telephone || "");
+        setGrade(currentUser?.grade || undefined);
+        setCategorie(currentUser?.categorieProfessionnelle || undefined);
+        setFamilleMetier(currentUser?.familleMetier || undefined);
+        setPosteDeTravail(currentUser?.posteDeTravail || undefined);
+        setStructure(currentUser?.service?.structure || undefined);
+        setService(currentUser?.service || undefined);
+        setRegion(currentUser?.commune?.departement?.region || undefined);
+        setDepartement(currentUser?.commune?.departement || undefined);
+        setCommune(currentUser?.commune || undefined);
+        setDateEntreeAdmin(formatDateForInput(currentUser.dateEntreeEnService) || "");
+                   
+               
+    }, [currentUser, lang]);
     const [matricule, setMatricule] = useState("");
     const [nationalite, setNationalite] = useState("");
     const [diplomeEntre, setDiplomeEntre] = useState("");
     const [nom, setNom] = useState("");
     const [prenom, setPrenom] = useState("");
     const [email, setEmail] = useState("");
-    const [contact, setContact] = useState("");
+    const [telephone, setTelephone] = useState("");
     const [genre, setGenre] = useState("");
     const [dateNaiss, setDateNaiss] = useState("");
     const [lieuNaiss, setLieuNaiss] = useState("");
-    const [grade, setGrade] = useState<CommonSettingProps>();
-    const [service, setService] = useState<CommonSettingProps>();
-    const [specialite, setSpecialite] = useState<CommonSettingProps>();
-    const [fonction, setFonction] = useState<CommonSettingProps>();
-    const [categorie, setCategorie] = useState<CommonSettingProps>();
-    const [region, setRegion] = useState<CommonSettingProps>();
-    const [departement, setDepartement] = useState<DepartementProps>();
-    const [commune, setCommune] = useState<CommuneProps>();
+     const [grade, setGrade] = useState<Grade>();
+    const [categorie, setCategorie] = useState<CategorieProfessionnelle>();
+    const [familleMetier, setFamilleMetier] = useState<FamilleMetier>();
+    const [posteDeTravail, setPosteDeTravail] = useState<PosteDeTravail>();
+    const [structure, setStructure] = useState<Structure>();
+    const [service, setService] = useState<Service>();
+    const [region, setRegion] = useState<Region>();
+    const [departement, setDepartement] = useState<Departement>();
+    const [commune, setCommune] = useState<Commune>();
     const [dateEntreeAdmin, setDateEntreeAdmin] = useState("");
     const [photoProfil, setPhotoProfil] = useState("");
 
@@ -144,51 +137,7 @@ function ProfileInformation() {
 
 
 
-    // verifier que au moins un element de l'app a ete modifier avant de pouvoir faire un update
-    // Vérifier si au moins un champ a été modifié avant de pouvoir effectuer une mise à jour
-    useEffect(() => {
-        const isDateEntree = userState.date_entree !== null && compareDates(userState.date_entree, dateEntreeAdmin);
-        const isDateNaissModified = userState.date_naiss !== null && compareDates(userState.date_naiss, dateNaiss);
-
-        const isModified =
-            userState.matricule !== matricule ||
-            userState.nationalite !== nationalite ||
-            userState.diplomeEntre !== diplomeEntre ||
-            !isDateEntree ||
-            userState.nom !== nom ||
-            userState.prenom !== prenom ||
-            userState.contact !== contact ||
-            userState.email !== email ||
-            userState.genre !== genre ||
-            userState.lieu_naiss !== lieuNaiss ||
-            !isDateNaissModified ||
-            userState.grade && userState.grade != grade?._id ||
-            userState.categorie && userState.categorie != categorie?._id ||
-            userState.fonction && userState.fonction != fonction?._id ||
-            userState.service && userState.service != service?._id ||
-            userState.specialite && userState.specialite != specialite?._id ||
-            // userState.region && userState.region != region?._id ||
-            // userState.departement && userState.departement != departement?._id ||
-            userState.commune && userState.commune != commune?._id
-            ;
-        if (isModified) {
-            setHaveChanged(true)
-        }
-        else {
-            setHaveChanged(false);
-        }
-    }, [matricule, nationalite, diplomeEntre, specialite, dateEntreeAdmin, nom, prenom, email, contact, genre, dateNaiss, lieuNaiss,
-        grade, categorie, fonction, service, region, departement, commune,
-
-        regions,
-        departements,
-        communes,
-        grades,
-        fonctions,
-        categories,
-        services,
-        specialites
-    ]);
+    
 
 
 
@@ -202,169 +151,228 @@ function ProfileInformation() {
         return true;
     };
 
-    const handleFonctionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedFonctionLibelle = e.target.value;
-        var selectedFonction = null;
-
-        if (lang === 'fr') {
-            selectedFonction = fonctions.find(fonction => fonction.libelleFr === selectedFonctionLibelle);
-
+    useEffect(() => {
+        if (structure && structure._id) {
+            getServicesForDropDownByStructure({ structureId: structure._id, lang }).then((data) =>
+                setFilteredServices(data.services)
+            );
         }
-        else {
-            selectedFonction = fonctions.find(fonction => fonction.libelleEn === selectedFonctionLibelle);
-
+    }, [structure]);
+    
+    useEffect(() => {
+        if (region && region._id) {
+            getDepartementsForDropDown({ regionId: region._id, lang }).then((data) =>
+                setFilteredDepartements(data.departements)
+            );
         }
-
-
-        if (selectedFonction) {
-            setFonction(selectedFonction);
+    }, [region]);
+    
+    useEffect(() => {
+        if (departement && departement._id) {
+            getCommunesForDropDown({ departementId: departement._id,lang }).then((data) =>
+                setFilteredCommunes(data.communes)
+            );
         }
-    };
+    }, [departement]);
+    
+    useEffect(() => {
+        if (grade && grade._id) {
+            getCategorieProfessionnellesForDropDown({ gradeId: grade._id, lang }).then((data) =>   
+                setFilteredCategorieProfessionnelles(data.categorieProfessionnelles)
+            );
+        }
+    }, [grade]);
+    
+    useEffect(() => {
+        if (familleMetier && familleMetier._id) {
+            getPosteDeTravailForDropDown({ familleMetierId: familleMetier._id, lang }).then((data) =>
+                setFilteredPosteDeTravails(data.posteDeTravails)
+            );
+        }
+    }, [familleMetier]);
 
     const handleGradeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedGradeLibelle = e.target.value;
+        const selectedGradeNom = e.target.value;
         var selectedGrade = null;
 
         if (lang === 'fr') {
-            selectedGrade = grades.find(grade => grade.libelleFr === selectedGradeLibelle);
-
+            selectedGrade = grades.find(grade => grade.nomFr === selectedGradeNom);
         }
         else {
-            selectedGrade = grades.find(grade => grade.libelleEn === selectedGradeLibelle);
-
+            selectedGrade = grades.find(grade => grade.nomEn === selectedGradeNom);
         }
-
-
+        
         if (selectedGrade) {
             setGrade(selectedGrade);
         }
     };
 
     const handleCategorieChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedCategorieLibelle = e.target.value;
+        const selectedCategorieNom = e.target.value;
         var selectedCategorie = null;
 
         if (lang === 'fr') {
-            selectedCategorie = categories.find(categorie => categorie.libelleFr === selectedCategorieLibelle);
-
+            selectedCategorie = filteredCategorieProfessionnelles.find(categorie => categorie.nomFr === selectedCategorieNom);
         }
         else {
-            selectedCategorie = categories.find(categorie => categorie.libelleEn === selectedCategorieLibelle);
-
+            selectedCategorie = filteredCategorieProfessionnelles.find(categorie => categorie.nomEn === selectedCategorieNom);
         }
-
 
         if (selectedCategorie) {
             setCategorie(selectedCategorie);
         }
-    };
+    }
 
-    const handleServiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedServiceLibelle = e.target.value;
-        var selectedService = null;
+    const handleStructureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedStructureNom = e.target.value;
+        var selectedStructure = null;
+
+        if(!selectedStructureNom){
+            setStructure(undefined);
+            setFilteredServices([]);
+            setService(undefined)
+            return;
+        }
 
         if (lang === 'fr') {
-            selectedService = services.find(service => service.libelleFr === selectedServiceLibelle);
-
+            selectedStructure = structures.find(structure => structure.nomFr === selectedStructureNom);
         }
         else {
-            selectedService = services.find(service => service.libelleEn === selectedServiceLibelle);
+            selectedStructure = structures.find(structure => structure.nomEn === selectedStructureNom);
+        }
+       
 
+
+        if (selectedStructure) {
+            setStructure(selectedStructure);
+        }
+    }
+    
+    const handleServiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedServiceNom = e.target.value;
+        var selectedService = null;
+
+        if(!selectedServiceNom){
+            setService(undefined)
+            return;
+        }
+
+        if (lang === 'fr') {
+            selectedService = filteredServices.find(service => service.nomFr === selectedServiceNom);
+        }
+        else {
+            selectedService = filteredServices.find(service => service.nomEn === selectedServiceNom);
         }
 
 
         if (selectedService) {
             setService(selectedService);
         }
-    };
+    }
 
-    const handleSpecialiteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedSpecialiteLibelle = e.target.value;
-        var selectedSpecialite = null;
-    
+    const handleFamilleMetierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedFamilleMetierNom = e.target.value;
+        var selectedFamilleMetier = null;
+
+        if(!selectedFamilleMetierNom){
+            setFamilleMetier(undefined);
+            setFilteredPosteDeTravails([]);
+            setPosteDeTravail(undefined)
+            return;
+        } 
         if (lang === 'fr') {
-            selectedSpecialite = specialites.find(specialite => specialite.libelleFr === selectedSpecialiteLibelle);
-    
+            selectedFamilleMetier = familleMetiers.find(familleMetier => familleMetier.nomFr === selectedFamilleMetierNom);
+        }else {
+            selectedFamilleMetier = familleMetiers.find(familleMetier => familleMetier.nomEn === selectedFamilleMetierNom);
         }
-        else {
-            selectedSpecialite = specialites.find(specialite => specialite.libelleEn === selectedSpecialiteLibelle);
-    
-        }
-    
-    
-        if (selectedSpecialite) {
-            setSpecialite(selectedSpecialite);
+
+        if (selectedFamilleMetier) {
+            setFamilleMetier(selectedFamilleMetier);
         }
     };
 
-    // filtrer les donnee a partir de l'id de la region selectionner
-    const filterDepartementByRegion = (regionId: string | undefined) => {
-        if (regionId && regionId !== '') {
-            // Filtrer les departements en fonction de l'ID de la region
-            const result: DepartementProps[] = departements.filter(departement => "" + departement.region === regionId);
+    const handlePosteDeTavailChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedPosteDeTravailNom = e.target.value;
+        var selectedPosteDeTravail = null;
 
-            setFilteredDepartement(result);
-
+        if(!selectedPosteDeTravailNom){
+            setPosteDeTravail(undefined)
+            return;
+        } 
+        if (lang === 'fr') {
+            selectedPosteDeTravail = filteredPosteDeTravails.find(posteDeTavail => posteDeTavail.nomFr === selectedPosteDeTravailNom);
+        }else {
+            selectedPosteDeTravail = filteredPosteDeTravails.find(posteDeTavail => posteDeTavail.nomEn === selectedPosteDeTravailNom);
         }
-    };
 
-    // filtrer les donnee a partir de l'id du departement selectionner
-    const filterCommuneByDepartement = (departementId: string | undefined) => {
-        if (departementId && departementId !== '') {
-            // Filtrer les departements en fonction de l'ID de la departement
-            const result: CommuneProps[] = communes.filter(commune => "" + commune.departement === departementId);
-
-            setFilteredCommune(result);
+        if (selectedPosteDeTravail) {
+            setPosteDeTravail(selectedPosteDeTravail);
         }
     };
 
     const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedRegionLibelle = e.target.value;
+        const selectedRegionNom = e.target.value;
         var selectedRegion = null;
 
+        if(!selectedRegionNom){
+            setRegion(undefined);
+            setFilteredDepartements([]);
+            setDepartement(undefined)
+            setFilteredCommunes([]);
+            setCommune(undefined)
+            return;
+        } 
         if (lang === 'fr') {
-            selectedRegion = regions.find(region => region.libelleFr === selectedRegionLibelle);
-
+            selectedRegion = regions.find(region => region.nomFr === selectedRegionNom);
         }
         else {
-            selectedRegion = regions.find(region => region.libelleEn === selectedRegionLibelle);
-
+            selectedRegion = regions.find(region => region.nomEn === selectedRegionNom);
         }
-
 
         if (selectedRegion) {
             setRegion(selectedRegion);
-            filterDepartementByRegion(selectedRegion._id);
         }
     };
+
     const handleDepartementChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedDepartementLibelle = e.target.value;
+        const selectedDepartementNom = e.target.value;
         var selectedDepartement = null;
 
+        if(!selectedDepartementNom){
+            setDepartement(undefined)
+            setFilteredCommunes([]);
+            setCommune(undefined)
+            return;
+        } 
+
         if (lang === 'fr') {
-            selectedDepartement = departements.find(departement => departement.libelleFr === selectedDepartementLibelle);
+            selectedDepartement = filteredDepartements.find(departement => departement.nomFr === selectedDepartementNom);
 
         }
         else {
-            selectedDepartement = departements.find(departement => departement.libelleEn === selectedDepartementLibelle);
+            selectedDepartement = filteredDepartements.find(departement => departement.nomEn === selectedDepartementNom);
         }
 
         if (selectedDepartement) {
             setDepartement(selectedDepartement);
-            filterCommuneByDepartement(selectedDepartement._id);
         }
     };
+
     const handleCommuneChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedCommuneLibelle = e.target.value;
+        const selectedCommuneNom = e.target.value;
         var selectedCommune = null;
 
+        if(!selectedCommuneNom){
+            setCommune(undefined)
+            return;
+        } 
+
         if (lang === 'fr') {
-            selectedCommune = filteredCommune && filteredCommune.find(commune => commune.libelleFr === selectedCommuneLibelle);
-
+            selectedCommune =  filteredCommunes.find(commune => commune.nomFr === selectedCommuneNom);
         }
-        else {
-            selectedCommune = filteredCommune && filteredCommune.find(commune => commune.libelleEn === selectedCommuneLibelle);
 
+        else {
+            selectedCommune = filteredCommunes.find(commune => commune.nomEn === selectedCommuneNom);
         }
 
 
@@ -372,6 +380,8 @@ function ProfileInformation() {
             setCommune(selectedCommune);
         }
     };
+
+    
 
     const handleUpdateProfil = async () => {
         // Vérification des champs obligatoires
@@ -400,48 +410,67 @@ function ProfileInformation() {
         }
 
         setLoading(true);
+        await updateUtilisateur(
+        {
+            _id: currentUser._id,
+            matricule,
+            nom,
+            prenom,
+            email,
+            genre,
+            role:currentUser.role,
+            telephone,
+            dateNaissance:dateNaiss,
+            lieuNaissance:lieuNaiss,
+            dateEntreeEnService:dateEntreeAdmin,
+            photoDeProfil:"",
+            service,
+            categorieProfessionnelle:categorie,
+            posteDeTravail,
+            grade,
+            familleMetier,
+            commune,
+            actif:true,
+        }, lang).then((e: ReponseApiPros) => {
+            if (e.success) {
+                createToast(e.message, '', 0);
+                dispatch(updateUtilisateurSlice({
+                    id: e.data._id,
+                    utilisateurData: {
+                        _id: e.data._id,
+                        nom: e.data.nom,
+                        genre: e.data.genre,
+                        email: e.data.email,
+                        photoDeProfil: e.data.photoDeProfil,
+                        matricule: e.data.matricule,
+                        telephone: e.data.telephone,
+                        prenom: e.data.prenom,
+                        dateNaissance: e.data.dateNaissance,
+                        lieuNaissance: e.data.lieuNaissance,
+                        dateEntreeEnService: e.data.dateEntreeEnService,
+                        categorieProfessionnelle: categorie,
+                        posteDeTravail: posteDeTravail,
+                        service: service,
+                        commune: commune,
+                        grade:grade,
+                        familleMetier:familleMetier,
+                        role: e.data.role,
+                        actif: e.data.actif
+                    }
 
-        // await apiUpdateEtudiant(
-        //     {
-        //         _id: userState._id,
-        //         nom,
-        //         genre,
-        //         email,
-        //         photo_profil: photoProfil,
-        //         contact,
-        //         matricule,
-        //         nationalite,
-        //         diplomeEntre,
-        //         prenom,
-        //         date_naiss: dateNaiss,
-        //         lieu_naiss: lieuNaiss,
-        //         date_entree: dateEntreeAdmin,
-        //         niveaux: userState.niveaux,
-        //         specialite: specialite?._id || null,
-        //         categorie: categorie?._id || null,
-        //         fonction: fonction?._id || null,
-        //         service: service?._id || null,
-        //         commune: commune?._id || null
-        //     }
-        // ).then((e: ReponseApiPros) => {
-        //     if (e.success) {
-        //         createToast(e.message[lang as keyof typeof e.message], '', 0);
-        //         const userData: UserState = e.data;
-        //         dispatch(setUser({ ...userData }));
-        //         setOpenModalConfirm(false);
-        //         setLoading(false);
-        //         setHaveChanged(false);
+                }));
 
-        //     } else {
-        //         createToast(e.message[lang as keyof typeof e.message], '', 2);
-        //         setLoading(false);
 
-        //     }
-        // }).catch((e) => {
-        //     createToast(e.response.data.message[lang as keyof typeof e.response.data.message], '', 2);
-        //     setLoading(false);
-        // })
+            } else {
+                createToast(e.message, '', 2);
 
+            }
+        }).catch((e) => {
+            createToast(e.response.data.message, '', 2);
+        }).finally(()=>{
+            setLoading(false)
+        })
+        
 
 
 
@@ -481,7 +510,7 @@ function ProfileInformation() {
                                     </div>
                                     {/* Date entrée admin */}
                                     <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.date_entree_admin')} />
+                                        <LabelInput title={t('label.date_entree_service')} />
 
                                         <div className="relative">
                                             <input
@@ -531,16 +560,16 @@ function ProfileInformation() {
                                     </div>
                                 </div>
                                 <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-                                    {/* Contact */}
+                                    {/* Telephone */}
                                     <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.contact')} />
+                                        <LabelInput title={t('label.telephone')} />
                                         <div className="relative">
                                             <IconeInput icone={<MdOutlinePhone />} />
                                             <input
                                                 className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                                                 type="phone"
-                                                value={contact}
-                                                onChange={(e) => { setContact(e.target.value); }}
+                                                value={telephone}
+                                                onChange={(e) => { setTelephone(e.target.value); }}
                                             />
                                         </div>
                                     </div>
@@ -598,23 +627,9 @@ function ProfileInformation() {
                                         </div>
                                         {errorGenre && <p className="text-red-500 pt-2 text-sm " >{errorGenre}</p>}
                                     </div>
-                                    <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.nationalite')} />
-                                        <div className="relative">
-                                            <input
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                                type="text"
-                                                value={nationalite}
-                                                onChange={(e) => setNationalite(e.target.value)}
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                                     {/* Date de naissance */}
                                     <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.date_naiss')} />
+                                        <LabelInput title={t('label.date_naissance')} />
 
                                         <div className="relative">
                                             <IconeInput icone={<FaBirthdayCake />} />
@@ -626,12 +641,12 @@ function ProfileInformation() {
                                             />
                                         </div>
                                     </div>
-
-
-
+                                    
+                                </div>
+                                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                                     {/* lieu de naissance */}
                                     <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.lieu_naiss')} />
+                                        <LabelInput title={t('label.lieu_naissance')} />
 
                                         <div className="relative">
                                             <IconeInput icone={<RiMapPin2Fill />} />
@@ -644,202 +659,190 @@ function ProfileInformation() {
                                             />
                                         </div>
                                     </div>
+                                    
                                 </div>
-                                {/* {(userState.role.toString()===roles.etudiant.toString() || userState.role.toString()===roles.delegue.toString()) && (<div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row"> */}
-                                { (<div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-                                    {/* diplome */}
-                                    <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.diplome')} />
-
-                                        <div className="relative">
-                                            <input
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                                type="text"
-                                                value={diplomeEntre}
-                                                onChange={(e) => setDiplomeEntre(e.target.value)}
-                                            />
-                                        </div>
-                                    </div>
-                                    {/* Specialite */}
-                                    <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.specialite')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={specialite ? (lang === 'fr' ? specialite.libelleFr : specialite.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.specialite')}
-                                                onChange={handleSpecialiteChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.specialite')}</option>
-                                                {specialites.map(specialite => (
-                                                    <option key={specialite._id} value={(lang === 'fr' ? specialite.libelleFr : specialite.libelleEn)}>{(lang === 'fr' ? specialite.libelleFr : specialite.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>)}
-                            </>
-                    }
-
-                    {/* {(userState.role.toString()===roles.superAdmin.toString() || userState.role.toString()===roles.admin.toString() || userState.role.toString()===roles.enseignant.toString()) && ( */}
-                     {(userState.role.toString()===roles.superAdmin.toString() || userState.role.toString()===roles.admin.toString()) && (
-                        settingIsLoading ?
-                            <div className="w-full flex justify-center my-10">
-                                <div className=" my-10 h-10 w-10 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
-
-                            </div>
-                            :
-                            <>
-                                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-
-                                    {/* Grade */}
-                                    <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.grade')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={grade ? (lang === 'fr' ? grade.libelleFr : grade.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.grade')}
-                                                onChange={handleGradeChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.grade')}</option>
-                                                {grades.map(grade => (
-                                                    <option key={grade._id} value={(lang === 'fr' ? grade.libelleFr : grade.libelleEn)}>{(lang === 'fr' ? grade.libelleFr : grade.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    {/* Catégorie */}
-                                    <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.categorie')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={categorie ? (lang === 'fr' ? categorie.libelleFr : categorie.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.categorie')}
-                                                onChange={handleCategorieChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.categorie')}</option>
-                                                {categories.map(categorie => (
-                                                    <option key={categorie._id} value={(lang === 'fr' ? categorie.libelleFr : categorie.libelleEn)}>{(lang === 'fr' ? categorie.libelleFr : categorie.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-
-                                    {/* Fonction */}
-                                    <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.fonction')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={fonction ? (lang === 'fr' ? fonction.libelleFr : fonction.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.fonction')}
-                                                onChange={handleFonctionChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.fonction')}</option>
-                                                {fonctions.map(fonction => (
-                                                    <option key={fonction._id} value={(lang === 'fr' ? fonction.libelleFr : fonction.libelleEn)}>{(lang === 'fr' ? fonction.libelleFr : fonction.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    {/* Service */}
-                                    <div className="w-full sm:w-1/2">
-                                        <LabelInput title={t('label.service')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={service ? (lang === 'fr' ? service.libelleFr : service.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.service')}
-                                                onChange={handleServiceChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.service')}</option>
-                                                {services.map(service => (
-                                                    <option key={service._id} value={(lang === 'fr' ? service.libelleFr : service.libelleEn)}>{(lang === 'fr' ? service.libelleFr : service.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-
-                                    {/* Région */}
-                                    <div className="w-full sm:w-1/3">
-                                        <LabelInput title={t('label.region')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={region ? (lang === 'fr' ? region.libelleFr : region.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}
-                                                onChange={handleRegionChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}</option>
-                                                {regions.map(region => (
-                                                    <option key={region._id} value={(lang === 'fr' ? region.libelleFr : region.libelleEn)}>{(lang === 'fr' ? region.libelleFr : region.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    {/* Département */}
-                                    <div className="w-full sm:w-1/3">
-                                        <LabelInput title={t('label.departement')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={departement ? (lang === 'fr' ? departement.libelleFr : departement.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.departement')}
-                                                onChange={handleDepartementChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.departement')}</option>
-                                                {filteredDepartement && filteredDepartement.map(departement => (
-                                                    <option key={departement._id} value={(lang === 'fr' ? departement.libelleFr : departement.libelleEn)}>{(lang === 'fr' ? departement.libelleFr : departement.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    {/* Commune */}
-                                    <div className="w-full sm:w-1/3">
-                                        <LabelInput title={t('label.commune')} />
-
-                                        <div className="relative">
-                                            <select
-                                                value={commune ? (lang === 'fr' ? commune.libelleFr : commune.libelleEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.commune')}
-                                                onChange={handleCommuneChange}
-                                                className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                            >
-                                                <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.commune')}</option>
-                                                {filteredCommune && filteredCommune.map(commune => (
-                                                    <option key={commune._id} value={(lang === 'fr' ? commune.libelleFr : commune.libelleEn)}>{(lang === 'fr' ? commune.libelleFr : commune.libelleEn)}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
                                 
-                            </>)
+                            </>
+                    }                     
+                            
+                    <>
+                        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
 
-                    }
+                            {/* Strucuture */}
+                            <div className="w-full sm:w-1/2">
+                                <LabelInput title={t('label.structure')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={structure ? (lang === 'fr' ? structure.nomFr : structure.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.structure')}
+                                        onChange={handleStructureChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.structure')}</option>
+                                        {structures.map(structure => (
+                                            <option key={structure._id} value={(lang === 'fr' ? structure.nomFr : structure.nomEn)}>{(lang === 'fr' ? structure.nomFr : structure.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            {/* Service */}
+                            <div className="w-full sm:w-1/2">
+                                <LabelInput title={t('label.service')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={service ? (lang === 'fr' ? service.nomFr : service.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.service')}
+                                        onChange={handleServiceChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.service')}</option>
+                                        {filteredServices.map(service => (
+                                            <option key={service._id} value={(lang === 'fr' ? service.nomFr : service.nomEn)}>{(lang === 'fr' ? service.nomFr : service.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+
+                            {/* Grade */}
+                            <div className="w-full sm:w-1/2">
+                                <LabelInput title={t('label.grade')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={grade ? (lang === 'fr' ? grade.nomFr : grade.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.grade')}
+                                        onChange={handleGradeChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.grade')}</option>
+                                        {grades.map(grade => (
+                                            <option key={grade._id} value={(lang === 'fr' ? grade.nomFr : grade.nomEn)}>{(lang === 'fr' ? grade.nomFr : grade.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            {/* Catégorie */}
+                            <div className="w-full sm:w-1/2">
+                                <LabelInput title={t('label.categorie_professionnelle')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={categorie ? (lang === 'fr' ? categorie.nomFr : categorie.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.categorie_professionnelle')}
+                                        onChange={handleCategorieChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.categorie_professionnelle')}</option>
+                                        {filteredCategorieProfessionnelles.map(categorie => (
+                                            <option key={categorie._id} value={(lang === 'fr' ? categorie.nomFr : categorie.nomEn)}>{(lang === 'fr' ? categorie.nomFr : categorie.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">                            
+                           
+                            {/* famille metier */}
+                            <div className="w-full sm:w-1/2">
+                                <LabelInput title={t('label.famille_metier')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={familleMetier ? (lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.famille_metier')}
+                                        onChange={handleServiceChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.famille_metier')}</option>
+                                        {familleMetiers.map(familleMetier => (
+                                            <option key={familleMetier._id} value={(lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn)}>{(lang === 'fr' ? familleMetier.nomFr : familleMetier.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="w-full sm:w-1/2">
+                                <LabelInput title={t('label.poste_de_travail')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={posteDeTravail ? (lang === 'fr' ? posteDeTravail.nomFr : posteDeTravail.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.poste_de_travail')}
+                                        onChange={handlePosteDeTavailChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.poste_de_travail')}</option>
+                                        {filteredPosteDeTravails.map(poste => (
+                                            <option key={poste._id} value={(lang === 'fr' ? poste.nomFr : poste.nomEn)}>{(lang === 'fr' ? poste.nomFr : poste.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+
+                            {/* Région */}
+                            <div className="w-full sm:w-1/3">
+                                <LabelInput title={t('label.region')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={region ? (lang === 'fr' ? region.nomFr : region.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}
+                                        onChange={handleRegionChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.region')}</option>
+                                        {regions.map(region => (
+                                            <option key={region._id} value={(lang === 'fr' ? region.nomFr : region.nomEn)}>{(lang === 'fr' ? region.nomFr : region.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            {/* Département */}
+                            <div className="w-full sm:w-1/3">
+                                <LabelInput title={t('label.departement')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={departement ? (lang === 'fr' ? departement.nomFr : departement.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.departement')}
+                                        onChange={handleDepartementChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.departement')}</option>
+                                        {filteredDepartements && filteredDepartements.map(departement => (
+                                            <option key={departement._id} value={(lang === 'fr' ? departement.nomFr : departement.nomEn)}>{(lang === 'fr' ? departement.nomFr : departement.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            {/* Commune */}
+                            <div className="w-full sm:w-1/3">
+                                <LabelInput title={t('label.commune')} />
+
+                                <div className="relative">
+                                    <select
+                                        value={commune ? (lang === 'fr' ? commune.nomFr : commune.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.commune')}
+                                        onChange={handleCommuneChange}
+                                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    >
+                                        <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.commune')}</option>
+                                        {filteredCommunes && filteredCommunes.map(commune => (
+                                            <option key={commune._id} value={(lang === 'fr' ? commune.nomFr : commune.nomEn)}>{(lang === 'fr' ? commune.nomFr : commune.nomEn)}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        
+                    </>
+
+                    
 
                     {/* bouton valider !! */}
                     <div className="flex justify-center pt-0 gap-2.5  ">
                         <button
                             className="text-sm mt-8 flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
-                            onClick={() => {
-                                if (haveChanged) {
-                                    setOpenModalConfirm(true)
-                                } else {
-                                    createToast(lang === 'fr' ? "Aucune information n'a changé." : "No information has changed.", '', 1);
-                                }
-
-                            }
-
-
+                            onClick={() => {setOpenModalConfirm(true) }
                             } >
                             {t('boutton.mettre_a_jour_info')}
                         </button>

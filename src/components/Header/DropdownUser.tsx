@@ -85,7 +85,7 @@ const DropdownUser = () => {
         <div className="h-10 w-10 rounded-full overflow-hidden">
           {
             userState.photoDeProfil !== null && userState.photoDeProfil !== '' ?
-              <img className="w-full h-full object-cover" src={serveurUrl + userState.photoDeProfil} alt={userState.nom} />
+              <img className="w-full h-full object-cover" src={`${serveurUrl}${userState.photoDeProfil}`} alt={userState.nom} />
               :
               <img src={
                 user.role === roles.superAdmin ? ImageAdmin :

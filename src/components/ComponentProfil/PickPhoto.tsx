@@ -1,6 +1,4 @@
 import ImageAdmin from './../../images/user/admin.png';
-import ImageTeacher from './../../images/user/teacher.png';
-import ImageDelegate from './../../images/user/delegate.png';
 import ImageStudent from './../../images/user/student.png';
 import { config, serveurUrl } from "../../config";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,21 +9,20 @@ import createToast from '../../hooks/toastify';
 // import { apiSavePhotoProfil } from '../../services/other_users/photoDeProfile/api_save_profile_image';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import CustomModal from '../Modals/CustomDialogModal';
-// import { apiDeletePhotoProfil } from '../../services/other_users/photoDeProfile/api_delete_profile_image';
 import { setUser } from '../../_redux/features/utilisateurs/utilisateurSlice';
+import { savePhotoProfil } from '../../services/utilisateurs/utilisateurAPI';
+// import { apiDeletePhotoProfil } from '../../services/other_users/photoDeProfile/api_delete_profile_image';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 
-export function PickPhoto() {
-  const dataUserIsLoading = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
+export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const roles = config.roles;
-  const userState = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   const lang = useSelector((state: RootState) => state.setting.language);
-  const user = { username: userState.nom, role: userState.role, photo: userState.photoDeProfil };
+  const user = { username: currentUser.nom, role: currentUser.role, photo: currentUser.photoDeProfil };
 
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
@@ -65,18 +62,18 @@ export function PickPhoto() {
       setLoading(true);
       try {
 
-        // await apiSavePhotoProfil({ formData: formData, userId: userState?._id || "" })
-        //   .then((reponse: { data: any; message: { fr: string; en: string; }; }) => {
-        //     setLoading(false);
-        //     setFile(null);
-        //     dispatch(setUser({ ...userState, photoDeProfil: reponse.data }));
-        //     createToast(lang === 'fr' ? reponse.message.fr : reponse.message.en, '', 0);
-        //     setUpdatePhoto(false)
-        //   }).catch((e: { message: { fr: string; en: string; }; }) => {
-        //     createToast(lang === 'fr' ? e.message.fr : e.message.en, '', 2);
-        //     setLoading(false);
+        await savePhotoProfil({ formData: formData, userId: currentUser?._id || "" })
+          .then((reponse) => {
+            setLoading(false);
+            setFile(null);
+            dispatch(setUser({ ...currentUser, photoDeProfil: reponse.data }));
+            createToast(reponse.message, '', 0);
+            setUpdatePhoto(false)
+          }).catch((e) => {
+            createToast(e.message,'', 2);
+            setLoading(false);
 
-        //   })
+          })
 
       } catch (e) {
         createToast('Une erreur est survenue', '', 2);
@@ -90,19 +87,19 @@ export function PickPhoto() {
       createToast('erreur', '', 1)
     }
   }
-
+  console.log(`${serveurUrl}${currentUser.photoDeProfil}`)
   return (
     <div className="col-span-5 xl:col-span-2">
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
           <h3 className="font-medium text-black dark:text-white">
-            {t('label.photoDeProfil')}
+            {t('label.photo_profil')}
           </h3>
         </div>
 
         {
 
-          dataUserIsLoading === null ?
+          currentUser === null ?
             <div className="w-full flex justify-center my-10">
               <div className=" my-10 h-10 w-10 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
 
@@ -128,7 +125,7 @@ export function PickPhoto() {
                     </span>
 
                     {
-                      userState.photoDeProfil !== '' && <div className='-mt-2 flex space-x-2'>
+                      currentUser.photoDeProfil !== '' && <div className='-mt-2 flex space-x-2'>
                         <button
                           onClick={() => setUpdatePhoto(true)}
                           className='hover:text-primary flex items-center justify-center gap-x-1 '>
@@ -155,11 +152,11 @@ export function PickPhoto() {
 
                 {
 
-
+                  
                   !updatePhoto && user.photo !== '' ?
                     <div className='w-full flex justify-center items-center'>
                       <div className="h-30 lg:h-40 w-30 lg:w-40 rounded-full overflow-hidden">
-                        <img className="w-full h-full object-cover" src={serveurUrl + userState.photoDeProfil} alt={userState.nom} />
+                        <img className="w-full h-full object-cover" src={`${serveurUrl}${currentUser.photoDeProfil}`} alt={currentUser.nom} />
                       </div>
                     </div>
                     :
@@ -260,15 +257,15 @@ export function PickPhoto() {
         isDelete={true}
         closeModal={() => setOpenModalDelete(false)}
         handleConfirm={async () => {
-          if (userState.photoDeProfil !== '') {
+          if (currentUser.photoDeProfil !== '') {
             setLoading(true);
             try {
               setLoading(true);
 
-              // await apiDeletePhotoProfil({ userId: userState?._id })
+              // await apiDeletePhotoProfil({ userId: currentUser?._id })
               //   .then((reponse: { message: { fr: string; en: string; }; }) => {
               //     setFile(null);
-              //     dispatch(setUser({ ...userState, photoDeProfil: '' }));
+              //     dispatch(setUser({ ...currentUser, photoDeProfil: '' }));
               //     createToast(lang === 'fr' ? reponse.message.fr : reponse.message.en, '', 0);
 
               //     setLoading(false);
