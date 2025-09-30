@@ -49,7 +49,7 @@ const Formations = () => {
         setHeaderConfig({
             title: t('button.ajouter_formation'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedFormation(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

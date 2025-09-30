@@ -8,27 +8,34 @@ import { HiOutlineLightBulb } from 'react-icons/hi2';
 interface ChercheurSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
+    currentUser:Utilisateur
     t: (key: string) => string;
 }
 
 const ChercheurSidebarLink: React.FC<ChercheurSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
-    t
+    t,
+    currentUser
 }) => {
     const { pathname } = useLocation();
 
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-        {path: '/chercheurs/gestion-chercheur', label: t('sub_menu.gerer_chercheurs')},
-        {path: '/chercheurs/mandats', label: t('sub_menu.mandats')},
-        {path: '/chercheurs/rapports', label: t('sub_menu.rapports_mandats')},
+        {path: '/chercheurs/gestion-chercheur', label: t('sub_menu.gerer_chercheurs'), roles:["SUPER-ADMIN", "ADMIN"]},
+        {path: '/chercheurs/mandats', label: t('sub_menu.mandats'), roles:["SUPER-ADMIN", "ADMIN"]},
+        {path: '/chercheurs/rapports', label: t('sub_menu.rapports_mandats'), roles:["SUPER-ADMIN", "ADMIN"]},
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
-    // const accessibleItems = menuItems.filter(item => item.permission);
-    const accessibleItems = menuItems;
+    const accessibleItems = menuItems.filter((item) =>
+        item.roles.some((role) => currentUser.roles.includes(role))
+    );
+
+    if (accessibleItems.length === 0) {
+        return null; // pas de menu si aucun droit
+    }
     // Cas où l'utilisateur a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (

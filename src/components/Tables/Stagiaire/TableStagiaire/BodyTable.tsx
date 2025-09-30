@@ -78,13 +78,13 @@ const BodyTable = ({ data, onEdit}: { data: Stagiaire[], onEdit: (stagiaire: Sta
                                     },
                                 });
 
-                                listPage.push({
-                                    name: t('label.attestation_convention'),
-                                    handleClick: () => {
-                                        dispatch(setStagiaireSelected(item));
-                                        navigate('/stagiaire/attestations&convention');
-                                    },
-                                });
+                                // listPage.push({
+                                //     name: t('label.attestations_conventions'),
+                                //     handleClick: () => {
+                                //         dispatch(setStagiaireSelected(item));
+                                //         // navigate('/stagiaire/attestations&convention');
+                                //     },
+                                // });
                             
 
                                 return listPage.length > 0 ? (

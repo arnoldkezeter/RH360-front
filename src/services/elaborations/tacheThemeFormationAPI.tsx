@@ -194,6 +194,26 @@ export async function reinitialiserStatutTaches({lang}: {lang:string}): Promise<
     }
 }
 
+export async function marquerExecuteTacheThemeFormation({ tacheId, currentUserId, lang}: {tacheId:string, currentUserId:string, lang:string}): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.put(
+            `${api}/${tacheId}/executer/${currentUserId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error updating tachethemeformation:', error);
+        throw error;
+    }
+}
+
 
 
 

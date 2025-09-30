@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import ButtonCrudTable from "../../../common/ButtonActionTable"
 import { setShowModal, setShowModalDelete } from "../../../../../_redux/features/setting"
-import { SelectButton } from "../../../common/composants/SelectButton";
 import { RootState } from "../../../../../_redux/store";
 import { formatDateWithLang } from "../../../../../fonctions/fonction";
 import { useTranslation } from "react-i18next";
@@ -27,7 +26,7 @@ const BodyTable = ({ data, onEdit}: { data: TacheThemeFormation[], onEdit: (tach
                 {/* titre */}
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{lang === 'fr' ? item.tache.nomFr : item.tache.nomEn}</h5>
+                        <h5>{lang === 'fr' ? item?.tache?.nomFr || "": item?.tache?.nomEn||""}</h5>
                     </div>
                 </td>
 
@@ -35,9 +34,9 @@ const BodyTable = ({ data, onEdit}: { data: TacheThemeFormation[], onEdit: (tach
                 <td className="border-b border-[#eee] py-2 lg:py-4 px-4 dark:border-strokedark align-top">
                     <div className="min-h-[40px] flex items-center">
                         <h5>
-                            {formatDateWithLang(item.dateDebut, lang) === formatDateWithLang(item.dateFin, lang) 
-                                ? formatDateWithLang(item.dateDebut, lang)
-                                : `${t('label.du')} ${formatDateWithLang(item.dateDebut, lang)} ${t('label.au')} ${formatDateWithLang(item?.dateFin, lang)}`
+                            {formatDateWithLang(item?.dateDebut||"", lang) === formatDateWithLang(item?.dateFin||"", lang) 
+                                ? formatDateWithLang(item?.dateDebut||"", lang)
+                                : `${t('label.du')} ${formatDateWithLang(item?.dateDebut||"", lang)} ${t('label.au')} ${formatDateWithLang(item?.dateFin||"", lang)}`
                             }
                         </h5>
                     </div>

@@ -34,7 +34,7 @@ const TypeEchelleReponses = () => {
         setHeaderConfig({
             title: t('button.ajouter_type_echelle_reponse'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedTypeEchelleReponse(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

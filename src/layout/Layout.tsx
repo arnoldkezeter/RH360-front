@@ -9,11 +9,13 @@ import HeaderPage from '../components/HeaderPage';
 interface LayoutProps {
     isMobileOrTablet: boolean;
     userPermissions?: string[];
+    currentUser:Utilisateur
 }
 
-const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
+const Layout = ({ isMobileOrTablet, userPermissions, currentUser }: LayoutProps) => {
     const [sidebarOpen, setSidebarOpen] = useState(isMobileOrTablet);
     const location = useLocation();
+    
     
     // Liste des routes où HeaderPage ne doit pas être affiché
     const routesWithoutHeaderPage = [
@@ -25,6 +27,7 @@ const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
         '/elaboration-programme/besoins-formation/exprimer',
         '/elaboration-programme/besoins-formation/exprimer/nouvelle-competence',
         '/elaboration-programme/formation/theme-formation/participants',
+        
         
         '/execution-programme/rapports-formation',
 
@@ -62,7 +65,7 @@ const Layout = ({ isMobileOrTablet, userPermissions }: LayoutProps) => {
     return (
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
             <div className="flex h-screen overflow-hidden">
-                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentUser={currentUser}/>
                 
                 <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
                     <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />

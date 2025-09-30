@@ -10,12 +10,14 @@ interface ExecutionSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
     t: (key: string) => string;
+    currentUser:Utilisateur
 }
 
 const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
-    t
+    t,
+    currentUser
 }) => {
     const { pathname } = useLocation();
 
@@ -23,17 +25,19 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
             
-        {path: '/execution-programme/calendrier-formation', label: t('sub_menu.calendrier_formation')},
-        {path: '/execution-programme/tache-executee', label: t('sub_menu.tache_executee')},
-        {path: '/execution-programme/suivi-budgetaire', label: t('sub_menu.suivi_budgetaire')},
-        {path: '/execution-programme/supports-formation', label: t('sub_menu.support_formation')},
-        {path: '/execution-programme/rapports-formation', label: t('sub_menu.rapport_formation')}
+        {path: '/execution-programme/calendrier-formation', label: t('sub_menu.calendrier_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/execution-programme/tache-executee', label: t('sub_menu.tache_executee'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/execution-programme/suivi-budgetaire', label: t('sub_menu.suivi_budgetaire'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/execution-programme/supports-formation', label: t('sub_menu.support_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/execution-programme/rapports-formation', label: t('sub_menu.rapport_formation'), roles:["SUPER-ADMIN", "ADMIN"] }
 
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
     // const accessibleItems = menuItems.filter(item => item.permission);
-    const accessibleItems = menuItems;
+    const accessibleItems = menuItems.filter((item) =>
+        item.roles.some((role) => currentUser.roles.includes(role))
+    );
     // Cas où l'utilisateur a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (
@@ -108,7 +112,7 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
                             <div className="w-6">
                                 <FaTasks className="text-[22px]" />
                             </div>
-                            {t('menu.etudiants')}
+                            {t('menu.execution_programme')}
                             <IoIosArrowDown className={`absolute right-2 top-1/2 -translate-y-1/2 fill-current ${open ? 'rotate-180' : ''}`} />
                         </NavLink>
                         <div className={`transform overflow-hidden ${!open ? 'hidden' : ''}`}>
@@ -116,7 +120,7 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
                                 {accessibleItems.map((item, index) => (
                                     <li key={index}>
                                         <NavLink to={item.path} className={({ isActive }) =>
-                                            `group relative flex items-center pb-2 rounded-md px-4 font-medium text-white duration-300 ease-in-out hover:text-[#1e3a8a] ${isActive ? 'text-secondary' : ''}`}
+                                            `group relative flex items-center pb-2 rounded-md px-4 font-medium text-white duration-300 ease-in-out hover:text-secondary ${isActive ? 'text-white' : ''}`}
                                         >
                                             {item.label}
                                         </NavLink>

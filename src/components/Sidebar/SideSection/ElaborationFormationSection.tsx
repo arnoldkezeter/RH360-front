@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { PiStudentFill } from 'react-icons/pi';
 import { IoIosArrowDown } from 'react-icons/io';
 import SidebarLinkGroup from '../SideGroup/SidebarLinkGroup';
 import { IoList } from 'react-icons/io5';
@@ -10,31 +9,35 @@ interface ElaborationSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
     t: (key: string) => string;
+    currentUser:Utilisateur
 }
 
 const ElaborationSidebarLink: React.FC<ElaborationSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
-    t
+    t,
+    currentUser
 }) => {
     const { pathname } = useLocation();
 
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-        {path: '/elaboration-programme/axes-strategique', label: t('sub_menu.axes_strategique')},
-        {path: '/elaboration-programme/competences', label: t('sub_menu.competences')},
-        {path: '/elaboration-programme/familles-metier', label: t('sub_menu.familles_metier')},
-        {path: '/elaboration-programme/programmes-formation', label: t('sub_menu.programmes_formation')},
-        {path: '/elaboration-programme/formations', label: t('sub_menu.formations')},
-        {path: '/elaboration-programme/formation/themes-formation', label: t('sub_menu.themes_formations')},
-        {path: '/elaboration-programme/besoins-formation/exprimer', label: t('sub_menu.besoins_formation_exprimer')},
-        {path: '/elaboration-programme/besoins-formation/rapports', label: t('sub_menu.besoins_formation_rapport')},
+        {path: '/elaboration-programme/axes-strategique', label: t('sub_menu.axes_strategique'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/elaboration-programme/competences', label: t('sub_menu.competences'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/elaboration-programme/familles-metier', label: t('sub_menu.familles_metier'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/elaboration-programme/programmes-formation', label: t('sub_menu.programmes_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/elaboration-programme/formations', label: t('sub_menu.formations'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/elaboration-programme/formation/themes-formation', label: t('sub_menu.themes_formations'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/elaboration-programme/besoins-formation/exprimer', label: t('sub_menu.besoins_formation_exprimer'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/elaboration-programme/besoins-formation/rapports', label: t('sub_menu.besoins_formation_rapport'), roles:["SUPER-ADMIN", "ADMIN"] },
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
     // const accessibleItems = menuItems.filter(item => item.permission);
-    const accessibleItems = menuItems;
+    const accessibleItems = menuItems.filter((item) =>
+        item.roles.some((role) => currentUser.roles.includes(role))
+    );
     // Cas où l'utilisateur a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (
@@ -84,7 +87,7 @@ const ElaborationSidebarLink: React.FC<ElaborationSidebarLinkProps> = ({
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-[#1e3a8a] dark:hover:bg-meta-4 ${pathname === singleItem.path ? 'bg-[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
                 >
                     <div className="w-6">
-                        <PiStudentFill className="text-[18px]" />
+                        <IoList className="text-[18px]" />
                     </div>
                     {singleItem.label}
                 </NavLink>
@@ -107,9 +110,9 @@ const ElaborationSidebarLink: React.FC<ElaborationSidebarLinkProps> = ({
                             className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-[#1e3a8a] dark:hover:bg-meta-4 ${pathname.includes('elaboration-programme') ? 'bg-[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
                         >
                             <div className="w-6">
-                                <PiStudentFill className="text-[22px]" />
+                                <IoList className="text-[22px]" />
                             </div>
-                            {t('menu.etudiants')}
+                            {t('menu.elaboration_programme')}
                             <IoIosArrowDown className={`absolute right-2 top-1/2 -translate-y-1/2 fill-current ${open ? 'rotate-180' : ''}`} />
                         </NavLink>
                         <div className={`transform overflow-hidden ${!open ? 'hidden' : ''}`}>
@@ -117,7 +120,7 @@ const ElaborationSidebarLink: React.FC<ElaborationSidebarLinkProps> = ({
                                 {accessibleItems.map((item, index) => (
                                     <li key={index}>
                                         <NavLink to={item.path} className={({ isActive }) =>
-                                            `group relative flex items-center pb-2 rounded-md px-4 font-medium text-[#1e3a8a] duration-300 ease-in-out hover:text-secondary ${isActive ? 'text-white' : ''}`}
+                                            `group relative flex items-center pb-2 rounded-md px-4 font-medium text-white duration-300 ease-in-out hover:text-secondary ${isActive ? 'text-white' : ''}`}
                                         >
                                             {item.label}
                                         </NavLink>

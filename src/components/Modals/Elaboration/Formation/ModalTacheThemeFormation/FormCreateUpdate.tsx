@@ -145,7 +145,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                 console.log(e);
                 createToast(e.response.data.message, '', 2);
             }).finally(()=>{
-                setIsLoading(true)
+                setIsLoading(false)
             })
 
         } else {
@@ -182,7 +182,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                     console.log(e);
                     createToast(e.response.data.message, '', 2);
                 }).finally(()=>{
-                    setIsLoading(true)
+                    setIsLoading(false)
                 })
         }
     }
@@ -197,6 +197,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                 isDelete={false}
                 closeModal={closeModal}
                 handleConfirm={handleCreateTacheThemeFormation}
+                isLoading={isLoading}
             >
 
                 <label>{t('label.tache_formation')}</label><label className="text-red-500"> *</label>

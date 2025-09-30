@@ -133,7 +133,7 @@ const CarnetsStage = () => {
             <WeeklySection stats={stats} progressionPercent={progressionPercent} isLoading={isLoading}/>
                     
             {/* Generate Report Section */}
-            <GenerateSection dateDebut={startDate} dateFin={endDate} />
+            {/* <GenerateSection dateDebut={startDate} dateFin={endDate} /> */}
             <FormCreateUpdate tacheStagiaire={selectedTacheStagiaire} onAdd={addTache} onUpdate={updateTache}/>
             <FormDelete tacheStagiaire={selectedTacheStagiaire} onDelete={deleteTache}/>
             

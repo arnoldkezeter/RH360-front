@@ -19,16 +19,18 @@ import NoteServiceSidebarLink from './SideSection/NoteServiceSection';
 interface SidebarProps {
     sidebarOpen: boolean;
     setSidebarOpen: (arg: boolean) => void;
+    currentUser:Utilisateur
     // userPermissions?:string[];
 }
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }: SidebarProps) => {
     const location = useLocation();
     const { pathname } = location;
     const trigger = useRef<any>(null);
     const sidebar = useRef<any>(null);
     const { t } = useTranslation();
     const userPermissions = true;
+    
     
     const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
     const [sidebarExpanded, setSidebarExpanded] = useState(
@@ -114,6 +116,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/* Elaboration : list group */}
                             {userPermissions && <ElaborationSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}
@@ -123,6 +126,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/* Execution */}
                             {userPermissions && <ExecutionSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}
@@ -132,6 +136,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/**Evaluations */}
                             {userPermissions && <EvaluationSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}
@@ -141,6 +146,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/**Stagiaires */}
                             {userPermissions && <StagiaireSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}
@@ -150,6 +156,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/**Chercheur */}
                             {userPermissions && <ChercheurSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}
@@ -160,6 +167,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/**Utilisateur */}
                             {userPermissions && <UtilisateurSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}
@@ -170,6 +178,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/**Note de service */}
                              {userPermissions && <NoteServiceSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}
@@ -193,6 +202,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             {/* Parametre */}
                             {userPermissions && <ParametreSidebarLink
                                 // userPermissions={userPermissions}
+                                currentUser={currentUser}
                                 sidebarExpanded={sidebarExpanded}
                                 setSidebarExpanded={setSidebarExpanded}
                                 t={t}

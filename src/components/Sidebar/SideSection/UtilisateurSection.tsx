@@ -9,25 +9,29 @@ interface UtilisateurSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
     t: (key: string) => string;
+    currentUser:Utilisateur
 }
 
 const UtilisateurSidebarLink: React.FC<UtilisateurSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
-    t
+    t,
+    currentUser
 }) => {
     const { pathname } = useLocation();
 
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-        {path: '/utilisateurs/gestion-utilisateur', label: t('sub_menu.gerer_utilisateurs')},
-        {path: '/utilisateurs/historiques', label: t('sub_menu.historique_actions')},
+        {path: '/utilisateurs/gestion-utilisateur', label: t('sub_menu.gerer_utilisateurs'), roles:["SUPER-ADMIN", "ADMIN"] },
+        // {path: '/utilisateurs/historiques', label: t('sub_menu.historique_actions'), roles:["SUPER-ADMIN", "ADMIN"] },
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
     // const accessibleItems = menuItems.filter(item => item.permission);
-    const accessibleItems = menuItems;
+    const accessibleItems = menuItems.filter((item) =>
+        item.roles.some((role) => currentUser.roles.includes(role))
+    );
     // Cas où l'utilisateur a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (

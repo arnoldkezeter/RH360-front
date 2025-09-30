@@ -467,6 +467,7 @@
     "femmes":"Femmes",
     "support_formation":"Support de formation",
 
+    "attestations_conventions":"Attestations et conventions",
     "carnet_stage":"Carnet de stage",
     "taches_completees":"Tâches complétées",
     "taches_en_cours":"En cours",
@@ -481,6 +482,8 @@
     "absent":"Absent",
     "en_cours":"En cours",
     "termine":"Terminé",
+    "terminee":"Terminée",
+    "doit_etre_termine":"Doit être terminée le ",
     "activite_quotidienne":"Activité quotidienne",
     "generation_carnet":"Génération et téléchargement du carnet de stage",
     "inclure_rapport":"Inclure dans le rapport",

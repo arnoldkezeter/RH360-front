@@ -36,7 +36,7 @@ function FormDelete({ tacheThemeFormation }: { tacheThemeFormation : TacheThemeF
             }).catch((e) => {
                 createToast(e.response.data.message, '', 2);
             }).finally(()=>{
-                setIsLoading(true)
+                setIsLoading(false)
             })
         }
     }
@@ -51,7 +51,7 @@ function FormDelete({ tacheThemeFormation }: { tacheThemeFormation : TacheThemeF
                 handleConfirm={handleDelete}
                 isLoading={isLoading}
             >
-                <h1>{t('form_delete.suppression')+t('form_delete.tache_formation')} : {tacheThemeFormation?lang === 'fr'?tacheThemeFormation.tache.nomFr:tacheThemeFormation.tache.nomEn:""} </h1>
+                <h1>{t('form_delete.suppression')+t('form_delete.tache_formation')} : {tacheThemeFormation?lang === 'fr'?tacheThemeFormation?.tache?.nomFr:tacheThemeFormation?.tache?.nomEn:""} </h1>
             </CustomDialogModal>
         </>
     );

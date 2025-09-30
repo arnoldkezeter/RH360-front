@@ -41,7 +41,7 @@ const LieuFormations = () => {
         setHeaderConfig({
             title: t('button.ajouter_lieu_formation'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedLieuFormation(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

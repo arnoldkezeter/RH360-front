@@ -310,7 +310,7 @@ const EvaluationResults = () => {
     <>
       {/* Header */}
       <BreadcrumbPageDescription
-        pageDescription={t('page_description.rapport_evaluation_a_chaud')}
+        pageDescription={""}
         titleColor="text-[#1E3A8A]"
         pageName={t('sub_menu.rapport_evaluation_a_chaud')}
       />

@@ -51,7 +51,7 @@ const Stagiaires = () => {
         setHeaderConfig({
             title: t('button.ajouter_stagiaire'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedStagiaire(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

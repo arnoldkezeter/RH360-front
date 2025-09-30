@@ -44,7 +44,7 @@ const Utilisateurs = () => {
         setHeaderConfig({
             title: t('button.ajouter_utilisateur'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedUtilisateur(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

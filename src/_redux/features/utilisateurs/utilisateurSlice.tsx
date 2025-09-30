@@ -18,6 +18,7 @@ const initialState: UtilisateurInitialData = {
         email: "",
         photoDeProfil: "",
         genre: "",
+        roles:[],
         actif: false
     },
     pageIsLoading: false,

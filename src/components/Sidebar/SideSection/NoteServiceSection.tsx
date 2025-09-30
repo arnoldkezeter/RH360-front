@@ -9,25 +9,29 @@ interface NoteServiceSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
     t: (key: string) => string;
+    currentUser:Utilisateur
 }
 
 const NoteServiceSidebarLink: React.FC<NoteServiceSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
-    t
+    t,
+    currentUser
 }) => {
     const { pathname } = useLocation();
 
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-        {path: '/notes-service/generer_notes', label: t('sub_menu.generer_note')},
-        {path: '/notes-service/historiques', label: t('sub_menu.historique_note')}
+        {path: '/notes-service/generer_notes', label: t('sub_menu.generer_note'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/notes-service/historiques', label: t('sub_menu.historique_note'), roles:["SUPER-ADMIN", "ADMIN"]}
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
     // const accessibleItems = menuItems.filter(item => item.permission);
-    const accessibleItems = menuItems;
+    const accessibleItems = menuItems.filter((item) =>
+        item.roles.some((role) => currentUser.roles.includes(role))
+    );
     // Cas où l'noteservice a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (

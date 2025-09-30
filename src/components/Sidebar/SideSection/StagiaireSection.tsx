@@ -9,12 +9,14 @@ interface StagiaireSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
     t: (key: string) => string;
+    currentUser:Utilisateur
 }
 
 const StagiaireSidebarLink: React.FC<StagiaireSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
-    t
+    t,
+    currentUser
 }) => {
     const { pathname } = useLocation();
 
@@ -22,15 +24,17 @@ const StagiaireSidebarLink: React.FC<StagiaireSidebarLinkProps> = ({
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
          
-        {path: '/stagiaires/gestion-stagiaire', label: t('sub_menu.gerer_stagiaires')},
-        {path: '/stagiaires/stages', label: t('sub_menu.stages')},
-        {path: '/stagiaires/rapports', label: t('sub_menu.rapports_stages')},
+        {path: '/stagiaires/gestion-stagiaire', label: t('sub_menu.gerer_stagiaires'), roles:["SUPER-ADMIN", "ADMIN", "SUPERVISEUR"] },
+        {path: '/stagiaires/stages', label: t('sub_menu.stages'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/stagiaires/rapports', label: t('sub_menu.rapports_stages'), roles:["SUPER-ADMIN", "ADMIN"] },
 
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
     // const accessibleItems = menuItems.filter(item => item.permission);
-    const accessibleItems = menuItems;
+    const accessibleItems = menuItems.filter((item) =>
+        item.roles.some((role) => currentUser.roles.includes(role))
+    );
     // Cas où l'utilisateur a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (

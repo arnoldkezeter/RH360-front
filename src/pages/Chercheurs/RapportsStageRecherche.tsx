@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../_redux/store';
-import RapportStageBody from '../../components/Tables/Stagiaire/BodyRapport/BodyRapport';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
 import { useStatsStageRecherches } from '../../hooks/useFetchStatStageRechercheData';
+import RapportStageBody from '../../components/Tables/Chercheur/BodyRapport/BodyRapport';
 
 
 const RapportStage=()=> {

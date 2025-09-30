@@ -16,6 +16,7 @@ interface Utilisateur {
     email: string;
     genre: string;
     role: string;
+    roles:string[];
     telephone?: string;
     dateNaissance?: string ;
     lieuNaissance?: string ;

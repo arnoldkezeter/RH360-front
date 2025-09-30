@@ -51,7 +51,7 @@ const GenerateSection = ({ dateDebut, dateFin}: GenerateSectionTacheStagiairePro
               </div> */}
             </div>
             
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+            {/* <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
               <div className="text-sm font-semibold text-gray-900 mb-4">{t('label.inclure_rapport')}</div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <label className="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
@@ -67,7 +67,7 @@ const GenerateSection = ({ dateDebut, dateFin}: GenerateSectionTacheStagiairePro
                   <span className="text-sm font-medium text-gray-700">{t('label.obsevation_superviseur')}</span>
                 </label>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
     );

@@ -39,7 +39,7 @@ const Formateurs = () => {
         setHeaderConfig({
             title: t('button.ajouter_formateur'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedFormateur(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

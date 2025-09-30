@@ -7,7 +7,6 @@ import BreadcrumbPageDescription from "../../../components/BreadcrumbPageDescrip
 
 import { setShowModal } from "../../../_redux/features/setting";
 import { useFetchData } from "../../../hooks/fechDataOptions";
-import { getFormationForDropDown } from "../../../services/elaborations/formationAPI";
 import { setErrorPageTacheThemeFormation, setTacheThemeFormationLoading, setTacheThemeFormations } from "../../../_redux/features/elaborations/tacheThemeFormationSlice";
 import { getFilteredTacheThemeFormations } from "../../../services/elaborations/tacheThemeFormationAPI";
 import FormCreateUpdate from "../../../components/Modals/Elaboration/Formation/ModalTacheThemeFormation/FormCreateUpdate";
@@ -47,9 +46,8 @@ const TacheThemeFormations = () => {
         setHeaderConfig({
             title: t('button.ajouter_tache_formation'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions:[],
             onAdd: () => {setSelectedTacheThemeFormation(null);dispatch(setShowModal())},
-            onExport: handleExportUsers,
         });
     }, [t]);
 
@@ -92,7 +90,6 @@ const TacheThemeFormations = () => {
                 lang,
             },
             onSuccess: (data) => {
-                
                 dispatch(setTacheThemeFormations(data || {
                     tacheThemeFormations: [],
                     currentPage: 0,

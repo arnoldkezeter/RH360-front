@@ -40,7 +40,7 @@ const ObjectifThemes = () => {
         setHeaderConfig({
             title: t('button.ajouter_objectif_theme'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedObjectifTheme(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

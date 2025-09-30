@@ -43,7 +43,7 @@ const ThemeFormations = () => {
         setHeaderConfig({
             title: t('button.ajouter_theme_formation'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedThemeFormation(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

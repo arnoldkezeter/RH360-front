@@ -47,7 +47,7 @@ const Chercheurs = () => {
         setHeaderConfig({
             title: t('button.ajouter_chercheur'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedChercheur(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

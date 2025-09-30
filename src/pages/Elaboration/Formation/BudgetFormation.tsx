@@ -40,7 +40,7 @@ const BudgetFormations = () => {
         setHeaderConfig({
             title: t('button.ajouter_budget_theme'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedBudgetFormation(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

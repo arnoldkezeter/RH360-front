@@ -17,13 +17,12 @@ import { setSaveDeviceType } from './_redux/features/setting.js';
 import ChoisirCompte from './pages/ChoisirCompte/ChoisirCompte.js';
 import { RootState } from './_redux/store.js';
 import VerificationCode from './pages/Authentication/verification_code.js';
-import { useTranslation } from 'react-i18next';
 import ProtectedRoute from './components/protectRoutes.js';
 import AccessDenied from './pages/CommonPage/AccesRefuse.js';
 import { HeaderProvider } from './components/Context/HeaderConfig.js';
 import { setUser } from './_redux/features/utilisateurs/utilisateurSlice.js';
 import { useSettingData } from './hooks/useSettingData.js';
-import { setRegions } from './_redux/features/parametres/regionSlice.js';
+import { getCurrentUserData } from './services/utilisateurs/utilisateurAPI.js';
 
 function App() {
 
@@ -32,6 +31,7 @@ function App() {
 
   const [isMobileOrTablet, setIsMobileOrTablet] = useState<boolean>(true);
   const [userRole, setUserRole] = useState<string>('');
+  const currentUser: Utilisateur = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   const [loading, setLoading] = useState<boolean>(true); // Commence en mode chargement
   const [isAuth, setIsAuth] = useState<{ value: any; status: boolean }>({ value: 'default', status: false });
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
@@ -67,7 +67,7 @@ function App() {
       const localUser = isAuth.value;
 
       if (localUser) {
-        const { _id, role, nom, prenom, email, photoDeProfil, genre, actif } = localUser;
+        const { _id, role, roles, nom, prenom, email, photoDeProfil, genre, actif } = localUser;
         if (role) {
           dispatch(
             setUser({
@@ -79,8 +79,11 @@ function App() {
               photoDeProfil,
               genre,
               actif,
+              roles
             })
           );
+          console.log(_id)
+          console.log(roles)
           setUserRole(role);
         }
       }
@@ -133,7 +136,7 @@ function App() {
 
               {/* Menu de gauche pour les differents roles  */}
               <Route element={isAuth.value !== null && isAuth.status ?
-                <Layout isMobileOrTablet={isMobileOrTablet} userPermissions={userPermissions}/> : <Navigate to={'/signin'} />} >
+                <Layout isMobileOrTablet={isMobileOrTablet} userPermissions={userPermissions} currentUser={currentUser}/> : <Navigate to={'/signin'} />} >
 
                 {/*  Page de droites   */}
                 {/* page dashboard est celle selectionner par defaut */}

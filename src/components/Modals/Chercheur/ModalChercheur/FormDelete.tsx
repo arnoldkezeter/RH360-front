@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify.tsx';
 import { deleteChercheur } from '../../../../services/chercheurs/chercheurAPI.tsx';
 import { deleteChercheurSlice } from '../../../../_redux/features/chercheurs/chercheurSlice.tsx';
+import { useState } from 'react';
 
 
 
@@ -58,9 +59,4 @@ function FormDelete({ chercheur }: { chercheur : Chercheur|null}) {
 
 export default FormDelete
 
-
-
-function useState<T>(arg0: boolean): [any, any] {
-    throw new Error('Function not implemented.');
-}
 

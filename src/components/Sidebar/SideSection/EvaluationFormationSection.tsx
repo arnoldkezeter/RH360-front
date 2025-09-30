@@ -9,29 +9,33 @@ interface EvaluationSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
     t: (key: string) => string;
+    currentUser:Utilisateur
 }
 
 const EvaluationSidebarLink: React.FC<EvaluationSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
-    t
+    t,
+    currentUser
 }) => {
     const { pathname } = useLocation();
 
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-        {path: '/evaluations/type-echelle-reponse', label: t('sub_menu.types_echelles_reponses')},    
-        {path: '/evaluations/cree-evaluation', label: t('sub_menu.cree_evaluation')},
-        {path: '/evaluations/evaluation-a-chaud', label: t('sub_menu.evaluation_a_chaud')},
-        {path: '/evaluations/rapport/evaluation-a-chaud', label: t('sub_menu.rapport_evaluation_a_chaud')},
-        // {path: '/evaluations/rapport/evaluation-formateur', label: t('sub_menu.rapport_evaluation_formateur')},
+        {path: '/evaluations/type-echelle-reponse', label: t('sub_menu.types_echelles_reponses'), roles:["SUPER-ADMIN", "ADMIN"] },    
+        {path: '/evaluations/cree-evaluation', label: t('sub_menu.cree_evaluation'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/evaluations/evaluation-a-chaud', label: t('sub_menu.evaluation_a_chaud'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/evaluations/rapport/evaluation-a-chaud', label: t('sub_menu.rapport_evaluation_a_chaud'), roles:["SUPER-ADMIN", "ADMIN"] },
+        // {path: '/evaluations/rapport/evaluation-formateur', label: t('sub_menu.rapport_evaluation_formateur'), roles:["SUPER-ADMIN", "ADMIN"] },
 
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
     // const accessibleItems = menuItems.filter(item => item.permission);
-    const accessibleItems = menuItems;
+    const accessibleItems = menuItems.filter((item) =>
+        item.roles.some((role) => currentUser.roles.includes(role))
+    );
     // Cas où l'utilisateur a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (

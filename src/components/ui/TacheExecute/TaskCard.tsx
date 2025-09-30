@@ -1,17 +1,20 @@
 import { AlertCircle, BarChart3, Check, CheckSquare, Clock, FileText, Mail, Upload, Users, MessageCircle } from 'lucide-react';
 import React, { useState } from 'react';
-import { ETAT_TACHE, STATUT_TACHE_THEME } from '../../../config';
+import { STATUT_TACHE_THEME } from '../../../config';
 import { useTranslation } from 'react-i18next';
 import FormCheckTask from '../../Modals/Execution/ExecutionTache/FormCheckTask';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowModal, setShowModalCheckTask, setShowModalEmail, setShowModalGenerateDoc, setShowModalUploadDoc } from '../../../_redux/features/setting';
+import { setShowModalCheckTask, setShowModalEmail, setShowModalGenerateDoc, setShowModalUploadDoc } from '../../../_redux/features/setting';
 import { useNavigate } from 'react-router-dom';
-import FormCreateUpdate from '../../Modals/Elaboration/Formation/ModalObjectifTheme/FormCreateUpdate';
 import { setThemeFormationSelected } from '../../../_redux/features/elaborations/themeFormationSlice';
 import { RootState } from '../../../_redux/store';
 import FormUploadFile from '../../Modals/Execution/ExecutionTache/FormUploadFile';
 import FormGenerateFile from '../../Modals/Execution/ExecutionTache/FormGenerateFile';
 import FormSendMessage from '../../Modals/Execution/ExecutionTache/FormEmailTask';
+import createToast from '../../../hooks/toastify';
+import { marquerExecuteTacheThemeFormation } from '../../../services/elaborations/tacheThemeFormationAPI';
+import { updateTacheThemeFormationSlice } from '../../../_redux/features/elaborations/tacheThemeFormationSlice';
+import { formatDateWithLang } from '../../../fonctions/fonction';
 
 const StatusIcon = ({ statut }: { statut: string }) => {
   const iconClasses = "w-5 h-5";
@@ -65,7 +68,7 @@ const TacheCard: React.FC<TacheCardProps> = ({
   const statut = statutsTaches.find(t=>t.key===tache.statut)
   const type = typeTaches.find(tt => tt.key === tache.tache.type);
   const [selectedTache, setSelectedTache] = useState<TacheThemeFormation>()
-  const [getObj, setGetObj] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
 
   const getStatusBadge = () => {
@@ -89,6 +92,46 @@ const TacheCard: React.FC<TacheCardProps> = ({
   // Fonction pour gérer l'ouverture du chat
   const handleOpenChat = () => {
     onOpenChat(tache);
+  };
+
+  const handleMarqueExecute = async (selected:TacheThemeFormation) => {
+    try{
+      setIsLoading(true)
+      await marquerExecuteTacheThemeFormation(
+          {
+              tacheId:selected._id||"",
+              currentUserId:currentUser._id||"",
+              lang
+          }
+      ).then(async (e: ReponseApiPros) => {
+          
+          if (e.success) {
+              createToast(e.message, '', 0);
+              dispatch(updateTacheThemeFormationSlice({
+                id: selected._id||"",
+                tacheThemeFormationData: {
+                  _id: e.data._id,
+                  theme: selected.theme,
+                  tache: selected.tache,
+                  dateDebut: selected.dateDebut,
+                  dateFin: selected.dateFin,
+                  estExecutee: true,
+                  dateExecution: e.data.dateExecution,
+                  statut: e.data.statut,
+                },
+                
+              }));
+          } else {
+              createToast(e.message, '', 2);
+          }
+      }).catch((e) => {
+          createToast(e.response.data.message, '', 2);
+      }).finally(()=>{
+          setIsLoading(false)
+      })
+    }finally{
+      setIsLoading(false)
+    }
   };
 
   const handleExecuteTache = (selected:TacheThemeFormation) => {
@@ -176,6 +219,8 @@ const TacheCard: React.FC<TacheCardProps> = ({
 
   };
 
+
+
   return (
     <>
         <div className="group bg-white border border-[#E5E7EB] rounded-xl p-6 hover:shadow-lg hover:border-[#D1D5DB] transition-all duration-200 hover:-translate-y-0.5">
@@ -211,7 +256,7 @@ const TacheCard: React.FC<TacheCardProps> = ({
             {tache.dateFin && (
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-[#9CA3AF] flex-shrink-0" />
-                <span className="text-[#4B5563]">{tache.dateFin}</span>
+                <span className="text-[#4B5563]">{`${t('label.doit_etre_termine')} ${formatDateWithLang(tache.dateFin, lang)}`}</span>
               </div>
             )}
           </div>
@@ -238,11 +283,15 @@ const TacheCard: React.FC<TacheCardProps> = ({
                   
                   {/* Nouveau bouton, aligné à droite par justify-between */}
                  {(currentUser.role.toLowerCase()==="super-admin" || currentUser.role.toLowerCase()==="admin") && (<button
-                      onClick={() => { /* Votre logique ici */ }}
+                      onClick={() => handleMarqueExecute(tache)}
                       className="w-full sm:w-auto px-4 py-2.5 bg-[#3B82F6] hover:bg-[#2563EB] text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2"
                   >
                       {/* Remplacez l'icône et le texte */}
-                      <span className="hidden sm:inline">{t('button.marquer_executer')}</span>
+                      {isLoading && <div className={`flex items-center justify-center bg-transparent pr-2`}>
+                          <div className="h-5 w-5  animate-spin rounded-full border-2 border-solid border-white border-t-transparent"></div>
+                      </div>}
+                      {isLoading ? "" : t('button.marquer_executer')}
+                      {/* <span className="hidden sm:inline">{t('button.marquer_executer')}</span> */}
                   </button>)}
               </div>
           )}
