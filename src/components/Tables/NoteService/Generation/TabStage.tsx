@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Calendar, Users, Clock, MoreVertical, Edit, Eye, Download, Trash2, Filter, Search, Plus } from 'lucide-react';
+import { Calendar, Users, Clock, MoreVertical, Download, Filter, Search } from 'lucide-react';
 import { formatDate } from '../../../../fonctions/fonction';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../_redux/store';
@@ -9,9 +9,9 @@ import { getFilteredStages } from '../../../../services/stagiaires/stageAPI';
 import { setErrorPageStage, setStages, setStagesLoading } from '../../../../_redux/features/stagiaire/stageSlice';
 import { NoData } from '../../../NoData';
 import Pagination from '../../../Pagination/Pagination';
-import { setShowModalDelete } from '../../../../_redux/features/setting';
-import FormDelete from '../../../Modals/Stage/ModalStage/FormDelete';
 import Skeleton from 'react-loading-skeleton';
+import FormCreateUpdateNoteMandat from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteMandat';
+import { setShowModal } from '../../../../_redux/features/setting';
 
 interface StageTabProps {
   onEditStage?: (stage: Stage) => void;
@@ -183,7 +183,8 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleGenerate = () => {
-     
+      setSelectedStage(stage)
+      dispatch(setShowModal())
     };
 
     return (
@@ -398,6 +399,7 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                 />}
             </div>
         </div>
+        <FormCreateUpdateNoteMandat note={undefined} stageId={selectedStage?._id}/>
     </>
   );
 };
