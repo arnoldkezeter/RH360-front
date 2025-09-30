@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Calendar, Users, Clock, MoreVertical, Edit, Eye, Download, Trash2, Filter, Search, Plus } from 'lucide-react';
+import { Calendar, Users, Clock, MoreVertical, Edit, Eye, Download, Trash2, Filter, Search, Plus, Pencil } from 'lucide-react';
 import { formatDate } from '../../../../fonctions/fonction';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../_redux/store';
@@ -9,9 +9,10 @@ import { getFilteredStageRecherches } from '../../../../services/chercheurs/stag
 import { setErrorPageStageRecherche, setStageRecherches, setStageRecherchesLoading } from '../../../../_redux/features/chercheurs/stageRechercheSlice';
 import { NoData } from '../../../NoData';
 import Pagination from '../../../Pagination/Pagination';
-import { setShowModalDelete } from '../../../../_redux/features/setting';
+import { setShowModal, setShowModalDelete } from '../../../../_redux/features/setting';
 import FormDelete from '../../../Modals/StageRecherche/ModalStageRecherche/FormDelete';
 import Skeleton from 'react-loading-skeleton';
+import ChangerStatutStage from '../../../Modals/StageRecherche/ModalStageRecherche/ChangerStatut';
 
 interface HistoriqueStageRecherchesTabProps {
   onEditStageRecherche?: (stageRecherche: StageRecherche) => void;
@@ -218,6 +219,17 @@ const HistoriqueStageRecherches = ({ onEditStageRecherche }: HistoriqueStageRech
                   <Trash2 className="w-4 h-4 mr-3" />
                   Supprimer
                 </button>
+                <button 
+                  className="flex items-center w-full px-4 py-2 text-sm text-[#2563EB] hover:bg-[#EFF6FF]"
+                  onClick={() => {
+                    setSelectedStageRecherche(stageRecherche);
+                    dispatch(setShowModal());
+                    setIsOpen(false);
+                  }}
+                >
+                  <Pencil className="w-4 h-4 mr-3" />
+                  {t('label.mettre_a_jour_statut')}
+                </button>
               </div>
             </div>
           </>
@@ -367,6 +379,7 @@ const HistoriqueStageRecherches = ({ onEditStageRecherche }: HistoriqueStageRech
                 />}
             </div>
         </div>
+        <ChangerStatutStage stage={selectedStageRecherche} />
         <FormDelete stageRecherche={selectedStageRecherche} />
     </>
   );

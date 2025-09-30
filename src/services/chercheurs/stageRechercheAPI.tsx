@@ -77,6 +77,35 @@ export async function deleteStageRecherche(stagerechercheId: string, lang:string
     }
 }
 
+export async function  changerStatutStage({stageId, statut, noteServiceFile, lang}:{stageId:string, statut:string, lang:string, noteServiceFile:File|null}): Promise<ReponseApiPros> {
+  try {
+    let formData = new FormData();
+    formData.append("statut", statut);
+
+    // si accepté, on ajoute le fichier
+    if (statut === "ACCEPTE" && noteServiceFile) {
+      formData.append("noteServiceFile", noteServiceFile);
+    }
+    console.log(formData)
+    const response = await axios.put(
+      `${api}/${stageId}/changer-statut`,
+      formData,
+      {
+        headers: {
+          // 'Content-Type': 'application/json',
+          'accept-language':lang,
+          'authorization': token,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Erreur changerStatutStageService:", error);
+    throw error;
+  }
+};
+
 export async function getStageRechercheById({id, lang }: {id:string, lang:string }): Promise<StageRecherche> {
     try {
         const response: AxiosResponse<any> = await axios.get(

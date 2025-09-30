@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Calendar, Users, Clock, MoreVertical, Edit, Eye, Download, Trash2, Filter, Search, Plus } from 'lucide-react';
+import { Calendar, Users, Clock, MoreVertical, Edit, Eye, Download, Trash2, Filter, Search, Plus, Pencil } from 'lucide-react';
 import { formatDate } from '../../../../fonctions/fonction';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../_redux/store';
@@ -9,9 +9,11 @@ import { getFilteredStages } from '../../../../services/stagiaires/stageAPI';
 import { setErrorPageStage, setStages, setStagesLoading } from '../../../../_redux/features/stagiaire/stageSlice';
 import { NoData } from '../../../NoData';
 import Pagination from '../../../Pagination/Pagination';
-import { setShowModalDelete } from '../../../../_redux/features/setting';
+import { setShowModal, setShowModalDelete } from '../../../../_redux/features/setting';
 import FormDelete from '../../../Modals/Stage/ModalStage/FormDelete';
 import Skeleton from 'react-loading-skeleton';
+import ChangerStatutStage from '../../../Modals/Stage/ModalStage/ChangerStatut';
+import { tr } from 'date-fns/locale';
 
 interface HistoriqueStagesTabProps {
   onEditStage?: (stage: Stage) => void;
@@ -154,11 +156,11 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
     return type === 'GROUPE' ? (
       <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#EDE9FE] text-[#5B21B6]">
         <Users className="w-3 h-3 mr-1" />
-        Groupe
+        {t('label.groupe')}
       </span>
     ) : (
       <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#DBEAFE] text-[#1E40AF]">
-        Individuel
+        {t('label.individuel')}
       </span>
     );
   };
@@ -213,7 +215,7 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                   onClick={handleEdit}
                 >
                   <Edit className="w-4 h-4 mr-3" />
-                  Modifier
+                  {t('button.modifier')}
                 </button>
                 
                 <hr className="my-1 border-[#E5E7EB]" />
@@ -222,7 +224,19 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                   onClick={() => {setSelectedStage(stage);dispatch(setShowModalDelete()); setIsOpen(false)}}
                 >
                   <Trash2 className="w-4 h-4 mr-3" />
-                  Supprimer
+                  {t('button.supprimer')}
+                </button>
+
+                <button 
+                  className="flex items-center w-full px-4 py-2 text-sm text-[#2563EB] hover:bg-[#EFF6FF]"
+                  onClick={() => {
+                    setSelectedStage(stage);
+                    dispatch(setShowModal());
+                    setIsOpen(false);
+                  }}
+                >
+                  <Pencil className="w-4 h-4 mr-3" />
+                  {t('label.mettre_a_jour_statut')}
                 </button>
               </div>
             </div>
@@ -241,8 +255,8 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 <div className="mb-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">Historique des Affectations</h1>
-                    <p className="text-[#6B7280]">Gérez et suivez tous vos stages de formation</p>
+                    <h1 className="text-3xl font-bold text-[#1F2937] mb-2">{t('label.historique_affectations')}</h1>
+                    <p className="text-[#6B7280]">{t('page_description.historique_affectations')}</p>
                     </div>
                 </div>
                 </div>
@@ -272,10 +286,10 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterStatus(e.target.value)}
                         className="w-full px-3 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
                     >
-                        <option value="ALL">Tous les statuts</option>
-                        <option value="EN_ATTENTE">En attente</option>
-                        <option value="ACCEPTE">Accepté</option>
-                        <option value="REFUSE">Refusé</option>
+                        <option value="ALL">{t('label.tous_les_statuts')}</option>
+                        <option value="EN_ATTENTE">{t('label.en_attente')}</option>
+                        <option value="ACCEPTE">{t('label.accepte')}</option>
+                        <option value="REFUSE">{t('label.refuse')}</option>
                     </select>
                     </div>
 
@@ -286,15 +300,15 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value)}
                         className="w-full px-3 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
                     >
-                        <option value="ALL">Tous les types</option>
-                        <option value="GROUPE">Groupe</option>
-                        <option value="INDIVIDUEL">Individuel</option>
+                        <option value="ALL">{t('label.tous_les_types')}</option>
+                        <option value="GROUPE">{t('label.groupe')}</option>
+                        <option value="INDIVIDUEL">{t('label.individuel')}</option>
                     </select>
                     </div>
 
                     <button className="inline-flex items-center px-4 py-2 bg-[#F3F4F6] text-[#374151] rounded-lg hover:bg-[#E5E7EB] transition-colors">
                     <Filter className="w-4 h-4 mr-2" />
-                    Filtres
+                    {t('label.filtres')}
                     </button>
                 </div>
                 </div>
@@ -327,13 +341,13 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                                     <div className="flex items-center text-[#6B7280]">
                                     <Users className="w-4 h-4 mr-2" />
                                     <span className="text-sm">
-                                        {stage.nombreStagiaires} stagiaire{(stage?.nombreStagiaires||0) > 1 ? 's' : ''}
+                                        {stage.nombreStagiaires} {t("label.stagiaire")}{(stage?.nombreStagiaires||0) > 1 ? 's' : ''}
                                     </span>
                                     </div>
                                     {stage.type === 'GROUPE' && (
                                     <div className="flex items-center text-[#6B7280]">
                                         <span className="text-sm">
-                                        {stage.nombreGroupes} groupe{(stage?.nombreGroupes||0) > 1 ? 's' : ''}
+                                        {stage.nombreGroupes} {t('label.groupe')}{(stage?.nombreGroupes||0) > 1 ? 's' : ''}
                                         </span>
                                     </div>
                                     )}
@@ -350,7 +364,7 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                                     <div className="flex items-center text-[#6B7280]">
                                     <Clock className="w-4 h-4 mr-2" />
                                     <span className="text-sm">
-                                        Durée: {calculateDuration(stage.dateDebut, stage.dateFin)}
+                                        {t("label.duree")}: {calculateDuration(stage.dateDebut, stage.dateFin)}
                                     </span>
                                     </div>
                                 </div>
@@ -367,10 +381,10 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                             <div className="px-6 py-4 bg-[#F9FAFB] border-t border-[#E5E7EB] mt-auto">
                                 <div className="flex items-center justify-between">
                                 <span className="text-xs text-[#6B7280]">
-                                    Année {stage.anneeStage}
+                                    {t('label.annee')} {stage.anneeStage}
                                 </span>
                                 <span className="text-xs text-[#6B7280]">
-                                    Créé le {formatDate(stage?.createdAt||"")}
+                                    {t('label.cree_le')} {formatDate(stage?.createdAt||"")}
                                 </span>
                                 </div>
                             </div>
@@ -399,6 +413,7 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
                 />}
             </div>
         </div>
+        <ChangerStatutStage stage={selectedStage}/>
         <FormDelete stage={selectedStage} />
     </>
   );

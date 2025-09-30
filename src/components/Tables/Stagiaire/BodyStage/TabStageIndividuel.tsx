@@ -246,10 +246,10 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
             <div className="bg-gradient-to-r from-[#eff6ff] to-[#eef2ff] dark:from-[#1f2937] dark:to-[#374151] rounded-lg p-6">
                 <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-2 flex items-center gap-2">
                     <User className="w-6 h-6 text-[#2563eb]" />
-                    {stageToEdit ? 'Modifier le Stage Individuel' : 'Stage Individuel'}
+                    {stageToEdit ? t('label.modifier_stage_individuel') : t('label.stage_individuel')}
                 </h3>
                 <p className="text-[#4b5563] dark:text-[#d1d5db] text-sm">
-                    Gérez l'affectation d'un stagiaire à des services
+                    {t('page_description.stage_individuel')}
                 </p>
             </div>
 
@@ -257,7 +257,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
                         <Info className="w-4 h-4 text-[#2563eb]" />
-                        Information sur le stage
+                        {t('label.information_stage')}
                     </label>
                 </div>
 
@@ -321,7 +321,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
                         <Users className="w-4 h-4 text-[#2563eb]" />
-                        Services et Supervision
+                        {t('label.service_superviseur')}
                     </label>
                     <button 
                         onClick={handleServiceAdd}
@@ -330,7 +330,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                 transition-colors"
                     >
                         <Plus className="w-4 h-4" />
-                        Ajouter
+                        {t('button.ajouter')}
                     </button>
                 </div>
 
@@ -345,7 +345,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                 {/* Service */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Service
+                                        {t('label.service')}
                                     </label>
                                     <div className="relative">
                                         <FilterList
@@ -367,7 +367,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                 {/* Superviseur */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Superviseur
+                                        {t('label.superviseur')}
                                     </label>
                                     <div className="relative">
                                         <FilterList
@@ -392,7 +392,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                 {/* Date début */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Date début
+                                        {t('label.date_debut')}
                                     </label>
                                     <input 
                                         type="date" 
@@ -407,7 +407,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                 {/* Date fin avec bouton supprimer */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Date fin
+                                        {t('label.date_fin')}
                                     </label>
                                     <div className="flex gap-2">
                                         <input 
@@ -454,12 +454,12 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                      {isCreating ? (
                         <>
                             <Spinner />
-                            {stageToEdit ? 'Modification en cours...' : 'Création en cours...'}
+                            {stageToEdit ? t('label.modification_en_cours') : t('label.creation_en_cours')}
                         </>
                     ) : (
                         <>
                             <UserPlus className="w-5 h-5" />
-                            {stageToEdit ? 'Modifier le stage' : 'Crée le stage'}
+                            {stageToEdit ? t('label.modifier_stage') : t('label.cree_stage')}
                         </>
                     )}
                 </button>
@@ -470,10 +470,9 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                             rounded-lg p-4 flex items-start gap-3">
                 <Info className="w-5 h-5 text-[#2563eb] dark:text-[#60a5fa] mt-0.5 flex-shrink-0" />
                 <div className="text-sm text-[#1e40af] dark:text-[#93c5fd]">
-                    <p className="font-medium mb-1">Conseil</p>
+                    <p className="font-medium mb-1">{t('label.conseil')}</p>
                     <p className="text-[#1d4ed8] dark:text-[#bfdbfe]">
-                        Vous pouvez affecter un stagiaire à plusieurs services avec des périodes différentes. 
-                        Assurez-vous que les dates ne se chevauchent pas.
+                        {t('label.stage_ind_note')}
                     </p>
                 </div>
             </div>

@@ -940,10 +940,10 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
             <div className="bg-gradient-to-r from-[#f0f9ff] to-[#e0f2fe] dark:from-[#1f2937] dark:to-[#374151] rounded-lg p-6">
                 <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-2 flex items-center gap-2">
                     <Users className="w-6 h-6 text-[#0ea5e9]" />
-                    {stageToEdit ? 'Modifier le Stage Groupe' : 'Stage Groupe Automatisé'}
+                    {stageToEdit ?t('label.modifier_stage_groupe') : t('label.stage_groupe_automatisé')}
                 </h3>
                 <p className="text-[#4b5563] dark:text-[#d1d5db] text-sm">
-                    Gestion automatisée des groupes, rotations et affectations de stage
+                    {t('page_description.groupe_stage')}
                 </p>
             </div>
 
@@ -952,7 +952,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
                         <Info className="w-4 h-4 text-[#0ea5e9]" />
-                        Information sur le stage
+                        {t('label.information_stage')}
                     </label>
                 </div>
 
@@ -992,14 +992,14 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
                         <UserCheck className="w-4 h-4 text-[#0ea5e9]" />
-                        Étape 1: Sélection et Répartition des Stagiaires
+                        {t('label.selection_repartition')}
                     </label>
                 </div>
 
                 {/* Recherche de stagiaires */}
                 <div className="mb-4">
                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide mb-2 block">
-                        Rechercher et ajouter des stagiaires
+                        {t("label.recherche_ajout_stagiaire")}
                     </label>
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9ca3af] w-4 h-4" />
@@ -1022,7 +1022,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 {pageIsLoading?<Skeleton height={200}/>:<>{selectedStagiaires.length > 0 && (
                     <div className="mb-4">
                         <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide mb-2 block">
-                            Stagiaires sélectionnés ({selectedStagiaires.length})
+                            {t('label.stagiaires_selectionnes')} ({selectedStagiaires.length})
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                             {selectedStagiaires.map((stagiaire, index) => (
@@ -1046,7 +1046,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div className="space-y-2">
                         <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                            Nombre de stagiaires par groupe
+                            {t('label.nombre_stagiaire_groupe')}
                         </label>
                         {pageIsLoading?<Skeleton height={50}/>:<input
                             type="number"
@@ -1070,7 +1070,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                      transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <Shuffle className="w-4 h-4" />
-                            Générer les groupes
+                            {t("label.generer_groupe")}
                         </button>
                     </div>
                 </div>

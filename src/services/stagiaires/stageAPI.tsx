@@ -57,6 +57,35 @@ export async function updateStage({ nomFr,nomEn,type,stagiaire,groupes, rotation
   }
 }
 
+export async function  changerStatutStageService({stageId, statut, noteServiceFile, lang}:{stageId:string, statut:string, lang:string, noteServiceFile:File|null}): Promise<ReponseApiPros> {
+  try {
+    let formData = new FormData();
+    formData.append("statut", statut);
+
+    // si accepté, on ajoute le fichier
+    if (statut === "ACCEPTE" && noteServiceFile) {
+      formData.append("noteServiceFile", noteServiceFile);
+    }
+    console.log(formData)
+    const response = await axios.put(
+      `${api}/${stageId}/changer-statut`,
+      formData,
+      {
+        headers: {
+          // 'Content-Type': 'application/json',
+          'accept-language':lang,
+          'authorization': token,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Erreur changerStatutStageService:", error);
+    throw error;
+  }
+};
+
 export async function deleteStage(stageId: string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.delete(
