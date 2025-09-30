@@ -10,8 +10,10 @@ import { setErrorPageStage, setStages, setStagesLoading } from '../../../../_red
 import { NoData } from '../../../NoData';
 import Pagination from '../../../Pagination/Pagination';
 import Skeleton from 'react-loading-skeleton';
-import FormCreateUpdateNoteMandat from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteMandat';
+import FormCreateUpdateNoteMandat from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteStageIndividuel';
 import { setShowModal } from '../../../../_redux/features/setting';
+import FormCreateUpdateNoteStageIndiviuel from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteStageIndividuel';
+import FormCreateUpdateNoteStageGroupe from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteStageGroupe';
 
 interface StageTabProps {
   onEditStage?: (stage: Stage) => void;
@@ -399,7 +401,8 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                 />}
             </div>
         </div>
-        <FormCreateUpdateNoteMandat note={undefined} stageId={selectedStage?._id}/>
+        {selectedStage && selectedStage.type==='INDIVIDUEL' && <FormCreateUpdateNoteStageIndiviuel note={undefined} stageId={selectedStage?._id}/>}
+        {selectedStage && selectedStage.type==='GROUPE' && <FormCreateUpdateNoteStageGroupe note={undefined} stageId={selectedStage?._id}/>}
     </>
   );
 };

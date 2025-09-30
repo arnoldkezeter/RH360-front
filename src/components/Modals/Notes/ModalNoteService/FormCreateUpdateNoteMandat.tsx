@@ -5,7 +5,7 @@ import CustomDialogModal from '../../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { createNoteService, createNoteServiceStage, updateNoteService } from '../../../../services/notes/noteServiceAPI';
+import { createNoteService, updateNoteService } from '../../../../services/notes/noteServiceAPI';
 import { updateNoteServiceSlice } from '../../../../_redux/features/notes/noteServiceSlice';
 
 
@@ -98,42 +98,13 @@ function FormCreateUpdateNoteMandat({note, themeId, mandatId, stageId }: {note:N
 
         if (!note) {
             setIsLoading(true)
-            if(mandatId){
-                await createNoteService(
-                    {
-                        titreFr,
-                        titreEn,
-                        theme:themeId, 
-                        stage:stageId, 
-                        mandat:mandatId, 
-                        designationTuteur, 
-                        miseEnOeuvre,
-                        typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
-                        copieA, 
-                        creePar:userId, 
-                        valideParDG:false
-                    },lang
-                ).then( (e: any) => {
-                    
-                    if (e) {
-                        closeModal();
-                    } else {
-                        createToast(e.message, '', 2);
-
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message, '', 2);
-                }).finally(()=>{
-                    setIsLoading(false)
-                })
-            }
-
-            if(stageId){
-                await createNoteServiceStage(
+            await createNoteService(
                 {
                     titreFr,
                     titreEn,
+                    theme:themeId, 
                     stage:stageId, 
+                    mandat:mandatId, 
                     designationTuteur, 
                     miseEnOeuvre,
                     typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
@@ -144,19 +115,32 @@ function FormCreateUpdateNoteMandat({note, themeId, mandatId, stageId }: {note:N
             ).then( (e: any) => {
                 
                 if (e) {
+                    // createToast(e.message, '', 0);
+                    // dispatch(createNoteServiceSlice({
+
+                    //     noteService: {
+                    //         _id: e.data._id,
+                    //         titreFr: e.data.titreFr,
+                    //         titreEn: e.data.titreEn,
+                    //         copieA: e.data.copieA,
+                    //         typeNote: e.data.typeNote
+                    //     }
+
+                    // }));
+
+                   
                     closeModal();
+
                 } else {
                     createToast(e.message, '', 2);
 
                 }
             }).catch((e) => {
+                console.log(e);
                 createToast(e.response.data.message, '', 2);
             }).finally(()=>{
                 setIsLoading(false)
             })
-            }
-
-
 
         } else {
             setIsLoading(true)

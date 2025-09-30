@@ -735,7 +735,10 @@
     "gap": "Gap",
     "taux_presence": "Taux de présence relatif",
     "copie_a":"Copie A",
-    "placeholder_copie_a":"Séparez chaque copie par des ; ou ,"
+    "placeholder_copie_a":"Séparez chaque copie par des ; ou ,",
+    "placeholder_dispositions":"Séparez chaque disposition par des ; ou ,",
+    "dispositions":"Dispositions à prendre",
+    "personnes_responsables":"Personne(s) responsable(s) de l'acheminement des carnets de stage"
   },
   
   "recherche": {

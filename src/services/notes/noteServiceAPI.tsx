@@ -100,6 +100,53 @@ export async function createNoteServiceStage(
   }
 }
 
+export async function createNoteServiceStageGroupe(
+  { titreFr, titreEn,descriptionFr, descriptionEn, stage, designationTuteur, miseEnOeuvre, dispositions, personnesResponsables, typeNote, copieA, creePar, valideParDG }: CreateNoteInput,
+  lang: string
+): Promise<boolean> {
+  try {
+    const response: AxiosResponse<Blob> = await axios.post(
+      `${api}/note-service/stage/groupe`, 
+      { titreFr, titreEn,descriptionFr, descriptionEn, stage,designationTuteur, miseEnOeuvre, dispositions, personnesResponsables, typeNote, copieA, creePar, valideParDG },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'accept-language': lang,
+          'authorization': token,
+        },
+        responseType: 'blob', // 👈 important pour recevoir un fichier
+      }
+    );
+
+    // ✅ Créer une URL temporaire pour télécharger le fichier
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Nom de fichier depuis le header backend si dispo
+    const disposition = response.headers['content-disposition'];
+    let fileName = 'note-service.pdf';
+    if (disposition) {
+      const match = disposition.match(/filename="(.+)"/);
+      if (match?.[1]) fileName = match[1];
+    }
+
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    // Nettoyer après téléchargement
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    return true;
+  } catch (error) {
+    console.error('Erreur lors de la création de la note de service:', error);
+    throw error;
+  }
+}
+
 export async function updateNoteService({ _id, titreFr, titreEn, theme, stage, mandat,designationTuteur, miseEnOeuvre, typeNote, copieA, creePar, valideParDG }: UpdateNoteInput, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(

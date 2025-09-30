@@ -5,25 +5,31 @@ import CustomDialogModal from '../../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { createNoteService, createNoteServiceStage, updateNoteService } from '../../../../services/notes/noteServiceAPI';
+import { createNoteServiceStageGroupe, updateNoteService } from '../../../../services/notes/noteServiceAPI';
 import { updateNoteServiceSlice } from '../../../../_redux/features/notes/noteServiceSlice';
 
 
-function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }: {note:NoteService|undefined, themeId?:string,  mandatId?:string, stageId?:string }) {
+function FormCreateUpdateStageGroupe({note, themeId, mandatId, stageId }: {note:NoteService|undefined, themeId?:string,  mandatId?:string, stageId?:string }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
     const userId = useSelector((state: RootState) => state.utilisateurSlice.utilisateur._id);
     const dispatch = useDispatch();
     const [titreFr, setTitreFr] = useState("");
     const [titreEn, setTitreEn] = useState("");
+    const [descriptionFr, setDescriptionFr] = useState("");
+    const [descriptionEn, setDescriptionEn] = useState("");
     const [copieA, setCopieA] = useState("");
     const [designationTuteur, setDesignationTuteur] = useState("");
     const [miseEnOeuvre, setMiseEnOeuvre] = useState("");
+    const [dispositions, setDispositions] = useState("");
+    const [personnesResponsables, setPersonnesResponsables] = useState("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     
 
     const [errorTitreFr, setErrorTitreFr] = useState("");
     const [errorTitreEn, setErrorTitreEn] = useState("");
+    const [errorDescriptionFr, setErrorDescriptionFr] = useState("");
+    const [errorDescriptionEn, setErrorDescriptionEn] = useState("");
     const [errorCopieA, setErrorCopieA] = useState("");
     
     const [isFirstRender, setIsFirstRender] = useState(true);
@@ -38,18 +44,26 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
             
             setTitreFr(note.titreFr);
             setTitreEn(note.titreEn);
+            setDescriptionFr(note?.descriptionFr||"")
+            setDescriptionEn(note?.descriptionEn||"")
             setCopieA(note.copieA)
             setDesignationTuteur(note.designationTuteur||"");
             setMiseEnOeuvre(note.miseEnOeuvre||"")
+            setDispositions(note?.dispositions||"")
+            setPersonnesResponsables(note?.personnesResponsables||"")
             
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.note'));
             
             setTitreFr("");
             setTitreEn("");
+            setDescriptionFr("")
+            setDescriptionEn("")
             setCopieA("");
             setDesignationTuteur("");
-            setMiseEnOeuvre("")
+            setMiseEnOeuvre("");
+            setDispositions("")
+            setPersonnesResponsables("")
             
         }
 
@@ -57,6 +71,8 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
         if (isFirstRender) {
             setErrorTitreFr("");
             setErrorTitreEn("");
+            setErrorDescriptionFr("");
+            setErrorDescriptionEn("");
             setErrorCopieA("")
            
             
@@ -67,7 +83,9 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
     const closeModal = () => {
         setErrorTitreFr("");
         setErrorTitreEn("");
-         setErrorCopieA("");
+        setErrorCopieA("");
+        setErrorDescriptionFr("");
+        setErrorDescriptionEn("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -80,7 +98,7 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
 
 
     const handleCreateNoteService = async () => {
-        if (!titreFr || !titreEn || !copieA) {
+        if (!titreFr || !titreEn || !copieA || !descriptionFr || !descriptionEn) {
             if (!titreFr) {
                 setErrorTitreFr(t('error.titre_fr'));
             }
@@ -93,49 +111,32 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
                 setErrorCopieA(t('error.copie_a'))
             }
 
+            if (!descriptionFr) {
+                setErrorDescriptionFr(t('error.description_fr'));
+            }
+
+            if(!descriptionEn){
+                setErrorDescriptionEn(t("error.description_en"))
+            }
+
             return;
         }
 
         if (!note) {
             setIsLoading(true)
-            if(mandatId){
-                await createNoteService(
-                    {
-                        titreFr,
-                        titreEn,
-                        theme:themeId, 
-                        stage:stageId, 
-                        mandat:mandatId, 
-                        designationTuteur, 
-                        miseEnOeuvre,
-                        typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
-                        copieA, 
-                        creePar:userId, 
-                        valideParDG:false
-                    },lang
-                ).then( (e: any) => {
-                    
-                    if (e) {
-                        closeModal();
-                    } else {
-                        createToast(e.message, '', 2);
-
-                    }
-                }).catch((e) => {
-                    createToast(e.response.data.message, '', 2);
-                }).finally(()=>{
-                    setIsLoading(false)
-                })
-            }
-
-            if(stageId){
-                await createNoteServiceStage(
+            await createNoteServiceStageGroupe(
                 {
                     titreFr,
                     titreEn,
+                    descriptionFr,
+                    descriptionEn,
+                    theme:themeId, 
                     stage:stageId, 
+                    mandat:mandatId, 
                     designationTuteur, 
                     miseEnOeuvre,
+                    dispositions,
+                    personnesResponsables,
                     typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
                     copieA, 
                     creePar:userId, 
@@ -144,19 +145,32 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
             ).then( (e: any) => {
                 
                 if (e) {
+                    // createToast(e.message, '', 0);
+                    // dispatch(createNoteServiceSlice({
+
+                    //     noteService: {
+                    //         _id: e.data._id,
+                    //         titreFr: e.data.titreFr,
+                    //         titreEn: e.data.titreEn,
+                    //         copieA: e.data.copieA,
+                    //         typeNote: e.data.typeNote
+                    //     }
+
+                    // }));
+
+                   
                     closeModal();
+
                 } else {
                     createToast(e.message, '', 2);
 
                 }
             }).catch((e) => {
+                console.log(e);
                 createToast(e.response.data.message, '', 2);
             }).finally(()=>{
                 setIsLoading(false)
             })
-            }
-
-
 
         } else {
             setIsLoading(true)
@@ -232,6 +246,21 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
                     onChange={(e) => { setTitreEn(e.target.value); setErrorTitreEn("") }}
                 />
                 {errorTitreEn && <p className="text-red-500" >{errorTitreEn}</p>}
+                <label>{t('label.descrip_fr')}</label><label className="text-red-500"> *</label>
+                <textarea
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    value={descriptionFr}
+                    onChange={(e) => { setDescriptionFr(e.target.value); setErrorDescriptionFr("") }}
+                />
+                {errorDescriptionFr && <p className="text-red-500" >{errorDescriptionFr}</p>}
+                
+                <label>{t('label.descrip_en')}</label><label className="text-red-500"> *</label>
+                <textarea
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    value={descriptionEn}
+                    onChange={(e) => { setDescriptionEn(e.target.value); setErrorDescriptionEn("") }}
+                />
+                {errorDescriptionEn && <p className="text-red-500" >{errorDescriptionEn}</p>}
                 <label>{t('label.copie_a')}</label><label className="text-red-500"> *</label>
                 <input
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -255,6 +284,21 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
                     value={miseEnOeuvre}
                     onChange={(e) => { setMiseEnOeuvre(e.target.value)}}
                 />
+                <label>{t('label.dispositions')}</label>
+                <input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="text"
+                    value={dispositions}
+                    onChange={(e) => { setDispositions(e.target.value)}}
+                    placeholder={t('label.placeholder_dispositions')}
+                />
+                <label>{t('label.personnes_responsables')}</label>
+                <input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="text"
+                    value={personnesResponsables}
+                    onChange={(e) => { setPersonnesResponsables(e.target.value)}}
+                />
             </CustomDialogModal>
 
         </>
@@ -263,4 +307,4 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
 
 
 
-export default FormCreateUpdateNoteStageIndiviuel;
+export default FormCreateUpdateStageGroupe;
