@@ -7,6 +7,7 @@ interface ButtonProps {
     className?: string;
     variant?: 'primary' | 'secondary';
     size?: 'sm' | 'md' | 'lg';
+    disabled?:boolean
 }
 
 const Button: React.FC<ButtonProps> = ({ 
@@ -14,7 +15,8 @@ const Button: React.FC<ButtonProps> = ({
   title, 
   className = '',
   variant = 'primary',
-  size = 'md'
+  size = 'md',
+  disabled=false
 }) => {
   // Classes de base communes
   const baseClasses = `
@@ -61,6 +63,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       className={`
         ${baseClasses}
         ${variantClasses[variant]}

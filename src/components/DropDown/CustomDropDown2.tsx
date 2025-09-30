@@ -12,6 +12,7 @@ interface CustomDropDownProps<T> {
     searchItem?:boolean;
     onSelect: (selected: T | undefined) => void;
     displayProperty?: (item: T) => string;
+    disabled?:boolean
 }
 
 function CustomDropDown2<T>({
@@ -25,6 +26,7 @@ function CustomDropDown2<T>({
     placeholder,
     onSelect,
     displayProperty = (item: T) => String(item),
+    disabled=false
 }: CustomDropDownProps<T>): JSX.Element {
     const [isOpen, setIsOpen] = useState(false);
     const [searchText, setSearchText] = useState("");
@@ -118,6 +120,7 @@ function CustomDropDown2<T>({
             </div>
             {isOpen && (
                 <ul
+                
                     className="absolute z-50 top-full left-0 w-full max-h-48 overflow-auto border border-stroke
                     dark:border-gray-700 bg-white dark:bg-gray-800 rounded-md mt-1 shadow-lg "
                 >

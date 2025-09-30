@@ -161,6 +161,8 @@
   },
   
   "label": {
+    "titre_note":"Note de service des stages",
+    "generer_note_service_ind_grp":"Générer des notes de service pour les stages individuels et groupés",
     "generer_note":"Générer la note",
     "duree_inconnue":"Durée inconnue",
     "individuel":"Individuel",

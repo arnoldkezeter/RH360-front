@@ -13,20 +13,19 @@ import FormCreateUpdate from "../../components/Modals/Execution/ModalBudgetDepen
 import { useFetchData } from "../../hooks/fechDataOptions";
 import { getFormationForDropDown } from "../../services/elaborations/formationAPI";
 import { setErrorPageFormation, setFormations } from "../../_redux/features/elaborations/formationSlice";
-import { getFilteredThemeFormations, getThemeFormationForDropDown } from "../../services/elaborations/themeFormationAPI";
-import { setErrorPageThemeFormation, setThemeFormationLoading, setThemeFormations } from "../../_redux/features/elaborations/themeFormationSlice";
 import { getBudgetFormationForDropDown } from "../../services/elaborations/budgetFormationAPI";
 import { setBudgetFormationLoading, setBudgetFormations, setBudgetFormationSelected, setErrorPageBudgetFormation } from "../../_redux/features/elaborations/budgetFormationSlice";
 import { TYPE_DEPENSE } from "../../config";
 import Table from "../../components/Tables/Execution/TableBudgetFormation/Table";
+import { generateDepense } from "../../services/executions/depenseAPI";
 
 const SuiviBudgetaires = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const fetchData = useFetchData();
   const lang = useSelector((state: RootState) => state.setting.language);
+  const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   const { data: { budgetFormations } } = useSelector((state: RootState) => state.budgetFormationSlice);
-  const { data: { themeFormations } } = useSelector((state: RootState) => state.themeFormationSlice);
   const { data: { programmeFormations } } = useSelector((state: RootState) => state.programmeFormationSlice);
   const { data: { formations } } = useSelector((state: RootState) => state.formationSlice);
   const typesDepenses = Object.values(TYPE_DEPENSE)
@@ -45,9 +44,9 @@ const SuiviBudgetaires = () => {
     setHeaderConfig({
       title: t('button.ajouter_depense_formation'),
       showAddButton: false,
-      exportOptions: ['PDF', 'Excel'],
+      exportOptions: ['PDF'],
       onAdd: () => { setSelectedDepense(null); dispatch(setShowModal()) },
-      onExport: handleExportUsers,
+      onExport: handleExport,
     });
   }, [t]);
 
@@ -134,8 +133,12 @@ const SuiviBudgetaires = () => {
   
   
   
-  const handleExportUsers = (format: string) => {
-    console.log(`Export des depenses en ${format}`);
+  const handleExport = async (format: string) => {
+    if(currentBudget && currentBudget._id && currentUser && currentUser._id){
+      await generateDepense({budgetId:currentBudget?._id,userId:currentUser._id, lang:lang })
+    }else{
+
+    }
   };
 
   const handleAddDepense = (depense: Depense) => {

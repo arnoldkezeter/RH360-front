@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { apiUrl, wstjqer } from '../../config.js';
+import { downloadDocument } from '../../fonctions/fonction.js';
 
 const api = `${apiUrl}/theme-formation/budget-formation/depenses`;
 
@@ -104,6 +105,31 @@ export async function getFilteredDepenses({page, lang, type, search, budgetId }:
         console.error('Error getting all settings:', error);
         throw error;
     }
+}
+
+export async function generateDepense({budgetId, userId, lang}:{budgetId:string, userId:string, lang: string}): Promise<boolean> {
+  try {
+    const response: AxiosResponse<Blob> = await axios.get(
+      `${api}/${budgetId}/${userId}/pdf`, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'accept-language': lang,
+          'authorization': token,
+        },
+        responseType: 'blob', // 👈 important pour recevoir un fichier
+      }
+    );
+
+    // ✅ Créer une URL temporaire pour télécharger le fichier
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    downloadDocument(blob,"mémoire-depense")
+    console.log("génération")
+    return true;
+  } catch (error) {
+    console.error('Erreur lors de la création de la note de service:', error);
+    throw error;
+  }
 }
 
 

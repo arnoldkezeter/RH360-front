@@ -1,6 +1,6 @@
 interface NoteDeService{
     reference:string;
-    theme: Theme,
+    theme: ThemeFormation,
     typeNote: string;
     titreFr:string;
     titreEn:string;

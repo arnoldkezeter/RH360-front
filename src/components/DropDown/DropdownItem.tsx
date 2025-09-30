@@ -4,9 +4,10 @@ import React from 'react';
 interface DropdownItemProps {
   children: React.ReactNode;
   onClick: () => void;
+  disabled?:boolean;
 }
 
-const DropdownItem: React.FC<DropdownItemProps> = ({ children, onClick }) => {
+const DropdownItem: React.FC<DropdownItemProps> = ({ children, onClick, disabled }) => {
   return (
     <li>
       <button

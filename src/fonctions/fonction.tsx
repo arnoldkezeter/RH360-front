@@ -1,7 +1,5 @@
 import { config } from "../config";
 import CryptoJS from 'crypto-js';
-import { t } from "i18next";
-import createToast from "../hooks/toastify";
 import { Archive, File, FileAudio, FileImage, FileText, FileVideo } from "lucide-react";
 
 
@@ -279,7 +277,7 @@ export function reduceWord(word: string, maxSize: number): string {
   }
 }
 
-export function createPDF(blob:Blob, title:string, type?:string){
+export function downloadDocument(blob:Blob, title:string, type?:string){
     const url = URL.createObjectURL(blob);
     // Télécharger le PDF
     const link = document.createElement('a');
@@ -294,6 +292,7 @@ export function createPDF(blob:Blob, title:string, type?:string){
     link.click();
     // Libérer l'URL de l'objet
     URL.revokeObjectURL(url);
+    document.body.removeChild(link);
 }
 
 export function compareDates(date1: string, date2: string): boolean {

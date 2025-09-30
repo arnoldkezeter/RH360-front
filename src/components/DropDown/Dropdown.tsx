@@ -6,13 +6,15 @@ interface DropdownProps {
   textColor?: string;
   children: React.ReactNode;
   className?: string;
+  disabled?:boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ 
   defaultText, 
   textColor = 'text-gray-700', 
   children,
-  className = ''
+  className = '',
+  disabled=false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
