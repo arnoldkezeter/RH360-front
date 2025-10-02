@@ -4,7 +4,7 @@ import { STATUT_TACHE_THEME } from '../../../config';
 import { useTranslation } from 'react-i18next';
 import FormCheckTask from '../../Modals/Execution/ExecutionTache/FormCheckTask';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowModalCheckTask, setShowModalEmail, setShowModalGenerateDoc, setShowModalUploadDoc } from '../../../_redux/features/setting';
+import { setShowModalCheckTask, setShowModalConvocationFormateur, setShowModalConvocationParticipant, setShowModalEmail, setShowModalFichePresence, setShowModalFichePresenceFormateur, setShowModalGenerateDoc, setShowModalUploadDoc } from '../../../_redux/features/setting';
 import { useNavigate } from 'react-router-dom';
 import { setThemeFormationSelected } from '../../../_redux/features/elaborations/themeFormationSlice';
 import { RootState } from '../../../_redux/store';
@@ -15,6 +15,10 @@ import createToast from '../../../hooks/toastify';
 import { marquerExecuteTacheThemeFormation } from '../../../services/elaborations/tacheThemeFormationAPI';
 import { updateTacheThemeFormationSlice } from '../../../_redux/features/elaborations/tacheThemeFormationSlice';
 import { formatDateWithLang } from '../../../fonctions/fonction';
+import FormCreateUpdateConvocationFormateur from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteConvocationFormateur';
+import FormCreateUpdateConvocationParticipant from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteConvocationParticipants';
+import FormCreateUpdateFichePresence from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteFichesPresence';
+import FormCreateUpdateFichePresenceFormateur from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteFichesPresenceFormateur';
 
 const StatusIcon = ({ statut }: { statut: string }) => {
   const iconClasses = "w-5 h-5";
@@ -56,7 +60,6 @@ const TacheCard: React.FC<TacheCardProps> = ({
   tache, 
   typeTaches, 
   lang, 
-  onExecute,
   onOpenChat
 }) => {
   const { t } = useTranslation();
@@ -68,6 +71,8 @@ const TacheCard: React.FC<TacheCardProps> = ({
   const statut = statutsTaches.find(t=>t.key===tache.statut)
   const type = typeTaches.find(tt => tt.key === tache.tache.type);
   const [selectedTache, setSelectedTache] = useState<TacheThemeFormation>()
+  const [activeForm, setActiveForm] = useState<string | null>(null);
+  const [isParticipant, setIsParticipant] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
 
@@ -140,7 +145,8 @@ const TacheCard: React.FC<TacheCardProps> = ({
     // dispatch(setShowModalCheckTask())
     switch (selected.tache.type) {
       case 'checkbox':
-        setSelectedTache(selected)
+        setSelectedTache(selected);
+        setActiveForm("checkTask");
         dispatch(setShowModalCheckTask())
         break;
 
@@ -200,16 +206,43 @@ const TacheCard: React.FC<TacheCardProps> = ({
 
       case 'upload':
           setSelectedTache(selected)
+          setActiveForm("uploadFile");
           dispatch(setShowModalUploadDoc())
         break;
 
       case 'email':
         setSelectedTache(selected)
+        setActiveForm("sendMessage");
         dispatch(setShowModalEmail())
       break;
       case 'autoGenerate':
-        setSelectedTache(selected)
-        dispatch(setShowModalGenerateDoc())
+        switch(selected.tache.code){
+          case 'note_service_convocation_formateur':
+            setSelectedTache(selected)
+            setActiveForm("convocationFormateur");
+            dispatch(setShowModalConvocationFormateur())
+          break
+          case 'note_service_convocation_participant':
+            setSelectedTache(selected)
+            setActiveForm("convocationParticipant");
+            dispatch(setShowModalConvocationParticipant())
+          break
+          case 'confection_fiches_presence_participant':
+            setSelectedTache(selected)
+            setActiveForm("fichePresence");
+            dispatch(setShowModalFichePresence())
+          break
+           case 'confection_fiches_presence_formateur':
+            setSelectedTache(selected)
+            setActiveForm("fichePresenceFormateur");
+            dispatch(setShowModalFichePresenceFormateur())
+          break
+          default:
+            setSelectedTache(selected)
+            dispatch(setShowModalGenerateDoc());
+            setActiveForm("generateFile");
+          break
+        }
       break;
         
 
@@ -296,11 +329,37 @@ const TacheCard: React.FC<TacheCardProps> = ({
               </div>
           )}
         </div>
-        {selectedTache && <FormCheckTask tache={selectedTache} />}
-        {selectedTache && <FormUploadFile tache={selectedTache} />}
-        {selectedTache && <FormGenerateFile tache={selectedTache} />}
-        {selectedTache && <FormSendMessage tache={selectedTache} />}
-       
+        {selectedTache && activeForm === "checkTask" && (
+          <FormCheckTask tache={selectedTache} />
+        )}
+
+        {selectedTache && activeForm === "uploadFile" && (
+          <FormUploadFile tache={selectedTache} />
+        )}
+
+        {selectedTache && activeForm === "generateFile" && (
+          <FormGenerateFile tache={selectedTache} />
+        )}
+
+        {selectedTache && activeForm === "sendMessage" && (
+          <FormSendMessage tache={selectedTache} />
+        )}
+
+        {selectedTache && activeForm === "convocationFormateur" && (
+          <FormCreateUpdateConvocationFormateur tache={selectedTache} note={undefined} themeId={selectedTache.theme?._id}/>
+        )}
+
+        {selectedTache && activeForm === "convocationParticipant" && (
+          <FormCreateUpdateConvocationParticipant tache={selectedTache} note={undefined} themeId={selectedTache.theme?._id}/>
+        )}
+
+        {selectedTache && activeForm === "fichePresence" && (
+          <FormCreateUpdateFichePresence tache={selectedTache} note={undefined} themeId={selectedTache.theme?._id}/>
+        )}
+
+        {selectedTache && activeForm === "fichePresenceFormateur" && (
+          <FormCreateUpdateFichePresenceFormateur tache={selectedTache} note={undefined} themeId={selectedTache.theme?._id}/>
+        )}
 
     </>
   );

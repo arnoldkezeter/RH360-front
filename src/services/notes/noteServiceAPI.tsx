@@ -147,6 +147,148 @@ export async function createNoteServiceStageGroupe(
   }
 }
 
+export async function createNoteServiceConvocationFormateur(
+  {theme, titreFr, titreEn,descriptionFr, descriptionEn, copieA, creePar, typeNote }: CreateNoteInput,
+  tacheFormationId:string,lang: string
+): Promise<boolean> {
+  try {
+    const response: AxiosResponse<Blob> = await axios.post(
+      `${api}/note-service/convocation/formateurs`, 
+      { theme, titreFr, titreEn,descriptionFr, descriptionEn, copieA, creePar, typeNote, tacheFormationId },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'accept-language': lang,
+          'authorization': token,
+        },
+        responseType: 'blob', // 👈 important pour recevoir un fichier
+      }
+    );
+
+    // ✅ Créer une URL temporaire pour télécharger le fichier
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Nom de fichier depuis le header backend si dispo
+    const disposition = response.headers['content-disposition'];
+    let fileName = 'note-service.pdf';
+    if (disposition) {
+      const match = disposition.match(/filename="(.+)"/);
+      if (match?.[1]) fileName = match[1];
+    }
+
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    // Nettoyer après téléchargement
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    return true;
+  } catch (error) {
+    console.error('Erreur lors de la création de la note de service:', error);
+    throw error;
+  }
+}
+
+export async function createNoteServiceConvocationParticipant(
+  {theme, titreFr, titreEn, copieA, creePar, typeNote }: CreateNoteInput,
+  tacheFormationId:string,lang: string
+): Promise<boolean> {
+  try {
+    const response: AxiosResponse<Blob> = await axios.post(
+      `${api}/note-service/convocation/participants`, 
+      { theme, titreFr, titreEn, copieA, creePar, typeNote, tacheFormationId },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'accept-language': lang,
+          'authorization': token,
+        },
+        responseType: 'blob', // 👈 important pour recevoir un fichier
+      }
+    );
+
+    // ✅ Créer une URL temporaire pour télécharger le fichier
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Nom de fichier depuis le header backend si dispo
+    const disposition = response.headers['content-disposition'];
+    let fileName = 'note-service.pdf';
+    if (disposition) {
+      const match = disposition.match(/filename="(.+)"/);
+      if (match?.[1]) fileName = match[1];
+    }
+
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    // Nettoyer après téléchargement
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    return true;
+  } catch (error) {
+    console.error('Erreur lors de la création de la note de service:', error);
+    throw error;
+  }
+}
+
+export async function createNoteServiceFichePresence(
+  {theme, titreFr, titreEn, copieA, creePar, typeNote }: CreateNoteInput,
+  tacheFormationId:string,lang: string, isParticipant:boolean
+): Promise<boolean> {
+  try {
+    const ficheType = isParticipant?"participants":"formateurs"
+    const response: AxiosResponse<Blob> = await axios.post(
+      `${api}/formations/fiches-presence/${ficheType}`, 
+      { theme, titreFr, titreEn, copieA, creePar, typeNote, tacheFormationId },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'accept-language': lang,
+          'authorization': token,
+        },
+        responseType: 'blob', // 👈 important pour recevoir un fichier
+      }
+    );
+
+    // ✅ Créer une URL temporaire pour télécharger le fichier
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Nom de fichier depuis le header backend si dispo
+    const disposition = response.headers['content-disposition'];
+    let fileName = 'note-service.pdf';
+    if (disposition) {
+      const match = disposition.match(/filename="(.+)"/);
+      if (match?.[1]) fileName = match[1];
+    }
+
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    // Nettoyer après téléchargement
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    return true;
+  } catch (error) {
+    console.error('Erreur lors de la création de la note de service:', error);
+    throw error;
+  }
+}
+
 export async function updateNoteService({ _id, titreFr, titreEn, theme, stage, mandat,designationTuteur, miseEnOeuvre, typeNote, copieA, creePar, valideParDG }: UpdateNoteInput, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(

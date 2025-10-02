@@ -967,11 +967,13 @@
   },
  
   "form_save": {
+    
     "ajouter":"Ajouter ",
     "enregistrer": "Enregistrer ",
     "type_echelle_reponse":"un type de réponse",
     "echelle_reponse":"une échelle de réponse", 
     "auto_evaluation":"une auto-évaluation",
+    "note":"une note de service",
     "structure":"une structure",
     "cohorte":"une cohorte",
     "departement":"un département",
@@ -1014,7 +1016,7 @@
     "type_echelle_reponse":"du type de réponse",
     "echelle_reponse":"de l'échelle de réponse",
     "dates_effective_lieu_formation":"des dates effectives du lieu de formation",
-
+    "note":"de la note de service",
     "auto_evaluation":"de l'auto-évaluation",
     "structure":"de la structure",
     "cohorte":"de la cohorte",
@@ -1056,7 +1058,7 @@
     "supprimer": "Supprimer",
     "suppression": "Suppression ",
     "reinitialiser":"Réinitialiser",
-
+    "note":"de la note de service",
     "evaluation_a_chaud":"de l'évaluation",
     "type_echelle_reponse":"du type de réponse",
     "echelle_reponse":"de l'échelle de réponse",

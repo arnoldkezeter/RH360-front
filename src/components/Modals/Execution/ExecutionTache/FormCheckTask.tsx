@@ -51,7 +51,7 @@ function FormCheckTask({ tache }: { tache: TacheThemeFormation|undefined }) {
             await updateStatutTacheThemeFormation({tacheId:tache._id||"", currentUser:currentUser._id||"", statut:"EN_ATTENTE",donnees:'check', lang}).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
-                dispatch(updateTacheThemeFormationSlice({
+                    dispatch(updateTacheThemeFormationSlice({
                         id: e.data._id,
                         tacheThemeFormationData: {
                             _id: tache._id,

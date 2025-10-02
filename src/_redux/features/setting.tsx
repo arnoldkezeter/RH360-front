@@ -25,6 +25,10 @@ interface SettingState {
         addRole:boolean,
         openChapitre: boolean,
         openEnseignement:boolean,
+        openConvocationFormateur:boolean;
+        openConvocationParticipant:boolean;
+        openFichePresence:boolean;
+        openFichePresenceFormateur:boolean;
         openPeriode:boolean,
         toDoSondage: boolean,
 
@@ -62,7 +66,10 @@ const initialState: SettingState = {
         openEnseignement:false,
         openPeriode:false,
         toDoSondage: false,
-
+        openConvocationFormateur:false,
+        openConvocationParticipant:false,
+        openFichePresence:false,
+        openFichePresenceFormateur:false,
         openCheckTask:false,
         openGenerateDoc:false,
         openUploadDoc:false,
@@ -140,6 +147,23 @@ export const settingSlice = createSlice({
             state.showModal.openGenerateDoc= !state.showModal.openGenerateDoc;
         },
 
+        setShowModalConvocationFormateur: (state) => {
+            state.showModal.openConvocationFormateur= !state.showModal.openConvocationFormateur;
+        },
+
+
+        setShowModalConvocationParticipant: (state) => {
+            state.showModal.openConvocationParticipant= !state.showModal.openConvocationParticipant;
+        },
+
+        setShowModalFichePresence: (state) => {
+            state.showModal.openFichePresence= !state.showModal.openFichePresence;
+        },
+
+        setShowModalFichePresenceFormateur: (state) => {
+            state.showModal.openFichePresenceFormateur= !state.showModal.openFichePresenceFormateur;
+        },
+
         setShowModalUploadDoc: (state) => {
             state.showModal.openUploadDoc= !state.showModal.openUploadDoc;
         },
@@ -212,6 +236,10 @@ export const {
     setShowModalUploadDoc,
     setShowModalEmail,
     setShowModalDatesEffectives,
+    setShowModalConvocationFormateur,
+    setShowModalConvocationParticipant,
+    setShowModalFichePresence,
+    setShowModalFichePresenceFormateur,
     setShowLanguage, setShowModalCreate, setShowModalUpdate, setShowModalDelete, setShowModalDetails, setShowModal, setShowModalToDOSondage
     , setSaveDeviceType,setShowRoleModal, setShowModalPeriode, setShowModalElement, setShowModalPresence, setShowModalOpenScan, setShowModalCompetence, setShowModalNotificationDetails,
     setCurrentIndexUserRole,setShowModalEvaluation, setShowModalPresenceManuelle, setUserPermission, addUserPemission, removeUserPemission, setSelectedUserPermission, setSelectedUserRole
