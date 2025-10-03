@@ -9,11 +9,13 @@ import Skeleton from 'react-loading-skeleton';
 import { useTranslation } from 'react-i18next';
 import Table from '../../components/Tables/Dashbord/TableDashord/Table';
 import StatCard from '../../components/StatCard';
+import { config } from '../../config';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const DashboardProgram = () => {
     const lang: string = useSelector((state: RootState) => state.setting.language) || 'fr';
+    const userRole: string = useSelector((state: RootState) => state.utilisateurSlice.utilisateur.role)
     const {data:{programmeFormations}} = useSelector((state: RootState) => state.programmeFormationSlice);
     const [selectedId, setSelectedId] = useState<string|undefined>();
     const {t} = useTranslation()
@@ -52,7 +54,7 @@ const DashboardProgram = () => {
         },
         ],
     };
-
+    const roles = config.roles;
 
 
 
@@ -84,12 +86,12 @@ const DashboardProgram = () => {
   return (
     <div className="p-4 space-y-6">
       {/* Cartes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {(roles.superAdmin === userRole || roles.admin === userRole) && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {isLoading?<Skeleton height={150}/>:<StatCard title={lang === 'fr' ? 'Taux d’exécution' : 'Execution Rate'} value={`${(data?.tauxExecution?.tauxExecutionGlobal) || 0}%`} icon={BarChart2} color="from-[#3B82F6] to-[#60A5FA]" />}
         {isLoading?<Skeleton height={150}/>:<StatCard title={lang === 'fr' ? 'Stages en cours' : 'Ongoing Stages'} value={data?.nbStageEnCours || 0} icon={CalendarCheck} color="from-[#F59E0B] to-[#FBBF24]" />}
         {isLoading?<Skeleton height={150}/>:<StatCard title={lang === 'fr' ? 'Formateurs déployés' : 'Deployed Trainers'} value={`${(data.statsFormateurs?.interne || 0)+(data.statsFormateurs?.externe || 0)}`} icon={Users} color="from-[#10B981] to-[#34D399]" />}
         {isLoading?<Skeleton height={150}/>:<StatCard title={lang === 'fr' ? 'Budget dépensé' : 'Budget Spent'} value={`${getTotalMontantReelTTC(coutFormations)}`} icon={Banknote} color="from-[#8B5CF6] to-[#A78BFA]" />}
-      </div>
+      </div>}
 
       {/* Histogramme */}
       <div className="bg-white rounded-xl shadow-lg border border-stroke p-6 hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
@@ -160,7 +162,7 @@ const DashboardProgram = () => {
       </div>
 
       {/* Courbe */}
-      <div className="bg-white rounded-xl shadow-lg border border-stroke p-6 hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
+      {(roles.superAdmin === userRole || roles.admin === userRole) && <div className="bg-white rounded-xl shadow-lg border border-stroke p-6 hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
             <div className="w-2 h-6 bg-gradient-to-b from-[#10B981] to-[#059669] rounded-full"></div>
@@ -226,7 +228,7 @@ const DashboardProgram = () => {
                 }}
             />
         </div>
-      </div>
+      </div>}
 
       {/* Tableau */}
       <Table data={data.formationsAVenir} isLoading={isLoading}/>

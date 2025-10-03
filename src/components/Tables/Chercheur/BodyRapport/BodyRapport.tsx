@@ -37,7 +37,7 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
   const superviseursData = useMemo(() => {
     return (data.repartitionParSuperviseur || []).map((item: any) => ({
       ...item,
-      label: `${item.nom} ${item.prenom}`,
+      label: `${item.superviseur.nom} ${item.superviseur?.prenom||""}`,
     }));
   }, [data.repartitionParSuperviseur]);
 
@@ -112,7 +112,7 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
         />}
         {isLoading?<Skeleton height={100}/>:<StatCard
           title={t("label.stages_termines")}
-          value={data.totalStagesTermines ?? 0}
+          value={data.totalStageRecherchesTermines ?? 0}
           icon={CheckCircle}
           color="from-[#10B981] to-[#059669]"
         />}
@@ -124,19 +124,19 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
         />}
         {isLoading?<Skeleton height={100}/>:<StatCard
           title={t("label.duree_moyenne_mois")}
-          value={data.dureeMoyenneStages ?? 0}
+          value={data.dureeMoyenneStageRecherches ?? 0}
           icon={Clock}
           color="from-[#EC4899] to-[#BE185D]"
         />}
         {isLoading?<Skeleton height={100}/>:<StatCard
           title={t("label.taux_acceptation")}
-          value={`${((data.tauxStatutStages?.tauxAccepte ?? 0) * 100).toFixed(1)}%`}
+          value={`${((data.tauxStatutStageRecherches?.tauxAccepte ?? 0) * 100).toFixed(1)}%`}
           icon={CheckCircle}
           color="from-[#10B981] to-[#059669]"
         />}
         {isLoading?<Skeleton height={100}/>:<StatCard
           title={t("label.taux_refus")}
-          value={`${((data.tauxStatutStages?.tauxRefuse ?? 0) * 100).toFixed(1)}%`}
+          value={`${((data.tauxStatutStageRecherches?.tauxRefuse ?? 0) * 100).toFixed(1)}%`}
           icon={XCircle}
           color="from-[#EF4444] to-[#DC2626]"
         />}
@@ -154,12 +154,12 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
             data={superviseursData}
             margin={{ bottom: 60 }}
           >
-            <XAxis dataKey="label" angle={-30} textAnchor="end" interval={0} height={60} />
+            <XAxis dataKey="label" angle={0} textAnchor="end" interval={0} height={60} />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="enCours" fill="#8884d8" name={t("label.en_cours")} />
-            <Bar dataKey="termines" fill="#82ca9d" name={t("label.termines")} />
+            <Bar dataKey="stagesEnCours" fill="#8884d8" name={t("label.en_cours")} />
+            <Bar dataKey="stagesTermines" fill="#82ca9d" name={t("label.termines")} />
           </BarChart>
         </div>}
       </div>
@@ -210,12 +210,12 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
             height={300}
             margin={{ bottom: 60 }}
           >
-            <XAxis dataKey="label" angle={-30} textAnchor="end" interval={0} height={60} />
+            <XAxis dataKey="label" angle={0} textAnchor="end" interval={0} height={60} />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="acceptes" fill="#4caf50" name={t("label.acceptes")} />
-            <Bar dataKey="refuses" fill="#f44336" name={t("label.refuses")} />
+            <Bar dataKey="stagesAccepte" fill="#4caf50" name={t("label.acceptes")} />
+            <Bar dataKey="stagesRefuse" fill="#f44336" name={t("label.refuses")} />
           </BarChart>
         </div>}
       </div>

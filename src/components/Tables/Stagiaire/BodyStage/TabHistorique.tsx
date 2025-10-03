@@ -138,9 +138,9 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
 
   const getStatusBadge = (statut: Stage['statut']): JSX.Element => {
     const statusConfig: Record<Stage['statut'], { bg: string; text: string; label: string }> = {
-      'EN_ATTENTE': { bg: 'bg-[#FEF3C7]', text: 'text-[#92400E]', label: 'En attente' },
-      'ACCEPTE': { bg: 'bg-[#D1FAE5]', text: 'text-[#065F46]', label: 'Accepté' },
-      'REFUSE': { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', label: 'Refusé' }
+      'EN_ATTENTE': { bg: 'bg-[#FEF3C7]', text: 'text-[#92400E]', label: t('label.en_attente') },
+      'ACCEPTE': { bg: 'bg-[#D1FAE5]', text: 'text-[#065F46]', label: t('label.accepte')  },
+      'REFUSE': { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', label: t('label.refuse')  }
     };
     
     const config = statusConfig[statut];

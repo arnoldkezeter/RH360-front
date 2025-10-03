@@ -50,7 +50,7 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
           tauxStatutStages,
           repartitionParService,
           repartitionParSuperviseur,
-          stagiairesParEtablissement,
+          // stagiairesParEtablissement,
         //   stagiairesParStatutEtEtablissement
         ] = await Promise.all([
           getTotalStagiaires(dateDebut, dateFin),
@@ -60,7 +60,7 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
           getTauxStatutStages(dateDebut, dateFin),
           getRepartitionStagiairesParService(dateDebut, dateFin),
           getRepartitionStagiairesParSuperviseur(dateDebut, dateFin),
-          getNombreStagiairesParEtablissement(dateDebut, dateFin),
+          // getNombreStagiairesParEtablissement(dateDebut, dateFin),
           // getNombreStagiairesParStatutEtEtablissement(dateDebut, dateFin),
         ]);
         if (isMounted) {
@@ -72,11 +72,11 @@ export function useStatsStages({ dateDebut, dateFin }: StatsStagesParams) {
             tauxStatutStages,
             repartitionParService,
             repartitionParSuperviseur,
-            stagiairesParEtablissement,
+            // stagiairesParEtablissement,
             // stagiairesParStatutEtEtablissement
           });
         }
-        console.log(stagiairesParEtablissement)
+        
       } catch (err) {
         if (isMounted) setError(err);
       } finally {

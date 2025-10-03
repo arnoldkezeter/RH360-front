@@ -30,7 +30,7 @@ const ChercheurSidebarLink: React.FC<ChercheurSidebarLinkProps> = ({
 
     // Filtrer les éléments du menu en fonction des permissions
     const accessibleItems = menuItems.filter((item) =>
-        item.roles.some((role) => currentUser.roles.includes(role))
+        item.roles.some((role) => currentUser.roles && currentUser.roles.includes(role))
     );
 
     if (accessibleItems.length === 0) {

@@ -37,14 +37,68 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
   const superviseursData = useMemo(() => {
     return (data.repartitionParSuperviseur || []).map((item: any) => ({
       ...item,
-      label: `${item.nom} ${item.prenom}`,
+      label: `${item.superviseur.nom} ${item.superviseur.prenom}`,
     }));
   }, [data.repartitionParSuperviseur]);
+  
+  // 2. Définir une largeur minimale nécessaire par élément/barre (ex: 50-70 pixels).
+  const MIN_BAR_WIDTH = 70; 
+  const CHART_HEIGHT = 300;
+  const MAX_CONTAINER_WIDTH = 800; // Limite optionnelle si vous ne voulez pas un graphique trop large
+
+  // Calculer la largeur dynamique du graphique
+  const getDynamicChartWidth = (data: string | any[], minWidthPerBar: number, containerMaxWidth: number) => {
+      if (!data || data.length === 0) {
+          return containerMaxWidth || 400; // Retourne une largeur par défaut si pas de données
+      }
+      
+      const requiredWidth = data.length * minWidthPerBar;
+      
+      // S'assurer que le graphique n'est jamais plus petit que la largeur du conteneur parent (800px par défaut)
+      return Math.max(containerMaxWidth || 800, requiredWidth); 
+  };
+
+  // ... À l'intérieur de votre composant React où superviseursData est disponible ...
+
+  // Calcul de la largeur
+  const chartWidthSuperviseur = getDynamicChartWidth(
+      superviseursData, 
+      MIN_BAR_WIDTH, 
+      MAX_CONTAINER_WIDTH // 800 par exemple
+  );
+
+  // Hauteur minimale requise par élément/barre (y compris l'espacement).
+const MIN_BAR_HEIGHT = 40; 
+// Largeur maximale du conteneur (pour la barre de défilement)
+const MAX_CONTAINER_WIDTH_SERVICE = '100%'; 
+// Hauteur minimale pour que le graphique soit lisible même avec peu de données
+const MIN_CHART_HEIGHT = 300; 
+
+// Calculer la hauteur dynamique du graphique
+const getDynamicChartHeight = (data: string | any[], minHeightPerBar: number, minChartHeight: number) => {
+    if (!data || data.length === 0) {
+        return minChartHeight;
+    }
+    
+    // Calculer la hauteur nécessaire pour tous les éléments + une marge
+    const requiredHeight = data.length * minHeightPerBar + 50; 
+    
+    // S'assurer que le graphique n'est jamais plus petit que la hauteur minimale
+    return Math.max(minChartHeight, requiredHeight); 
+};
+  const chartHeightService = getDynamicChartHeight(
+      servicesData, 
+      MIN_BAR_HEIGHT, 
+      MIN_CHART_HEIGHT
+  );
+
+
+  
 
   // Largeurs dynamiques pour scroll horizontal si beaucoup d'éléments
   const chartWidthEtablissement = Math.min(Math.max(etablissementsData.length * 120, 600), 1500);
-  const chartWidthSuperviseur = Math.min(Math.max(superviseursData.length * 80, 600), 1500);
-  const chartHeightService = 300;
+  // const chartWidthSuperviseur = Math.min(Math.max(superviseursData.length * 80, 600), 1500);
+  // const chartHeightService = 300;
 
   // Cartes Statistiques
   const StatCard = ({ title, value, icon: Icon, color }: any) => (
@@ -142,64 +196,100 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
         />}
       </div>
 
-      {/* Diagramme superviseurs */}
-      <div className="bg-white p-4 rounded-2xl shadow-md">
-        <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_superviseur")}</h3>
-        {isLoading?<Skeleton height={320}/>:(superviseursData && superviseursData.length===0)?
-          <NoData/>
-        : <div style={{ overflowX: 'auto' }}>
+     {/* Diagramme superviseurs */}
+    <div className="bg-white p-4 rounded-2xl shadow-md">
+      <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_superviseur")}</h3>
+      {isLoading ? (
+        <Skeleton height={CHART_HEIGHT} />
+      ) : superviseursData && superviseursData.length === 0 ? (
+        <NoData />
+      ) : (
+        // 💡 Correction 1: Le conteneur doit gérer l'overflow (déjà fait)
+        <div style={{ overflowX: 'auto' }}>
           <BarChart
-            width={chartWidthSuperviseur}
-            height={300}
-            data={superviseursData}
-            margin={{ bottom: 60 }}
+            // 💡 Correction 2: Utilisation de la largeur calculée dynamiquement
+            width={chartWidthSuperviseur} 
+            height={CHART_HEIGHT}
+            data={superviseursData.map((item: { superviseur: { prenom: any; }; }) => ({ 
+                ...item, 
+                label: item.superviseur.prenom // Simplification de l'étiquette si elle est trop longue
+            }))}
+            margin={{ 
+                top: 5, 
+                right: 20, 
+                left: 20, 
+                bottom: 60 // Garder cette marge pour les étiquettes X tournées
+            }}
           >
-            <XAxis dataKey="label" angle={-30} textAnchor="end" interval={0} height={60} />
+            {/* 💡 Amélioration: Rotation de l'étiquette X pour les noms longs */}
+            <XAxis 
+                dataKey="label" 
+                angle={-30} // Rotation pour éviter le chevauchement (vous aviez 0)
+                textAnchor="end" 
+                interval={0} 
+                height={60} 
+            />
             <YAxis />
             <Tooltip />
-            <Legend />
-            <Bar dataKey="enCours" fill="#8884d8" name={t("label.en_cours")} />
-            <Bar dataKey="termines" fill="#82ca9d" name={t("label.termines")} />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '10px' }}/>
+            <Bar dataKey="totalStagesEnCours" fill="#8884d8" name={t("label.en_cours")} />
+            <Bar dataKey="totalStagesTermines" fill="#82ca9d" name={t("label.termines")} />
           </BarChart>
-        </div>}
-      </div>
+        </div>
+      )}
+    </div>
 
       {/* Diagramme par service */}
       <div className="bg-white p-4 rounded-2xl shadow-md">
         <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_service")}</h3>
-         {isLoading?<Skeleton height={320}/>:(servicesData && servicesData.length===0)?
-          <NoData/>
-        : <div className="overflow-x-auto" style={{ width: '100%' }}>
-          <div
-            style={{
-              width: servicesData.length > 10 ? `${servicesData.length * 120}px` : '100%',
-              height: chartHeightService,
-            }}
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={servicesData}
-                margin={{ top: 20, right: 30, left: 100, bottom: 20 }}
-              >
-                <XAxis type="number" />
-                <YAxis
-                  dataKey="label"
-                  type="category"
-                  width={120}
-                  tick={{ fontSize: 12 }}
-                />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="nombreStagiaires" fill="#8884d8" name={t("label.nombre_stagiaires")} />
-              </BarChart>
-            </ResponsiveContainer>
+        {isLoading ? (
+          <Skeleton height={MIN_CHART_HEIGHT} />
+        ) : servicesData && servicesData.length === 0 ? (
+          <NoData />
+        ) : (
+          // 💡 La div externe gère le débordement vertical si la hauteur dépasse l'écran
+          // Cependant, dans ce cas, nous gérons le débordement via la hauteur calculée
+          <div className="overflow-x-auto" style={{ width: '100%' }}>
+            <div
+              style={{
+                // 💡 CORRECTION: Largeur toujours 100%, la hauteur devient dynamique
+                width: MAX_CONTAINER_WIDTH_SERVICE, 
+                height: chartHeightService, // 💡 Hauteur calculée
+              }}
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={servicesData.map((item: { nomFr: any; nomEn: any; }) => ({
+                      ...item,
+                      // Utiliser le nom du service approprié selon la langue ou le nom par défaut
+                      label: lang === 'fr' ? item.nomFr||"" : item.nomEn||"",
+                  }))}
+                  // Marge ajustée pour donner plus de place aux étiquettes Y (noms de services)
+                  margin={{ top: 20, right: 30, left: 10, bottom: 20 }} 
+                >
+                  {/* XAxis affiche les valeurs numériques (nombre de stagiaires) */}
+                  <XAxis type="number" /> 
+                  {/* YAxis affiche les catégories (noms de services) */}
+                  <YAxis
+                    dataKey="label"
+                    type="category"
+                    // 💡 AMÉLIORATION: Augmenter la largeur de l'axe Y pour les noms longs (150-200px)
+                    width={180} 
+                    tick={{ fontSize: 12 }}
+                  />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="nombreStagiaires" fill="#8884d8" name={t("label.nombre_stagiaires")} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>}
+        )}
       </div>
 
       {/* Diagramme stagiaires par établissement */}
-      <div className="bg-white p-4 rounded-2xl shadow-md">
+      {/* <div className="bg-white p-4 rounded-2xl shadow-md">
         <h3 className="text-lg font-semibold mb-2">{t("label.repartition_par_etablissement")}</h3>
          {isLoading?<Skeleton height={320}/>:(etablissementsData && etablissementsData.length===0)?
           <NoData/>
@@ -218,7 +308,7 @@ const RapportStageBody = ({ data, isLoading, startDate, endDate, onDateChange }:
             <Bar dataKey="refuses" fill="#f44336" name={t("label.refuses")} />
           </BarChart>
         </div>}
-      </div>
+      </div> */}
     </div>
   );
 };

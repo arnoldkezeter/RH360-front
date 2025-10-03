@@ -137,9 +137,9 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
 
   const getStatusBadge = (statut: Stage['statut']): JSX.Element => {
     const statusConfig: Record<Stage['statut'], { bg: string; text: string; label: string }> = {
-      'EN_ATTENTE': { bg: 'bg-[#FEF3C7]', text: 'text-[#92400E]', label: 'En attente' },
-      'ACCEPTE': { bg: 'bg-[#D1FAE5]', text: 'text-[#065F46]', label: 'Accepté' },
-      'REFUSE': { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', label: 'Refusé' }
+      'EN_ATTENTE': { bg: 'bg-[#FEF3C7]', text: 'text-[#92400E]', label: t('label.en_attente') },
+      'ACCEPTE': { bg: 'bg-[#D1FAE5]', text: 'text-[#065F46]', label: t('label.accepte')  },
+      'REFUSE': { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', label: t('label.refuse')  }
     };
     
     const config = statusConfig[statut];
@@ -259,7 +259,7 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9CA3AF] w-4 h-4" />
                         <input
                         type="text"
-                        placeholder="Rechercher un stage..."
+                        placeholder={t('label.recherche_stage')}
                         value={searchTerm}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
@@ -274,10 +274,10 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterStatus(e.target.value)}
                         className="w-full px-3 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
                     >
-                        <option value="ALL">Tous les statuts</option>
-                        <option value="EN_ATTENTE">En attente</option>
-                        <option value="ACCEPTE">Accepté</option>
-                        <option value="REFUSE">Refusé</option>
+                        <option value="ALL">{t('label.tous_les_statuts')}</option>
+                        <option value="EN_ATTENTE">{t('label.en_attente')}</option>
+                        <option value="ACCEPTE">{t('label.accepte')}</option>
+                        <option value="REFUSE">{t('label.refuse')}</option>
                     </select>
                     </div>
 
@@ -288,15 +288,15 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value)}
                         className="w-full px-3 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
                     >
-                        <option value="ALL">Tous les types</option>
-                        <option value="GROUPE">Groupe</option>
-                        <option value="INDIVIDUEL">Individuel</option>
+                        <option value="ALL">{t('label.tous_les_types')}</option>
+                        <option value="GROUPE">{t('label.groupe')}</option>
+                        <option value="INDIVIDUEL">{t('label.individuel')}</option>
                     </select>
                     </div>
 
                     <button className="inline-flex items-center px-4 py-2 bg-[#F3F4F6] text-[#374151] rounded-lg hover:bg-[#E5E7EB] transition-colors">
                     <Filter className="w-4 h-4 mr-2" />
-                    Filtres
+                    {t('label.filtres')}
                     </button>
                 </div>
                 </div>
@@ -329,13 +329,13 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                                     <div className="flex items-center text-[#6B7280]">
                                     <Users className="w-4 h-4 mr-2" />
                                     <span className="text-sm">
-                                        {stage.nombreStagiaires} stagiaire{(stage?.nombreStagiaires||0) > 1 ? 's' : ''}
+                                        {stage.nombreStagiaires} {t('label.stagiaire')}{(stage?.nombreStagiaires||0) > 1 ? 's' : ''}
                                     </span>
                                     </div>
                                     {stage.type === 'GROUPE' && (
                                     <div className="flex items-center text-[#6B7280]">
                                         <span className="text-sm">
-                                        {stage.nombreGroupes} groupe{(stage?.nombreGroupes||0) > 1 ? 's' : ''}
+                                        {stage.nombreGroupes} {t('label.groupe')}{(stage?.nombreGroupes||0) > 1 ? 's' : ''}
                                         </span>
                                     </div>
                                     )}
@@ -352,7 +352,7 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                                     <div className="flex items-center text-[#6B7280]">
                                     <Clock className="w-4 h-4 mr-2" />
                                     <span className="text-sm">
-                                        Durée: {calculateDuration(stage.dateDebut, stage.dateFin)}
+                                        {t('label.duree')}: {calculateDuration(stage.dateDebut, stage.dateFin)}
                                     </span>
                                     </div>
                                 </div>
@@ -369,10 +369,10 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                             <div className="px-6 py-4 bg-[#F9FAFB] border-t border-[#E5E7EB] mt-auto">
                                 <div className="flex items-center justify-between">
                                 <span className="text-xs text-[#6B7280]">
-                                    Année {stage.anneeStage}
+                                    {t('label.annee')} {stage.anneeStage}
                                 </span>
                                 <span className="text-xs text-[#6B7280]">
-                                    Créé le {formatDate(stage?.createdAt||"")}
+                                    {t('label.cree_le')} {formatDate(stage?.createdAt||"")}
                                 </span>
                                 </div>
                             </div>

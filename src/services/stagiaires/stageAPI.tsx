@@ -192,7 +192,8 @@ export async function getTotalStagesTermines(dateDebut:string, dateFin:string): 
       }
     });
     
-    return response.data.totalStagesTermines;
+    
+    return response.data.totalStagiairesTermines;
   } catch (error) {
     console.error("Erreur getTotalStagesTermines:", error);
     throw error;
@@ -212,7 +213,8 @@ export async function getMoyenneStagiairesParSuperviseur(dateDebut:string, dateF
       }
     });
      
-    return response.data.moyenneStagiairesParSuperviseur;
+    
+    return response.data.data.moyenneStagiairesParSuperviseur;
   } catch (error) {
     console.error("Erreur getMoyenneStagiairesParSuperviseur:", error);
     throw error;
@@ -272,7 +274,7 @@ export async function getRepartitionStagiairesParService(dateDebut:string, dateF
       }
     });
     
-    return response.data.repartitionParService
+    return response.data.data
 ;
   } catch (error) {
     console.error("Erreur getRepartitionStagiairesParService:", error);
@@ -293,7 +295,7 @@ export async function getRepartitionStagiairesParSuperviseur(dateDebut:string, d
       }
     });
     
-    return response.data.repartitionParSuperviseur;
+    return response.data.data;
   } catch (error) {
     console.error("Erreur getRepartitionStagiairesParSuperviseur:", error);
     throw error;
@@ -313,7 +315,8 @@ export async function getNombreStagiairesParEtablissement(dateDebut:string, date
         dateFin
       }
     });
-     
+    
+    console.log(response.data)
     return response.data.data;
   } catch (error) {
     console.error("Erreur getNombreStagiairesParEtablissement:", error);

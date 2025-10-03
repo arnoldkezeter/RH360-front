@@ -11,13 +11,14 @@ import HistoriqueStages from '../../components/Tables/Stagiaire/BodyStage/TabHis
 import { getStageByIdAndType } from '../../services/stagiaires/stageAPI';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../_redux/store';
+import { useTranslation } from 'react-i18next';
 
 const StageManagement = () => {
   const [activeTab, setActiveTab] = useState("individuel");
   const [stageToEdit, setStageToEdit] = useState<Stage | null>(null);
   const lang:string = useSelector((state: RootState) => state.setting.language) || 'fr';
   const [pageIsLoading, setPageIsLoading] = useState(false);
-
+  const {t}=useTranslation();
   const handleEditStage = async (stage: Stage) => {
     setPageIsLoading(true)
     if (stage.type === 'INDIVIDUEL') {
@@ -51,9 +52,9 @@ const StageManagement = () => {
     <div className="p-6 space-y-6 bg-white">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value="individuel">Stage Individuel</TabsTrigger>
-          <TabsTrigger value="groupe">Stage en Groupe</TabsTrigger>
-          <TabsTrigger value="historique">Historique</TabsTrigger>
+          <TabsTrigger value="individuel">{t('label.stage_individuel')}</TabsTrigger>
+          <TabsTrigger value="groupe">{t('label.stage_groupe')}</TabsTrigger>
+          <TabsTrigger value="historique">{t('label.historique')}</TabsTrigger>
         </TabsList>
         
         <TabsContent value="individuel">

@@ -141,8 +141,7 @@ function App() {
                 {/*  Page de droites   */}
                 {/* page dashboard est celle selectionner par defaut */}
                 <Route index element={
-                  (roles.superAdmin === userRole || roles.admin === userRole) ? <DashBoardAmin /> :
-                    <NotFoundIsAuth />
+                   <DashBoardAmin /> 
 
                 } />
                 {/* autres pagges pour chaque type de compte */}

@@ -3,9 +3,11 @@ import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
 import LanguageToogle from '../ui/language_toggle';
 // import ModalNotificationDetails from '../Modals/ModalNotification/FormNotification';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setShowModalNotificationDetails } from '../../_redux/features/setting';
 import { useState } from 'react';
+import NotificationSystem from './Notification';
+import { RootState } from '../../_redux/store';
 
 
 
@@ -14,6 +16,7 @@ const Header = (props: {
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   const [selectedNotification, setSelectedNotification] = useState<NotificationType | null>(null);
   const handleNotificationDetails = (notification: NotificationType) => {
       setSelectedNotification(notification);
@@ -71,7 +74,9 @@ const Header = (props: {
           <LanguageToogle />
           <ul className="flex items-center gap-2 2xsm:gap-4">
             {/* <DarkModeSwitcher /> */}
-            <DropdownNotification onEdit={handleNotificationDetails}/>
+            <NotificationSystem 
+              userId={currentUser._id||""} 
+            />
           </ul>
 
           <DropdownUser />

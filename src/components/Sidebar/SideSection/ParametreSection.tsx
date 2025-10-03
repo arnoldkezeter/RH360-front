@@ -61,7 +61,7 @@ const ParametreSidebarLink = ({
     ];
 
     const accessibleItems = menuItems.filter((item) =>
-        item.roles.some((role) => currentUser.roles.includes(role))
+        item.roles.some((role) => currentUser.roles && currentUser.roles.includes(role))
     );
 
     if (accessibleItems.length === menuItems.length) {

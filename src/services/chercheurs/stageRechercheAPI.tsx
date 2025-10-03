@@ -86,7 +86,6 @@ export async function  changerStatutStage({stageId, statut, noteServiceFile, lan
     if (statut === "ACCEPTE" && noteServiceFile) {
       formData.append("noteServiceFile", noteServiceFile);
     }
-    console.log(formData)
     const response = await axios.put(
       `${api}/${stageId}/changer-statut`,
       formData,
@@ -191,7 +190,7 @@ export async function getTotalStageRecherchesTermines(dateDebut:string, dateFin:
       }
     });
     
-    return response.data.totalStageRecherchesTermines;
+    return response.data.data;
   } catch (error) {
     console.error("Erreur getTotalStageRecherchesTermines:", error);
     throw error;
@@ -210,8 +209,8 @@ export async function getMoyenneChercheursParSuperviseur(dateDebut:string, dateF
         dateFin
       }
     });
-     
-    return response.data.moyenneChercheursParSuperviseur;
+    
+    return response.data.data;
   } catch (error) {
     console.error("Erreur getMoyenneChercheursParSuperviseur:", error);
     throw error;
@@ -231,6 +230,7 @@ export async function getDureeMoyenneStageRecherches(dateDebut:string, dateFin:s
         dateFin
       }
     });
+    
     return response.data.dureeMoyenneMois;
   } catch (error) {
     console.error("Erreur getDureeMoyenneStageRecherches:", error);
@@ -250,7 +250,7 @@ export async function getTauxStatutStageRecherches(dateDebut:string, dateFin:str
         dateFin
       }
     });
-    
+   
     return response.data.tauxStatutStageRecherches;
   } catch (error) {
     console.error("Erreur getTauxStatutStageRecherches:", error);
@@ -291,8 +291,7 @@ export async function getRepartitionChercheursParSuperviseur(dateDebut:string, d
         dateFin
       }
     });
-    
-    return response.data.repartitionParSuperviseur;
+    return response.data.data;
   } catch (error) {
     console.error("Erreur getRepartitionChercheursParSuperviseur:", error);
     throw error;

@@ -1081,10 +1081,10 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                    Groupes générés ({groupes.length})
+                                    {t('label.groupes_generes')} ({groupes.length})
                                 </label>
                                 <span className="text-xs text-[#16a34a] dark:text-[#22c55e]">
-                                    Vous pouvez déplacer les stagiaires entre les groupes
+                                    {t("label.deplace_stagiaires")}
                                 </span>
                             </div>
 
@@ -1092,7 +1092,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                 <div key={groupIndex} className="p-4 bg-[#fafafa] dark:bg-[#374151] rounded-lg border-l-4 border-[#16a34a]">
                                     <h4 className="text-lg font-semibold text-[#111827] dark:text-white mb-3 flex items-center gap-2">
                                         <Users className="w-5 h-5 text-[#16a34a]" />
-                                        Groupe {groupe.numero} ({groupe.stagiaires.length} stagiaires)
+                                        {t('label.groupe')} {groupe.numero} ({groupe.stagiaires.length} stagiaires)
                                     </h4>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -1109,7 +1109,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                                 >
                                                     {groupes.map(g => (
                                                         <option key={g.numero} value={g.numero}>
-                                                            Groupe {g.numero}
+                                                            {t('label.groupe')} {g.numero}
                                                         </option>
                                                     ))}
                                                 </select>
@@ -1128,7 +1128,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
                         <RotateCcw className="w-4 h-4 text-[#0ea5e9]" />
-                        Étape 2: Configuration des Services et Rotations
+                        {t('label.etape_config_rotations')}
                     </label>
                     <button
                         onClick={ajouterService}
@@ -1137,7 +1137,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                  transition-colors"
                     >
                         <Plus className="w-4 h-4" />
-                        Ajouter Service
+                        {t('label.ajout_service')}
                     </button>
                 </div>
 
@@ -1148,7 +1148,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Service
+                                        {t('label.service')}
                                     </label>
                                     <FilterList
                                         items={[]}
@@ -1173,7 +1173,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Superviseur
+                                       {t('label.superviseur')}
                                     </label>
                                     <div className="flex gap-2">
                                         <div className="flex-1">
@@ -1217,7 +1217,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 {pageIsLoading?<Skeleton height={50} className='mb-5'/>:<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div className="space-y-2">
                         <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                            <Calendar className="inline-block w-4 h-4 mr-1 text-[#0ea5e9]" /> Date de début du stage
+                            <Calendar className="inline-block w-4 h-4 mr-1 text-[#0ea5e9]" /> {t('label.date_debut_stage')}
                         </label>
                         <input
                             type="date"
@@ -1231,7 +1231,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
 
                     <div className="space-y-2">
                         <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                            <Calendar className="inline-block w-4 h-4 mr-1 text-[#0ea5e9]" /> Date de fin du stage
+                            <Calendar className="inline-block w-4 h-4 mr-1 text-[#0ea5e9]" /> {t('label.date_fin_stage')}
                         </label>
                         <input
                             type="date"
@@ -1245,7 +1245,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
 
                     <div className="space-y-2">
                         <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                            <Clock className="inline-block w-4 h-4 mr-1 text-[#0ea5e9]" /> Jours par rotation
+                            <Clock className="inline-block w-4 h-4 mr-1 text-[#0ea5e9]" /> {t('label.jour_rotation')}
                         </label>
                         <input
                             type="number"
@@ -1269,7 +1269,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                  transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <RotateCcw className="w-4 h-4" />
-                        Générer les rotations
+                        {t('label.generer_rotation')}
                     </button>
                 </div>
 
@@ -1277,23 +1277,23 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 {pageIsLoading?<Skeleton height={300}/>:<>{rotationsGenerees && rotations.length > 0 && (
                     <div className="space-y-4">
                         <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                            Rotations générées
+                            {t('label.rotation_generer')}
                         </label>
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-[#e5e7eb] dark:divide-[#374151] rounded-lg border border-[#e5e7eb] dark:border-[#374151]">
                                 <thead className="bg-[#f9fafb] dark:bg-[#374151]">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-[#6b7280] dark:text-[#9ca3af] uppercase tracking-wider">
-                                            Groupe
+                                            {t('label.groupe')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-[#6b7280] dark:text-[#9ca3af] uppercase tracking-wider">
-                                            Service
+                                            {t('label.service')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-[#6b7280] dark:text-[#9ca3af] uppercase tracking-wider">
-                                            Superviseur
+                                            {t('label.superviseur')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-[#6b7280] dark:text-[#9ca3af] uppercase tracking-wider">
-                                            Dates
+                                            {t('label.dates')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -1301,7 +1301,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                     {rotations.map((rotation, index) => (
                                         <tr key={index}>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#111827] dark:text-white">
-                                                Groupe {rotation.groupe}
+                                                {t('label.groupe')} {rotation.groupe}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-[#4b5563] dark:text-[#d1d5db]">
                                                 {lang === 'fr' ? rotation.serviceRef?.nomFr : rotation.serviceRef?.nomEn}
@@ -1310,7 +1310,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                                 {rotation.superviseurRef?.nom} {rotation.superviseurRef?.prenom}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-[#4b5563] dark:text-[#d1d5db]">
-                                                Du {new Date(rotation.dateDebut).toLocaleDateString()} au {new Date(rotation.dateFin).toLocaleDateString()}
+                                                {t('label.du')} {new Date(rotation.dateDebut).toLocaleDateString()} {t('label.au')} {new Date(rotation.dateFin).toLocaleDateString()}
                                             </td>
                                         </tr>
                                     ))}
@@ -1326,7 +1326,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-[#0ea5e9]" />
-                        Étape 3: Affectations finales (Optionnel)
+                        {t('label.etape_affectation_finale')}
                     </label>
                     <button
                         onClick={ajouterAffectationFinale}
@@ -1335,12 +1335,12 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                  transition-colors"
                     >
                         <Plus className="w-4 h-4" />
-                        Ajouter Affectation
+                        {t('label.ajout_affectation')}
                     </button>
                 </div>
 
                 <p className="text-sm text-[#6b7280] dark:text-[#9ca3af] mb-4">
-                    Vous pouvez définir des affectations finales spécifiques pour chaque groupe, qui prendront le pas sur les rotations automatiques.
+                    {t('label.description_aff_spe')}
                 </p>
 
                 {pageIsLoading?<Skeleton height={200}/>:<div className="space-y-4">
@@ -1358,7 +1358,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Groupe
+                                        {t('label.groupe')}
                                     </label>
                                     <select
                                         value={affectation.groupe}
@@ -1369,14 +1369,14 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                     >
                                         {groupes.map(g => (
                                             <option key={g.numero} value={g.numero}>
-                                                Groupe {g.numero}
+                                                {t('label.groupe')} {g.numero}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Service
+                                        {t('label.service')}
                                     </label>
                                     <FilterList
                                         items={[]}
@@ -1399,7 +1399,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Superviseur
+                                        {t('label.superviseur')}
                                     </label>
                                     <FilterList
                                         items={[]}
@@ -1422,7 +1422,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Date de début
+                                        {t('label.date_debut')}
                                     </label>
                                     <input
                                         type="date"
@@ -1435,7 +1435,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        Date de fin
+                                        {t('label.date_fin')}
                                     </label>
                                     <input
                                         type="date"
@@ -1467,12 +1467,12 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     {isCreating ? (
                         <>
                             <Spinner />
-                            {stageToEdit ? 'Modification en cours...' : 'Création en cours...'}
+                            {stageToEdit ? t('label.modification_en_cours') : t('label.creation_en_cours')}
                         </>
                     ) : (
                         <>
                             <Plus className="w-5 h-5" />
-                            {stageToEdit ? 'Modifier le stage' : 'Créer le stage'}
+                            {stageToEdit ? t('label.modifier_stage') : t('label.cree_stage')}
                         </>
                     )}
                 </button>
@@ -1487,7 +1487,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     disabled={isCreating} // Désactiver aussi ce bouton pendant le chargement
                 >
                     <RotateCcw className="w-5 h-5" />
-                    Réinitialiser
+                    {t('button.reinitialise')}
                 </button>
             </div>
         </div>
