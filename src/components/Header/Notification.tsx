@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { io, Socket } from 'socket.io-client';
 import { Bell, Check, Trash2, X, Loader2 } from 'lucide-react';
 import { deleteNotification, loadNotifications, markAllAsRead, markAsRead } from '../../services/notifications/notificationServiceAPI';
 import { apiUrl, config, wstjqer } from '../../config';
 import { useTranslation } from 'react-i18next';
+import socket from '../../utils/socket';
+import { useSocket } from '../../hooks/useSocket';
 
 // --- Déclaration d'interface pour la clarté TypeScript ---
 // Assurez-vous que cette interface correspond à la structure de vos données backend
 
 
 const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }) => {
-    const [socket, setSocket] = useState<Socket | null>(null);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState<number>(0);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -49,6 +49,7 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }) => {
         try {
             // Utilisation des valeurs hardcodées (20, 1, false) comme dans votre code original
             const result = await loadNotifications(20, 1, false, userId); 
+            console.log(result)
             if (result.success) {
                 setNotifications(result.data.notifications);
                 setUnreadCount(result.data.nonLuesCount);
@@ -64,67 +65,46 @@ const NotificationSystem: React.FC<NotificationSystemProps> = ({ userId }) => {
     useEffect(() => {
         loadNotificationsData();
     }, [loadNotificationsData]);
-
-
-    // --- Connexion et Authentification Socket.IO ---
     useEffect(() => {
-        if (!userId || !token) return;
+        if (!userId || !userId) {
+            console.log('⏳ Attente du chargement utilisateur...');
+            // Vous pouvez afficher un loader ici
+        }
+    }, [userId]);
+    console.log('=== DEBUG SOCKET ===');
+    // console.log('currentUser:', currentUser);
+    console.log('userId:', userId);
+    console.log('token:', token);
+    console.log('wstjqer:', wstjqer);
+    console.log('apiUrl:', apiUrl);
+    console.log('==================');
 
-        const newSocket = io(apiUrl, {
-            transports: ['websocket'],
-            // Ajout d'un ping/pong pour la détection de déconnexion
-            // pingTimeout: 60000, 
-        });
+    const socket = useSocket({
+        apiUrl,
+        userId,
+        token,
+        enabled: !!userId
+    });
+    // --- Connexion et Authentification Socket.IO ---
+       useEffect(() => {
+        if (!userId) return;
 
-        const onConnect = () => {
-            console.log('Connecté au serveur Socket.IO');
-
-            // ⚠️ AUTHENTIFICATION EXPLICITE
-            newSocket.emit('authenticate', { 
-                userId: userId, 
-                token: token 
-            }); 
-        };
-
-        const onAuthenticated = (data: { success: boolean }) => {
-            if (data.success) {
-                console.log(`Socket authentifié pour userId: ${userId}`);
-            } else {
-                console.error('Échec de l\'authentification Socket.IO');
-                newSocket.disconnect();
-            }
-        };
-
-        const onNewNotification = (notification: Notification) => {
-            setNotifications((prev) => [notification, ...prev]);
-            setUnreadCount((prev) => prev + 1);
-            showToast(notification);
+        const handleNewNotification = (notif: Notification) => {
+            console.log('📬 Nouvelle notification reçue:', notif);
+            setNotifications(prev => [notif, ...prev]);
+            setUnreadCount(prev => prev + 1);
+            showToast(notif);
             playNotificationSound();
         };
 
-        const onDisconnect = () => {
-            console.log('Déconnecté du serveur Socket.IO');
-        };
-
-        newSocket.on('connect', onConnect);
-        newSocket.on('authenticated', onAuthenticated);
-        newSocket.on('nouvelle_notification', onNewNotification);
-        newSocket.on('disconnect', onDisconnect);
-
-        setSocket(newSocket);
+        socket.onNewNotification(handleNewNotification);
 
         return () => {
-            if (newSocket) {
-                // Nettoyage de tous les écouteurs pour éviter les fuites de mémoire
-                newSocket.off('connect', onConnect);
-                newSocket.off('authenticated', onAuthenticated);
-                newSocket.off('nouvelle_notification', onNewNotification);
-                newSocket.off('disconnect', onDisconnect);
-                newSocket.disconnect();
-            }
+            socket.off('nouvelle_notification', handleNewNotification);
         };
-    // Dépendances complètes incluant les fonctions de rappel
-    }, [userId, token, setSocket, showToast, playNotificationSound]);
+    }, [userId]);
+
+
 
 
     // --- Handlers d'action ---

@@ -128,7 +128,7 @@ function FormCreateChat({ currentUser, entityId }: { currentUser: Utilisateur | 
                 handleConfirm={handleCreateChat}
             >     
                         
-                <label >Type d'entité</label>
+                <label >{t("label.type_entite")}</label>
                 <select 
                     value={newChatData.entityType} 
                     onChange={(e) => setNewChatData(prev => ({ ...prev, entityType: e.target.value as typeof prev.entityType }))} 
@@ -136,7 +136,7 @@ function FormCreateChat({ currentUser, entityId }: { currentUser: Utilisateur | 
                         {ENTITY_TYPES.map(type => (<option key={type} value={type}>{type}</option>))}
                 </select>
                 {/* <label >ID de l'entité</label><input type="text" value={newChatData.entityId} onChange={(e) => setNewChatData(prev => ({ ...prev, entityId: e.target.value }))} className="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#3b82f6]" placeholder="507f1f77bcf86cd799439011" /> */}
-                <label>Titre du chat</label>
+                <label>{t("label.titre_chat")}</label>
                 <input 
                     type="text" value={newChatData.title} 
                     onChange={(e) => setNewChatData(prev => ({ ...prev, title: e.target.value }))} 

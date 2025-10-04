@@ -100,7 +100,7 @@ export async function getFilteredThemeFormations({page, lang, familleMetier, for
     }
 }
 
-export async function getThemeFormationForDropDown({lang, formation }: {lang:string,formation:string  }): Promise<ThemeFormationReturnGetType> {
+export async function getThemeFormationForDropDown({lang, formation,userId }: {lang:string,formation:string, userId?:string  }): Promise<ThemeFormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/dropdown/formation/${formation}`,
@@ -109,6 +109,9 @@ export async function getThemeFormationForDropDown({lang, formation }: {lang:str
                     'Content-Type': 'application/json',
                     'accept-language':lang,
                     'authorization': token,
+                },
+                params:{
+                  userId
                 }
             },
         );

@@ -178,7 +178,7 @@ export async function getFormationsForGantt({page, lang, programmeFormation, fam
     }
 }
 
-export async function getFormationForDropDown({lang, programmeId }: {lang:string, programmeId:string }): Promise<FormationReturnGetType> {
+export async function getFormationForDropDown({lang, programmeId, userId }: {lang:string, programmeId:string, userId?:string }): Promise<FormationReturnGetType> {
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/dropdown/programme/${programmeId}`,
@@ -187,6 +187,9 @@ export async function getFormationForDropDown({lang, programmeId }: {lang:string
                     'Content-Type': 'application/json',
                     'accept-language':lang,
                     'authorization': token,
+                },
+                params:{
+                  userId
                 }
             },
         );

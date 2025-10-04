@@ -24,6 +24,7 @@ const TachesExecutees = () => {
   const fetchData = useFetchData();
   const { t } = useTranslation();
   const lang = useSelector((state: RootState) => state.setting.language);
+  const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   
   const { data: { themeFormations } } = useSelector((state: RootState) => state.themeFormationSlice);
   const { data: { programmeFormations } } = useSelector((state: RootState) => state.programmeFormationSlice);
@@ -60,7 +61,7 @@ const TachesExecutees = () => {
 
     fetchData({
       apiFunction: getFormationForDropDown,
-      params: { lang, programmeId: currentProgrammeFormation._id },
+      params: { lang, programmeId: currentProgrammeFormation._id, userId:currentUser._id },
       onSuccess: (data) => {
         dispatch(setFormations(data));
         if (data.formations?.length > 0) {
@@ -83,6 +84,7 @@ const TachesExecutees = () => {
       apiFunction: getThemeFormationForDropDown,
       params: {
         formation: currentFormation?._id || "",
+        userId:currentUser._id,
         lang,
       },
       onSuccess: (data) => {
