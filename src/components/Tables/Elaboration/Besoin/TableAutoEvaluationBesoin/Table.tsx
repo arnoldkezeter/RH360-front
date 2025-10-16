@@ -123,12 +123,12 @@ const Table = ({ data, currentPage, user, onPageChange, onEdit}: TableAutoEvalua
             {/*  */}
             <div className="rounded-sm border border-stroke bg-white px-3 lg:px-5 pt-0 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 mt-2">
     
-                <div className="flex justify-between items-center gap-x-1 lg:gap-x-2 mb-1 -mt-3 md:mt-0">
-                    <ButtonCreate
+                <div className="flex justify-between items-center gap-x-1 lg:gap-x-2 mb-1 mt-3">
+                    {/* <ButtonCreate
                         title={t('button.nouvelles_competences')}
                         useTitle={true}
                         onClick={() => navigate('/elaboration-programme/besoins-formation/exprimer/nouvelle-competence')}
-                    />
+                    /> */}
                     <InputSearch hintText={t('recherche.rechercher')+t(t('recherche.besoin_formation_predefini'))} value={searchText} onSubmit={(text) => setSearchText(text)} />
                 </div>
 

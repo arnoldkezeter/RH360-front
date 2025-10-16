@@ -14,6 +14,7 @@ interface SettingState {
         delete: boolean,
         details:boolean,
         open: boolean,
+        openUserCohorte:boolean,
         notificationDetails:boolean,
         openDatesEffectives:boolean
         openEvaluation:boolean,
@@ -53,6 +54,7 @@ const initialState: SettingState = {
         delete: false,
         details:false,
         open: false,
+        openUserCohorte:false,
         notificationDetails:false,
         openDatesEffectives:false,
         openEvaluation:false,
@@ -133,6 +135,10 @@ export const settingSlice = createSlice({
 
         setShowModal: (state) => {
             state.showModal.open = !state.showModal.open;
+        },
+
+        setShowModalUserCohorte: (state) => {
+            state.showModal.openUserCohorte = !state.showModal.openUserCohorte;
         },
 
         setShowModalDatesEffectives: (state) => {
@@ -240,6 +246,7 @@ export const {
     setShowModalConvocationParticipant,
     setShowModalFichePresence,
     setShowModalFichePresenceFormateur,
+    setShowModalUserCohorte,
     setShowLanguage, setShowModalCreate, setShowModalUpdate, setShowModalDelete, setShowModalDetails, setShowModal, setShowModalToDOSondage
     , setSaveDeviceType,setShowRoleModal, setShowModalPeriode, setShowModalElement, setShowModalPresence, setShowModalOpenScan, setShowModalCompetence, setShowModalNotificationDetails,
     setCurrentIndexUserRole,setShowModalEvaluation, setShowModalPresenceManuelle, setUserPermission, addUserPemission, removeUserPemission, setSelectedUserPermission, setSelectedUserRole

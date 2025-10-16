@@ -16,7 +16,7 @@ const BodyTable = ({ data, onEdit}: { data: Stagiaire[], onEdit: (stagiaire: Sta
             <tr key={index + 1} className="font-medium text-black dark:text-white text-[12px] md:text-[14px]">
                 {/* index */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 pl-4 md:pl-5 lg:pl-6 xl:pl-5 dark:border-strokedark hidden md:table-cell align-top">
-                    <h5 className=" align-top">{index + 1}</h5>
+                    <h5 className="align-top">{index + 1}</h5>
                 </td>
 
                 {/* nom */}
@@ -34,7 +34,7 @@ const BodyTable = ({ data, onEdit}: { data: Stagiaire[], onEdit: (stagiaire: Sta
                 </td>
 
                 {/* email */}
-                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black  align-top">
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
                     <div className="min-h-[40px] flex items-center">
                         <h5>{item.email}</h5>
                     </div>
@@ -47,10 +47,8 @@ const BodyTable = ({ data, onEdit}: { data: Stagiaire[], onEdit: (stagiaire: Sta
                     </div>
                 </td>
 
-                
-
-                {/* Action  bouton pour edit*/}
-                <td className="border-b border-[#eee] py-1 px-0 dark:border-strokedark flex justify-center items-center align-top">
+                {/* Action bouton pour edit */}
+                <td className="border-b border-[#eee] py-0 lg:py-4 px-0 dark:border-strokedark align-top">
                     <div className="min-h-[40px] flex items-center justify-center gap-1">
                         <ButtonCrudTable
                             onClickEdit={() => {

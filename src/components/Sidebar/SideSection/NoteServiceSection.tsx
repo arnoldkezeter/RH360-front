@@ -24,7 +24,7 @@ const NoteServiceSidebarLink: React.FC<NoteServiceSidebarLinkProps> = ({
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
         {path: '/notes-service/generer_notes', label: t('sub_menu.generer_note'), roles:["SUPER-ADMIN", "ADMIN"] },
-        {path: '/notes-service/historiques', label: t('sub_menu.historique_note'), roles:["SUPER-ADMIN", "ADMIN"]}
+        // {path: '/notes-service/historiques', label: t('sub_menu.historique_note'), roles:["SUPER-ADMIN", "ADMIN"]}
     ];
 
     // Filtrer les éléments du menu en fonction des permissions

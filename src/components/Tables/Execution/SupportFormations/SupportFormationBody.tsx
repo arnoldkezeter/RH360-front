@@ -15,6 +15,8 @@ import { Button } from "../../../ui/Support/Button";
 import { formatFileSizeInMo, getFileIcon, getFileSize, truncateText } from "../../../../fonctions/fonction";
 import { NoData } from "../../../NoData";
 import createToast from "../../../../hooks/toastify";
+import { setShowModalDelete } from "../../../../_redux/features/setting";
+import Skeleton from "react-loading-skeleton";
 
 interface SupportFormationBodyProps {
     data: SupportFormation[];
@@ -131,17 +133,7 @@ const SupportFormationBody = ({
         }
     }, [searchText, isSearch, data]);
 
-    const handleDelete = async (id: string) => {
-        if (confirm(t('confirmer_suppression'))) {
-        try {
-            await deleteSupportFormation(id, lang);
-            dispatch(deleteSupportFormationSlice({id}))
-        } catch (error) {
-            console.error('Erreur suppression:', error);
-        }
-        }
-    };
-
+   
     const handleDownload = async (support: any) => {
         try {
             await telechargerSupportFormation(support._id, lang).then((e: Blob) => {
@@ -268,9 +260,8 @@ const SupportFormationBody = ({
                     </div>
                 </div>
                 {/* </div> */}
-                { (
+                { pageIsLoading?<Skeleton height={300}/>:(
                 <>
-                    {console.log(data)}
                     {filteredData && filteredData.length === 0 ? (
                     <NoData/>
                     ) : (
@@ -297,18 +288,7 @@ const SupportFormationBody = ({
                                         {support.taille?formatFileSizeInMo(support.taille):""}
                                     </div>
                                 </div>
-                                <div className="flex-1">
-                                    {support.theme && (
-                                    <div 
-                                        className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white text-xs font-medium mb-2 max-w-full"
-                                        title={lang === 'fr' ? support.theme.titreFr : support.theme.titreEn}
-                                    >
-                                        <span className="truncate">
-                                        {truncateText(lang === 'fr' ? support.theme.titreFr : support.theme.titreEn)}
-                                        </span>
-                                    </div>
-                                    )}
-                                </div>
+                                
                                 </div>
                             </div>
                             
@@ -345,7 +325,7 @@ const SupportFormationBody = ({
                                 </Button>
                                 <Button
                                 variant="destructive"
-                                onClick={() => handleDelete(support._id!)}
+                                onClick={() => {onEdit(support);dispatch(setShowModalDelete())}}
                                 className="bg-gradient-to-r from-[#ef4444] to-[#dc2626] hover:from-[#dc2626] hover:to-[#b91c1c] text-white rounded-xl h-10 px-4 flex-shrink-0"
                                 >
                                 <Trash2 className="w-4 h-4" />

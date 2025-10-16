@@ -12,11 +12,12 @@ interface CustomDialogModalProps {
     children: React.ReactNode;
     isLoading?: boolean;
     isUnique?: boolean;
+    isClose?:boolean;
 }
 
 // model generale pour les boites de dialogue
 
-function CustomModal({ isUnique, isLoading, title, handleConfirm, isModalOpen, isDelete, closeModal, children }: CustomDialogModalProps) {
+function CustomModal({ isUnique, isClose, isLoading, title, handleConfirm, isModalOpen, isDelete, closeModal, children }: CustomDialogModalProps) {
     const { t } = useTranslation();
     return (
         <div>
@@ -65,7 +66,7 @@ function CustomModal({ isUnique, isLoading, title, handleConfirm, isModalOpen, i
 
                                     {
                                         
-                                        isUnique ?
+                                        isUnique || isClose ?
                                             <div className='flex items-end justify-end w-full mt-10'>
 
                                                 <button
@@ -78,7 +79,7 @@ function CustomModal({ isUnique, isLoading, title, handleConfirm, isModalOpen, i
                                                     {isLoading && <div className={`flex items-center justify-center bg-transparent pr-2`}>
                                                         <div className="h-5 w-5  animate-spin rounded-full border-2 border-solid border-white border-t-transparent"></div>
                                                     </div>}
-                                                    {isLoading?"":t('button.d_accord')}
+                                                    {isLoading?"":isClose?t("button.fermer"):t('button.d_accord')}
                                                 </button>
                                             </div>
 

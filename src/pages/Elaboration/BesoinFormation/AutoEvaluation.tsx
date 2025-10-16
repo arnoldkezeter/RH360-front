@@ -12,6 +12,7 @@ import { setAutoEvaluationBesoinLoading, setAutoEvaluationBesoins, setErrorPageA
 import Table from "../../../components/Tables/Elaboration/Besoin/TableAutoEvaluationBesoin/Table";
 import FormCreateUpdate from "../../../components/Modals/Elaboration/BesoinFormation/ModalBesoinFormation/FormCreateUpdate";
 import FormDelete from "../../../components/Modals/Elaboration/BesoinFormation/ModalBesoinFormation/FormDelete";
+import { useNavigate } from "react-router-dom";
 
 
 const AutoEvaluationBesoins = () => {
@@ -24,16 +25,16 @@ const AutoEvaluationBesoins = () => {
     const { data: { autoEvaluationBesoins } } = useSelector((state: RootState) => state.autoEvalualtionBesoinSlice);
     const [selectedAutoEvaluationBesoin, setSelectedAutoEvaluationBesoin] = useState<AutoEvaluationBesoin | null>(null);
     const user = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
-   
+    const navigate = useNavigate()
     const { setHeaderConfig } = useHeader();
 
     // Configure le header
     useEffect(() => {
         setHeaderConfig({
-            title:'',
+            title:t('button.nouvelles_competences'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
-            onAdd: () => {},
+            exportOptions: [],
+            onAdd: () => {navigate('/elaboration-programme/besoins-formation/exprimer/nouvelle-competence')},
             onExport: handleExportUsers,
         });
     }, [t]);

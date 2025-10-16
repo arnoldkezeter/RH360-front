@@ -1487,7 +1487,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     disabled={isCreating} // Désactiver aussi ce bouton pendant le chargement
                 >
                     <RotateCcw className="w-5 h-5" />
-                    {t('button.reinitialise')}
+                    {t('button.reinitialiser')}
                 </button>
             </div>
         </div>

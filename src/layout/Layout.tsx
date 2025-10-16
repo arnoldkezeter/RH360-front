@@ -24,11 +24,10 @@ const Layout = ({ isMobileOrTablet, userPermissions, currentUser }: LayoutProps)
         '/elaboration-programme/competences',
         '/elaboration-programme/familles-metier',
         '/elaboration-programme/besoins-formation/rapports',
-        '/elaboration-programme/besoins-formation/exprimer',
-        '/elaboration-programme/besoins-formation/exprimer/nouvelle-competence',
         '/elaboration-programme/formation/theme-formation/participants',
         
-        
+        '/execution-programme/calendrier-formation',
+        '/execution-programme/tache-executee',
         '/execution-programme/rapports-formation',
 
         '/evaluations/cree-evaluation',
@@ -37,6 +36,8 @@ const Layout = ({ isMobileOrTablet, userPermissions, currentUser }: LayoutProps)
 
         '/stagiaires/rapports',
         '/stagiaires/stages',
+        '/chercheurs/mandats',
+        '/chercheurs/rapports',
 
         '/notes-service/generer_notes',
         

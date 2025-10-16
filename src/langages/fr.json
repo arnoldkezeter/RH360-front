@@ -95,6 +95,7 @@
     "taches_formations": "Tâches de formation"
   },
   "page_description": {
+    "calendrier_formation":"Consultez le calendrier des formations",
     "stage_individuel": "Gérez l'affectation d'un stagiaire à des services",
     "groupe_stage": "Gestion automatisée des groupes, rotations et affectations de stage",
     "historique_affectations": "Gérez et suivez tous vos stages de formation",
@@ -148,6 +149,10 @@
     "liste_alerte": "Liste des alertes recentes"
   },
   "label": {
+    "aucun_utilisateur_cohorte":"Aucun utilisateur dans cette cohorte",
+    "utilisateur_actuels":"Utilisateurs actuels",
+    "ajouter_utilisateur":"Ajouter un utilisateur",
+    "contact":"Contact",
     "nouveau":"Nouveau",
     "messages":"Messages",
     "chargement...":"Chargement...",
@@ -821,6 +826,7 @@
     "pas_de_resultats": "Aucun résultat"
   },
   "button": {
+    "d_accord":"D'accord",
     "reinitialiser": "Réinitialiser",
     "supprimer": "Supprimer",
     "modifier": "Modifier",
@@ -856,7 +862,7 @@
     "ajouter_support": "Ajouter un support",
     "telecharger": "Télécharger",
     "ajouter_tache_stagiaire": "Ajouter une tâche",
-    "nouvelles_competences": "Nouvelles compétences"
+    "nouvelles_competences": "Proposer de nouvelles compétences"
   },
   "actions": {
     "exporter": "Exporter au format",
@@ -954,6 +960,8 @@
   "form_save": {
     "ajouter": "Ajouter ",
     "enregistrer": "Enregistrer ",
+    "gerer_utilisateurs_cohorte":"Gérer les utilisateurs de la cohorte",
+    "axe_strategique":"un axe stratégique",
     "type_echelle_reponse": "un type de réponse",
     "echelle_reponse": "une échelle de réponse",
     "auto_evaluation": "une auto-évaluation",
@@ -989,6 +997,7 @@
   },
   "form_update": {
     "enregistrer": "Mettre à jour les informations ",
+    "axe_strategique":"de l'axe stratégique",
     "type_echelle_reponse": "du type de réponse",
     "echelle_reponse": "de l'échelle de réponse",
     "dates_effective_lieu_formation": "des dates effectives du lieu de formation",
@@ -1027,6 +1036,7 @@
     "supprimer": "Supprimer",
     "suppression": "Suppression ",
     "reinitialiser": "Réinitialiser",
+    "axe_strategique":"de l'axe stratégique",
     "note": "de la note de service",
     "evaluation_a_chaud": "de l'évaluation",
     "type_echelle_reponse": "du type de réponse",
@@ -1064,6 +1074,7 @@
     "tache_stagiaire": "de la tâche"
   },
   "error": {
+    "specialite":"Le champ spécialité est obligatoire.",
     "veuillez_completer_tous_champs": "Veuillez completer tous champs",
     "selectionnez_reponse": "Veuillez sélectionner une réponse",
     "fichier": "Veuillez choisir un fichier.",
@@ -1142,12 +1153,17 @@
   "message": {
     "verifier": "Vérifier",
     "non_autoriser": "Non autorisé",
+    "utilisateur_ajoute_cohorte":"Utilisateur ajouté à la cohorte",
+    "utilisateur_retire_cohorte":"Utilisateur retiré de la cohorte",
     "vous_etes_pas_autoriser_a_mener_cette_action": "Vous n'êtes pas autorisé à mener cette action",
     "erreur": "Une erreur est survenue",
+    "nouveau_chat_cree":"Nouveau chat crée",
+    "nouveau_participant_ajoute":"Nouveau participant ajouté",
+    "chat_desactive":"Chat désactivé",
     "serveur_inactif": "Le serveur est actuellement éteint. Merci de le démarrer.",
     "erreur_recuperation": "Une erreur s'est produite lors de la récupération des données !",
     "generate_qr": "Génération du code QR en cours",
-    "aucune caméra": "Aucune caméra détectée",
+    "aucune_camera": "Aucune caméra détectée",
     "qr_code_invalid": "QR code invalide",
     "enregistrement": "Enregistrement en cours...",
     "generation": "Génération en cours...",

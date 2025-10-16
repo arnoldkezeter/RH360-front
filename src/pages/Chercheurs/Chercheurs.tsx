@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
-import createToast from "../../hooks/toastify";
 import { useHeader } from "../../components/Context/HeaderConfig";
 import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
 import Table from "../../components/Tables/Chercheur/TableChercheur/Table";
@@ -17,8 +16,6 @@ import { useFetchData } from "../../hooks/fechDataOptions";
 import FormCreateUpdate from "../../components/Modals/Chercheur/ModalChercheur/FormCreateUpdate";
 import { STATUTS } from "../../config";
 import FormDelete from "../../components/Modals/Chercheur/ModalChercheur/FormDelete";
-import { setErrorPageEtablissement, setEtablissements } from "../../_redux/features/parametres/etablissementSlice";
-import { getEtablissementsForDropDown } from "../../services/settings/etablissementAPI";
 import { getChercheursByFiltres } from "../../services/chercheurs/chercheurAPI";
 
 const Chercheurs = () => {

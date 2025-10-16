@@ -5,12 +5,12 @@ const api = `${apiUrl}/chercheurs`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createChercheur({nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, etablissement, domaineRecherche, photoDeProfil, commune, actif}: Chercheur, lang:string): Promise<ReponseApiPros> {
+export async function createChercheur({nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, etablissement, domaineRecherche, doctorat, photoDeProfil, commune, actif}: Chercheur, lang:string): Promise<ReponseApiPros> {
     
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, domaineRecherche, etablissement, photoDeProfil, commune, actif},
+            {nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, domaineRecherche, etablissement, photoDeProfil, commune, doctorat, actif},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,11 +28,11 @@ export async function createChercheur({nom, prenom, email, genre, telephone, dat
     }
 }
 
-export async function updateChercheur({ _id,nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, etablissement, domaineRecherche, photoDeProfil, commune, actif }: Chercheur, lang:string): Promise<ReponseApiPros> {
+export async function updateChercheur({ _id,nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, etablissement, domaineRecherche, doctorat, photoDeProfil, commune, actif }: Chercheur, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, etablissement, domaineRecherche, photoDeProfil, commune, actif},
+            {nom, prenom, email, genre, telephone, dateNaissance, lieuNaissance, etablissement, domaineRecherche, photoDeProfil, commune, doctorat, actif},
             {
                 headers: {
                     'Content-Type': 'application/json',

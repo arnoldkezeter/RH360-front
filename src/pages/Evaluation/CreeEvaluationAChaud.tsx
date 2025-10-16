@@ -627,9 +627,7 @@ const EvaluationManager = () => {
                       </div>
 
                       <div className="flex items-center gap-2 ml-4">
-                        <button className="p-2 text-[#64748b] hover:text-[#2563eb] hover:bg-[#eff6ff] rounded-lg transition-colors">
-                          <Eye className="w-5 h-5" />
-                        </button>
+                        
                         <button 
                           onClick={() => editerEvaluation(evaluation)}
                           className="p-2 text-[#64748b] hover:text-[#059669] hover:bg-[#ecfdf5] rounded-lg transition-colors"

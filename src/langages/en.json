@@ -95,6 +95,7 @@
     "taches_formations": "Training Tasks"
   },
   "page_description": {
+    "calendrier_formation":"View the training calendar",
     "stage_individuel": "Manage intern assignment to services",
     "groupe_stage": "Automated management of groups, rotations and internship assignments",
     "historique_affectations": "Manage and track all your training internships",
@@ -148,6 +149,10 @@
     "liste_alerte": "List of recent alerts"
   },
   "label": {
+    "aucun_utilisateur_cohorte": "No users in this cohort",
+    "utilisateur_actuels": "Current users",
+    "ajouter_utilisateur": "Add user",
+    "contact":"Contact",
     "nouveau": "New",
     "messages":"Messages",
     "chargement...":"Loading...",
@@ -821,6 +826,7 @@
     "pas_de_resultats": "No results"
   },
   "button": {
+    "d_accord":"All right",
     "reinitialiser": "Reset",
     "supprimer": "Delete",
     "modifier": "Edit",
@@ -856,7 +862,7 @@
     "ajouter_support": "Add material",
     "telecharger": "Download",
     "ajouter_tache_stagiaire": "Add task",
-    "nouvelles_competences": "New skills"
+    "nouvelles_competences": "Proposing new skills"
   },
   "actions": {
     "exporter": "Export to format",
@@ -954,6 +960,8 @@
   "form_save": {
     "ajouter": "Add ",
     "enregistrer": "Save ",
+    "gerer_utilisateurs_cohorte":"Manage cohort users",
+    "axe_strategique":"a strategic axis",
     "type_echelle_reponse": "a response type",
     "echelle_reponse": "a response scale",
     "auto_evaluation": "a self-assessment",
@@ -989,6 +997,7 @@
   },
   "form_update": {
     "enregistrer": "Update information for ",
+    "axe_strategique":"of the strategic axis",
     "type_echelle_reponse": "the response type",
     "echelle_reponse": "the response scale",
     "dates_effective_lieu_formation": "actual training location dates",
@@ -1028,6 +1037,7 @@
     "suppression": "Deletion of ",
     "reinitialiser": "Reset",
     "note": "the service note",
+    "axe_strategique":"of the strategic axis",
     "evaluation_a_chaud": "the evaluation",
     "type_echelle_reponse": "the response type",
     "echelle_reponse": "the response scale",
@@ -1064,6 +1074,7 @@
     "tache_stagiaire": "the task"
   },
   "error": {
+    "specialite": "The specialty field is required.",
     "veuillez_completer_tous_champs": "Please complete all fields",
     "selectionnez_reponse": "Please select a response",
     "fichier": "Please choose a file.",
@@ -1141,9 +1152,14 @@
   },
   "message": {
     "verifier": "Check",
+    "utilisateur_ajoute_cohorte": "User added to cohort",
+    "utilisateur_retire_cohorte": "User removed from cohort",
     "non_autoriser": "Not authorized",
     "vous_etes_pas_autoriser_a_mener_cette_action": "You are not authorized to perform this action",
     "erreur": "An error occurred",
+    "nouveau_chat_cree": "New chat created",
+    "nouveau_participant_ajoute": "New participant added",
+    "chat_desactive": "Chat deactivated",
     "serveur_inactif": "Server is currently off. Please start it.",
     "erreur_recuperation": "An error occurred while retrieving data!",
     "generate_qr": "Generating QR code",

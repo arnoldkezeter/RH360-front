@@ -11,6 +11,7 @@ import FormDelete from "../../components/Modals/Parametres/ModalCohorte/FormDele
 import { useHeader } from "../../components/Context/HeaderConfig";
 import { getCohortes } from "../../services/settings/cohorteAPI";
 import CohorteUserManager from "./CohorteUserManager";
+import { setShowModalUserCohorte } from "../../_redux/features/setting";
 
 
 
@@ -68,7 +69,7 @@ const Cohortes = () => {
 
     const handleOpenUserCohorteManage=()=>{
         console.log("open")
-        setIsModalOpen(true);
+        dispatch(setShowModalUserCohorte())
     }
     
     return (
@@ -89,9 +90,6 @@ const Cohortes = () => {
             {selectedCohorte && selectedCohorte._id && (
                 <CohorteUserManager
                     cohorteId={selectedCohorte._id}
-                    lang="fr" // ou 'en' selon la langue active
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
                 />
             )}
 

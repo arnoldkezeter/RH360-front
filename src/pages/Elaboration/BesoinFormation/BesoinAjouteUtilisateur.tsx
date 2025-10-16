@@ -33,7 +33,7 @@ const BesoinAjouteUtilisateur = () => {
         setHeaderConfig({
             title: t('button.ajouter_nouvelle_competence'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedBesoinAjouteUtilisateur(null);dispatch(setShowModal())},
             onExport: handleExportUsers,
         });

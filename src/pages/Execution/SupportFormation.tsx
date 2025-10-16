@@ -11,112 +11,13 @@ import { useFetchData } from "../../hooks/fechDataOptions";
 import { getFormationForDropDown } from "../../services/elaborations/formationAPI";
 import { setErrorPageFormation, setFormations } from "../../_redux/features/elaborations/formationSlice";
 import { setErrorPageThemeFormation, setThemeFormationLoading, setThemeFormations } from "../../_redux/features/elaborations/themeFormationSlice";
-import { getBudgetFormationForDropDown } from "../../services/elaborations/budgetFormationAPI";
-import { setBudgetFormationLoading, setBudgetFormations, setBudgetFormationSelected, setErrorPageBudgetFormation } from "../../_redux/features/elaborations/budgetFormationSlice";
-import Table from "../../components/Tables/Execution/TableBudgetFormation/Table";
 import { getFilteredSupportsFormation } from "../../services/executions/supportFormationAPI";
 import { setErrorPageSupportFormation, setSupportFormationLoading, setSupportFormations } from "../../_redux/features/execution/supportFormationSlice";
 import { getThemeFormationForDropDown } from "../../services/elaborations/themeFormationAPI";
 import SupportFormationBody from "../../components/Tables/Execution/SupportFormations/SupportFormationBody";
 import FormCreateUpdate from "../../components/Modals/Execution/SupportFormation/FormCreateUpdate";
+import FormDelete from "../../components/Modals/Execution/SupportFormation/FormDelete";
 
-const mockSupports = [
-  {
-    _id: "1",
-    nomFr: "Introduction à la gestion de projet Support d'introduction à la gestion de projet avec les meilleures pratiques et méthodologies",
-    nomEn: "Introduction to Project Management",
-    descriptionFr: "Support d'introduction à la gestion de projet avec les meilleures pratiques et méthodologies.",
-    descriptionEn: "Introductory material on project management with best practices and methodologies.",
-    fichier: "uploads/supports/gestion_projet_intro.pdf",
-    theme: {
-        _id: "101",
-        titreFr: "Support d'introduction à la gestion de projet avec les meilleures pratiques et méthodologies ",
-        titreEn: "Project Management",
-        dateDebut: '2024-01-15',
-        dateFin: '2024-06-30',
-    }
-  },
-  {
-    _id: "2",
-    nomFr: "Sécurité informatique avancée",
-    nomEn: "Advanced Cybersecurity",
-    descriptionFr: "Support complet pour le module de sécurité informatique couvrant les dernières menaces et protections.",
-    descriptionEn: "Comprehensive material for the cybersecurity module covering latest threats and protections.",
-    fichier: "uploads/supports/securite_info.docx",
-    theme: {
-        _id: "102",
-        titreFr: "Sécurité Informatique Sécurité Informatique Sécurité Informatique Sécurité Informatique",
-        titreEn: "IT Security",
-        dateDebut: '2024-02-01',
-        dateFin: '2024-07-15',
-        formation: undefined
-    }
-  },
-  {
-    _id: "3",
-    nomFr: "Communication efficace",
-    nomEn: "Effective Communication",
-    descriptionFr: "Techniques avancées pour améliorer la communication interpersonnelle et professionnelle.",
-    descriptionEn: "Advanced techniques to improve interpersonal and professional communication.",
-    fichier: "uploads/supports/communication.pptx",
-    theme: {
-        _id: "103",
-        titreFr: "Développement Personnel",
-        titreEn: "Personal Development",
-        dateDebut: '2024-03-01',
-        dateFin: '2024-08-30',
-        formation: undefined
-    }
-  },
-  {
-    _id: "4",
-    nomFr: "Analytics et Data Science",
-    nomEn: "Analytics and Data Science",
-    descriptionFr: "Formation complète sur l'analyse de données et les techniques de data science.",
-    descriptionEn: "Complete training on data analysis and data science techniques.",
-    fichier: "uploads/supports/data_science.xlsx",
-    theme: {
-        _id: "104",
-        titreFr: "Data Science",
-        titreEn: "Data Science",
-        dateDebut: '2024-04-01',
-        dateFin: '2024-09-15',
-        formation: undefined
-    }
-  },
-  {
-    _id: "5",
-    nomFr: "Développement Web Frontend",
-    nomEn: "Frontend Web Development",
-    descriptionFr: "Maîtrisez les technologies modernes de développement web frontend.",
-    descriptionEn: "Master modern frontend web development technologies.",
-    fichier: "uploads/supports/frontend_dev.mp4",
-    theme: {
-        _id: "105",
-        titreFr: "Développement Web",
-        titreEn: "Web Development",
-        dateDebut: '2024-05-01',
-        dateFin: '2024-10-30',
-        formation: undefined
-    }
-  },
-  {
-    _id: "6",
-    nomFr: "Leadership et Management",
-    nomEn: "Leadership and Management",
-    descriptionFr: "Développez vos compétences en leadership et management d'équipe.",
-    descriptionEn: "Develop your leadership and team management skills.",
-    fichier: "uploads/supports/leadership.zip",
-    theme: {
-        _id: "106",
-        titreFr: "Leadership",
-        titreEn: "Leadership",
-        dateDebut: '2024-06-01',
-        dateFin: '2024-11-15',
-        formation: undefined
-    }
-  }
-];
 
 const SupportFormationManager = () => {
   const dispatch = useDispatch();
@@ -296,6 +197,7 @@ const SupportFormationManager = () => {
       />
 
       <FormCreateUpdate supportFormation={selectedSupport} theme={currentTheme}/>
+      <FormDelete support={selectedSupport}/>
       
     </>
   );

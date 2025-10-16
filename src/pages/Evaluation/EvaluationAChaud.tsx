@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Search } from 'lucide-react';
-import axios from 'axios';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../_redux/store';
 import { useTranslation } from 'react-i18next';

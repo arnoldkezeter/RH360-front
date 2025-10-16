@@ -4,6 +4,7 @@ interface Chercheur {
     prenom?: string;
     email: string;
     genre: string;
+    doctorat: string;
     telephone?: string;
     dateNaissance?: string ;
     lieuNaissance?: string ;

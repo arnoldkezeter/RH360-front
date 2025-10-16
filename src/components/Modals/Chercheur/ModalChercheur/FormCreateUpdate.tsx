@@ -47,8 +47,10 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
     const [region, setRegion] = useState<Region>();
     const [departement, setDepartement] = useState<Departement>();
     const [commune, setCommune] = useState<Commune>();
+    const [doctorat, setDoctorat] = useState("");
 
     const [errorNom, setErrorNom] = useState("");
+    const [errorDoctorat, setErrorDoctorat] = useState("");
     const [errorGenre, setErrorGenre] = useState("");
     const [errorEmail, setErrorEmail] = useState("");
     const [errorEtablissement, setErrorEtablissement] = useState("");
@@ -76,6 +78,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
             setRegion(chercheur?.commune?.departement?.region || undefined);
             setDepartement(chercheur?.commune?.departement || undefined);
             setCommune(chercheur?.commune || undefined);
+            setDoctorat(chercheur.doctorat)
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.chercheur'));
             setNom("");
@@ -85,7 +88,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
             setLieuNaissance("");
             setEmail("");
             setTelephone("");
-            
+            setDoctorat("")
             setRegion(undefined);
             setDepartement(undefined);
             setCommune(undefined);
@@ -100,6 +103,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
             setErrorNom("");
             setErrorGenre("");
             setErrorEmail("");
+            setErrorDoctorat("")
             setErrorEtablissement("")
             setErrorTelephone("")
             setErrorDomaineRecherche("")
@@ -113,6 +117,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
         setErrorEmail("");
         setErrorEtablissement("")
         setErrorTelephone("")
+        setErrorDoctorat("")
         setErrorDomaineRecherche("")
         setIsFirstRender(true);
         dispatch(setShowModal());
@@ -235,7 +240,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
 
 
     const handleCreateChercheur = async () => {
-        if (!nom || !genre || !email || !telephone || !etablissement || !domaineRecherche) {
+        if (!nom || !genre || !email || !telephone || !etablissement || !domaineRecherche || !doctorat) {
             if (!nom) {
                 setErrorNom(t('error.nom'));
             }
@@ -258,6 +263,10 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
            
             if(!domaineRecherche){
                 setErrorDomaineRecherche(t('error.domaine_recherche'))
+            }
+
+            if(!doctorat){
+                setErrorDoctorat(t('error.specialite'))
             }
         
             
@@ -284,6 +293,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                     commune,
                     etablissement,
                     domaineRecherche,
+                    doctorat,
                     actif:true,
                 }, lang
             ).then((e: ReponseApiPros) => {
@@ -304,6 +314,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                             etablissement: e.data.etablissement,
                             domaineRecherche:e.data.domaineRecherche,
                             commune: commune,
+                            doctorat:e.data.doctorat,
                             actif: e.data.actif,
                         }
 
@@ -335,6 +346,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                     commune,
                     etablissement,
                     domaineRecherche,
+                    doctorat,
                     actif:true,
                 }, lang).then((e: ReponseApiPros) => {
                     if (e.success) {
@@ -354,6 +366,7 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                                 etablissement: e.data.etablissement,
                                 domaineRecherche:e.data.domaineRecherche,
                                 commune: commune,
+                                doctorat:e.data.doctorat,
                                 actif: e.data.actif
                             }
 
@@ -463,6 +476,14 @@ function FormCreateUpdate({ chercheur }: { chercheur: Chercheur | null }) {
                     onSelect={handleEtablissementSelect}
                 />
                 {errorEtablissement && <p className="text-red-500">{errorEtablissement}</p>}
+                <label>{t('label.specialite')}</label><label className="text-red-500"> *</label>
+                <input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="text"
+                    value={doctorat}
+                    onChange={(e) => {setDoctorat(e.target.value); setErrorDoctorat("")}}
+                />
+                {errorDoctorat && <p className="text-red-500">{errorDoctorat}</p>}
 
                 <label>{t('label.domaine_recherche')}</label><label className="text-red-500"> *</label>
                 <input

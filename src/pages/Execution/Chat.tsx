@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Send, Users, Settings, Search, FileText, X, Plus, Trash2, Check, CheckCheck } from 'lucide-react';
+import { Send, Users, Search, X, Plus, Trash2, Check, CheckCheck, WifiOff, Wifi } from 'lucide-react';
 import { t } from 'i18next';
 import FilterList from '../../components/ui/AutoComplete';
 import { useFetchData } from '../../hooks/fechDataOptions';
@@ -12,12 +12,12 @@ import createToast from '../../hooks/toastify';
 import { setShowModal } from '../../_redux/features/setting';
 import FormCreateChat from '../../components/Modals/Chat/FormAddChat';
 import { searchUtilisateur } from '../../services/utilisateurs/utilisateurAPI';
-import { useSocket } from '../../hooks/useSocket';
 import { apiUrl, wstjqer } from '../../config';
+import useSocket from '../../hooks/useSocket';
+import socketService from '../../hooks/useSocket';
 
-// ✅ Helper pour grouper ET TRIER les messages par date (du plus ancien au plus récent)
+// ✅ AMÉLIORATION 1: Groupement et tri optimisés avec mémoïsation
 const groupMessagesByDate = (messages: Message[]) => {
-    // D'abord trier tous les messages par date croissante
     const sortedMessages = [...messages].sort((a, b) => 
         new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
@@ -41,7 +41,6 @@ const groupMessagesByDate = (messages: Message[]) => {
     return groups;
 };
 
-// Helper pour formater l'heure
 const formatTime = (timestamp: string, lang: string) => {
     return new Date(timestamp).toLocaleTimeString(lang, { 
         hour: '2-digit', 
@@ -49,14 +48,13 @@ const formatTime = (timestamp: string, lang: string) => {
     });
 };
 
-
-// Composant de bulle de message
-const MessageBubble: React.FC<{
+// ✅ AMÉLIORATION 2: MessageBubble mémoïsé pour éviter re-renders inutiles
+const MessageBubble = React.memo<{
     message: Message;
     isCurrentUser: boolean;
     lang: string;
     showSender?: boolean;
-}> = ({ message, isCurrentUser, lang, showSender }) => {
+}>(({ message, isCurrentUser, lang, showSender }) => {
     const isRead = message.isRead && message.isRead.length > 1;
     
     return (
@@ -87,9 +85,8 @@ const MessageBubble: React.FC<{
             </div>
         </div>
     );
-};
+});
 
-// Séparateur de date
 const DateSeparator: React.FC<{ date: string }> = ({ date }) => (
     <div className="flex items-center justify-center my-4">
         <div className="bg-[#e9edef] px-3 py-1 rounded-md shadow-sm">
@@ -108,6 +105,11 @@ const ChatManager = () => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const pageIsLoading = useSelector((state: RootState) => state.chatSlice.pageIsLoading);
+    const [messagesLoading, setMessagesLoading] = useState(false);
+    const [sending, setSending] = useState(false);
+    
+    // ✅ AMÉLIORATION 3: État de connexion socket
+    const [isSocketConnected, setIsSocketConnected] = useState(false);
 
     const dispatch = useDispatch();
     const fetchData = useFetchData();
@@ -122,29 +124,34 @@ const ChatManager = () => {
     const socketUrl = useMemo(() => apiUrl.replace('/api/v1', ''), []);
     const token = useMemo(() => localStorage.getItem(wstjqer) || '', []);
     
-    const socket = useSocket({
-        apiUrl: socketUrl,
-        userId: currentUser?._id,
-        token,
-        enabled: !!(currentUser?._id && token)
-    });
+
+    // ✅ Utiliser directement socketService au lieu de socket
+    const socket = socketService;
+
 
     useEffect(() => {
         setTacheId(query.get("tacheId") || "");
         setEntityType(query.get("entityType") || "");
     }, [search]);
 
-        
+
+    // ✅ AMÉLIORATION 5: Surveillance de la connexion socket
     useEffect(() => {
-        if (!selectedChat?._id) return;
-        
-        const pollInterval = setInterval(async () => {
-            console.log('🔄 Polling des messages...');
-            await loadChatMessages(selectedChat._id || "", false);
-        }, 1000); // Toutes les 5 secondes
-        
-        return () => clearInterval(pollInterval);
-    }, [selectedChat?._id]);
+        if (!socket) return;
+
+        const checkConnection = () => {
+            const connected = socket.isConnected();
+            setIsSocketConnected(connected);
+        };
+
+        // Vérification initiale
+        checkConnection();
+
+        // Vérification périodique
+        const interval = setInterval(checkConnection, 5000);
+
+        return () => clearInterval(interval);
+    }, [socket]);
 
     const readMessages = useCallback(async (chatId: string) => {
         if (!currentUser?._id) return;
@@ -155,7 +162,7 @@ const ChatManager = () => {
         }
     }, [currentUser, lang]);
 
-    // ✅ Gestion Socket.IO - Événements globaux
+    // ✅ AMÉLIORATION 6: Gestion Socket.IO avec nettoyage approprié
     useEffect(() => {
         if (!currentUser?._id || !socket.isConnected()) return;
 
@@ -177,35 +184,125 @@ const ChatManager = () => {
             }
         };
 
+        const handleUnreadMessage = (data: { chatId: string; message: Message; chatTitle: string }) => {
+            console.log('📬 Message non lu reçu:', data);
+            
+            // Si on n'est pas dans ce chat, afficher une notification
+            if (selectedChat?._id !== data.chatId) {
+                createToast(
+                    `${data.chatTitle}: ${data.message.content.substring(0, 50)}...`, 
+                    '', 
+                    0
+                );
+                
+                // Mettre à jour le compteur dans Redux
+                // dispatch(incrementUnreadCount(data.chatId));
+            }
+        };
+
+
         socket.onChatCreated(handleChatCreated);
         socket.onParticipantAdded(handleParticipantAdded);
         socket.onChatDeactivated(handleChatDeactivated);
+        socket.on('unread_message', handleUnreadMessage);
+        
 
         return () => {
             socket.off('chat_created', handleChatCreated);
             socket.off('participant_added', handleParticipantAdded);
             socket.off('chat_deactivated', handleChatDeactivated);
+            socket.off('unread_message', handleUnreadMessage);
         };
     }, [currentUser?._id, selectedChat?._id, socket, t]);
 
-    // ✅ Gestion Socket.IO - Événements du chat sélectionné
+    // ✅ AMÉLIORATION 7: Gestion améliorée des messages avec dédoublonnage
+   // 1️⃣ Initialiser la connexion Socket (une seule fois)
     useEffect(() => {
-        if (!selectedChat?._id || !currentUser?._id || !socket.isConnected()) {
-            console.log('⏸️ Conditions non remplies pour rejoindre le chat');
+        if (!currentUser?._id || !token) {
+            console.log('⏸️ Infos utilisateur manquantes');
             return;
         }
 
-        console.log(`🔗 Rejoindre le chat: ${selectedChat._id}`);
-        socket.joinChat(selectedChat._id);
+        console.log('🚀 Initialisation Socket.IO ChatManager');
+        socketService.connect(socketUrl, currentUser._id, token);
+
+        return () => {
+            console.log('🔌 Déconnexion Socket.IO ChatManager');
+            socketService.disconnect();
+        };
+    }, [socketUrl, currentUser?._id, token]);
+
+        // 2️⃣ Gérer le chat sélectionné (rejoindre/quitter + listeners)
+    useEffect(() => {
+        if (!selectedChat?._id || !currentUser?._id) {
+            console.log('⏸️ Pas de chat sélectionné');
+            return;
+        }
+
+        // Attendre que le socket soit connecté
+        const checkAndJoin = () => {
+            if (!socketService.isConnected()) {
+                console.log('⏳ Socket non connecté, attente...');
+                setTimeout(checkAndJoin, 500);
+                return;
+            }
+
+            console.log(`🔗 Rejoindre le chat: ${selectedChat._id}`);
+            socketService.joinChat(selectedChat._id||"");
+        };
+
+        checkAndJoin();
 
         const handleNewMessage = (data: { chatId: string; message: Message }) => {
-            console.log('📨 Nouveau message reçu:', data);
+            console.log('=====================================');
+            console.log('📨 [FRONTEND] Nouveau message reçu');
+            console.log('Data:', data);
+            console.log('Chat actuel:', selectedChat._id);
+            console.log('Match?', data.chatId === selectedChat._id);
+            console.log('=====================================');
+            
             if (data.chatId === selectedChat._id) {
                 setMessages(prev => {
-                    // Éviter les doublons
-                    const exists = prev.some(msg => msg._id === data.message._id);
-                    if (exists) return prev;
-                    return [...prev, data.message];
+                    // ✅ CORRECTION : Si c'est notre propre message, remplacer l'optimiste
+                    if (data.message.sender._id === currentUser._id) {
+                        console.log('🔄 C\'est notre message, recherche de l\'optimiste à remplacer');
+                        
+                        // Trouver le message optimiste correspondant
+                        const optimisticIndex = prev.findIndex(msg => 
+                            msg._id && msg._id.toString().startsWith('temp-') && 
+                            msg.content === data.message.content &&
+                            Math.abs(new Date(msg.timestamp).getTime() - new Date(data.message.timestamp).getTime()) < 5000
+                        );
+                        
+                        if (optimisticIndex !== -1) {
+                            console.log('✅ Message optimiste trouvé, remplacement');
+                            const newMessages = [...prev];
+                            newMessages[optimisticIndex] = data.message;
+                            return newMessages;
+                        } else {
+                            console.log('⚠️ Message optimiste non trouvé, vérification doublon');
+                            // Vérifier si le message réel existe déjà
+                            const exists = prev.some(msg => msg._id === data.message._id);
+                            if (exists) {
+                                console.log('❌ Message déjà présent, ignoré');
+                                return prev;
+                            }
+                            console.log('➕ Ajout du message');
+                            return [...prev, data.message];
+                        }
+                    } else {
+                        // ✅ Message d'un autre utilisateur
+                        console.log('👤 Message d\'un autre utilisateur');
+                        const exists = prev.some(msg => msg._id === data.message._id);
+                        
+                        if (exists) {
+                            console.log('❌ Message déjà présent, ignoré');
+                            return prev;
+                        }
+                        
+                        console.log('➕ Ajout nouveau message');
+                        return [...prev, data.message];
+                    }
                 });
                 
                 if (data.message.sender._id !== currentUser._id) {
@@ -217,7 +314,6 @@ const ChatManager = () => {
         const handleMessagesRead = (data: { chatId: string; userId: string }) => {
             if (data.chatId === selectedChat._id) {
                 console.log('📩 Messages lus par', data.userId);
-                // Mettre à jour les indicateurs de lecture
                 setMessages(prev => prev.map(msg => {
                     if (msg.sender._id === currentUser._id) {
                         const isRead = msg.isRead || [];
@@ -241,29 +337,28 @@ const ChatManager = () => {
             }
         };
 
-        socket.onNewMessage(handleNewMessage);
-        socket.onMessagesRead(handleMessagesRead);
-        socket.onPermissionsUpdated(handlePermissionsUpdated);
+        // ✅ Enregistrer les listeners
+        console.log('👂 Enregistrement des listeners');
+        socketService.onNewMessage(handleNewMessage);
+        socketService.onMessagesRead(handleMessagesRead);
+        socketService.onPermissionsUpdated(handlePermissionsUpdated);
 
         return () => {
             console.log(`👋 Quitter le chat: ${selectedChat._id}`);
-            socket.leaveChat(selectedChat._id||"");
-            socket.off('new_message', handleNewMessage);
-            socket.off('messages_read', handleMessagesRead);
-            socket.off('participant_permissions_updated', handlePermissionsUpdated);
+            socketService.leaveChat(selectedChat._id||"");
+            socketService.off('new_message', handleNewMessage);
+            socketService.off('messages_read', handleMessagesRead);
+            socketService.off('participant_permissions_updated', handlePermissionsUpdated);
         };
-    }, [selectedChat?._id, currentUser?._id, socket, readMessages, t]);
+    }, [selectedChat?._id, currentUser?._id, readMessages, t]);
 
-    const [messagesLoading, setMessagesLoading] = useState(false);
-
-    const loadChatMessages = useCallback(async (chatId: string, loading:boolean) => {
+    const loadChatMessages = useCallback(async (chatId: string, loading: boolean) => {
         if (!currentUser?._id) return;
-        if(loading){
+        if (loading) {
             setMessagesLoading(true);
         }
         try {
             const data = await getChatMessages({ chatId, userId: currentUser._id, page: 1, limit: 50, lang });
-            // ✅ Les messages sont déjà triés par le backend normalement, mais on s'assure
             const sortedMessages = (data.messages || []).sort((a: { timestamp: string | number | Date; }, b: { timestamp: string | number | Date; }) => 
                 new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
             );
@@ -303,27 +398,38 @@ const ChatManager = () => {
         }
     }, [tacheId, chats, entityType, loadChatMessages]);
 
-    // ✅ Scroll automatique amélioré avec délai
+    // ✅ AMÉLIORATION 8: Scroll automatique avec IntersectionObserver
+    const shouldAutoScroll = useRef(true);
+
     useEffect(() => {
-        if (messagesEndRef.current && messages.length > 0) {
-            // Petit délai pour laisser le DOM se mettre à jour
-            setTimeout(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+        const container = messagesContainerRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+            shouldAutoScroll.current = distanceFromBottom < 100;
+        };
+
+        container.addEventListener('scroll', handleScroll);
+        return () => container.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        if (shouldAutoScroll.current && messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages]);
-
-    const [sending, setSending] = useState(false);
 
     const sendMessage = async () => {
         if (!newMessage.trim() || !selectedChat || !currentUser?._id || sending) return;
 
         setSending(true);
         const messageContent = newMessage.trim();
-        setNewMessage(""); // ✅ Vider immédiatement l'input
+        setNewMessage("");
 
         const optimisticMessage: Message = {
-            _id: `temp-${Date.now()}`,
+            _id: `temp-${Date.now()}-${Math.random()}`,
             content: messageContent,
             messageType: "text",
             sender: {
@@ -336,6 +442,7 @@ const ChatManager = () => {
             isRead: [{ user: currentUser._id, readAt: new Date().toISOString() }],
         };
 
+        console.log('📤 Envoi message optimiste:', optimisticMessage._id);
         setMessages(prev => [...prev, optimisticMessage]);
 
         try {
@@ -347,30 +454,22 @@ const ChatManager = () => {
                 lang
             );
 
+            console.log('✅ Réponse API:', response);
+
             if (response.success && response.data) {
-                // ✅ Remplacer le message optimiste par le message réel
-                setMessages(prev =>
-                    prev.map(msg => msg._id === optimisticMessage._id ? response.data : msg)
-                );
-                
-                // ✅ CORRECTION : Émettre l'événement socket après l'envoi réussi
-                if (socket.isConnected()) {
-                    socket.emit('send_message', {
-                        chatId: selectedChat._id,
-                        message: response.data
-                    });
-                    console.log('📤 Message émis via socket:', response.data);
-                }
+                console.log('📨 Message sauvegardé avec _id:', response.data._id);
+                // Le message réel arrivera via socket
             } else {
+                console.error('❌ Échec API:', response.message);
                 createToast(response.message, "", 2);
                 setMessages(prev => prev.filter(msg => msg._id !== optimisticMessage._id));
-                setNewMessage(messageContent); // Restaurer le message en cas d'erreur
+                setNewMessage(messageContent);
             }
         } catch (error: any) {
-            console.error("Erreur envoi message:", error);
+            console.error("❌ Erreur envoi message:", error);
             createToast(error.response?.data?.message || t("message.erreur_generique"), "", 2);
             setMessages(prev => prev.filter(msg => msg._id !== optimisticMessage._id));
-            setNewMessage(messageContent); // Restaurer le message
+            setNewMessage(messageContent);
         } finally {
             setSending(false);
         }
@@ -440,29 +539,37 @@ const ChatManager = () => {
         return chat.messages.filter(msg => !msg.isRead?.some(read => read.user === currentUser?._id)).length;
     };
 
-    // ✅ Grouper les messages par date (déjà triés)
+    // ✅ AMÉLIORATION 9: Groupement mémoïsé pour performance
     const groupedMessages = useMemo(() => groupMessagesByDate(messages), [messages]);
 
     return (
-         <>
+        <>
             <div className="flex w-full h-screen bg-[#f0f2f5]">
                 {/* Sidebar des chats */}
                 <div className="w-1/3 bg-white border-r border-[#e9edef] flex flex-col">
                     <div className="p-4 bg-[#f0f2f5] border-b border-[#e9edef]">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-xl font-semibold text-[#111b21]">{t('label.messages')}</h2>
-                            <button
-                                onClick={() => dispatch(setShowModal())}
-                                className="bg-[#00a884] text-white p-2 rounded-full hover:bg-[#008f6c] transition-colors"
-                            >
-                                <Plus size={20} />
-                            </button>
+                            <div className="flex items-center gap-2">
+                                {/* ✅ AMÉLIORATION 10: Indicateur de connexion socket */}
+                                {isSocketConnected ? (
+                                    <Wifi size={16} className="text-green-500" />
+                                ) : (
+                                    <WifiOff size={16} className="text-red-500"  />
+                                )}
+                                <button
+                                    onClick={() => dispatch(setShowModal())}
+                                    className="bg-[#00a884] text-white p-2 rounded-full hover:bg-[#008f6c] transition-colors"
+                                >
+                                    <Plus size={20} />
+                                </button>
+                            </div>
                         </div>
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#667781]" size={18} />
                             <input
                                 type="text"
-                                placeholder="Rechercher..."
+                                placeholder={t('label.recherche')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2 bg-white border border-[#e9edef] rounded-lg text-sm focus:outline-none focus:border-[#00a884]"
@@ -515,7 +622,6 @@ const ChatManager = () => {
                 <div className="flex-1 flex flex-col bg-[#efeae2]">
                     {selectedChat ? (
                         <>
-                            {/* Header du chat */}
                             <div className="bg-[#f0f2f5] border-b border-[#e9edef] p-4">
                                 <div className="flex items-center justify-between">
                                     <div>
@@ -535,7 +641,6 @@ const ChatManager = () => {
                                 </div>
                             </div>
 
-                            {/* Messages */}
                             <div 
                                 ref={messagesContainerRef}
                                 className="flex-1 overflow-y-auto p-4 bg-[#efeae2]"
@@ -570,7 +675,6 @@ const ChatManager = () => {
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            {/* Input de message */}
                             <div className="bg-[#f0f2f5] p-4">
                                 <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2">
                                     <input
@@ -598,7 +702,6 @@ const ChatManager = () => {
                                 <div className="text-[#667781] mb-4">
                                     <Users size={80} className="mx-auto" />
                                 </div>
-                                {/* <h3 className="text-2xl font-light text-[#41525d] mb-2">WhatsApp Web</h3> */}
                                 <p className="text-[#667781]">{t("label.selectionnez_chat")}</p>
                             </div>
                         </div>

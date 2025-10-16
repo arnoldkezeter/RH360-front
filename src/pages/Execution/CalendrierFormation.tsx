@@ -150,9 +150,9 @@ const CalendrierFormations = () => {
     return (
         <>
             <BreadcrumbPageDescription 
-                pageDescription={t('page_description.formation')} 
+                pageDescription={t('page_description.calendrier_formation')} 
                 titleColor="text-[#1e3a8a]" 
-                pageName={t('sub_menu.formations')} 
+                pageName={t('sub_menu.calendrier_formation')} 
             />
             <Table
                 data={formations}
