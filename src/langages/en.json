@@ -41,6 +41,7 @@
     "menu": "Menu"
   },
   "sub_menu": {
+    "cohorte_utilisateur":"Cohort members",
     "participants_formation": "Training Participants",
     "axes_strategique": "Strategic Areas",
     "competences": "Skills",
@@ -95,6 +96,7 @@
     "taches_formations": "Training Tasks"
   },
   "page_description": {
+    "cohorte_utilisateur":"Add or remove cohort members",
     "calendrier_formation":"View the training calendar",
     "stage_individuel": "Manage intern assignment to services",
     "groupe_stage": "Automated management of groups, rotations and internship assignments",
@@ -791,6 +793,7 @@
     "rechercher": "Search for ",
     "participant": "a participant",
     "mandat": "a mandate",
+    "membre":"a member",
     "evaluation_a_chaud": "an evaluation",
     "type_echelle_reponse": "a response type",
     "echelle_reponse": "a response scale",
@@ -1037,6 +1040,7 @@
     "suppression": "Deletion of ",
     "reinitialiser": "Reset",
     "note": "the service note",
+    "cohorte_utilisateur":"of the member",
     "axe_strategique":"of the strategic axis",
     "evaluation_a_chaud": "the evaluation",
     "type_echelle_reponse": "the response type",

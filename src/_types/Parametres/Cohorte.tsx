@@ -42,3 +42,8 @@ interface CohorteReturnGetType {
     totalPages: number;
     pageSize: number;
 }
+
+interface CohorteUser {
+  utilisateur: Utilisateur;
+  // Ajoutez d'autres champs de la cohorte si nécessaire
+}

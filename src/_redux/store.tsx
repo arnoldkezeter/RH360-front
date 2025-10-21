@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import settingReducer from "./features/setting.tsx";
 import structureReducer from "./features/parametres/strucutureSlice.tsx";
 import cohorteReducer from "./features/parametres/cohorteSlice.tsx";
+import cohorteUtilisateurReducer from "./features/parametres/cohorteUtilisateurSlice.tsx";
 import serviceReducer from "./features/parametres/serviceSlice.tsx";
 import categorieProfessionnelleReducer from "./features/parametres/categorieProfessionnelleSlice.tsx";
 import besoinFormationPredefiniReducer from "./features/parametres/besoinFormationPredefini.tsx";
@@ -50,6 +51,7 @@ const store = configureStore({
     setting: settingReducer,
     structureSlice:structureReducer,
     cohorteSlice:cohorteReducer,
+    cohorteUtilisateurSlice:cohorteUtilisateurReducer,
     gradeSlice:gradeReducer,
     serviceSlice:serviceReducer,
     categorieProfessionnelleSlice:categorieProfessionnelleReducer,

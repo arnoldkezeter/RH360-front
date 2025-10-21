@@ -53,6 +53,7 @@ import GenerationNoteDeServiceManager from '../pages/NotesDeService/GenerationNo
 import ChatManager from '../pages/Execution/Chat';
 import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
 import MonProfil from '../pages/Parametres/Profil';
+import CohorteUtilisateurs from '../pages/Parametres/CohorteUtilisateur';
 
 
 
@@ -351,6 +352,12 @@ const coreRoutes = [
     path: '/parametres/cohortes',
     title: 'Cohorte',
     component: Cohortes,
+  },
+
+  {
+    path: '/parametres/cohortes/membres',
+    title: 'Membres de la cohorte',
+    component: CohorteUtilisateurs,
   },
 
   {

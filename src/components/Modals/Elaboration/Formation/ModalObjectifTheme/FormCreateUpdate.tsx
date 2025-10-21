@@ -65,14 +65,6 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
         dispatch(setShowModal());
     };
 
-
-
-    const onSearchCohorte = async (search: string) => {
-        setErrorNomEn("");
-        const data = await searchCohorte({searchString: search, lang});
-        return data?.cohortes || [];
-    };
-
    
 
 

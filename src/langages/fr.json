@@ -41,6 +41,7 @@
     "menu": "Menu"
   },
   "sub_menu": {
+    "cohorte_utilisateur":"Membres de la cohorte",
     "participants_formation": "Participants à la formation",
     "axes_strategique": "Axes stratégiques",
     "competences": "Compétences",
@@ -95,6 +96,7 @@
     "taches_formations": "Tâches de formation"
   },
   "page_description": {
+    "cohorte_utilisateur":"Ajoutez ou supprimez des membres de la cohorte",
     "calendrier_formation":"Consultez le calendrier des formations",
     "stage_individuel": "Gérez l'affectation d'un stagiaire à des services",
     "groupe_stage": "Gestion automatisée des groupes, rotations et affectations de stage",
@@ -791,6 +793,7 @@
     "rechercher": "Rechercher ",
     "participant": "un participant",
     "mandat": "un mandat",
+    "membre":"un membre",
     "evaluation_a_chaud": "une évaluation",
     "type_echelle_reponse": "un type de réponse",
     "echelle_reponse": "une échelle de réponse",
@@ -1036,6 +1039,7 @@
     "supprimer": "Supprimer",
     "suppression": "Suppression ",
     "reinitialiser": "Réinitialiser",
+    "cohorte_utilisateur":"du membre",
     "axe_strategique":"de l'axe stratégique",
     "note": "de la note de service",
     "evaluation_a_chaud": "de l'évaluation",

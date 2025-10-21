@@ -49,6 +49,7 @@ const Layout = ({ isMobileOrTablet, userPermissions, currentUser }: LayoutProps)
         '/parametres/cohortes',
         '/parametres/taches-formations',
         '/parametres/cohorte/utilisateur',
+        '/parametres/cohortes/membres',
         '/parametres/services',
         '/parametres/categories-professionnelles',
         '/parametres/grades',
