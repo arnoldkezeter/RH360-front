@@ -126,6 +126,27 @@ export async function getThemeFormationForDropDown({lang, formation,userId }: {l
     }
 }
 
+export async function sendInvitations({themeId, subject, content, lang, participant }: {themeId:string, subject:string, content:string, lang:string, participant:boolean}): Promise<ReponseApiPros> {
+    try {
+        const response: AxiosResponse<any> = await axios.post(
+            `${api}/${themeId}/invitation`,
+            {subject,content,participant},
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                }
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating Formation:', error);
+        throw error;
+    }
+}
+
 
 
 

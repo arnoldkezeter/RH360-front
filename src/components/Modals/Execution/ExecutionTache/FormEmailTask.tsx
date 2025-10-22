@@ -7,7 +7,7 @@ import { setShowModalEmail } from '../../../../_redux/features/setting';
 import createToast from '../../../../hooks/toastify';
 import CustomDialogModal from '../../CustomDialogModal';
 import { updateTacheThemeFormationSlice } from '../../../../_redux/features/elaborations/tacheThemeFormationSlice';
-import { sendInvitations } from '../../../../services/elaborations/formationAPI';
+import { sendInvitations } from '../../../../services/elaborations/themeFormationAPI';
 
 
 
@@ -51,8 +51,8 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
         try {
             // Remplacez cette simulation par votre vraie logique d'API
             const response = await sendInvitations({
-                formationId: tache?.theme?.formation._id||"",
-                sujet: sujet,
+                themeId: tache?.theme?._id||"",
+                subject: sujet,
                 content: message,
                 lang,
                 participant:isParticipant==='P'

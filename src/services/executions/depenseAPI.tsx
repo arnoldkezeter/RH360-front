@@ -13,6 +13,7 @@ export async function createDepense({nomFr, nomEn, montantUnitairePrevu, montant
         const taxeIds = Array.isArray(taxes)
         ? taxes.map(t => (typeof t === 'string' ? t : t._id ? t._id : null)).filter(Boolean)
         : [];
+       
         const response: AxiosResponse<any> = await axios.post(
             `${api}/${budgetId}`,
             {nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes:taxeIds, type},
@@ -108,7 +109,8 @@ export async function getFilteredDepenses({page, lang, type, search, budgetId }:
 }
 
 export async function generateDepense({budgetId, userId, lang}:{budgetId:string, userId:string, lang: string}): Promise<boolean> {
-  try {
+    console.log("generation")
+    try {
     const response: AxiosResponse<Blob> = await axios.get(
       `${api}/${budgetId}/${userId}/pdf`, 
       {

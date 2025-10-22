@@ -33,6 +33,7 @@ const SuiviBudgetaires = () => {
   const [selectedDepense, setSelectedDepense] = useState<Depense | null>(null);
   const [currentProgrammeFormation, setCurrentProgrammeFormation] = useState<ProgrammeFormation | undefined>(undefined);
   const [currentFormation, setCurrentFormation] = useState<Formation | undefined>(undefined);
+  const [isExporting, setIsExporting]=useState(false);
 //   const [currentTheme, setCurrentTheme] = useState<ThemeFormation | undefined>(undefined);
   const [currentBudget, setCurrentBudget] = useState<BudgetFormation | undefined>(undefined);
   const [currentType, setCurrentType] = useState<TypeDepense>();
@@ -111,6 +112,7 @@ const SuiviBudgetaires = () => {
               // Définir le premier theme formation comme formation courant
               if (data.budgetFormations?.length > 0) {
                   setCurrentBudget(data.budgetFormations[0]);
+                  dispatch(setBudgetFormationSelected(data.budgetFormations[0]))
               } else {
                   setCurrentBudget(undefined);
               }
@@ -133,9 +135,14 @@ const SuiviBudgetaires = () => {
   
   
   
-  const handleExport = async (format: string) => {
+  const handleExport = async () => {
     if(currentBudget && currentBudget._id && currentUser && currentUser._id){
-      await generateDepense({budgetId:currentBudget?._id,userId:currentUser._id, lang:lang })
+      setIsExporting(true)
+      try{
+        await generateDepense({budgetId:currentBudget?._id,userId:currentUser._id, lang:lang })
+      }finally{
+        setIsExporting(false)
+      }
     }else{
 
     }
@@ -210,6 +217,14 @@ const SuiviBudgetaires = () => {
         depense={selectedDepense} 
         onDelete={handleDeleteDepense} 
         />
+        {isExporting && (
+        <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex flex-col items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 mb-4"></div>
+          <p className="text-white text-lg font-medium">
+            {t('telechargement_en_cours') || "Téléchargement en cours..."}
+          </p>
+        </div>
+      )}
     </>
   );
 };
