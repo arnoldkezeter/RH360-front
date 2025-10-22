@@ -1,17 +1,15 @@
-import ImageAdmin from './../../images/user/admin.png';
-import ImageStudent from './../../images/user/student.png';
+import ImageUser from './../../images/user/user.png';
+
 import { config, serveurUrl } from "../../config";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../_redux/store";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import createToast from '../../hooks/toastify';
-// import { apiSavePhotoProfil } from '../../services/other_users/photoDeProfile/api_save_profile_image';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import CustomModal from '../Modals/CustomDialogModal';
 import { setUser } from '../../_redux/features/utilisateurs/utilisateurSlice';
-import { savePhotoProfil } from '../../services/utilisateurs/utilisateurAPI';
-// import { apiDeletePhotoProfil } from '../../services/other_users/photoDeProfile/api_delete_profile_image';
+import { deletePhotoProfil, savePhotoProfil } from '../../services/utilisateurs/utilisateurAPI';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -20,7 +18,6 @@ export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const roles = config.roles;
   const lang = useSelector((state: RootState) => state.setting.language);
   const user = { username: currentUser.nom, role: currentUser.role, photo: currentUser.photoDeProfil };
 
@@ -58,7 +55,6 @@ export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
     if (file) {
       const formData = new FormData();
       formData.append('image_profil', file);
-      console.log(formData);
       setLoading(true);
       try {
 
@@ -66,7 +62,7 @@ export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
           .then((reponse) => {
             setLoading(false);
             setFile(null);
-            dispatch(setUser({ ...currentUser, photoDeProfil: reponse.data }));
+            dispatch(setUser({ ...currentUser, photoDeProfil: reponse.data.photoDeProfil }));
             createToast(reponse.message, '', 0);
             setUpdatePhoto(false)
           }).catch((e) => {
@@ -87,7 +83,6 @@ export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
       createToast('erreur', '', 1)
     }
   }
-  console.log(`${serveurUrl}${currentUser.photoDeProfil}`)
   return (
     <div className="col-span-5 xl:col-span-2">
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -109,12 +104,12 @@ export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
                 <div className="mb-4 flex items-center gap-3">
                   <div className="h-14 w-14 rounded-full overflow-hidden">
                     {
-
-                      <img src={
-                        user.role === roles.superAdmin ? ImageAdmin :
-                          user.role === roles.admin ? ImageAdmin :
-                                ImageStudent
-                      } alt="User" />
+                      currentUser.photoDeProfil !== null && currentUser.photoDeProfil !== '' ?
+                      <img 
+                        src={`${serveurUrl}${currentUser.photoDeProfil}`} 
+                        alt={currentUser.nom} 
+                        crossOrigin="anonymous"
+                      />:<img src={ImageUser} alt="User" />
                     }
                   </div>
 
@@ -156,7 +151,14 @@ export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
                   !updatePhoto && user.photo !== '' ?
                     <div className='w-full flex justify-center items-center'>
                       <div className="h-30 lg:h-40 w-30 lg:w-40 rounded-full overflow-hidden">
-                        <img className="w-full h-full object-cover" src={`${serveurUrl}${currentUser.photoDeProfil}`} alt={currentUser.nom} />
+                        {currentUser.photoDeProfil !== null && currentUser.photoDeProfil !== '' ?
+                          <img 
+                            className="w-full h-full object-cover" 
+                            src={`${serveurUrl}${currentUser.photoDeProfil}`} 
+                            alt={currentUser.nom} 
+                            crossOrigin="anonymous"
+                          />:<img src={ImageUser} alt="User" />
+                        }
                       </div>
                     </div>
                     :
@@ -262,23 +264,23 @@ export function PickPhoto({currentUser}:{currentUser:Utilisateur}) {
             try {
               setLoading(true);
 
-              // await apiDeletePhotoProfil({ userId: currentUser?._id })
-              //   .then((reponse: { message: { fr: string; en: string; }; }) => {
-              //     setFile(null);
-              //     dispatch(setUser({ ...currentUser, photoDeProfil: '' }));
-              //     createToast(lang === 'fr' ? reponse.message.fr : reponse.message.en, '', 0);
+              await deletePhotoProfil({ userId: currentUser?._id||"", lang })
+                .then((reponse) => {
+                  setFile(null);
+                  dispatch(setUser({ ...currentUser, photoDeProfil: '' }));
+                  createToast(reponse.message, '', 0);
 
-              //     setLoading(false);
-              //     setUpdatePhoto(false);
-              //     setFile(null);
-              //     setOpenModalDelete(false);
+                  setLoading(false);
+                  setUpdatePhoto(false);
+                  setFile(null);
+                  setOpenModalDelete(false);
 
-              //   }).catch((e: { message: { fr: string; en: string; }; }) => {
-              //     createToast(lang === 'fr' ? e.message.fr : e.message.en, '', 2)
-              //     setLoading(false);
-              //     setUpdatePhoto(false);
-              //     setFile(null);
-              //   })
+                }).catch((e) => {
+                  createToast(e.data.message, '', 2)
+                  setLoading(false);
+                  setUpdatePhoto(false);
+                  setFile(null);
+                })
 
             } catch (e) {
               createToast('Une erreur est survenue', '', 2);

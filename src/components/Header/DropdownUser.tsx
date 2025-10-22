@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 import ImageAdmin from './../../images/user/admin.png';
-import ImageTeacher from './../../images/user/teacher.png';
-import ImageDelegate from './../../images/user/delegate.png';
+import ImageUser from './../../images/user/user.png';
 import ImageStudent from './../../images/user/student.png';
 import { logoutFunction } from '../../services/auth/logout';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from "./../../_redux/store";
 import { config, serveurUrl } from '../../config';
 import { BiLogOutCircle } from "react-icons/bi";
@@ -14,22 +13,17 @@ import { BiLogOutCircle } from "react-icons/bi";
 import { RxPerson } from "react-icons/rx";
 import { useTranslation } from 'react-i18next';
 import Loading from '../ui/loading';
-import { setSelectedUserPermission, setSelectedUserRole } from '../../_redux/features/setting';
-import { FaUserShield } from 'react-icons/fa6';
 
 
 const DropdownUser = () => {
   // const pageIsLoading = useSelector((state: RootState) => state.setting.pageIsLoading);
   const pageIsLoading = false;
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const roles = config.roles;
 
   const userState = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
-  const user = { nom_et_prenom: `${userState.nom + ' ' + userState.prenom}`, role: userState.role };
-
+  const user = { nom_et_prenom: `${userState.nom + ' ' + userState?.prenom||""}`, role: userState.role };
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
 
@@ -85,13 +79,14 @@ const DropdownUser = () => {
         <div className="h-10 w-10 rounded-full overflow-hidden">
           {
             userState.photoDeProfil !== null && userState.photoDeProfil !== '' ?
-              <img className="w-full h-full object-cover" src={`${serveurUrl}${userState.photoDeProfil}`} alt={userState.nom} />
+              <img 
+                className="w-full h-full object-cover" 
+                src={`${serveurUrl}${userState.photoDeProfil}`} 
+                alt={userState.nom} 
+                crossOrigin="anonymous"
+              />
               :
-              <img src={
-                user.role === roles.superAdmin ? ImageAdmin :
-                  user.role === roles.admin ? ImageAdmin :
-                    ImageStudent
-              } alt="User" />
+              <img src={ImageUser} alt="User" />
           }
         </div>
 
@@ -138,7 +133,7 @@ const DropdownUser = () => {
 
         </ul>
 
-        <ul className="flex flex-col  border-b border-stroke   dark:border-strokedark">
+        {/* <ul className="flex flex-col  border-b border-stroke   dark:border-strokedark">
           <NavLink
             to="/user/permissions"
             onClick={() => {dispatch(setSelectedUserPermission(undefined)); dispatch(setSelectedUserRole("")); setDropdownOpen(false) }}
@@ -152,7 +147,7 @@ const DropdownUser = () => {
           </NavLink>
 
 
-        </ul>
+        </ul> */}
 
 
         <button

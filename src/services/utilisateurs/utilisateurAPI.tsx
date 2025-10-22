@@ -237,6 +237,25 @@ export async function savePhotoProfil({ formData, userId }: { formData: FormData
     }
 }
 
+export async function deletePhotoProfil({userId,lang}: {userId: string;lang: string}): Promise<ReponseApiPros> {
+  try {
+    const response: AxiosResponse<ReponseApiPros> = await axios.delete(
+      `${api}/${userId}/photo-profil`,
+      {
+        headers: {
+          'accept-language': lang,
+          'authorization': token,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Erreur suppression photo de profil : ', error);
+    throw error;
+  }
+}
+
 export async function verifierMotDePasse({ userId, motDePasse }: { userId: String, motDePasse: string }): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.get(

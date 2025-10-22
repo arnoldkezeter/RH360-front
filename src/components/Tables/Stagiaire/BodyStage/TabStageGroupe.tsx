@@ -280,31 +280,50 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
         createToast(`${nombreGroupes} groupes générés automatiquement`, "", 0);
     };
 
-    const deplacerStagiaire = ( groupeSource: number, groupeDestination: number, stagiaireId?: string) => {
-        
-        const stagiaire = groupes[groupeSource - 1].stagiaires.find(s => s._id === stagiaireId);
-        if (!stagiaire) return;
+    const deplacerStagiaire = (
+  groupeSource: number,
+  groupeDestination: number,
+  stagiaireId: string
+) => {
+  const stagiaire = groupes[groupeSource - 1]?.stagiaires.find(s => s._id === stagiaireId);
+  if (!stagiaire) return;
 
-        const nouveauxGroupes = groupes.map(groupe => {
-            if (groupe.numero === groupeSource) {
-                return {
-                    ...groupe,
-                    stagiaires: groupe.stagiaires.filter(s => s._id !== stagiaireId),
-                    stagiaireIds: groupe.stagiaireIds.filter(id => id !== stagiaireId)
-                };
-            }
-            if (groupe.numero === groupeDestination) {
-                return {
-                    ...groupe,
-                    stagiaires: [...groupe.stagiaires, stagiaire],
-                    stagiaireIds: [...groupe.stagiaireIds, stagiaireId]
-                };
-            }
-            return groupe;
-        });
+  // On met à jour les groupes
+  const nouveauxGroupes = groupes
+    .map(groupe => {
+      if (groupe.numero === groupeSource) {
+        const stagiairesRestants = groupe.stagiaires.filter(s => s._id !== stagiaireId);
+        const stagiaireIdsRestants = groupe.stagiaireIds.filter(id => id !== stagiaireId);
 
-        // setGroupes(nouveauxGroupes);
-    };
+        // 🔹 Retourne null si le groupe est désormais vide
+        if (stagiairesRestants.length === 0) {
+          return null;
+        }
+
+        return {
+          ...groupe,
+          stagiaires: stagiairesRestants,
+          stagiaireIds: stagiaireIdsRestants,
+        };
+      }
+
+      if (groupe.numero === groupeDestination) {
+        return {
+          ...groupe,
+          stagiaires: [...groupe.stagiaires, stagiaire],
+          stagiaireIds: [...groupe.stagiaireIds, stagiaireId],
+        };
+      }
+
+      return groupe;
+    })
+    // 🔹 Filtrer les groupes supprimés (null)
+    .filter((groupe): groupe is GroupData => groupe !== null);
+
+  setGroupes(nouveauxGroupes);
+};
+
+
 
     // ÉTAPE 2: Gestion des services et rotations
     const ajouterService = () => {
@@ -1103,7 +1122,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                                 </span>
                                                 <select
                                                     value={groupe.numero}
-                                                    onChange={(e) => deplacerStagiaire(groupe.numero, parseInt(e.target.value), stagiaire?._id)}
+                                                    onChange={(e) => deplacerStagiaire(groupe.numero, parseInt(e.target.value), stagiaire?._id||"")}
                                                     className="text-xs border border-[#e5e7eb] dark:border-[#4b5563] rounded px-2 py-1
                                                             bg-white dark:bg-[#1f2937] text-[#111827] dark:text-white"
                                                 >

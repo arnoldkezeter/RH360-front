@@ -167,7 +167,7 @@ function FormCreateUpdate({ tacheThemeFormation }: { tacheThemeFormation: TacheT
                                 dateDebut: e.data.dateDebut,
                                 dateFin: e.data.dateFin,
                                 theme: e.data.theme,
-                                tache: e.data.tache,
+                                tache:tacheGenerique,
                             }
 
                         }));

@@ -29,7 +29,7 @@ export async function createTacheThemeFormation({tache, dateDebut, dateFin}: Tac
 export async function updateTacheThemeFormation({ _id, tache, dateDebut, dateFin }: TacheThemeFormation,lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
-            `${api}/${_id}`,
+            `${api}/${_id}/dates`,
             {tache:tache._id, dateDebut, dateFin},
             {
                 headers: {
@@ -101,7 +101,7 @@ export async function getFilteredTacheThemeFormations({page, lang,themeId, dateD
 
 export async function getTacheProgressionByTheme({themeId, lang}:{themeId: string, lang: string}): Promise<ReponseApiPros> {
     try {
-        const url = `${api}/progression-taches/${themeId}`;
+        const url = `${api}/theme/${themeId}/progression`;
 
         const response: AxiosResponse<any> = await axios.get(url, {
             headers: {
@@ -157,7 +157,7 @@ export async function getTacheThemeFormationForDropDown({lang }: {lang:string })
 export async function updateStatutTacheThemeFormation({ tacheId, currentUser, statut,donnees, lang}: {tacheId:string, currentUser:string, statut:string, donnees?:any,lang:string}): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
-            `${api}/${tacheId}/${currentUser}`,{statut, donnees},
+            `${api}/${tacheId}/statut/${currentUser}`,{statut, donnees},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ export async function updateStatutTacheThemeFormation({ tacheId, currentUser, st
 export async function reinitialiserStatutTaches({lang}: {lang:string}): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
-            `${api}`,{lang},
+            `${api}/reinitialiser-toutes`,{lang},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -198,6 +198,7 @@ export async function marquerExecuteTacheThemeFormation({ tacheId, currentUserId
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${tacheId}/executer/${currentUserId}`,
+            {},
             {
                 headers: {
                     'Content-Type': 'application/json',

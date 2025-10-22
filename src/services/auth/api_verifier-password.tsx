@@ -13,12 +13,12 @@ export async function apiVerifierMotDePasse({ userId, motDePasse }: ResetPassApi
 
     try {
         const response: AxiosResponse<any> = await axios.post(
-            `${api}/password/verify`,
-            { userId, motDePasse },
+            `${api}/${userId}/verify-password`,
+            {motDePasse},
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'token': token,
+                    'authorization': token,
                 },
             },
         );

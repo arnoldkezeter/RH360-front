@@ -2,20 +2,21 @@ import axios, { AxiosResponse } from 'axios';
 import { apiUrl, wstjqer } from '../../../config';
 
 
-const api = `${apiUrl}/user`;
+const api = `${apiUrl}/utilisateurs`;
 const token = localStorage.getItem(wstjqer);
 
 
 
 
-export async function apiDeletePhotoProfil({ userId }: { userId: string }): Promise<ReponseApiPros> {
+export async function apiDeletePhotoProfil({ userId, lang }: { userId: string, lang:string }): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.delete(
-            `${api}/delete-photo-profile?userId=${userId}`,
+            `${api}/${userId}/photo-profil`,
             {
                 headers: {
                     'content-type': 'multipart/form-data',
-                    'token': token,
+                    'accept-language':lang,
+                    'authorization': token,
                 },
             },
         );
