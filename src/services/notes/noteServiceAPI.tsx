@@ -153,7 +153,7 @@ export async function createNoteServiceConvocationFormateur(
 ): Promise<boolean> {
   try {
     const response: AxiosResponse<Blob> = await axios.post(
-      `${api}/note-service/convocation/formateurs`, 
+      `${api}/convocation/formateurs`, 
       { theme, titreFr, titreEn,descriptionFr, descriptionEn, copieA, creePar, typeNote, tacheFormationId },
       {
         headers: {
@@ -242,11 +242,11 @@ export async function createNoteServiceConvocationParticipant(
 }
 
 export async function createNoteServiceFichePresence(
-  {theme, titreFr, titreEn, copieA, creePar, typeNote }: CreateNoteInput,
+  {theme, titreFr, titreEn, copieA, creePar, typeNote, lieuId }: CreateNoteInput,
   tacheFormationId:string,lang: string, isParticipant:boolean
 ): Promise<boolean> {
   try {
-    const ficheType = isParticipant?"participants":"formateurs"
+    const ficheType = isParticipant?`participants/${lieuId}`:"formateurs"
     const response: AxiosResponse<Blob> = await axios.post(
       `${api}/formations/fiches-presence/${ficheType}`, 
       { theme, titreFr, titreEn, copieA, creePar, typeNote, tacheFormationId },
@@ -310,6 +310,32 @@ export async function updateNoteService({ _id, titreFr, titreEn, theme, stage, m
     }
 }
 
+export async function  validerNoteService({noteId, noteServiceFile, lang}:{noteId:string, lang:string, noteServiceFile:File}): Promise<ReponseApiPros> {
+  try {
+    let formData = new FormData();
+
+    // si accepté, on ajoute le fichier
+    formData.append("noteServiceFile", noteServiceFile);
+    
+    const response = await axios.put(
+      `${api}/${noteId}`,
+      formData,
+      {
+        headers: {
+          // 'Content-Type': 'application/json',
+          'accept-language':lang,
+          'authorization': token,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Erreur changerStatutStageService:", error);
+    throw error;
+  }
+};
+
 export async function deleteNoteService(noteserviceId: string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.delete(
@@ -334,7 +360,7 @@ export async function getFilteredNoteServices({page, lang, search }: {page?: num
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/filtre`,
+            `${api}/`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -344,7 +370,7 @@ export async function getFilteredNoteServices({page, lang, search }: {page?: num
                 params: {
                     page: page,
                     limit: pageSize,
-                    titre:search
+                    search:search
                 },
             },
         );
@@ -357,6 +383,34 @@ export async function getFilteredNoteServices({page, lang, search }: {page?: num
         console.error('Error getting all settings:', error);
         throw error;
     }
+}
+
+export async function telechargerNoteService(id: string, lang: string): Promise<Blob> {
+  try {
+    const response = await axios.get(`${api}/telecharger/${id}`, {
+      headers: {
+        'accept-language': lang,
+        'authorization': token,
+      },
+      responseType: 'blob',
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+    const blob = error.response.data as Blob;
+    if (blob.type === 'application/json') {
+      // Lire le blob JSON
+      const text = await blob.text(); // lire le blob en texte
+      const json = JSON.parse(text);  // parser en JSON
+      console.error('Erreur backend:', json.message || json);
+    } else {
+      console.error('Erreur backend non JSON:', error.message);
+    }
+  } else {
+    console.error('Erreur inconnue:', error);
+  }
+    throw error;
+  }
 }
 
 

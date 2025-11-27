@@ -4,13 +4,13 @@ import { RootState } from '../../../../_redux/store.tsx';
 import CustomDialogModal from '../../CustomDialogModal.tsx';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify.tsx';
-import { deleteObjectifTheme } from '../../../../services/elaborations/objectifThemeAPI.tsx';
-import { deleteObjectifThemeSlice } from '../../../../_redux/features/elaborations/objectifThemeSlice.tsx';
 import { useState } from 'react';
+import { deleteNoteService } from '../../../../services/notes/noteServiceAPI.tsx';
+import { deleteNoteServiceSlice } from '../../../../_redux/features/notes/noteServiceSlice.tsx';
 
 
 
-function FormDelete({ objectifTheme, themeId }: { objectifTheme : ObjectifTheme | null, themeId:string}) {
+function FormDelete({ noteService }: { noteService : NoteService | null}) {
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,14 +19,14 @@ function FormDelete({ objectifTheme, themeId }: { objectifTheme : ObjectifTheme 
     const lang = useSelector((state: RootState) => state.setting.language);
 
     const handleDelete = async () => {
-        if (objectifTheme?._id != undefined) {
+        if (noteService?._id != undefined) {
             setIsLoading(true)
-            await deleteObjectifTheme(themeId, objectifTheme._id, lang).then((e: ReponseApiPros) => {
+            await deleteNoteService(noteService._id, lang).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
 
-                    if (objectifTheme._id) {
-                        dispatch(deleteObjectifThemeSlice({ id: objectifTheme._id }));
+                    if (noteService._id) {
+                        dispatch(deleteNoteServiceSlice({ id: noteService._id }));
                     }
 
                     closeModal();
@@ -51,7 +51,7 @@ function FormDelete({ objectifTheme, themeId }: { objectifTheme : ObjectifTheme 
                 handleConfirm={handleDelete}
                 isLoading={isLoading}
             >
-                <h1>{t('form_delete.suppression')+t('form_delete.objectif')} : {lang==='fr'?objectifTheme?.nomFr:objectifTheme?.nomEn} </h1>
+                <h1>{t('form_delete.suppression')+t('form_delete.note')} : {lang==='fr'?noteService?.titreFr:noteService?.titreEn} </h1>
             </CustomDialogModal>
         </>
     );

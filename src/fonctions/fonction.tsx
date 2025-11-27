@@ -553,6 +553,127 @@ export function getNavLinkClass (isActive: boolean){
   return  `group relative flex items-center pb-1.5 rounded-md px-4 font-medium text-white duration-300 ease-in-out hover:text-secondary ${isActive ? 'text-secondary' : ''}`;
 }
 
+/**
+ * Convertit les données du backend (peuplées) vers le format d'input (IDs)
+ * Utilisé lors de l'édition d'un thème existant
+ */
+export function convertPublicCibleToInput(
+    publicCible?: FamilleMetierRestriction[]
+): FamilleMetierInput[] {
+    if (!publicCible) return [];
+
+    return publicCible.map(fam => ({
+        familleMetier: fam.familleMetier._id!,
+        postes: fam.postes?.map(pos => ({
+            poste: pos.poste._id!,
+            structures: pos.structures?.map(str => ({
+                structure: str.structure._id!,
+                services: str.services?.map(srv => ({
+                    service: srv.service._id!
+                }))
+            }))
+        }))
+    }));
+}
+
+/**
+ * Vérifie si un public cible inclut toute une famille (pas de restrictions)
+ */
+export function isEntireFamilyTargeted(fam: FamilleMetierRestriction): boolean {
+    return !fam.postes || fam.postes.length === 0;
+}
+
+/**
+ * Vérifie si un poste inclut toutes les structures (pas de restrictions)
+ */
+export function isAllStructuresTargeted(poste: PosteRestriction): boolean {
+    return !poste.structures || poste.structures.length === 0;
+}
+
+/**
+ * Vérifie si une structure inclut tous les services (pas de restrictions)
+ */
+export function isAllServicesTargeted(structure: StructureRestriction): boolean {
+    return !structure.services || structure.services.length === 0;
+}
+
+/**
+ * Génère un résumé textuel du public cible pour affichage
+ */
+export function getPublicCibleSummary(
+    publicCible?: FamilleMetierRestriction[],
+    lang: 'fr' | 'en' = 'fr'
+): string {
+    if (!publicCible || publicCible.length === 0) {
+        return lang === 'fr' ? 'Aucun public ciblé' : 'No target audience';
+    }
+
+    const familleName = lang === 'fr' ? 'nomFr' : 'nomEn';
+    
+    return publicCible.map(fam => {
+        const familleNom = fam.familleMetier[familleName];
+        
+        if (isEntireFamilyTargeted(fam)) {
+            return `${familleNom} (${lang === 'fr' ? 'complète' : 'complete'})`;
+        }
+        
+        const postesCount = fam.postes?.length || 0;
+        return `${familleNom} (${postesCount} ${lang === 'fr' ? 'poste(s)' : 'position(s)'})`;
+    }).join(', ');
+}
+
+// ============================
+// ✅ Type Guards pour validation TypeScript
+// ============================
+
+export function isFamilleMetierInput(obj: any): obj is FamilleMetierInput {
+    return (
+        typeof obj === 'object' &&
+        obj !== null &&
+        typeof obj.familleMetier === 'string' &&
+        (obj.postes === undefined || Array.isArray(obj.postes))
+    );
+}
+
+export function isThemeFormationInput(obj: any): obj is ThemeFormationInput {
+    return (
+        typeof obj === 'object' &&
+        obj !== null &&
+        typeof obj.titreFr === 'string' &&
+        typeof obj.titreEn === 'string' &&
+        typeof obj.formation === 'string' &&
+        (obj.publicCible === undefined || Array.isArray(obj.publicCible))
+    );
+}
+
+
+export function getTypeNoteService(type:string, sousType:string, t:any) {
+    switch (type) {
+        case "acceptation_stage":
+            return t('label.acceptation_stage');
+        case "mandat":
+            return t('label.mandat');
+        case "convocation":
+            return sousType==="participants"?t('label.convocation_participant'):t('label.convocation_formateur');
+        default:
+            return "";
+    }
+}
+
+export function getTitleElement(noteService:NoteService, lang:string) {
+    switch (noteService.typeNote) {
+        case "acceptation_stage":
+            return lang==='fr'?noteService.stage?.nomFr:noteService.stage?.nomEn;
+        case "mandat":
+            return lang==='fr'?noteService.mandat?.nomFr:noteService.mandat?.nomEn;
+        case "convocation":
+            return lang==='fr'?noteService.theme?.titreFr:noteService.theme?.titreEn;
+        default:
+            return "";
+    }
+}
+
+
 
 
 

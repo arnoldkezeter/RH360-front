@@ -54,6 +54,7 @@ import ChatManager from '../pages/Execution/Chat';
 import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
 import MonProfil from '../pages/Parametres/Profil';
 import CohorteUtilisateurs from '../pages/Parametres/CohorteUtilisateur';
+import NoteServices from '../pages/NotesDeService/NotesService';
 
 
 
@@ -312,7 +313,7 @@ const coreRoutes = [
   {
     path: '/notes-service/historiques',
     title: 'Historique des notes de service',
-    component: undefined,
+    component: NoteServices,
   },
 
 

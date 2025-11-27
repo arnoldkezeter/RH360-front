@@ -1,6 +1,7 @@
 
 interface NoteService{
     _id?:string,
+    reference?:string,
     titreFr: string,
     titreEn: string,
     descriptionFr?: string,
@@ -9,14 +10,18 @@ interface NoteService{
     stage?: Stage,
     mandat?: StageRecherche,
     typeNote: string,
+    sousTypeConvocation?:string,
     designationTuteur?:string,
     miseEnOeuvre?:string,
     dispositions?:string,
     personnesResponsables?:string,
     copieA: string,
     fichierJoint ?:  string,// note signée scannée
+    filePath?:string,
     creePar?:Utilisateur
-    valideParDG?: Boolean
+    valideParDG?: Boolean,
+    createdAt?:string,
+    updatedAt?:string
 }
 
 
@@ -73,6 +78,7 @@ interface CreateNoteInput {
     fichierJoint ?:  string,// note signée scannée
     creePar?:string
     valideParDG?: Boolean
+    lieuId?:string
 }
 
 interface UpdateNoteInput {

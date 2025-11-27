@@ -6,7 +6,7 @@ const api = `${apiUrl}/theme-formation/lieux-formation`;
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
-export async function createLieuFormation({lieu, cohortes, participants, dateDebut, dateFin}:LieuFormation, themeId:string, lang:string): Promise<ReponseApiPros> {
+export async function createLieuFormation({lieu, cohortes, participants, dateDebut, dateFin}:LieuFormationInput, themeId:string, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/${themeId}/lieu`,
@@ -28,7 +28,7 @@ export async function createLieuFormation({lieu, cohortes, participants, dateDeb
 }
 
 
-export async function updateLieuFormation({_id, lieu, cohortes, participants, dateDebut, dateFin, dateDebutEffective, dateFinEffective}:LieuFormation,themeId:string,lang: string): Promise<ReponseApiPros> {
+export async function updateLieuFormation({_id, lieu, cohortes, participants, dateDebut, dateFin, dateDebutEffective, dateFinEffective}:LieuFormationInput,themeId:string,lang: string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${themeId}/lieu/${_id}`,
