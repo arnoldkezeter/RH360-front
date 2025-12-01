@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
 import { createNoteServiceStageGroupe, updateNoteService } from '../../../../services/notes/noteServiceAPI';
-import { updateNoteServiceSlice } from '../../../../_redux/features/notes/noteServiceSlice';
+import { createNoteServiceSlice, updateNoteServiceSlice } from '../../../../_redux/features/notes/noteServiceSlice';
 
 
 function FormCreateUpdateStageGroupe({note, themeId, mandatId, stageId }: {note:NoteService|undefined, themeId?:string,  mandatId?:string, stageId?:string }) {
@@ -122,7 +122,7 @@ function FormCreateUpdateStageGroupe({note, themeId, mandatId, stageId }: {note:
             return;
         }
 
-        if (!note) {
+        // if (!note) {
             setIsLoading(true)
             await createNoteServiceStageGroupe(
                 {
@@ -145,18 +145,12 @@ function FormCreateUpdateStageGroupe({note, themeId, mandatId, stageId }: {note:
             ).then( (e: any) => {
                 
                 if (e) {
-                    // createToast(e.message, '', 0);
-                    // dispatch(createNoteServiceSlice({
+                    createToast(e.message, '', 0);
+                    dispatch(createNoteServiceSlice({
 
-                    //     noteService: {
-                    //         _id: e.data._id,
-                    //         titreFr: e.data.titreFr,
-                    //         titreEn: e.data.titreEn,
-                    //         copieA: e.data.copieA,
-                    //         typeNote: e.data.typeNote
-                    //     }
+                        noteService: e.data
 
-                    // }));
+                    }));
 
                    
                     closeModal();
@@ -172,48 +166,48 @@ function FormCreateUpdateStageGroupe({note, themeId, mandatId, stageId }: {note:
                 setIsLoading(false)
             })
 
-        } else {
-            setIsLoading(true)
-            await updateNoteService(
-                {
-                    _id: note._id||"",
-                    titreFr,
-                    titreEn,
-                    theme:themeId, 
-                    stage:stageId, 
-                    mandat:mandatId, 
-                    designationTuteur, 
-                    miseEnOeuvre,
-                    typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
-                    copieA, 
-                    creePar:userId, 
-                    valideParDG:false
-                },lang).then((e: ReponseApiPros) => {
-                    if (e.success) {
-                        createToast(e.message, '', 0);
-                        dispatch(updateNoteServiceSlice({
-                            id: e.data._id,
-                            noteServiceData: {
-                                _id: e.data._id,
-                                titreFr: e.data.titreFr,
-                                titreEn: e.data.titreEn,
-                            }
+        // } else {
+        //     setIsLoading(true)
+        //     await updateNoteService(
+        //         {
+        //             _id: note._id||"",
+        //             titreFr,
+        //             titreEn,
+        //             theme:themeId, 
+        //             stage:stageId, 
+        //             mandat:mandatId, 
+        //             designationTuteur, 
+        //             miseEnOeuvre,
+        //             typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
+        //             copieA, 
+        //             creePar:userId, 
+        //             valideParDG:false
+        //         },lang).then((e: ReponseApiPros) => {
+        //             if (e.success) {
+        //                 createToast(e.message, '', 0);
+        //                 dispatch(updateNoteServiceSlice({
+        //                     id: e.data._id,
+        //                     noteServiceData: {
+        //                         _id: e.data._id,
+        //                         titreFr: e.data.titreFr,
+        //                         titreEn: e.data.titreEn,
+        //                     }
 
-                        }));
+        //                 }));
 
-                        closeModal();
+        //                 closeModal();
 
-                    } else {
-                        createToast(e.message, '', 2);
+        //             } else {
+        //                 createToast(e.message, '', 2);
 
-                    }
-                }).catch((e) => {
-                    console.log(e);
-                    createToast(e.response.data.message, '', 2);
-                }).finally(()=>{
-                    setIsLoading(false)
-                })
-        }
+        //             }
+        //         }).catch((e) => {
+        //             console.log(e);
+        //             createToast(e.response.data.message, '', 2);
+        //         }).finally(()=>{
+        //             setIsLoading(false)
+        //         })
+        // }
     }
 
 

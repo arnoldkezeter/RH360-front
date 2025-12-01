@@ -138,14 +138,14 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
         try {
             setIsCreation(true);
             // Filtrer services valides
-            const validServices = services.filter(s => s.serviceId && s.superviseurId && s.dateDebut && s.dateFin);
+            const validServices = services.filter(s => s.serviceId && s.dateDebut && s.dateFin);
             if (validServices.length === 0) throw new Error("Au moins un service complet requis.");
 
             // Créer les rotations, une par service
             const rotations = validServices.map(s => ({
                 stagiaire: stagiaire?._id,
                 service: s.serviceId||"",
-                superviseur: s.superviseurId||"",
+                superviseur: s.superviseurId,
                 dateDebut: s.dateDebut||"",
                 dateFin: s.dateFin||"",
             }));
@@ -154,7 +154,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
             const affectationsFinales = validServices.map(s => ({
                 stagiaire: stagiaire?._id,
                 service: s.serviceId||"",
-                superviseur: s.superviseurId||"",
+                superviseur: s.superviseurId,
                 dateDebut: s.dateDebut||"",
                 dateFin: s.dateFin||"",
             }));

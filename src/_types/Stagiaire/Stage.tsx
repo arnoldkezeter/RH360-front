@@ -14,7 +14,7 @@ interface Rotation {
   _id?: string;
   stage: Stage;          // _id du stage (INDIVIDUEL ou GROUPE)
   service: Service;        // _id du service
-  superviseur: Utilisateur;    // _id du superviseur
+  superviseur?: Utilisateur;    // _id du superviseur
 
   // Soit stagiaire (stage individuel), soit groupe (stage groupe)
   stagiaire?: Stagiaire;     // _id du stagiaire (optionnel, uniquement stage individuel)
@@ -68,7 +68,8 @@ interface Stage {
   anneeStage:number,
   nombreStagiaires?: number,
   nombreGroupes?: number,
-  createdAt?:string
+  createdAt?:string,
+  noteService?:NoteService
 }
 
 
@@ -129,7 +130,7 @@ interface CreateStageInput {
     groupe?: number;       // _id groupe (pour groupe)
     stagiaire?: string;    // _id stagiaire (pour individuel)
     service: string;       // _id service
-    superviseur: string;   // _id superviseur
+    superviseur?: string;   // _id superviseur
     dateDebut: string;     // ISO date string
     dateFin: string;       // ISO date string
   }>;

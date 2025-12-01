@@ -151,7 +151,6 @@ export async function getFilteredStages({page, search, type, statut, lang }: {se
 
         // Extraction de tous les objets de paramètres de la réponse
         const stages: StageReturnGetType = response.data.data;
-        
         return stages;
     } catch (error) {
         console.error('Error getting all settings:', error);
