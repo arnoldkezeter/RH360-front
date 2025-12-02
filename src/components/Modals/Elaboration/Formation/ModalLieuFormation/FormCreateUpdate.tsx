@@ -9,8 +9,7 @@ import { createLieuFormation, updateLieuFormation } from '../../../../../service
 import { createLieuFormationSlice, updateLieuFormationSlice } from '../../../../../_redux/features/elaborations/lieuFormationSlice';
 import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
 import { SearchSelectComponent } from '../../../../ui/SearchSelectComponent';
-import { hasTacheExecution, getTacheAndUserId, formatDateForInput } from '../../../../../fonctions/fonction';
-import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
+import { formatDateForInput } from '../../../../../fonctions/fonction';
 import { searchFamilleMetier } from '../../../../../services/elaborations/familleMetierAPI';
 import { searchPosteDeTravail } from '../../../../../services/settings/posteDeTravailAPI';
 import { searchStructure } from '../../../../../services/settings/structureAPI';
@@ -474,10 +473,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                         lieuFormation: e.data,
                         themeId: themeId
                     }));
-                    if(hasTacheExecution()){
-                        const {tacheId, userId}=getTacheAndUserId();
-                        await updateStatutTacheThemeFormation({tacheId:tacheId||"", currentUser:userId||"", statut:"EN_ATTENTE",donnees:'check', lang})
-                    }
+                    
                     closeModal();
 
                 } else {

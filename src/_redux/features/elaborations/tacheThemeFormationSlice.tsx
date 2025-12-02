@@ -34,7 +34,7 @@ const tachethemeformationSlice = createSlice({
         },
         updateTacheThemeFormationSlice(state, action: PayloadAction<UpdateTacheThemeFormationPayload>) {
             const { id, tacheThemeFormationData } = action.payload;
-            const index = state.data.tachesThemeFormation.findIndex(e => e._id === id);
+            const index = state.data.tachesThemeFormation.findIndex(e => e.tache._id === id);
             if (index !== -1) {
                 state.data.tachesThemeFormation[index] = { ...state.data.tachesThemeFormation[index], ...tacheThemeFormationData };
             }

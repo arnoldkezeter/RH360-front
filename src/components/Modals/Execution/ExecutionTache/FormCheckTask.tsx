@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { reinitialiserStatutTaches, updateStatutTacheThemeFormation } from '../../../../services/elaborations/tacheThemeFormationAPI';
+import { executerTacheTheme } from '../../../../services/elaborations/tacheThemeFormationAPI';
 import { RootState } from '../../../../_redux/store';
 import {setShowModalCheckTask } from '../../../../_redux/features/setting';
 import createToast from '../../../../hooks/toastify';
@@ -12,7 +12,6 @@ import { updateTacheThemeFormationSlice } from '../../../../_redux/features/elab
 function FormCheckTask({ tache }: { tache: TacheThemeFormation|undefined }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const { t } = useTranslation();
-    const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isFirstRender, setIsFirstRender] = useState(true);
@@ -48,19 +47,12 @@ function FormCheckTask({ tache }: { tache: TacheThemeFormation|undefined }) {
         // })
         if(tache){
             setIsLoading(true)
-            await updateStatutTacheThemeFormation({tacheId:tache._id||"", currentUser:currentUser._id||"", statut:"EN_ATTENTE",donnees:'check', lang}).then((e: ReponseApiPros) => {
+            await executerTacheTheme({tacheId:tache.tache._id||"", themeId:tache.theme?._id||"", statut:"EN_ATTENTE", lang}).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
                     dispatch(updateTacheThemeFormationSlice({
-                        id: e.data._id,
-                        tacheThemeFormationData: {
-                            _id: tache._id,
-                            dateDebut: tache.dateDebut,
-                            dateFin: tache.dateFin,
-                            theme: tache.theme,
-                            tache: tache.tache,
-                            statut:"EN_ATTENTE",
-                        }
+                        id: e.data.tache._id,
+                        tacheThemeFormationData: e.data
 
                     }));
         

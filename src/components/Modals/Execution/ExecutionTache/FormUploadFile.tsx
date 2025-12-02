@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { updateStatutTacheThemeFormation } from '../../../../services/elaborations/tacheThemeFormationAPI';
+import { executerTacheTheme } from '../../../../services/elaborations/tacheThemeFormationAPI';
 import { RootState } from '../../../../_redux/store';
 import { setShowModalCheckTask, setShowModalUploadDoc } from '../../../../_redux/features/setting';
 import createToast from '../../../../hooks/toastify';
@@ -75,7 +75,7 @@ function FormUploadFile({ tache }: { tache: TacheThemeFormation | undefined }) {
     // Simulation d'upload
     const handleUpload = async () => {
         if (!selectedFile) return;
-
+        setIsLoading(true)
         setUploadStatus('uploading');
         setUploadProgress(0);
 
@@ -92,41 +92,36 @@ function FormUploadFile({ tache }: { tache: TacheThemeFormation | undefined }) {
 
         try {
             const response = await uploadFile(selectedFile, lang)
-
+            
             if (response.success){
+                
                 handleCompleteTask();
              }
         } catch (error) {
             clearInterval(uploadInterval);
             setUploadStatus('error');
             console.error('Erreur d\'upload:', error);
+        }finally{
+            setIsLoading(false)
         }
     };
 
     const handleCompleteTask = async () => {
-        if (!tache || !tache._id || !currentUser._id) return;
-
+        if (!tache || !currentUser._id) return;
+       
         try {
-            const response = await updateStatutTacheThemeFormation({
-                tacheId: tache._id,
-                currentUser: currentUser._id,
+            const response = await executerTacheTheme({
+                tacheId: tache.tache._id||"",
+                themeId: tache.theme?._id||"",
                 statut: "EN_ATTENTE", // Marquer comme terminée après l'upload
-                donnees: 'uploaded_file',
                 lang
             });
-
+            
             if (response.success) {
                 createToast(response.message, '', 0);
                 dispatch(updateTacheThemeFormationSlice({
-                    id: response.data._id,
-                    tacheThemeFormationData: {
-                        _id: tache._id,
-                        dateDebut: tache.dateDebut,
-                        dateFin: tache.dateFin,
-                        theme: tache.theme,
-                        tache: tache.tache,
-                        statut:"EN_ATTENTE",
-                    }
+                    id: response.data.tache._id,
+                    tacheThemeFormationData: response.data
                 }));
                 closeModal();
             } else {
@@ -150,6 +145,7 @@ function FormUploadFile({ tache }: { tache: TacheThemeFormation | undefined }) {
             title={modalTitle}
             isModalOpen={isModalOpen}
             isDelete={false}
+            isLoading={isLoading}
             closeModal={closeModal}
             handleConfirm={handleUpload}
         >

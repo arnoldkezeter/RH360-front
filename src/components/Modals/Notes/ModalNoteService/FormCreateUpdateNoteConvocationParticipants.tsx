@@ -111,7 +111,7 @@ function FormCreateUpdateConvocationParticipant({tache, note, themeId }: {tache:
                 if (e) {
                     // createToast(e.message, '', 0);
                     dispatch(updateTacheThemeFormationSlice({
-                        id: tache._id||"",
+                        id: tache.tache._id||"",
                         tacheThemeFormationData: {
                             _id: tache._id,
                             dateDebut: tache.dateDebut,

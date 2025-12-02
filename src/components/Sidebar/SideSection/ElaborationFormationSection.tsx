@@ -26,9 +26,9 @@ const ElaborationSidebarLink: React.FC<ElaborationSidebarLinkProps> = ({
         {path: '/elaboration-programme/axes-strategique', label: t('sub_menu.axes_strategique'), roles:["SUPER-ADMIN", "ADMIN"] },
         {path: '/elaboration-programme/competences', label: t('sub_menu.competences'), roles:["SUPER-ADMIN", "ADMIN"] },
         {path: '/elaboration-programme/familles-metier', label: t('sub_menu.familles_metier'), roles:["SUPER-ADMIN", "ADMIN"] },
-        {path: '/elaboration-programme/programmes-formation', label: t('sub_menu.programmes_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/elaboration-programme/programmes-formation', label: t('sub_menu.programmes_formation'), roles:["SUPER-ADMIN", "ADMIN"] },
         {path: '/elaboration-programme/formations', label: t('sub_menu.formations'), roles:["SUPER-ADMIN", "ADMIN"] },
-        {path: '/elaboration-programme/formation/themes-formation', label: t('sub_menu.themes_formations'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
+        {path: '/elaboration-programme/formation/themes-formation', label: t('sub_menu.themes_formations'), roles:["SUPER-ADMIN", "ADMIN"] },
         {path: '/elaboration-programme/besoins-formation/exprimer', label: t('sub_menu.besoins_formation_exprimer'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
         {path: '/elaboration-programme/besoins-formation/rapports', label: t('sub_menu.besoins_formation_rapport'), roles:["SUPER-ADMIN", "ADMIN"] },
     ];

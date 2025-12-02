@@ -7,9 +7,7 @@ import { useTranslation } from 'react-i18next';
 import createToast from '../../../../../hooks/toastify';
 import { createObjectifTheme, updateObjectifTheme } from '../../../../../services/elaborations/objectifThemeAPI';
 import { createObjectifThemeSlice, updateObjectifThemeSlice } from '../../../../../_redux/features/elaborations/objectifThemeSlice';
-import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
-import { getTacheAndUserId, hasTacheExecution } from '../../../../../fonctions/fonction';
-import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
+import { getTacheAndUserId } from '../../../../../fonctions/fonction';
 
 
 function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifTheme | null, themeId:string }) {
@@ -102,10 +100,7 @@ function FormCreateUpdate({ objectifTheme, themeId }: { objectifTheme: ObjectifT
 
                     }));
 
-                    if(hasTacheExecution()){
-                        const {tacheId, userId}=getTacheAndUserId();
-                        await updateStatutTacheThemeFormation({tacheId:tacheId||"", currentUser:userId||"", statut:"EN_ATTENTE",donnees:'check', lang})
-                    }
+                    
                     closeModal();
 
                 } else {

@@ -67,7 +67,7 @@ export async function deleteThemeFormation(themeformationId: string, lang:string
     }
 }
 
-export async function getFilteredThemeFormations({page, lang, familleMetier, formation, dateDebut, dateFin, search }: {page?: number, lang:string, familleMetier?:string, formation?:string, dateDebut?:string, dateFin?:string, search?:string }): Promise<ThemeFormationReturnGetType> {
+export async function getFilteredThemeFormations({page, lang, familleMetier, formation, dateDebut, dateFin, search, filterType, userId }: {page?: number, lang:string, familleMetier?:string, formation?:string, dateDebut?:string, dateFin?:string, search?:string, filterType?:string, userId?:string }): Promise<ThemeFormationReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
@@ -85,7 +85,9 @@ export async function getFilteredThemeFormations({page, lang, familleMetier, for
                     formation,
                     debut:dateDebut, 
                     fin:dateFin, 
-                    titre:search
+                    titre:search,
+                    filterType,
+                    userId
                 },
             },
         );
@@ -143,6 +145,89 @@ export async function sendInvitations({themeId, subject, content, lang, particip
         return response.data;
     } catch (error) {
         console.error('Error creating Formation:', error);
+        throw error;
+    }
+}
+
+
+export async function getTargetedUsers({
+    themeId,
+    page,
+    lang,
+    familleMetier,
+    poste,
+    structure,
+    service,
+    nom,
+    prenom,
+    search
+}: {
+    themeId: string;
+    page?: number;
+    lang: string;
+    familleMetier?: string;
+    poste?: string;
+    structure?: string;
+    service?: string;
+    nom?: string;
+    prenom?: string;
+    search?: string;
+}): Promise<UtilisateurReturnGetType> {
+    const pageSize: number = 20;
+    const pageNum: number = page || 1;
+
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/${themeId}/targeted-users`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+                params: {
+                    page: pageNum,
+                    limit: pageSize,
+                    familleMetier,
+                    poste,
+                    structure,
+                    service,
+                    nom,
+                    prenom,
+                    search,
+                },
+            },
+        );
+
+        // Extraction des données de la réponse
+        const targetedUsers: UtilisateurReturnGetType = response.data.data;
+        
+        return targetedUsers;
+    } catch (error) {
+        console.error('Error getting targeted users:', error);
+        throw error;
+    }
+}
+
+export async function getThemeById({themeId, lang }: {themeId: string, lang:string}): Promise<ThemeFormation> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/${themeId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+            },
+        );
+
+        // Extraction de tous les objets de paramètres de la réponse
+        const themeFormations: ThemeFormation = response.data.data;
+        
+        return themeFormations;
+    } catch (error) {
+        console.error('Error getting all settings:', error);
         throw error;
     }
 }

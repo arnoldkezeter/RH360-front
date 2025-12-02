@@ -20,6 +20,7 @@ const Layout = ({ isMobileOrTablet, userPermissions, currentUser }: LayoutProps)
     // Liste des routes où HeaderPage ne doit pas être affiché
     const routesWithoutHeaderPage = [
         '/',
+        '/mes-formations',
         '/elaboration-programme/axes-strategique',
         '/elaboration-programme/competences',
         '/elaboration-programme/familles-metier',

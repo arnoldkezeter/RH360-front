@@ -9,7 +9,7 @@ import Input from '../../../ui/input';
 import createToast from '../../../../hooks/toastify';
 import { createTacheGenerique, updateTacheGenerique } from '../../../../services/settings/tacheGeneriqueAPI';
 import { createTacheGeneriqueSlice, updateTacheGeneriqueSlice } from '../../../../_redux/features/parametres/tacheGeneriqueSlice';
-import { METHODES_VALIDATIONS } from '../../../../config';
+import { METHODES_VALIDATIONS, NIVEAUX_EXECUTION } from '../../../../config';
 
 
 function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique | null }) {
@@ -19,14 +19,19 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [nomFr, setNomFr] = useState("");
     const [nomEn, setNomEn] = useState("");
+    const [ordre, setOrdre] = useState<number|undefined>(undefined);
     const [type, setType] = useState<MethodeValidation>();
+    const [niveau, setNiveau] = useState<NiveauExecution>();
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
     const methodesValidations = Object.values(METHODES_VALIDATIONS)
+    const niveauxExecution = Object.values(NIVEAUX_EXECUTION)
 
+    const [errorOrdre, setErrorOrdre] = useState("");
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
     const [errorType, setErrorType] = useState("");
+    const [errorNiveau, setErrorNiveau] = useState("");
 
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -40,36 +45,45 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
         if (tacheGenerique) {
             setModalTitle(t('form_update.enregistrer') + t('form_update.tache_formation'));
             
+            setOrdre(tacheGenerique.ordre);
             setNomFr(tacheGenerique.nomFr);
             setNomEn(tacheGenerique.nomEn);
             setDescriptionFr(tacheGenerique?.descriptionFr || "");
             setDescriptionEn(tacheGenerique?.descriptionEn || "");
             const type = methodesValidations.find(methode=>methode.key === tacheGenerique.type);
             setType(type)
+            const niveau = niveauxExecution.find(niv=>niv.key === tacheGenerique.niveau);
+            setNiveau(niveau)
 
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.tache_formation'));
+            setOrdre(undefined);
             setNomFr("");
             setNomEn("");
             setDescriptionFr("");
             setDescriptionEn("");
-            setType(undefined)
+            setType(undefined);
+            setNiveau(undefined);
         }
 
 
         if (isFirstRender) {
+            setErrorOrdre("");
             setErrorNomEn("");
             setErrorNomFr("");
             setErrorType("")
+            setErrorNiveau("");
             setIsFirstRender(false);
         }
     }, [tacheGenerique, isFirstRender, t]);
 
     const closeModal = () => {
+        setErrorOrdre("");
         setErrorNomFr("");
         setErrorType("")
         setErrorNomEn("");
         setIsFirstRender(true);
+        setErrorNiveau("");
         dispatch(setShowModal());
     };
 
@@ -90,9 +104,26 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
         }
     }
 
+     const handleNiveauChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedNiveauNom = e.target.value;
+        var selected=null;
+
+        if (lang === 'fr') {
+            selected = niveauxExecution.find(niveau => niveau.nomFr === selectedNiveauNom);
+        }
+        else {
+            selected = niveauxExecution.find(niveau => niveau.nomEn === selectedNiveauNom);
+        }
+        
+        if(selected){
+            setNiveau(selected)
+            setErrorNiveau("")
+        }
+    }
+
 
     const handleCreateUpdate = async () => {
-        if(!nomFr || !nomEn || !type){
+        if(!nomFr || !nomEn || !type || !ordre || !niveau){
             if (!nomFr) {
                 setErrorNomFr(t('error.nom_fr'));
             }
@@ -103,6 +134,14 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
             if (!type) {
                 setErrorType(t('error.methode_validation'));
             }
+
+            if (!niveau) {
+                setErrorNiveau(t('error.niveau'));
+            }
+
+            if(!ordre){
+                setErrorOrdre(t('error.ordre'));
+            }
             return;
         }
         // create
@@ -112,23 +151,18 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                 {
                     nomFr,
                     nomEn,
+                    ordre,
                     descriptionFr,
                     descriptionEn,
-                    type:type.key
+                    type:type.key,
+                    niveau:niveau.key
                 },
                 lang
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
                     dispatch(createTacheGeneriqueSlice({
-                        tacheGenerique:{
-                            _id:e.data._id,
-                            nomFr:e.data.nomFr,
-                            nomEn:e.data.nomEn,
-                            descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn,
-                            type:e.data.type
-                        }
+                        tacheGenerique:e.data
                     }));
 
                     closeModal();
@@ -153,9 +187,11 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                     _id: tacheGenerique._id,
                     nomFr,
                     nomEn,
+                    ordre,
                     descriptionFr:descriptionFr,
                     descriptionEn:descriptionEn,
-                    type:type.key
+                    type:type.key,
+                    niveau:niveau.key
                 },
                 lang
             ).then((e: ReponseApiPros) => {
@@ -163,15 +199,7 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                     createToast(e.message, '', 0);
                     dispatch(updateTacheGeneriqueSlice({
                         id: e.data._id,
-                        tacheGeneriqueData : {
-                            _id: e.data._id,
-                            nomFr: e.data.nomFr,
-                            nomEn: e.data.nomEn,
-                            descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn,
-                            type:e.data.type
-                            
-                        }
+                        tacheGeneriqueData : e.data
                     }));
 
                     closeModal();
@@ -202,7 +230,14 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                 handleConfirm={handleCreateUpdate}
                 isLoading={isLoading}
             >
-
+                <Label text={t('label.ordre')} required />
+                <Input
+                    value={`${ordre}`}
+                    type='number'
+                    setValue={(value) => { setOrdre(parseInt(value)); setErrorOrdre(""); }}
+                    hasBackground={true}
+                />
+                <ErrorMessage message={errorOrdre} />
                 <Label text={t('label.nom_chose_fr')} required />
                 <Input
                     value={nomFr}
@@ -236,6 +271,19 @@ function FormCreateUpdate({ tacheGenerique }: { tacheGenerique: TacheGenerique |
                     setValue={(value) => { setDescriptionEn(value); }}
                     hasBackground={true}
                 />
+
+                <Label text={t('label.niveau_execution')} required/>
+                <select
+                    value={niveau? (lang === 'fr' ? niveau.nomFr : niveau.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.niveau_execution')}
+                    onChange={handleNiveauChange}
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                >
+                    <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.niveau_execution')}</option>
+                    {niveauxExecution.map(niveau => (
+                        <option key={niveau.key} value={(lang === 'fr' ? niveau.nomFr : niveau.nomEn)}>{(lang === 'fr' ? niveau.nomFr : niveau.nomEn)}</option>
+                    ))}
+                </select>
+                {errorNiveau && <p className="text-red-500">{errorNiveau}</p>}
 
                 <Label text={t('label.methode_validation')} required/>
                 <select

@@ -51,15 +51,37 @@ import StageRechercheManagement from '../pages/Chercheurs/StageRecherches';
 import RapportStage from '../pages/Chercheurs/RapportsStageRecherche';
 import GenerationNoteDeServiceManager from '../pages/NotesDeService/GenerationNoteDeService';
 import ChatManager from '../pages/Execution/Chat';
-import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
 import MonProfil from '../pages/Parametres/Profil';
 import CohorteUtilisateurs from '../pages/Parametres/CohorteUtilisateur';
 import NoteServices from '../pages/NotesDeService/NotesService';
+import MesThemeDeFormations from '../pages/MesFormations/MesThemeDeFormations';
+import Taches from '../pages/MesFormations/Taches';
+import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
 
 
 
 
 const coreRoutes = [
+  //Mes formations
+  {
+    path: '/mes-formations/responsable',
+    title: 'Liste de mes formations où je suis responsable',
+    component: MesThemeDeFormations,
+  },
+
+  {
+    path: '/mes-formations/participant',
+    title: 'Liste de mes formations où je suis participant',
+    component: MesThemeDeFormations,
+  },
+
+  {
+    path: '/mes-formations/taches',
+    title: 'Liste des tâches',
+    component: Taches,
+  },
+
+
   // Elaboration programme de formation
   {
     path: '/elaboration-programme/axes-strategique',
@@ -105,7 +127,7 @@ const coreRoutes = [
   },
 
   {
-    path: '/elaboration-programme/formation/theme-formation/participants',
+    path: '/formation/pariticipants',
     title: 'Liste des participants de la formation',
     component: ParticipantsTheme,
   },

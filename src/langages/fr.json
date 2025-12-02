@@ -34,6 +34,7 @@
     "stagiaires": "Stagiaires",
     "chercheurs": "Chercheurs",
     "utilisateurs": "Utilisateurs",
+    "mes_formations":"Mes formations",
     "notes_service": "Notes de service",
     "parametres": "Paramètres",
     "profil": "Mon profil",
@@ -41,6 +42,10 @@
     "menu": "Menu"
   },
   "sub_menu": {
+    "mes_formations":"Mes formations",
+    "participant":"Formations Auxquelles Je Participe",
+    "responsable":"Mes Formations à Superviser",
+    "participant_list":"Participant",
     "cohorte_utilisateur":"Membres de la cohorte",
     "participants_formation": "Participants à la formation",
     "axes_strategique": "Axes stratégiques",
@@ -96,6 +101,9 @@
     "taches_formations": "Tâches de formation"
   },
   "page_description": {
+    "participant_list":"Consulter et modifier les participants de la formation",
+    "mes_themes_formation" : "Gérez les différentes formations auxquelles vous êtes assigné",
+    "mes_themes_formation_participant" : "Consultez la progression des formations auxquelles vous êtes inscrit",    
     "noteService": "Consultez les notes de service générées et gérez leur statut ou leur suppression",
     "cohorte_utilisateur":"Ajoutez ou supprimez des membres de la cohorte",
     "calendrier_formation":"Consultez le calendrier des formations",
@@ -292,6 +300,7 @@
     "reponses": "Réponses",
     "moyenne_globale": "Moyenne globale",
     "ordre": "Ordre",
+    "niveau_execution":"Niveau d'exécution",
     "de_taux_reponse": "de taux de réponse",
     "soumission_en_cours": "Soumission en cours",
     "brouillon": "Brouillon",
@@ -445,6 +454,7 @@
     "budget_estimatif": "Budget estimatif",
     "budget_reel": "Budget réel",
     "taches_formations": "Tâches à exécuter",
+    "execution":"Execution",
     "formateurs": "Formateurs",
     "lieux_formation": "Lieux de formation",
     "lieu": "Lieu",
@@ -865,6 +875,7 @@
     "modifier": "Modifier",
     "ajouter": "Ajouter ",
     "retirer": "Retirer",
+    "ajouter_participants":"Ajouter des participants",
     "marquer_executer": "Marquer comme exécutée",
     "mettre_a_jour": "Mettre à jour",
     "sauvegarder": "Enregistrer",
@@ -956,6 +967,7 @@
   },
   "select_par_defaut": {
     "selectionnez": "Sélectionnez ",
+    "niveau_execution":"un niveau d'exécution",
     "niveau_evaluation": "un niveau d'évaluation",
     "grade": "un grade",
     "etat": "un état",
@@ -1116,6 +1128,7 @@
     "selectionnez_reponse": "Veuillez sélectionner une réponse",
     "fichier": "Veuillez choisir un fichier.",
     "ordre": "Le champ ordre est obligatoire.",
+    "niveau_execution":"Le choix du niveau d'exécution est obligatoire.",
     "nature_depense_fr": "Le champ nature de la dépense en français est obligatoire.",
     "nature_depense_en": "Le champ nature de la dépense en anglais est obligatoire.",
     "type_depense": "Le champ type dépense est obligatoire.",

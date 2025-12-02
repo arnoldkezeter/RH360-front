@@ -67,7 +67,7 @@ export async function deleteTacheThemeFormation(tacheThemeFormationId: string, l
     }
 }
 
-export async function getFilteredTacheThemeFormations({page, lang,themeId, dateDebut, dateFin, executee, search }: {page: number, lang:string,themeId?:string, executee?:boolean, dateDebut?:string, dateFin?:string, search?:string }): Promise<TacheThemeFormationReturnGetType> {
+export async function getFilteredTacheThemeFormations({page, lang,themeId, dateDebut, dateFin, executee, niveau, search }: {page: number, lang:string,themeId?:string|null, executee?:boolean,niveau?:string, dateDebut?:string, dateFin?:string, search?:string }): Promise<TacheThemeFormationReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
@@ -82,6 +82,7 @@ export async function getFilteredTacheThemeFormations({page, lang,themeId, dateD
                     page: page,
                     limit: pageSize,
                     estExecutee:executee,
+                    niveau:niveau,
                     dateDebut, 
                     dateFin, 
                     nom:search
@@ -154,10 +155,12 @@ export async function getTacheThemeFormationForDropDown({lang }: {lang:string })
     }
 }
 
-export async function updateStatutTacheThemeFormation({ tacheId, currentUser, statut,donnees, lang}: {tacheId:string, currentUser:string, statut:string, donnees?:any,lang:string}): Promise<ReponseApiPros> {
+export async function executerTacheTheme({ tacheId, themeId, statut, lang}: {tacheId:string, themeId:string, statut:string, lang:string}): Promise<ReponseApiPros> {
+   
+    console.log("execution en cours")
     try {
-        const response: AxiosResponse<any> = await axios.put(
-            `${api}/${tacheId}/statut/${currentUser}`,{statut, donnees},
+        const response: AxiosResponse<any> = await axios.post(
+            `${api}/`,{tacheId, themeId, statut},
             {
                 headers: {
                     'Content-Type': 'application/json',

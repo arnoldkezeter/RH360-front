@@ -9,8 +9,6 @@ import { createFormateur, updateFormateur } from '../../../../../services/elabor
 import { createFormateurSlice, updateFormateurSlice } from '../../../../../_redux/features/elaborations/formateurSlice';
 import { searchUtilisateur } from '../../../../../services/utilisateurs/utilisateurAPI';
 import FilterList from '../../../../ui/AutoComplete';
-import { hasTacheExecution, getTacheAndUserId } from '../../../../../fonctions/fonction';
-import { updateStatutTacheThemeFormation } from '../../../../../services/elaborations/tacheThemeFormationAPI';
 
 
 function FormCreateUpdate({ formateur, themeId }: { formateur: Formateur | null, themeId:string }) {
@@ -115,10 +113,6 @@ function FormCreateUpdate({ formateur, themeId }: { formateur: Formateur | null,
                         }
 
                     }));
-                    if(hasTacheExecution()){
-                        const {tacheId, userId}=getTacheAndUserId();
-                        await updateStatutTacheThemeFormation({tacheId:tacheId||"", currentUser:userId||"", statut:"EN_ATTENTE",donnees:'check', lang})
-                    }
                     closeModal();
 
                 } else {

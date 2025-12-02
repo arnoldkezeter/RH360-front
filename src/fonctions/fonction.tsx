@@ -35,6 +35,20 @@ export function getTacheAndUserId(): { tacheId: string | null; userId: string | 
   };
 }
 
+export function getQueryParam(paramName: string): string | null {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(paramName);
+}
+
+export function getCurrentUrl(): string {
+  return window.location.href;
+}
+
+export function urlContains(value: string): boolean {
+  return window.location.href.includes(value);
+}
+
+
 export const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     day: 'numeric',

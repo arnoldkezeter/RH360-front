@@ -1,21 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../_redux/store";
-import { useHeader } from "../../../components/Context/HeaderConfig";
-import BreadcrumbPageDescription from "../../../components/BreadcrumbPageDescription";
+import { RootState } from "../../_redux/store";
+import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
 
-import { setShowModal } from "../../../_redux/features/setting";
-import { useFetchData } from "../../../hooks/fechDataOptions";
-import { getFormationForDropDown } from "../../../services/elaborations/formationAPI";
-import { setErrorPageThemeFormation, setThemeFormationLoading, setThemeFormations, setThemeFormationSelected } from "../../../_redux/features/elaborations/themeFormationSlice";
-import { getFilteredThemeFormations } from "../../../services/elaborations/themeFormationAPI";
-import Table from "../../../components/Tables/Elaboration/ThemeFormation/TableThemeFormation/Table";
-import { setErrorPageFormation, setFormations } from "../../../_redux/features/elaborations/formationSlice";
-import FormDelete from "../../../components/Modals/Elaboration/Formation/ModalThemeFormation/FormDelete";
-import FormCreateUpdate from "../../../components/Modals/Elaboration/Formation/ModalThemeFormation/FormCreateUpdate";
+import { useFetchData } from "../../hooks/fechDataOptions";
+import { getFormationForDropDown } from "../../services/elaborations/formationAPI";
+import { setErrorPageThemeFormation, setThemeFormationLoading, setThemeFormations, setThemeFormationSelected } from "../../_redux/features/elaborations/themeFormationSlice";
+import { getFilteredThemeFormations } from "../../services/elaborations/themeFormationAPI";
+import { setErrorPageFormation, setFormations } from "../../_redux/features/elaborations/formationSlice";
+import Table from "../../components/Tables/MesFormations/Tables/Table";
+import { urlContains } from "../../fonctions/fonction";
+import { useLocation } from "react-router-dom";
 
-const ThemeFormations = () => {
+const MesThemeDeFormations = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const fetchData = useFetchData();
@@ -34,50 +32,52 @@ const ThemeFormations = () => {
     const [selectedThemeFormation, setSelectedThemeFormation] = useState<ThemeFormation | null>(null);
     const [startDate, setStartDate] = useState<Date |null>(null)
     const [endDate, setEndDate] = useState<Date | null>(null)
-    
-
-    const { setHeaderConfig } = useHeader();
-
+    const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
+    const location = useLocation();
     // Configure le header
-    useEffect(() => {
-        setHeaderConfig({
-            title: t('button.ajouter_theme_formation'),
-            showAddButton: true,
-            exportOptions: [],
-            onAdd: () => {setSelectedThemeFormation(null);dispatch(setShowModal())},
-            onExport: handleExportUsers,
-        });
-    }, [t]);
+    const filterType:string|undefined = useMemo(() => {
+        if (urlContains("responsable")) {
+            return "responsable";
+        } else if (urlContains("participant")) {
+            return "publicCible";
+        }
+        return undefined;
+    }, [location.pathname]);
 
-    const handleExportUsers = (format: string) => {
-        console.log(`Export des themeFormations en ${format}`);
-        // Implémentez ici la logique d'export
-    };
+    // Un useEffect dédié uniquement à la réinitialisation des filtres
+    useEffect(() => {
+        setCurrentPage(1);
+        setCurrentProgrammeFormation(undefined);
+        setCurrentFamilleMetier(undefined);
+        setCurrentFormation(undefined);
+        setStartDate(null);
+        setEndDate(null);
+        setResetFilters(true);
+    }, [location.pathname]);
 
     useEffect(()=>{
         dispatch(setThemeFormationSelected(undefined));
     },[])
 
-    // Charge les formations pour une programmeFormation spécifique
+   
+    // Charge les formations pour un programmeFormation spécifique
     useEffect(() => {
         if (!currentProgrammeFormation || !currentProgrammeFormation._id) return;
 
         fetchData({
-            apiFunction: getFormationForDropDown,
-            params: { lang, programmeId: currentProgrammeFormation._id },
-            onSuccess: (data) => {
-                dispatch(setFormations(data));
-                // Définir le premier formation comme formation courant
-                if (data.formations?.length > 0) {
-                    setCurrentFormation(data.formations[0]);
-                } else {
-                    setCurrentFormation(undefined);
-                }
-                
-            },
-             onError: () => {
-                dispatch(setErrorPageFormation(t('message.erreur')));
-            },
+        apiFunction: getFormationForDropDown,
+        params: { lang, programmeId: currentProgrammeFormation._id, userId:currentUser._id },
+        onSuccess: (data) => {
+            dispatch(setFormations(data));
+            if (data.formations?.length > 0) {
+                setCurrentFormation(data.formations[0]);
+            } else {
+                setCurrentFormation(undefined);
+            }
+        },
+        onError: () => {
+            dispatch(setErrorPageFormation(t('message.erreur')));
+        },
         });
     }, [fetchData, currentProgrammeFormation, lang, dispatch]);
 
@@ -86,8 +86,9 @@ const ThemeFormations = () => {
     useEffect(() => {
         // Cas : filtre sur formation demandé explicitement mais formation = undefined
         // => on vide la liste sans appel API
-       
+      
         if (!resetFilters && !endDate && !startDate && !currentFamilleMetier && currentFormation === undefined) {
+            
             dispatch(setThemeFormations({
                 themeFormations: [],
                 currentPage: 0,
@@ -102,36 +103,36 @@ const ThemeFormations = () => {
             (!currentFormation && (!endDate && !startDate) && !currentFamilleMetier && !resetFilters) ||
             (formations.length === 0 && familleMetiers.length === 0 && !resetFilters)
         ) return;
-
-
-        fetchData({
-            apiFunction: getFilteredThemeFormations,
-            params: {
-                page: currentPage,
-                formation: currentFormation?._id,
-                familleMetier:currentFamilleMetier?._id,
-                dateDebut:startDate?.toString(),
-                dateFin:endDate?.toString(),
-                lang,
-            },
-            onSuccess: (data) => {
-                
-                dispatch(setThemeFormations(data || {
-                    themeFormations: [],
-                    currentPage: 0,
-                    totalItems: 0,
-                    totalPages: 0,
-                    pageSize: 0,
-                }));
-            },
-            onError: () => {
-                dispatch(setErrorPageThemeFormation(t('message.erreur')));
-            },
-            onLoading: (isLoading) => {
-                dispatch(setThemeFormationLoading(isLoading));
-            },
-        });
-    }, [currentPage, currentFormation, currentFamilleMetier, startDate, endDate, resetFilters, lang, dispatch]);
+            
+            fetchData({
+                apiFunction: getFilteredThemeFormations,
+                params: {
+                    page: currentPage,
+                    formation: currentFormation?._id,
+                    familleMetier:currentFamilleMetier?._id,
+                    dateDebut:startDate?.toString(),
+                    dateFin:endDate?.toString(),
+                    filterType:filterType,
+                    userId:currentUser._id,
+                    lang,
+                },
+                onSuccess: (data) => {
+                    dispatch(setThemeFormations(data || {
+                        themeFormations: [],
+                        currentPage: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                        pageSize: 0,
+                    }));
+                },
+                onError: () => {
+                    dispatch(setErrorPageThemeFormation(t('message.erreur')));
+                },
+                onLoading: (isLoading) => {
+                    dispatch(setThemeFormationLoading(isLoading));
+                },
+            });
+    }, [currentPage, currentFormation, filterType, currentUser, startDate, endDate, resetFilters, lang]);
 
 
 
@@ -186,14 +187,15 @@ const ThemeFormations = () => {
     return (
         <>
             <BreadcrumbPageDescription 
-                pageDescription={t('page_description.theme_formation')} 
+                pageDescription={filterType==="publicCible"?t('page_description.mes_themes_formation_participant'):t('page_description.mes_themes_formation')} 
                 titleColor="text-[#1e3a8a]" 
-                pageName={t('sub_menu.themes_formations')} 
+                pageName={t('sub_menu.mes_formations')} 
             />
             <Table
                 data={themeFormations}
                 programmeFormations={programmeFormations}
                 formations={formations}
+                isParticipant={filterType==="publicCible"}
                 currentFormation={currentFormation}
                 currentProgrammeFormation={currentProgrammeFormation}
                 currentFamilleMetier={currentFamilleMetier}
@@ -206,10 +208,8 @@ const ThemeFormations = () => {
                 onResetFilters={handleResetFilters}
                 onEdit={setSelectedThemeFormation} 
             />
-            <FormCreateUpdate themeFormation={selectedThemeFormation} isParticipant={false} />
-            <FormDelete themeFormation={selectedThemeFormation} />
         </>
     );
 };
 
-export default ThemeFormations;
+export default MesThemeDeFormations;

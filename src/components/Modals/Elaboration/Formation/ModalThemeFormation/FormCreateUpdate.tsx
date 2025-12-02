@@ -32,7 +32,7 @@ interface PublicCibleUIState {
     allPostes: boolean; // true = toute la famille (pas de restriction)
 }
 
-function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation | null }) {
+function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: ThemeFormation | undefined |null, isParticipant:boolean }) {
     const lang = useSelector((state: RootState) => state.setting.language);
     const { data: { programmeFormations } } = useSelector((state: RootState) => state.programmeFormationSlice);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -582,6 +582,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                     <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
+                        disabled={isParticipant}
                         value={titreFr}
                         onChange={(e) => { setTitreFr(e.target.value); setErrorTitreFr(""); }}
                     />
@@ -594,6 +595,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
                         value={titreEn}
+                        disabled={isParticipant}
                         onChange={(e) => { setTitreEn(e.target.value); setErrorTitreEn(""); }}
                     />
                     {errorTitreEn && <p className="text-red-500 text-sm mt-1">{errorTitreEn}</p>}
@@ -604,6 +606,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                     <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="date"
+                        disabled={isParticipant}
                         value={dateDebut}
                         onChange={(e) => { setDateDebut(e.target.value); setErrorDateDebut(""); }}
                     />
@@ -616,6 +619,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="date"
                         value={dateFin}
+                        disabled={isParticipant}
                         onChange={(e) => { setDateFin(e.target.value); setErrorDateFin(""); }}
                     />
                     {errorDateFin && <p className="text-red-500 text-sm mt-1">{errorDateFin}</p>}
@@ -627,6 +631,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                         value={programmeFormation ? programmeFormation.annee : ""}
                         onChange={handleProgrammeFormationChange}
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        disabled={isParticipant}
                     >
                         <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.programme_formation')}</option>
                         {programmeFormations.map(programmeFormation => (
@@ -644,6 +649,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                         value={formation ? (lang === 'fr' ? formation.titreFr : formation.titreEn) : ""}
                         onChange={handleFormationChange}
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        disabled={isParticipant}
                     >
                         <option value="">{t('select_par_defaut.selectionnez') + t('select_par_defaut.formation')}</option>
                         {filteredFormations.map(formation => (
@@ -655,7 +661,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                     {errorFormation && <p className="text-red-500 text-sm mt-1">{errorFormation}</p>}
                 </div>
 
-                <div>
+                {!isParticipant && (<div>
                     <label>{t('label.responsable')}</label>
                     <FilterList
                         items={[]}
@@ -670,7 +676,7 @@ function FormCreateUpdate({ themeFormation }: { themeFormation: ThemeFormation |
                         noResultsMessage={t('label.aucun_responsable')}
                         loadingMessage={t('label.recherche_responsable')}
                     />
-                </div>
+                </div>)}
 
                 {/* ✅ NOUVEAU: Section Public Cible Hiérarchique */}
                 <div className="border-t pt-4">

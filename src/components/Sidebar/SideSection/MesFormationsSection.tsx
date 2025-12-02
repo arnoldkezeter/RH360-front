@@ -1,19 +1,18 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { PiStudentFill } from 'react-icons/pi';
 import { IoIosArrowDown } from 'react-icons/io';
 import SidebarLinkGroup from '../SideGroup/SidebarLinkGroup';
-import { FaTasks } from 'react-icons/fa';
+import { GraduationCapIcon } from 'lucide-react';
 
 // Définir les types des props
-interface ExecutionSidebarLinkProps {
+interface MesFormationsSidebarLinkProps {
     sidebarExpanded: boolean;
     setSidebarExpanded: (expanded: boolean) => void;
     t: (key: string) => string;
     currentUser:Utilisateur
 }
 
-const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
+const MesFormationsSidebarLink: React.FC<MesFormationsSidebarLinkProps> = ({
     sidebarExpanded,
     setSidebarExpanded,
     t,
@@ -24,13 +23,8 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-            
-        {path: '/execution-programme/calendrier-formation', label: t('sub_menu.calendrier_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
-        {path: '/execution-programme/tache-executee', label: t('sub_menu.tache_executee'), roles:["SUPER-ADMIN", "ADMIN",] },
-        {path: '/execution-programme/suivi-budgetaire', label: t('sub_menu.suivi_budgetaire'), roles:["SUPER-ADMIN", "ADMIN"] },
-        {path: '/execution-programme/supports-formation', label: t('sub_menu.support_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
-        {path: '/execution-programme/rapports-formation', label: t('sub_menu.rapport_formation'), roles:["SUPER-ADMIN", "ADMIN"] }
-
+        {path: '/mes-formations/responsable', label: t('sub_menu.responsable'), roles:["RESPONSABLE-FORMATION"] },
+        {path: '/mes-formations/participant', label: t('sub_menu.participant'), roles:["UTILISATEUR"]}
     ];
 
     // Filtrer les éléments du menu en fonction des permissions
@@ -38,10 +32,10 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
     const accessibleItems = menuItems.filter((item) =>
         item.roles.some((role) => currentUser.roles && currentUser.roles.includes(role))
     );
-    // Cas où l'utilisateur a toutes les permissions
+    // Cas où l'MesFormations a toutes les permissions
     if (accessibleItems.length === menuItems.length) {
         return (
-            <SidebarLinkGroup activeCondition={pathname === '/execution-programme' || pathname.includes('execution-programme')}>
+            <SidebarLinkGroup activeCondition={pathname === '/mes-formations' || pathname.includes('mes-formations')}>
                 {(handleClick, open) => (
                     <>
                         <NavLink
@@ -50,12 +44,12 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
                                 e.preventDefault();
                                 sidebarExpanded ? handleClick() : setSidebarExpanded(true);
                             }}
-                            className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-[#1e3a8a] dark:hover:bg-meta-4 ${pathname.includes('execution-programme') ? 'bg-[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
+                            className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-[#1e3a8a] dark:hover:bg-meta-4 ${pathname.includes('mes-formations') ? 'bg-[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
                         >
                             <div className="w-6">
-                                <FaTasks className="text-[22px]" />
+                                <GraduationCapIcon className="text-[22px]" />
                             </div>
-                            {t('menu.execution_programme')}
+                            {t('menu.mes_formations')}
                             <IoIosArrowDown className={`absolute right-2 top-1/2 -translate-y-1/2 fill-current ${open ? 'rotate-180' : ''}`} />
                         </NavLink>
                         <div className={`transform overflow-hidden ${!open ? 'hidden' : ''}`}>
@@ -77,17 +71,17 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
         );
     }
 
-    // Cas où l'utilisateur a une seule permission
+    // Cas où l'MesFormations a une seule permission
     if (accessibleItems.length === 1) {
         const singleItem = accessibleItems[0];
         return (
             <li>
                 <NavLink
                     to={singleItem.path}
-                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-[#1e3a8a] dark:hover:bg-meta-4 ${pathname === singleItem.path ? 'bg-[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
+                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname === singleItem.path ? 'bg-g[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
                 >
                     <div className="w-6">
-                        <FaTasks className="text-[18px]" />
+                        <GraduationCapIcon className="text-[18px]" />
                     </div>
                     {singleItem.label}
                 </NavLink>
@@ -95,10 +89,10 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
         );
     }
 
-    // Cas où l'utilisateur a plusieurs permissions, mais pas toutes
+    // Cas où l'MesFormations a plusieurs permissions, mais pas toutes
     if (accessibleItems.length > 1) {
         return (
-            <SidebarLinkGroup activeCondition={pathname === '/execution-programme' || pathname.includes('execution-programme')}>
+            <SidebarLinkGroup activeCondition={pathname === '/mes-formations' || pathname.includes('mes-formations')}>
                 {(handleClick, open) => (
                     <>
                         <NavLink
@@ -107,12 +101,12 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
                                 e.preventDefault();
                                 sidebarExpanded ? handleClick() : setSidebarExpanded(true);
                             }}
-                            className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-[#1e3a8a] dark:hover:bg-meta-4 ${pathname.includes('execution-programme') ? 'bg-[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
+                            className={`group relative flex items-center gap-2.5 rounded-sm py-2 pl-3 pr-4 font-medium text-white duration-300 ease-in-out hover:bg-[#1e3a8a] dark:hover:bg-meta-4 ${pathname.includes('mes-formations') ? 'bg-[#1e3a8a] dark:bg-meta-4 text-white' : ''}`}
                         >
                             <div className="w-6">
-                                <FaTasks className="text-[22px]" />
+                                <GraduationCapIcon className="text-[22px]" />
                             </div>
-                            {t('menu.execution_programme')}
+                            {t('menu.etudiants')}
                             <IoIosArrowDown className={`absolute right-2 top-1/2 -translate-y-1/2 fill-current ${open ? 'rotate-180' : ''}`} />
                         </NavLink>
                         <div className={`transform overflow-hidden ${!open ? 'hidden' : ''}`}>
@@ -120,7 +114,7 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
                                 {accessibleItems.map((item, index) => (
                                     <li key={index}>
                                         <NavLink to={item.path} className={({ isActive }) =>
-                                            `group relative flex items-center pb-2 rounded-md px-4 font-medium text-white duration-300 ease-in-out hover:text-secondary ${isActive ? 'text-white' : ''}`}
+                                            `group relative flex items-center pb-2 rounded-md px-4 font-medium text-white duration-300 ease-in-out hover:text-secondary ${isActive ? 'text-secondary' : ''}`}
                                         >
                                             {item.label}
                                         </NavLink>
@@ -134,8 +128,8 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
         );
     }
 
-    // Cas où l'utilisateur n'a aucune permission
+    // Cas où l'MesFormations n'a aucune permission
     return null;
 };
 
-export default ExecutionSidebarLink;
+export default MesFormationsSidebarLink;

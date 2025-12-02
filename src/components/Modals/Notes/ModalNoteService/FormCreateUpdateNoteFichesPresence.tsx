@@ -106,7 +106,7 @@ function FormCreateUpdateFichePresence({tache, note, themeId }: {tache:TacheThem
                     dispatch(updateTacheThemeFormationSlice({
                         id: tache._id||"",
                         tacheThemeFormationData: {
-                            _id: tache._id,
+                            _id: tache.tache._id,
                             dateDebut: tache.dateDebut,
                             dateFin: tache.dateFin,
                             theme: tache.theme,

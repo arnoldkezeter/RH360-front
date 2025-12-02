@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { updateStatutTacheThemeFormation } from '../../../../services/elaborations/tacheThemeFormationAPI';
+import { executerTacheTheme } from '../../../../services/elaborations/tacheThemeFormationAPI';
 import { RootState } from '../../../../_redux/store';
-import { setShowModalCheckTask, setShowModalGenerateDoc } from '../../../../_redux/features/setting';
+import { setShowModalGenerateDoc } from '../../../../_redux/features/setting';
 import createToast from '../../../../hooks/toastify';
 import CustomDialogModal from '../../CustomDialogModal';
 import { updateTacheThemeFormationSlice } from '../../../../_redux/features/elaborations/tacheThemeFormationSlice';
-import { FileText, FileSpreadsheet, Download, CheckCircle, AlertCircle } from 'lucide-react';
+import { FileText, FileSpreadsheet } from 'lucide-react';
 
 
 
@@ -64,24 +64,20 @@ function FormGenerateFile({ tache }: { tache: TacheThemeFormation | undefined })
 
     const handleCompleteTask = async () => {
         if (!tache || !tache._id || !currentUser._id) return;
-
+        setIsLoading(true);
         try {
-            const response = await updateStatutTacheThemeFormation({
-                tacheId: tache._id,
-                currentUser: currentUser._id,
-                statut: "TERMINE",
-                donnees: `generated_${selectedFormat}_file`,
+            const response = await executerTacheTheme({
+                tacheId: tache.tache._id||"",
+                themeId: tache.theme?._id||"",
+                statut: "EN_ATTENTE",
                 lang
             });
 
             if (response.success) {
                 createToast(response.message, '', 0);
                 dispatch(updateTacheThemeFormationSlice({
-                    id: response.data._id,
-                    tacheThemeFormationData: {
-                        ...tache,
-                        statut: "TERMINE"
-                    }
+                    id: response.data.tache._id,
+                    tacheThemeFormationData: response.data
                 }));
                 closeModal();
             } else {
@@ -89,6 +85,8 @@ function FormGenerateFile({ tache }: { tache: TacheThemeFormation | undefined })
             }
         } catch (e: any) {
             createToast(e.response?.data?.message || t('errors.api_error'), '', 2);
+        }finally{
+            setIsLoading(false)
         }
     };
 
@@ -98,6 +96,7 @@ function FormGenerateFile({ tache }: { tache: TacheThemeFormation | undefined })
             isModalOpen={isModalOpen}
             isDelete={false}
             closeModal={closeModal}
+            isLoading={isLoading}
             handleConfirm={handleCompleteTask}
             // Désactiver le bouton de confirmation tant qu'un format n'est pas généré avec succès
         >                

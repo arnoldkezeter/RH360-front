@@ -31,6 +31,13 @@ export const METHODES_VALIDATIONS = {
     TABLE_FORM: { nomFr: "Tableau", nomEn: "Table", key: "table-form" },
 };
 
+export const NIVEAUX_EXECUTION = {
+    PRE: { nomFr: "Pré-formation", nomEn: "Pre-Training", key: "pre-formation" },
+    PENDANT: { nomFr: "Pendant la formation", nomEn: "During-Training", key: "pendant-formation" },
+    POST: { nomFr: "Post-formation", nomEn: "Post-Training", key: "post-formation" },
+};
+
+
 export const ETAT_TACHE = {
     EXECUTEE: { nomFr: "Exécutée", nomEn: "Executed", key: "EXECUTEE" },
     NON_EXECUTEE: { nomFr: "Non exécutée", nomEn: "Not executed", key: "NON_EXECUTEE" },

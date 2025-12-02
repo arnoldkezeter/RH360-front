@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { updateStatutTacheThemeFormation } from '../../../../services/elaborations/tacheThemeFormationAPI';
+import { executerTacheTheme } from '../../../../services/elaborations/tacheThemeFormationAPI';
 import { RootState } from '../../../../_redux/store';
 import { setShowModalEmail } from '../../../../_redux/features/setting';
 import createToast from '../../../../hooks/toastify';
@@ -31,6 +31,7 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
         setModalTitle(t('label.envoyer_message'));
     }, [t]);
 
+
     const closeModal = () => {
         setMessage('');
         setIsParticipant('')
@@ -47,9 +48,8 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
         }
 
         setSendStatus('');
-
+        setIsLoading(true);
         try {
-            // Remplacez cette simulation par votre vraie logique d'API
             const response = await sendInvitations({
                 themeId: tache?.theme?._id||"",
                 subject: sujet,
@@ -57,6 +57,7 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
                 lang,
                 participant:isParticipant==='P'
             });
+            
              if (response.success){
                 handleCompleteTask();
              }
@@ -68,18 +69,18 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
             console.error('Erreur d\'envoi:', error);
             createToast(t('errors.envoi_erreur'), '', 2);
         } finally {
+            setIsLoading(false);
         }
     };
 
     const handleCompleteTask = async () => {
-        if (!tache || !tache._id || !currentUser._id) return;
+        if (!tache || !currentUser._id) return;
 
         try {
-            const response = await updateStatutTacheThemeFormation({
-                tacheId: tache._id,
-                currentUser: currentUser._id,
+            const response = await executerTacheTheme({
+                tacheId: tache.tache._id||"",
+                themeId: tache.theme?._id||"",
                 statut: "EN_ATTENTE",
-                donnees: `message_sent`,
                 lang
             });
 
@@ -87,10 +88,7 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
                 createToast(response.message, '', 0);
                 dispatch(updateTacheThemeFormationSlice({
                     id: response.data._id,
-                    tacheThemeFormationData: {
-                        ...tache,
-                        statut: "EN_ATTENTE"
-                    }
+                    tacheThemeFormationData: response.data
                 }));
                 closeModal();
             } else {
@@ -105,10 +103,10 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
         <CustomDialogModal
             title={modalTitle}
             isModalOpen={isModalOpen}
+            isLoading={isLoading}
             isDelete={false}
             closeModal={closeModal}
             handleConfirm={handleSendMessage}
-            
         >
            
                 <div>
@@ -142,7 +140,6 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
                     value={sujet}
                     onChange={(e) => setSujet(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-                    // disabled={isSending}
                 />
                 <label htmlFor="message-input" className="block text-sm font-medium text-gray-700 mb-2">
                     {t('label.votre_message')}
@@ -154,7 +151,6 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={t('label.saisir_message')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-                    // disabled={isSending}
                 />
 
                

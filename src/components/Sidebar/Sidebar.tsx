@@ -13,6 +13,7 @@ import StagiaireSidebarLink from './SideSection/StagiaireSection';
 import ChercheurSidebarLink from './SideSection/ChercheurSection';
 import UtilisateurSidebarLink from './SideSection/UtilisateurSection';
 import NoteServiceSidebarLink from './SideSection/NoteServiceSection';
+import MesFormationsSidebarLink from './SideSection/MesFormationsSection';
 
 
 
@@ -112,6 +113,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }: SidebarProps) => 
                                 t={t}
                             />}
                             {/* TABLEAU DE BORD */}
+
+                             {/* Mes formations */}
+                             {userPermissions && <MesFormationsSidebarLink
+                                // userPermissions={userPermissions}
+                                currentUser={currentUser}
+                                sidebarExpanded={sidebarExpanded}
+                                setSidebarExpanded={setSidebarExpanded}
+                                t={t}
+                            />}
+                            {/* Mes formations  */}
 
                             {/* Elaboration : list group */}
                             {userPermissions && <ElaborationSidebarLink

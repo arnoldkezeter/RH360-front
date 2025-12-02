@@ -5,6 +5,8 @@ interface TacheGenerique {
     code?:string;
     nomFr: string;
     nomEn: string;
+    ordre:number;
+    niveau:string;
     descriptionFr?:string;
     descriptionEn?:string;
     type:string;
