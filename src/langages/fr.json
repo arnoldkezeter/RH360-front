@@ -272,7 +272,8 @@
     "tache_executee": "Pourcentage des tâches exécuté",
     "participant": "Participant",
     "sujet": "Sujet",
-    "envoyer_message": "Envoyer un message ?",
+    "envoyer_message_participant": "Communiquer la formation aux participants",
+    "envoyer_message_formateur": "Communiquer la formation aux formateurs",
     "votre_message": "Votre message",
     "saisir_message": "Saisissez votre message ici...",
     "marquer_tache": "Marquer la tâche comme terminée ?",
@@ -1120,6 +1121,7 @@
     "tache_stagiaire": "de la tâche"
   },
   "error": {
+    "message_vide" : "Veuillez renseigner l'objet et le contenu du message.",
     "famille_deja_ajoutee": "Cette famille de métier est déjà ajoutée",
     "poste_pas_dans_famille": "Ce poste n'appartient pas à cette famille de métier",
     "service_pas_dans_structure": "Ce service n'appartient pas à cette structure",

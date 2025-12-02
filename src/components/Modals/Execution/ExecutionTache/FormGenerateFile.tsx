@@ -63,7 +63,7 @@ function FormGenerateFile({ tache }: { tache: TacheThemeFormation | undefined })
     };
 
     const handleCompleteTask = async () => {
-        if (!tache || !tache._id || !currentUser._id) return;
+        if (!tache || !currentUser._id) return;
         setIsLoading(true);
         try {
             const response = await executerTacheTheme({

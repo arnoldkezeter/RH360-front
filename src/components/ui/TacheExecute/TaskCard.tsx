@@ -1,5 +1,5 @@
 import { AlertCircle, BarChart3, Check, CheckSquare, Clock, FileText, Mail, Upload, Users, MessageCircle } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { STATUT_TACHE_THEME } from '../../../config';
 import { useTranslation } from 'react-i18next';
 import FormCheckTask from '../../Modals/Execution/ExecutionTache/FormCheckTask';
@@ -72,11 +72,29 @@ const TacheCard: React.FC<TacheCardProps> = ({
   const type = typeTaches.find(tt => tt.key === tache.tache.type);
   const [selectedTache, setSelectedTache] = useState<TacheThemeFormation>()
   const [activeForm, setActiveForm] = useState<string | null>(null);
-  const [isTrainner, setIsTrainner] = useState<boolean>(false);
+  const [isParticip, setIsParticip] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   const isParticipant=getQueryParam("participant") === "true";
-  
+  const modalsState = useSelector((state: RootState) => state.setting.showModal);
+
+  useEffect(() => {
+    const allModalsClosed = 
+      !modalsState.openCheckTask &&
+      !modalsState.openUploadDoc &&
+      !modalsState.openGenerateDoc &&
+      !modalsState.openEmail &&
+      !modalsState.openConvocationFormateur &&
+      !modalsState.openConvocationParticipant &&
+      !modalsState.openFichePresence &&
+      !modalsState.openFichePresenceFormateur;
+
+    if (allModalsClosed) {
+      setSelectedTache(undefined);
+      setActiveForm(null);
+      setIsParticip(true);
+    }
+  }, [modalsState]);
  
   const getStatusBadge = () => {
     const baseClasses = "px-3 py-1.5 rounded-full text-xs font-medium transition-colors";
@@ -114,7 +132,7 @@ const TacheCard: React.FC<TacheCardProps> = ({
                 lang
             }
         ).then(async (e: ReponseApiPros) => {
-            
+            console.log(e)
             if (e.success) {
                 createToast(e.message, '', 0);
                 dispatch(updateTacheThemeFormationSlice({
@@ -228,7 +246,7 @@ const TacheCard: React.FC<TacheCardProps> = ({
       case 'email':
         setSelectedTache(selected)
         if(selected.tache.code==="communication_formateurs"){
-          setIsTrainner(true);
+          setIsParticip(false);
         }
         setActiveForm("sendMessage");
         dispatch(setShowModalEmail())
@@ -333,8 +351,8 @@ return (
               </div>
               
               {/* Bouton admin uniquement */}
-            {(currentUser.role.toLowerCase() === "super-admin" || 
-              currentUser.role.toLowerCase() === "admin") || (tache.tache.type === 'form') && (
+            {/* {(currentUser.role.toLowerCase() === "super-admin" || 
+              currentUser.role.toLowerCase() === "admin") || (tache.tache.type === 'form') && ( */}
                 <button
                     onClick={() => handleMarqueExecute(tache)}
                     disabled={isLoading}
@@ -345,7 +363,7 @@ return (
                 )}
                     {!isLoading && t('button.marquer_executer')}
                 </button>
-            )}
+            {/* )} */}
             
           </div>
       )}
@@ -363,7 +381,7 @@ return (
         )}
 
         {selectedTache && activeForm === "sendMessage" && (
-          <FormSendMessage tache={selectedTache} />
+          <FormSendMessage tache={selectedTache} isParticipant={isParticip}/>
         )}
 
         {selectedTache && activeForm === "convocationFormateur" && (

@@ -271,7 +271,8 @@
     "tache_executee": "Percentage of completed tasks",
     "participant": "Participant",
     "sujet": "Subject",
-    "envoyer_message": "Send a message?",
+    "envoyer_message_participant" : "Communicate the training information to the participants",
+    "envoyer_message_formateur" : "Communicate the training information to the trainers",
     "votre_message": "Your message",
     "saisir_message": "Enter your message here...",
     "marquer_tache": "Mark task as completed?",
@@ -1119,6 +1120,7 @@
     "tache_stagiaire": "the task"
   },
   "error": {
+    "message_vide" : "Please provide the subject and the content of the message.",
     "famille_deja_ajoutee": "This job family has already been added",
     "poste_pas_dans_famille": "This position does not belong to this job family",
     "service_pas_dans_structure": "This service does not belong to this structure",

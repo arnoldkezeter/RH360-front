@@ -75,7 +75,11 @@ const SuiviBudgetaires = () => {
   
           fetchData({
               apiFunction: getFormationForDropDown,
-              params: { lang, programmeId: currentProgrammeFormation._id },
+              params: { 
+                lang, 
+                programmeId: currentProgrammeFormation._id, 
+                userId:currentUser._id
+              },
               onSuccess: (data) => {
                   dispatch(setFormations(data));
                   // Définir le premier formation comme formation courant

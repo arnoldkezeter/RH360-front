@@ -12,7 +12,7 @@ import { sendInvitations } from '../../../../services/elaborations/themeFormatio
 
 
 
-function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) {
+function FormSendMessage({ tache, isParticipant=false }: { tache: TacheThemeFormation | undefined, isParticipant:boolean }) {
     const lang = useSelector((state: RootState) => state.setting.language);
     const { t } = useTranslation();
     const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
@@ -20,7 +20,6 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.openEmail);
     const [modalTitle, setModalTitle] = useState("");
-    const [isParticipant, setIsParticipant] = useState('');
 
     const [message, setMessage] = useState('');
     const [sujet, setSujet] = useState('');
@@ -28,13 +27,12 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
 
     // Initialisation du titre du modal
     useEffect(() => {
-        setModalTitle(t('label.envoyer_message'));
+        setModalTitle(isParticipant?t('label.envoyer_message_participant'):t('label.envoyer_message_formateur'));
     }, [t]);
 
 
     const closeModal = () => {
         setMessage('');
-        setIsParticipant('')
         setSujet('');
         setSendStatus('');
         dispatch(setShowModalEmail());
@@ -42,8 +40,8 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
 
     // Fonction de simulation de l'envoi de message
     const handleSendMessage = async () => {
-        if (!message.trim() || !sujet.trim() || !isParticipant.trim()) {
-            createToast(t('errors.message_vide'), '', 2);
+        if (!message.trim() || !sujet.trim()) {
+            createToast(t('error.message_vide'), '', 2);
             return;
         }
 
@@ -55,19 +53,24 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
                 subject: sujet,
                 content: message,
                 lang,
-                participant:isParticipant==='P'
+                participant:isParticipant
+            }).then((e)=>{
+                createToast(e.message, '', 0);
+                if (e.success){
+                    handleCompleteTask();
+                }
+            }).catch((e)=>{
+                createToast(e.message, '', 2);
             });
             
-             if (response.success){
-                handleCompleteTask();
-             }
+             
             
             setSendStatus('success');
 
         } catch (error) {
             setSendStatus('error');
             console.error('Erreur d\'envoi:', error);
-            createToast(t('errors.envoi_erreur'), '', 2);
+            createToast(t('message.erreur'), '', 2);
         } finally {
             setIsLoading(false);
         }
@@ -85,7 +88,7 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
             });
 
             if (response.success) {
-                createToast(response.message, '', 0);
+                // createToast(response.message, '', 0);
                 dispatch(updateTacheThemeFormationSlice({
                     id: response.data._id,
                     tacheThemeFormationData: response.data
@@ -109,14 +112,14 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
             handleConfirm={handleSendMessage}
         >
            
-                <div>
+                {/* <div>
                     <input
                         className='radio-label-space'
                         type="radio"
                         id={t('label.participant')}
                         name="formation"
                         value={t('label.participant')}
-                        checked={isParticipant === "P"}
+                        checked={!isTrainer}
                         onChange={() => { setIsParticipant("P"); }}
                     />
                     <label htmlFor={t('label.participant')} className='radio-intern-space'>{t('label.participant')}</label>
@@ -127,11 +130,11 @@ function FormSendMessage({ tache }: { tache: TacheThemeFormation | undefined }) 
                         id={t('label.formateur')}
                         name="formation"
                         value={t('label.formateur')}
-                        checked={isParticipant === "F"}
+                        checked={isTrainer}
                         onChange={() => { setIsParticipant("F");}}
                     />
                     <label htmlFor={t('label.formateur')}>{t('label.formateur')}</label>
-                </div>
+                </div> */}
                 <label htmlFor="sujet-input" className="block text-sm font-medium text-gray-700 mb-2">
                     {t('label.sujet')}
                 </label>
