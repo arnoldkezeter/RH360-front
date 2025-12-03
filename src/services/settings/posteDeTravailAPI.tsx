@@ -5,11 +5,11 @@ const api = `${apiUrl}/postes-de-travail`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createPosteDeTravail({nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
+export async function createPosteDeTravail({nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier, services }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier },
+            {nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier, services },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ export async function createPosteDeTravail({nomFr, nomEn, descriptionFr, descrip
     }
 }
 
-export async function updatePosteDeTravail({ _id, nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
+export async function updatePosteDeTravail({ _id, nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier, services }: PosteDeTravail, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier },
+            {nomFr, nomEn, descriptionFr, descriptionEn, famillesMetier, services},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,6 +131,31 @@ export async function searchPosteDeTravail({ searchString, lang }: { lang:string
                 },
                 params:{
                     nom:searchString
+                }
+            },
+        );
+        const PosteDeTravails: PosteDeTravailReturnGetType = response.data.data;
+
+        return PosteDeTravails;
+    } catch (error) {
+        // console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
+export async function searchPosteDeTravailByFamille({familleId, searchString, lang }: {familleId:string, lang:string, searchString: string}): Promise<PosteDeTravailReturnGetType> {
+   
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/familles-metier/${familleId}/postes`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+                params:{
+                    search:searchString
                 }
             },
         );

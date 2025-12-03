@@ -204,7 +204,7 @@ const TacheCard: React.FC<TacheCardProps> = ({
           break;
           case 'confection_fiches_eval_chaud' :
             dispatch(setThemeFormationSelected(selected.theme))
-            navigate(`/evaluations/cree-evaluation`)
+            navigate(`/evaluations/cree-evaluation?themeId=${selected.theme?._id}`)
           break;
           case 'elaboration_budget' :
             navigate(`/execution-programme/suivi-budgetaire?theme=${selected.theme?._id}`)

@@ -99,10 +99,10 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                         
 
                             listPage.push({
-                                name: t('label.taches_formations'),
+                                name: t('label.progression'),
                                 handleClick: () => {
                                     dispatch(setThemeFormationSelected(item));
-                                    navigate('/elaboration-programme/formation/theme-formation/taches-a-executee');
+                                    navigate(`/mes-formations/taches?participant=false&themeId=${item._id}`);
                                 },
                             });
 
@@ -119,7 +119,7 @@ const BodyTable = ({ data, onEdit}: { data: ThemeFormation[], onEdit: (themeForm
                                 name: t('label.participants'),
                                 handleClick: () => {
                                     dispatch(setThemeFormationSelected(item));
-                                    navigate('/elaboration-programme/formation/theme-formation/participants');
+                                    navigate(`/formation/pariticipants?themeId=${item._id}`);
                                 },
                             });
 

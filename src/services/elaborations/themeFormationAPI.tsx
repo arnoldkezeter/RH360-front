@@ -210,6 +210,7 @@ export async function getTargetedUsers({
 }
 
 export async function getThemeById({themeId, lang }: {themeId: string, lang:string}): Promise<ThemeFormation> {
+    console.log(themeId)
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/${themeId}`,

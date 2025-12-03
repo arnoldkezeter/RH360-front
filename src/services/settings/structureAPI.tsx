@@ -143,6 +143,31 @@ export async function searchStructure({ searchString, lang }: { lang:string, sea
     }
 }
 
+export async function searchStructureByPoste({posteId, searchString, lang }: {posteId:string, lang:string, searchString: string}): Promise<StructureReturnGetType> {
+   
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/postes/${posteId}/structures`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+                params:{
+                    search:searchString
+                }
+            },
+        );
+        const structures: StructureReturnGetType = response.data.data;
+
+        return structures;
+    } catch (error) {
+        // console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
 
 export async function getStructuresForDropDown({lang }: {lang:string }): Promise<StructureReturnGetType> {
     try {

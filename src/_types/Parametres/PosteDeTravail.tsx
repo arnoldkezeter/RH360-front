@@ -7,6 +7,7 @@ interface PosteDeTravail {
     descriptionFr?:string;
     descriptionEn?:string;
     famillesMetier:FamilleMetier[];
+    services:Service[];
 }
 
 interface PosteDeTravailInitialData {

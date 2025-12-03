@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useFetchData } from '../../hooks/fechDataOptions';
 import { getGroupedEchelleReponseByType } from '../../services/evaluations/echelleReponseAPI';
@@ -13,8 +13,8 @@ import { FaFilter, FaSort } from 'react-icons/fa';
 import Pagination from '../../components/Pagination/Pagination';
 import createToast from '../../hooks/toastify';
 import FilterList from '../../components/ui/AutoComplete';
-import { getFilteredThemeFormations } from '../../services/elaborations/themeFormationAPI';
-import { getEchellesMinMax, truncateText } from '../../fonctions/fonction';
+import { getFilteredThemeFormations, getThemeById } from '../../services/elaborations/themeFormationAPI';
+import { getEchellesMinMax, getQueryParam, truncateText } from '../../fonctions/fonction';
 import { NoData } from '../../components/NoData';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
 import FormDelete from '../../components/Modals/Evaluation/ModalEvaluationAChaud/FormDelete';
@@ -40,7 +40,7 @@ const EvaluationManager = () => {
       setIsDropdownVisible(!isDropdownVisible);
   };
   const loading =  useSelector((state: RootState) => state.evaluationChaudSlice.pageIsLoading);
-
+  const themeId = getQueryParam("themeId");
 // variable pour la pagination
   const itemsPerPage =  useSelector((state: RootState) => state.evaluationChaudSlice.data.pageSize); // nombre d'éléments maximum par page
   const count = useSelector((state: RootState) => state.evaluationChaudSlice.data.totalItems);
@@ -64,6 +64,43 @@ const EvaluationManager = () => {
   const evaluations = evaluationChauds; // Utiliser directement Redux
   
   const fetchData = useFetchData();
+
+
+  useEffect(() => {
+      // 💡 Condition de chargement : seulement si themeId est présent ET 
+      // l'objet themeFormation n'est pas déjà chargé pour éviter des boucles infinies.
+      if (!themeId) {
+          setThemeFormation(undefined); // Réinitialiser si l'ID est perdu
+          return;
+      }
+
+      // Si themeFormation est déjà chargé et correspond à themeId, on ne recharge pas.
+      // Vous devrez peut-être affiner cette vérification selon votre structure de données.
+      // const themeAlreadyLoaded = themeFormation && themeFormation._id === themeId; 
+      // if (themeAlreadyLoaded) return;
+
+
+      fetchData({
+          apiFunction: getThemeById,
+          params: {
+              lang,
+              themeId: themeId
+          },
+          onSuccess: (data) => {
+              // C'est ici que l'état est mis à jour APRES l'appel API
+              setThemeFormation(data);
+              setNewEvaluation(prev => ({ ...prev, theme: data }))
+              setActiveTab("create");
+          },
+          onError: () => {
+              // Gérer l'erreur
+          },
+          onLoading: (isLoading) => {
+              // Gérer le chargement
+          },
+      });
+      
+  }, [themeId, lang, fetchData]); // fetchData doit être une dépendance stable (e.g., wrapée dans useCallback)
 
   useEffect(() => {
     fetchData({
@@ -198,7 +235,7 @@ const EvaluationManager = () => {
   const [newEvaluation, setNewEvaluation] = useState<Partial<EvaluationChaud>>({
     titreFr: '',
     titreEn: '',
-    theme: undefined,
+    theme: themeFormation,
     descriptionFr: '',
     descriptionEn: '',
     rubriques: [],
@@ -262,19 +299,22 @@ const EvaluationManager = () => {
 
   // Réinitialiser le formulaire
   const resetForm = () => {
+    
+    setEditingEvaluation(null);
+    setExpandedRubrique(null);
+    setExpandedQuestion(null);
+    if(!themeId){
+      setThemeFormation(undefined);
+    } 
     setNewEvaluation({
       titreFr: '',
       titreEn: '',
-      theme: undefined,
+      theme: themeFormation,
       descriptionFr: '',
       descriptionEn: '',
       rubriques: [],
       actif: true
     });
-    setEditingEvaluation(null);
-    setExpandedRubrique(null);
-    setExpandedQuestion(null);
-    setThemeFormation(undefined); // CORRECTION 5: Réinitialiser aussi themeFormation
   };
 
   const ajouterRubrique = () => {
@@ -697,8 +737,9 @@ const EvaluationManager = () => {
                         searchDelay={300}
                         minSearchLength={2}
                         defaultValue={themeFormation}
-                        noResultsMessage={t('label.aucun_theme_formation')}
+                        noResultsMessage={t('label.aucun_theme')}
                         loadingMessage={t('label.recherche_theme_formation')}
+                        disable={themeId!==null}
                     />
                   </div>
 

@@ -13,6 +13,7 @@ interface FilterListProps<T> {
   enableBackendSearch?: boolean;
   loadingMessage?: string;
   noResultsMessage?: string;
+  disable?:boolean;
 }
 
 function FilterList<T>({
@@ -27,6 +28,7 @@ function FilterList<T>({
   enableBackendSearch = false,
   loadingMessage = "Recherche en cours...",
   noResultsMessage = "Aucun résultat trouvé",
+  disable=false,
 }: FilterListProps<T>) {
   const [query, setQuery] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -182,6 +184,7 @@ function FilterList<T>({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
+        disabled={disable}
         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
       />
 

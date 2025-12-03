@@ -11,9 +11,9 @@ import { searchCohorte } from '../../../../../services/settings/cohorteAPI';
 import { SearchSelectComponent } from '../../../../ui/SearchSelectComponent';
 import { formatDateForInput } from '../../../../../fonctions/fonction';
 import { searchFamilleMetier } from '../../../../../services/elaborations/familleMetierAPI';
-import { searchPosteDeTravail } from '../../../../../services/settings/posteDeTravailAPI';
-import { searchStructure } from '../../../../../services/settings/structureAPI';
-import { searchService } from '../../../../../services/settings/serviceAPI';
+import { searchPosteDeTravailByFamille } from '../../../../../services/settings/posteDeTravailAPI';
+import { searchStructureByPoste } from '../../../../../services/settings/structureAPI';
+import { searchServiceByStructure } from '../../../../../services/settings/serviceAPI';
 import { ChevronDown, ChevronUp, Trash2, X } from 'lucide-react';
 
 interface ParticipantsUIState {
@@ -43,6 +43,9 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
     const [participantList, setParticipantList] = useState<ParticipantsUIState[]>([]);
     const [expandedFamilles, setExpandedFamilles] = useState<Set<string>>(new Set());
     
+    const [currentFamilleId, setCurrentFamilleId] = useState<string>("");
+    const [currentPosteId, setCurrentPosteId] = useState<string>("");
+    const [currentStructureId, setCurrentStructureId] = useState<string>("");
 
     const [errorLieu, setErrorLieu] = useState("");
     const [errorCohorteParticipants, setErrorCohorteParticipants] = useState("");
@@ -124,6 +127,9 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
     }, [lieuFormation, isFirstRender, t]);
 
     const closeModal = () => {
+        setCurrentFamilleId("");
+        setCurrentPosteId("");
+        setCurrentStructureId("");
         setErrorLieu("");
         setErrorCohorteParticipants("");
         setErrorDateDebut("")
@@ -149,17 +155,17 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
     };
 
     const onSearchPoste = async (search: string) => {
-        const data = await searchPosteDeTravail({ searchString: search, lang });
+        const data = await searchPosteDeTravailByFamille({familleId:currentFamilleId, searchString: search, lang });
         return data?.posteDeTravails || [];
     };
-
+    
     const onSearchStructure = async (search: string) => {
-        const data = await searchStructure({ searchString: search, lang });
+        const data = await searchStructureByPoste({posteId:currentPosteId, searchString: search, lang });
         return data?.structures || [];
     };
-
+    
     const onSearchService = async (search: string) => {
-        const data = await searchService({ searchString: search, lang });
+        const data = await searchServiceByStructure({structureId:currentStructureId, searchString: search, lang });
         return data?.services || [];
     };
     
@@ -171,7 +177,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
             createToast(t('error.famille_deja_ajoutee'), '', 1);
             return;
         }
-
+         setCurrentFamilleId(famille._id!)
         setParticipantList([
             ...participantList,
             {
@@ -193,6 +199,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
     };
 
     const toggleAllPostes = (familleId: string) => {
+        setCurrentFamilleId(familleId)
         setParticipantList(participantList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {
@@ -219,7 +226,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                 if (fam.postes.some(p => p.poste._id === poste._id)) {
                     return fam;
                 }
-
+                setCurrentPosteId(poste._id!); 
                 return {
                     ...fam,
                     allPostes: false,
@@ -250,6 +257,8 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
     };
 
     const toggleAllStructures = (familleId: string, posteId: string) => {
+        setCurrentFamilleId(familleId);
+        setCurrentPosteId(posteId);
         setParticipantList(participantList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {
@@ -281,7 +290,7 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
                             if (pos.structures.some(s => s.structure._id === structure._id)) {
                                 return pos;
                             }
-
+                            setCurrentStructureId(structure._id!); 
                             return {
                                 ...pos,
                                 allStructures: false,
@@ -324,6 +333,9 @@ function FormCreateUpdate({ lieuFormation, themeId }: { lieuFormation: LieuForma
     };
 
     const toggleAllServices = (familleId: string, posteId: string, structureId: string) => {
+        setCurrentFamilleId(familleId);
+        setCurrentPosteId(posteId);
+        setCurrentStructureId(structureId);
         setParticipantList(participantList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {

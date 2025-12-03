@@ -96,7 +96,7 @@ const BodyTable = ({ data, isParticipant}: { data: ThemeFormation[], isParticipa
                         
 
                             listPage.push({
-                                name: t('label.taches_formations'),
+                                name: t('label.progression'),
                                 handleClick: () => {
                                     navigate(`/mes-formations/taches?participant=${isParticipant}&themeId=${item._id}`);
                                 },

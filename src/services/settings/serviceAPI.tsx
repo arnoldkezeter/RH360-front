@@ -143,6 +143,31 @@ export async function searchService({ searchString, lang }: { lang:string, searc
     }
 }
 
+export async function searchServiceByStructure({structureId, searchString, lang }: {structureId:string, lang:string, searchString: string}): Promise<ServiceReturnGetType> {
+   
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/structures/${structureId}/services`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language':lang,
+                    'authorization': token,
+                },
+                params:{
+                    search:searchString
+                }
+            },
+        );
+        const Services: ServiceReturnGetType = response.data.data;
+
+        return Services;
+    } catch (error) {
+        // console.error('Error getting all settings:', error);
+        throw error;
+    }
+}
+
 export async function getServicesBystructure({page, structureId, lang }: {page:number, structureId: string, lang:string }): Promise<ServiceReturnGetType> {
     const pageSize = 10;
     try {

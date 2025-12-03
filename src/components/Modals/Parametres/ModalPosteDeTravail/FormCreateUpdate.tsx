@@ -11,6 +11,7 @@ import { createPosteDeTravail, updatePosteDeTravail } from '../../../../services
 import { createPosteDeTravailSlice, updatePosteDeTravailSlice } from '../../../../_redux/features/parametres/posteDeTravailSlice';
 import { SearchSelectComponent } from '../../../ui/SearchSelectComponent';
 import { searchFamilleMetier } from '../../../../services/elaborations/familleMetierAPI';
+import { searchService } from '../../../../services/settings/serviceAPI';
 
 
 function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTravail: PosteDeTravail | null, onDepartmentUpdated: () => void; }) {
@@ -23,10 +24,13 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
     const [descriptionFr, setDescriptionFr] = useState("");
     const [descriptionEn, setDescriptionEn] = useState("");
     const [selectedFamilles, setSelectedFamilles] = useState<FamilleMetier[]>([]);
+    const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+    
 
     const [errorNomFr, setErrorNomFr] = useState("");
     const [errorNomEn, setErrorNomEn] = useState("");
     const [errorFamilleMetier, setErrorFamilleMetier] = useState("");
+    const [errorService, setErrorService] = useState("");
 
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -45,6 +49,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
             setDescriptionFr(posteDeTravail?.descriptionFr || "");
             setDescriptionEn(posteDeTravail?.descriptionEn || "");
             setSelectedFamilles(posteDeTravail.famillesMetier || [])
+            setSelectedServices(posteDeTravail.services || [])
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.categorie_professionnelle'));
             setCode("");
@@ -53,11 +58,13 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
             setDescriptionFr("");
             setDescriptionEn("");
             setSelectedFamilles([]);
+            setSelectedServices([]);
         }
         if (isFirstRender) {
             setErrorNomEn("");
             setErrorNomFr("");
             setErrorFamilleMetier("");
+            setErrorService("")
             setIsFirstRender(false);
         }
     }, [posteDeTravail, isFirstRender, t]);
@@ -66,6 +73,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
         setErrorNomFr("");
         setErrorNomEn("");
         setErrorFamilleMetier("");
+        setErrorService("")
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -77,8 +85,12 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
         const data = await searchFamilleMetier({searchString: search, lang});
         return data?.familleMetiers || [];
     };
+    const onSearchService = async (search: string) => {
+        const data = await searchService({searchString: search, lang});
+        return data?.services || [];
+    };
     const handleCreateUpdate = async () => {
-        if (!nomFr || !nomEn || (!selectedFamilles || selectedFamilles.length===0)) {
+        if (!nomFr || !nomEn || (!selectedFamilles || selectedFamilles.length===0) || (!selectedServices || selectedServices.length===0)) {
             if (!nomFr) {
                 setErrorNomFr(t('error.nom_fr'));
             }
@@ -87,6 +99,10 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
             }
             if (!selectedFamilles || selectedFamilles.length===0) {
                 setErrorFamilleMetier(t('error.famille_metier'));
+            }
+
+            if (!selectedServices || selectedServices.length===0) {
+                setErrorService(t('error.service'));
             }
             return;
         } 
@@ -100,18 +116,16 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                     descriptionFr,
                     descriptionEn,
                     famillesMetier:selectedFamilles,
+                    services:selectedServices
                 },lang
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
                     createToast(e.message, '', 0);
                     dispatch(createPosteDeTravailSlice({
                         posteDeTravail:{
-                            nomFr: e.data.nomFr,
-                            nomEn: e.data.nomEn,
-                            descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn,
-                            famillesMetier:selectedFamilles,
-                            _id: e.data._id,
+                            ...e.data,
+                            services:selectedServices,
+                            famillesMetier:selectedFamilles
                         }
                     }));
                     closeModal();
@@ -134,6 +148,7 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                     descriptionEn,
                     famillesMetier:selectedFamilles,
                     _id: posteDeTravail._id,
+                    services:selectedServices
                 }, lang
             ).then((e: ReponseApiPros) => {
                 if (e.success) {
@@ -141,12 +156,9 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                     dispatch(updatePosteDeTravailSlice({
                         id:e.data._id,
                         posteDeTravailData:{
-                            nomFr: e.data.nomFr,
-                            nomEn: e.data.nomEn,
-                            descriptionFr:e.data.descriptionFr,
-                            descriptionEn:e.data.descriptionEn,
-                            famillesMetier:selectedFamilles,
-                            _id: e.data._id,
+                            ...e.data,
+                            services:selectedServices,
+                            famillesMetier:selectedFamilles
                         }
                     }));
                     
@@ -220,6 +232,21 @@ function ModalCreateUpdate({ posteDeTravail, onDepartmentUpdated }: { posteDeTra
                     minSearchLength={2}
                     noResultsMessage={t('label.aucune_famille_metier')}
                     loadingMessage={t('label.recherche_famille_metier')}
+                    textDebutCaractere={t('label.tapez_car_deb')}
+                    textFinCaractere={t('label.tapez_car_fin')}
+                />
+                <ErrorMessage message={errorFamilleMetier} />
+                 <Label text={t('label.services')} required />
+                <SearchSelectComponent<Service>
+                    onSearch={onSearchService}
+                    selectedItems={selectedServices}
+                    onSelectionChange={setSelectedServices}
+                    placeholder={t('recherche.rechercher')+t('recherche.service')}
+                    displayField={lang?"nomFr":"nomEn"}
+                    searchDelay={300}
+                    minSearchLength={2}
+                    noResultsMessage={t('label.aucun_service')}
+                    loadingMessage={t('label.recherche_service')}
                     textDebutCaractere={t('label.tapez_car_deb')}
                     textFinCaractere={t('label.tapez_car_fin')}
                 />

@@ -12,9 +12,9 @@ import { createThemeFormationSlice, updateThemeFormationSlice } from '../../../.
 import { getFormationForDropDown } from '../../../../../services/elaborations/formationAPI';
 import { SearchSelectComponent } from '../../../../ui/SearchSelectComponent';
 import { searchUtilisateur } from '../../../../../services/utilisateurs/utilisateurAPI';
-import { searchPosteDeTravail } from '../../../../../services/settings/posteDeTravailAPI';
-import { searchStructure } from '../../../../../services/settings/structureAPI';
-import { searchService } from '../../../../../services/settings/serviceAPI';
+import { searchPosteDeTravailByFamille } from '../../../../../services/settings/posteDeTravailAPI';
+import { searchStructureByPoste } from '../../../../../services/settings/structureAPI';
+import { searchServiceByStructure } from '../../../../../services/settings/serviceAPI';
 import { X, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { searchFamilleMetier } from '../../../../../services/elaborations/familleMetierAPI';
 
@@ -62,6 +62,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     const [isFirstRender, setIsFirstRender] = useState(true);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.open);
     const [modalTitle, setModalTitle] = useState("");
+    const [currentFamilleId, setCurrentFamilleId] = useState<string>("");
+    const [currentPosteId, setCurrentPosteId] = useState<string>("");
+    const [currentStructureId, setCurrentStructureId] = useState<string>("");
 
     // ✅ Conversion des données backend vers l'UI
     const convertBackendToUI = (publicCible?: FamilleMetierRestriction[]): PublicCibleUIState[] => {
@@ -139,6 +142,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         setErrorDateFin("");
         setErrorProgrammeFormation("");
         setErrorFormation("");
+        setCurrentFamilleId("");
+        setCurrentPosteId("");
+        setCurrentStructureId("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -207,17 +213,17 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const onSearchPoste = async (search: string) => {
-        const data = await searchPosteDeTravail({ searchString: search, lang });
+        const data = await searchPosteDeTravailByFamille({familleId:currentFamilleId, searchString: search, lang });
         return data?.posteDeTravails || [];
     };
 
     const onSearchStructure = async (search: string) => {
-        const data = await searchStructure({ searchString: search, lang });
+        const data = await searchStructureByPoste({posteId:currentPosteId, searchString: search, lang });
         return data?.structures || [];
     };
 
     const onSearchService = async (search: string) => {
-        const data = await searchService({ searchString: search, lang });
+        const data = await searchServiceByStructure({structureId:currentStructureId, searchString: search, lang });
         return data?.services || [];
     };
 
@@ -233,7 +239,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
             createToast(t('error.famille_deja_ajoutee'), '', 1);
             return;
         }
-
+        setCurrentFamilleId(famille._id!)
         setPublicCibleList([
             ...publicCibleList,
             {
@@ -255,6 +261,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const toggleAllPostes = (familleId: string) => {
+        setCurrentFamilleId(familleId)
         setPublicCibleList(publicCibleList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {
@@ -281,7 +288,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                 if (fam.postes.some(p => p.poste._id === poste._id)) {
                     return fam;
                 }
-
+                setCurrentPosteId(poste._id!)
                 return {
                     ...fam,
                     allPostes: false,
@@ -312,6 +319,8 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const toggleAllStructures = (familleId: string, posteId: string) => {
+        setCurrentFamilleId(familleId);
+        setCurrentPosteId(posteId);
         setPublicCibleList(publicCibleList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {
@@ -343,7 +352,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                             if (pos.structures.some(s => s.structure._id === structure._id)) {
                                 return pos;
                             }
-
+                            setCurrentStructureId(structure._id!)
                             return {
                                 ...pos,
                                 allStructures: false,
@@ -386,6 +395,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const toggleAllServices = (familleId: string, posteId: string, structureId: string) => {
+        setCurrentFamilleId(familleId);
+        setCurrentPosteId(posteId);
+        setCurrentStructureId(structureId);
         setPublicCibleList(publicCibleList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {
