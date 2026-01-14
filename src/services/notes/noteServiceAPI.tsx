@@ -194,6 +194,53 @@ export async function createNoteServiceConvocationFormateur(
   }
 }
 
+export async function createNoteServiceBudget(
+  {theme, titreFr, titreEn, creePar, typeBudget }: CreateNoteInput,
+  lang: string
+): Promise<boolean> {
+  try {
+    const response: AxiosResponse<Blob> = await axios.post(
+      `${api}/budget`, 
+      { themeFormation:theme, budgetNomFr:titreFr, budgetNomEn:titreEn, creePar, typeBudget },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'accept-language': lang,
+          'authorization': token,
+        },
+        responseType: 'blob', // 👈 important pour recevoir un fichier
+      }
+    );
+
+    // ✅ Créer une URL temporaire pour télécharger le fichier
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Nom de fichier depuis le header backend si dispo
+    const disposition = response.headers['content-disposition'];
+    let fileName = 'note-service.pdf';
+    if (disposition) {
+      const match = disposition.match(/filename="(.+)"/);
+      if (match?.[1]) fileName = match[1];
+    }
+
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    // Nettoyer après téléchargement
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    return true;
+  } catch (error) {
+    console.error('Erreur lors de la création de la note de service:', error);
+    throw error;
+  }
+}
+
 export async function createNoteServiceConvocationParticipant(
   {theme, titreFr, titreEn, copieA, creePar, typeNote }: CreateNoteInput,
   tacheFormationId:string,lang: string
@@ -377,7 +424,7 @@ export async function getFilteredNoteServices({page, lang, search }: {page?: num
 
         // Extraction de tous les objets de paramètres de la réponse
         const noteServices: NoteServiceReturnGetType = response.data.data;
-        
+        console.log(noteServices);
         return noteServices;
     } catch (error) {
         console.error('Error getting all settings:', error);

@@ -113,6 +113,7 @@
     "utilisateur": "Manage all Users centrally (add, modify, delete).",
     "stagiaire": "Track interns with an overview of their assignments.",
     "chercheur": "Track researchers with an overview of their assignments.",
+    "mandat_recherche":"Manage the assignment of a researcher to structures",
     "programme_formation": "Create, manage and organize training programs to meet strategic and operational needs.",
     "formation": "Manage your trainings to deploy.",
     "theme_formation": "Organize themes related to each training.",
@@ -159,6 +160,7 @@
     "liste_alerte": "List of recent alerts"
   },
   "label": {
+    "selection_etablissement":"Selection by institution",
     "uploader_fichier": "Upload a file",
     "acceptation_stage": "Internship Acceptance",
     "convocation_participant": "Participant Summons",
@@ -226,6 +228,8 @@
     "recherche_stage": "Search for an internship...",
     "modifier_stage": "Edit internship",
     "cree_stage": "Create internship",
+    "modifier_mandat": "Edit mandate",
+    "cree_mandat": "Research mandate",
     "conseil": "Advice",
     "modification_en_cours": "Editing in progress...",
     "creation_en_cours": "Creating in progress...",
@@ -666,6 +670,8 @@
     "progression_chap": "Chapter progress",
     "info_objectifs": "This chapter contains no objectives. If you confirm the changes, the chapter status will be automatically updated. Make sure to check other parameters before proceeding.",
     "select_all": "Select all",
+    "unselect_all": "Unselect all",
+    "dejat_ajoute":"Already added",
     "chapitre": "Chapter",
     "aucun_doc_dispo": "No document available",
     "statut": "Status",
@@ -869,6 +875,7 @@
     "pas_de_resultats": "No results"
   },
   "button": {
+    "valider_selection":"Confirm selection",
     "d_accord":"All right",
     "reinitialiser": "Reset",
     "supprimer": "Delete",

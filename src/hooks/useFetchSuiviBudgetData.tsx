@@ -23,17 +23,15 @@ interface UseFetchDepensesReturnType {
 export const useFetchDepensesData = ({
   page,
   lang,
-  budgetId,
+  themeId,
   type,
   search,
-  formationId,
 }: {
   page: number;
   lang: string;
-  budgetId?: string;
+  themeId?: string;
   type?: string;
   search?: string;
-  formationId?: string;
 }): UseFetchDepensesReturnType => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
@@ -50,9 +48,9 @@ export const useFetchDepensesData = ({
     try {
       setIsLoading(true);
       const [depensesData, histogrammeData, totauxData] = await Promise.all([
-        getFilteredDepenses({ page, lang, budgetId, type, search }),
-        getHistogrammeDepense({ formationId }),
-        getTotauxBudget({ formationId }),
+        getFilteredDepenses({ page, lang, themeId, type, search }),
+        getHistogrammeDepense({ themeId }),
+        getTotauxBudget({ themeId }),
       ]);
 
       if (depensesData) {
@@ -78,11 +76,11 @@ export const useFetchDepensesData = ({
   };
 
   useEffect(() => {
-    if (!formationId) {
+    if (!themeId) {
       return
     };
     fetchData();
-  }, [page, lang, budgetId, type, search, formationId]);
+  }, [page, lang, themeId, type, search]);
 
   const refresh = async () => {
     await fetchData();

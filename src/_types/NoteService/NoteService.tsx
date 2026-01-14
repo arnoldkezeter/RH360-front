@@ -10,7 +10,7 @@ interface NoteService{
     stage?: Stage,
     mandat?: StageRecherche,
     typeNote: string,
-    sousTypeConvocation?:string,
+    sousTypeNote?:string,
     designationTuteur?:string,
     miseEnOeuvre?:string,
     dispositions?:string,
@@ -79,6 +79,7 @@ interface CreateNoteInput {
     creePar?:string
     valideParDG?: Boolean
     lieuId?:string
+    typeBudget?:string
 }
 
 interface UpdateNoteInput {

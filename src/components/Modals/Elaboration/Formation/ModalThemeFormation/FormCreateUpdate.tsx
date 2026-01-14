@@ -10,7 +10,7 @@ import FilterList from '../../../../ui/AutoComplete';
 import { createThemeFormation, updateThemeFormation } from '../../../../../services/elaborations/themeFormationAPI';
 import { createThemeFormationSlice, updateThemeFormationSlice } from '../../../../../_redux/features/elaborations/themeFormationSlice';
 import { getFormationForDropDown } from '../../../../../services/elaborations/formationAPI';
-import { SearchSelectComponent } from '../../../../ui/SearchSelectComponent';
+import { SearchSelectComponent } from '../../../../ui/MultipleSearchSelectedComponent';
 import { searchUtilisateur } from '../../../../../services/utilisateurs/utilisateurAPI';
 import { searchPosteDeTravailByFamille } from '../../../../../services/settings/posteDeTravailAPI';
 import { searchStructureByPoste } from '../../../../../services/settings/structureAPI';
@@ -233,22 +233,35 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     // ✅ Gestion du public cible
-    const addFamilleMetier = (famille: FamilleMetier) => {
-        // Vérifier si déjà ajoutée
-        if (publicCibleList.some(f => f.familleMetier._id === famille._id)) {
-            createToast(t('error.famille_deja_ajoutee'), '', 1);
-            return;
-        }
-        setCurrentFamilleId(famille._id!)
-        setPublicCibleList([
-            ...publicCibleList,
-            {
-                familleMetier: famille,
-                allPostes: true,
-                postes: []
+    const addFamilleMetier = (familles: FamilleMetier[]) => { // ✅ Accepter un tableau
+        const nouvellesFamilles = familles.filter(famille => {
+            const dejaAjoute = publicCibleList.some(f => f.familleMetier._id === famille._id);
+            if (dejaAjoute) {
+                createToast(t('error.famille_deja_ajoutee'), '', 1);
+                return false;
             }
-        ]);
-        setExpandedFamilles(prev => new Set([...prev, famille._id!]));
+            return true;
+        });
+
+        if (nouvellesFamilles.length === 0) return;
+
+        if (nouvellesFamilles.length > 0) {
+            setCurrentFamilleId(nouvellesFamilles[0]._id!);
+        }
+
+        const nouvellesEntrees = nouvellesFamilles.map(famille => ({
+            familleMetier: famille,
+            allPostes: true,
+            postes: []
+        }));
+
+        setPublicCibleList([...publicCibleList, ...nouvellesEntrees]);
+        
+        setExpandedFamilles(prev => {
+            const next = new Set(prev);
+            nouvellesFamilles.forEach(f => next.add(f._id!));
+            return next;
+        });
     };
 
     const removeFamilleMetier = (familleId: string) => {
@@ -274,31 +287,38 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         }));
     };
 
-    const addPosteToFamille = (familleId: string, poste: PosteDeTravail) => {
+    const addPosteToFamille = (familleId: string, postes: PosteDeTravail[]) => { // ✅ Accepter un tableau
         setPublicCibleList(publicCibleList.map(fam => {
             if (fam.familleMetier._id === familleId) {
-                // Vérifier si le poste appartient à cette famille
-                const appartient = poste.famillesMetier.some(fm => fm._id === familleId);
-                if (!appartient) {
-                    createToast(t('error.poste_pas_dans_famille'), '', 2);
-                    return fam;
+                // Filtrer les postes qui appartiennent à cette famille et qui ne sont pas déjà ajoutés
+                const nouveauxPostes = postes.filter(poste => {
+                    const appartient = poste.famillesMetier.some(fm => fm._id === familleId);
+                    const dejaAjoute = fam.postes.some(p => p.poste._id === poste._id);
+                    
+                    if (!appartient) {
+                        createToast(t('error.poste_pas_dans_famille'), '', 2);
+                        return false;
+                    }
+                    
+                    return !dejaAjoute;
+                });
+
+                if (nouveauxPostes.length === 0) return fam;
+                
+                if (nouveauxPostes.length > 0) {
+                    setCurrentPosteId(nouveauxPostes[0]._id!);
                 }
 
-                // Vérifier si déjà ajouté
-                if (fam.postes.some(p => p.poste._id === poste._id)) {
-                    return fam;
-                }
-                setCurrentPosteId(poste._id!)
                 return {
                     ...fam,
                     allPostes: false,
                     postes: [
                         ...fam.postes,
-                        {
+                        ...nouveauxPostes.map(poste => ({
                             poste,
                             allStructures: true,
                             structures: []
-                        }
+                        }))
                     ]
                 };
             }
@@ -341,28 +361,34 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         }));
     };
 
-    const addStructureToPoste = (familleId: string, posteId: string, structure: Structure) => {
+    const addStructureToPoste = (familleId: string, posteId: string, structures: Structure[]) => { // ✅ Accepter un tableau
         setPublicCibleList(publicCibleList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.map(pos => {
                         if (pos.poste._id === posteId) {
-                            // Vérifier si déjà ajoutée
-                            if (pos.structures.some(s => s.structure._id === structure._id)) {
-                                return pos;
+                            // Filtrer les structures qui ne sont pas déjà ajoutées
+                            const nouvellesStructures = structures.filter(structure => 
+                                !pos.structures.some(s => s.structure._id === structure._id)
+                            );
+
+                            if (nouvellesStructures.length === 0) return pos;
+                            
+                            if (nouvellesStructures.length > 0) {
+                                setCurrentStructureId(nouvellesStructures[0]._id!);
                             }
-                            setCurrentStructureId(structure._id!)
+
                             return {
                                 ...pos,
                                 allStructures: false,
                                 structures: [
                                     ...pos.structures,
-                                    {
+                                    ...nouvellesStructures.map(structure => ({
                                         structure,
                                         allServices: true,
                                         services: []
-                                    }
+                                    }))
                                 ]
                             };
                         }
@@ -426,7 +452,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         }));
     };
 
-    const addServiceToStructure = (familleId: string, posteId: string, structureId: string, service: Service) => {
+    const addServiceToStructure = (familleId: string, posteId: string, structureId: string, services: Service[]) => { // ✅ Accepter un tableau
         setPublicCibleList(publicCibleList.map(fam => {
             if (fam.familleMetier._id === familleId) {
                 return {
@@ -437,21 +463,21 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                 ...pos,
                                 structures: pos.structures.map(str => {
                                     if (str.structure._id === structureId) {
-                                        // Vérifier si le service appartient à cette structure
-                                        if (service.structure._id !== structureId) {
-                                            createToast(t('error.service_pas_dans_structure'), '', 2);
-                                            return str;
-                                        }
+                                        // Filtrer les services valides et non déjà ajoutés
+                                        const nouveauxServices = services.filter(service => {
+                                            if (service.structure._id !== structureId) {
+                                                createToast(t('error.service_pas_dans_structure'), '', 2);
+                                                return false;
+                                            }
+                                            return !str.services.some(s => s._id === service._id);
+                                        });
 
-                                        // Vérifier si déjà ajouté
-                                        if (str.services.some(s => s._id === service._id)) {
-                                            return str;
-                                        }
+                                        if (nouveauxServices.length === 0) return str;
 
                                         return {
                                             ...str,
                                             allServices: false,
-                                            services: [...str.services, service]
+                                            services: [...str.services, ...nouveauxServices]
                                         };
                                     }
                                     return str;
@@ -697,11 +723,11 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                     {/* Recherche de famille de métier */}
                     <SearchSelectComponent<FamilleMetier>
                         onSearch={onSearchFamilleMetier}
-                        selectedItems={[]}
+                        selectedItems={publicCibleList.map(f => f.familleMetier)}
                         onSelectionChange={(items) => {
-                            if (items.length > 0) {
-                                addFamilleMetier(items[0]);
-                            }
+                            // items.forEach(famille => {
+                                addFamilleMetier(items);
+                            // });
                         }}
                         placeholder={t('recherche.ajouter_famille_metier')}
                         displayField={lang === 'fr' ? "nomFr" : "nomEn"}
@@ -768,11 +794,11 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                         {/* Recherche de poste */}
                                         <SearchSelectComponent<PosteDeTravail>
                                             onSearch={onSearchPoste}
-                                            selectedItems={[]}
+                                            selectedItems={famItem.postes.map(p => p.poste)}
                                             onSelectionChange={(items) => {
-                                                if (items.length > 0) {
-                                                    addPosteToFamille(famItem.familleMetier._id!, items[0]);
-                                                }
+                                                // items.forEach(poste => {
+                                                    addPosteToFamille(famItem.familleMetier._id!, items);
+                                                // });
                                             }}
                                             placeholder={t('recherche.ajouter_poste')}
                                             displayField={lang === 'fr' ? "nomFr" : "nomEn"}
@@ -827,11 +853,11 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                         {/* Recherche de structure */}
                                                         <SearchSelectComponent<Structure>
                                                             onSearch={onSearchStructure}
-                                                            selectedItems={[]}
+                                                            selectedItems={posteItem.structures.map(s => s.structure)}
                                                             onSelectionChange={(items) => {
-                                                                if (items.length > 0) {
-                                                                    addStructureToPoste(famItem.familleMetier._id!, posteItem.poste._id!, items[0]);
-                                                                }
+                                                                // items.forEach(structure => {
+                                                                    addStructureToPoste(famItem.familleMetier._id!, posteItem.poste._id!, items);
+                                                                // });
                                                             }}
                                                             placeholder={t('recherche.ajouter_structure')}
                                                             displayField={lang === 'fr' ? "nomFr" : "nomEn"}
@@ -886,11 +912,11 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                                         {/* Recherche de service */}
                                                                         <SearchSelectComponent<Service>
                                                                             onSearch={onSearchService}
-                                                                            selectedItems={[]}
+                                                                            selectedItems={structureItem.services}
                                                                             onSelectionChange={(items) => {
-                                                                                if (items.length > 0) {
-                                                                                    addServiceToStructure(famItem.familleMetier._id!, posteItem.poste._id!, structureItem.structure._id!, items[0]);
-                                                                                }
+                                                                                // items.forEach(service => {
+                                                                                    addServiceToStructure(famItem.familleMetier._id!, posteItem.poste._id!, structureItem.structure._id!, items);
+                                                                                // });
                                                                             }}
                                                                             placeholder={t('recherche.ajouter_service')}
                                                                             displayField={lang === 'fr' ? "nomFr" : "nomEn"}

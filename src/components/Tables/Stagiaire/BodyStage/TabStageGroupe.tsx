@@ -27,6 +27,8 @@ import createToast from '../../../../hooks/toastify';
 import { createStageSlice, updateStageSlice } from '../../../../_redux/features/stagiaire/stageSlice';
 import Loading, { Spinner } from '../../../ui/loading';
 import Skeleton from 'react-loading-skeleton';
+import { searchEtablissement } from '../../../../services/settings/etablissementAPI';
+import EtablissementSelector from './EtablissementSelector';
 
 interface GroupStageTabProps {
   stageToEdit?: Stage | null;
@@ -144,7 +146,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 const rotationsFormatees: RotationData[] = stageToEdit.rotations.map(rotation => ({
                     groupe: rotation.groupe ? rotation.groupe.numero : 0, // number requis
                     service: rotation.service._id||"",
-                    superviseur: rotation.superviseur._id||"",
+                    superviseur: rotation?.superviseur?._id||"",
                     dateDebut: rotation.dateDebut.split('T')[0],
                     dateFin: rotation.dateFin.split('T')[0],
                     serviceRef: rotation.service,
@@ -161,7 +163,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     if (!servicesUtilises.has(serviceId||"")) {
                         servicesUtilises.set(serviceId||"", {
                             serviceId: serviceId||"",
-                            superviseurId: rotation.superviseur._id||"",
+                            superviseurId: rotation.superviseur?._id||"",
                             service: rotation.service,
                             superviseur: rotation.superviseur
                         });
@@ -223,6 +225,11 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
     const onSearchStagiaire = async (search: string) => {
         const data = await getStagiairesByFiltres({ page: 1, search: search, lang });
         return data?.stagiaires || [];
+    };
+
+    const onSearchEtablissement = async (search: string) => {
+        const data = await searchEtablissement({ searchString: search, lang });
+        return data?.etablissements || [];
     };
 
     const onSearchSuperviseur = async (search: string) => {
@@ -1013,6 +1020,42 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                         <UserCheck className="w-4 h-4 text-[#0ea5e9]" />
                         {t('label.selection_repartition')}
                     </label>
+                </div>
+                {/* Sélection par établissement - NOUVEAU */}
+                <EtablissementSelector
+                    lang={lang}
+                    onSearchEtablissement={onSearchEtablissement}
+                    onStagiairesSelected={(stagiaires, ids) => {
+                        // Fusionner avec la sélection existante sans doublons
+                        const newStagiaires = [...selectedStagiaires];
+                        const newIds = [...selectedStagiaireIds];
+                        
+                        stagiaires.forEach((stagiaire, index) => {
+                            if (!newIds.includes(ids[index])) {
+                                newStagiaires.push(stagiaire);
+                                newIds.push(ids[index]);
+                            }
+                        });
+                        
+                        setSelectedStagiaires(newStagiaires);
+                        setSelectedStagiaireIds(newIds);
+                        
+                        createToast(`${stagiaires.length} stagiaire(s) ajouté(s)`, '', 0);
+                    }}
+                    selectedStagiaireIds={selectedStagiaireIds}
+                    pageIsLoading={pageIsLoading}
+                />
+
+                {/* Séparateur */}
+                <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-white dark:bg-[#1f2937] text-gray-500 dark:text-gray-400">
+                            ou
+                        </span>
+                    </div>
                 </div>
 
                 {/* Recherche de stagiaires */}

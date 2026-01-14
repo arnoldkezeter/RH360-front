@@ -1,11 +1,13 @@
 import { useDispatch } from "react-redux"
 import ButtonCrudTable from "../../common/ButtonActionTable"
-import { setShowModal, setShowModalDelete } from "../../../../_redux/features/setting"
+import { setShowModal, setShowModalDelete, setShowRoleModal } from "../../../../_redux/features/setting"
+import { SelectButton } from "../../common/composants/SelectButton";
+import { useTranslation } from "react-i18next";
 
 const BodyTable = ({ data, onEdit}: { data: Utilisateur[], onEdit: (utilisateur: Utilisateur) => void }) => {
 
     const dispatch = useDispatch();
-   
+    const {t} = useTranslation();
     
     return <tbody>
         {data && data.map((item, index) => (
@@ -74,6 +76,14 @@ const BodyTable = ({ data, onEdit}: { data: Utilisateur[], onEdit: (utilisateur:
                                 onEdit(item);
                                 dispatch(setShowModalDelete())
                             }}
+                        />
+                        <SelectButton
+                            listPage={[
+                                {
+                                    "name": t('label.roles'),
+                                    "handleClick": () => { onEdit(item) ; dispatch(setShowRoleModal());}
+                                }
+                            ]}
                         />
                     </div>
                 </td>

@@ -26,11 +26,11 @@ export async function createUtilisateur({ matricule, nom, prenom, email, genre, 
     }
 }
 
-export async function updateUtilisateur({ _id,matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif }: Utilisateur, lang:string): Promise<ReponseApiPros> {
+export async function updateUtilisateur({ _id,matricule, nom, prenom, email, genre, role, roles, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif }: Utilisateur, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {matricule, nom, prenom, email, genre, role, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif },
+            {matricule, nom, prenom, email, genre, role, roles, telephone, dateNaissance, lieuNaissance, dateEntreeEnService, photoDeProfil, service, categorieProfessionnelle, posteDeTravail, commune, grade, familleMetier, actif },
             {
                 headers: {
                     'Content-Type': 'application/json',

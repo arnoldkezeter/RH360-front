@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HeaderTable from "./HeaderTable";
 import BodyTable from "./BodyTable";
 import { useTranslation } from "react-i18next";
@@ -18,16 +18,18 @@ import InputSearch from "../../common/SearchTable";
 import { setShowModal } from "../../../../_redux/features/setting";
 import { config } from "../../../../config";
 import Button from "../../common/Button";
+import { setDepenseLoading, setErrorPageDepense } from "../../../../_redux/features/execution/depenseSlice";
+import { getFilteredDepenses } from "../../../../services/executions/depenseAPI";
 
 interface TableDepenseProps {
     data: Depense[];
     typesDepenses: TypeDepense[];
     programmeFormations: ProgrammeFormation[];
     formations: Formation[];
-    budgets: BudgetFormation[];
+    themes:ThemeFormation[];
     currentFormation?: Formation;
     currentProgrammeFormation?: ProgrammeFormation;
-    currentBudget?: BudgetFormation;
+    currentTheme?: ThemeFormation;
     currentType?: TypeDepense;
     histogramme: any[];
     totaux: any;
@@ -35,18 +37,18 @@ interface TableDepenseProps {
     currentPage: number;
     onPageChange: (page: number) => void;
     onFormationChange: (formation: Formation) => void;
+    onThemeChange: (theme: ThemeFormation) => void;
     onProgrammeFormationChange: (programme: ProgrammeFormation) => void;
-    onBudgetChange: (budget: BudgetFormation) => void;
     onTypeChange: (type: TypeDepense) => void;
     onCreate: () => void;
     onEdit: (depense: Depense) => void;
 }
 
 const Table = ({
-    data, typesDepenses, programmeFormations, formations, budgets,
-    currentFormation, currentProgrammeFormation, currentBudget, currentType,
-    histogramme, totaux, isLoading, currentPage, onPageChange, onFormationChange,
-    onProgrammeFormationChange, onBudgetChange, onTypeChange, onCreate, onEdit
+    data, typesDepenses, programmeFormations, formations, themes, 
+    currentFormation, currentTheme, currentProgrammeFormation, currentType,
+    histogramme, totaux, isLoading, currentPage, onPageChange, onFormationChange, onThemeChange,
+    onProgrammeFormationChange, onTypeChange, onCreate, onEdit
 }: TableDepenseProps) => {
     const { t } = useTranslation();
     const pageIsLoading = isLoading;
@@ -64,7 +66,8 @@ const Table = ({
         setIsBloc2Visible(!isBloc2Visible);
     };
     // États pour l'interface
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchText, setSearchText] = useState("");
+    const [isSearch, setIsSearch] = useState(false);
 
     // Variables pour la pagination
     const itemsPerPage = useSelector((state: RootState) => state.depenseSlice.data.pageSize);
@@ -91,14 +94,54 @@ const Table = ({
         if (selected) onFormationChange(selected);
     };
 
-
-    const handleBudgetSelect = (selected: BudgetFormation | undefined) => {
-        if (selected) onBudgetChange(selected);
+    const handleThemeSelect = (selected: ThemeFormation | undefined) => {
+        if (selected) onThemeChange(selected);
     };
+
 
     const handleTypeSelect = (selected: TypeDepense | undefined) => {
         if (selected) onTypeChange(selected);
     };
+    const [filteredData, setFilteredData] = useState<Depense[]>(data);
+
+    const latestQueryDepense = useRef('');
+    useEffect(() => {
+        dispatch(setDepenseLoading(true));
+        latestQueryDepense.current = searchText;
+        
+        try{
+            
+            const filterDepenseByContent = async () => {
+                if (searchText === '') {                        
+                    const result: Depense[] = data;
+                    setFilteredData(result); 
+                        
+                }else{
+                    let depensesResult : Depense[] = [];
+                    
+                    await getFilteredDepenses({page:1, search:searchText, lang, themeId:currentTheme?._id}).then(result=>{
+                        if (latestQueryDepense.current === searchText) {
+                            if(result){
+                                depensesResult = result.depenses;
+                                setFilteredData(depensesResult);
+                            }
+                            }
+                        
+                    })
+                }
+        
+                
+            };
+            
+            filterDepenseByContent();
+        }catch(e){
+            dispatch(setErrorPageDepense(t('message.erreur')));
+        }finally{
+            if (latestQueryDepense.current === searchText) {
+                dispatch(setDepenseLoading(false)); // Définissez le loading à false après le chargement
+            }
+        }
+    }, [searchText, isSearch, data]);
 
     return (
         <div className="min-h-screen bg-white mt-3 dark:bg-gray-900">
@@ -165,8 +208,8 @@ const Table = ({
                                 onSelect={handleFormationSelect}
                             />
                         </div>
-            
-                        {/* Thème
+
+                        {/* Theme de Formation */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {t('label.theme')}
@@ -179,7 +222,7 @@ const Table = ({
                                 displayProperty={(item) => `${lang === 'fr' ? item.titreFr : item.titreEn}`}
                                 onSelect={handleThemeSelect}
                             />
-                        </div> */}
+                        </div>
                     </div>
                 </div>
                 {/* </div> */}
@@ -307,23 +350,8 @@ const Table = ({
                     }
                 `}>
                     <div className="flex flex-col gap-4 mb-3">
-                        {/* Ligne 1 : Budget + Type */}
+                        {/* Ligne 1 : Type */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Budget */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    {t('label.budget')}
-                                </label>
-                                <CustomDropDown2<BudgetFormation>
-                                    title=""
-                                    selectedItem={currentBudget}
-                                    items={budgets}
-                                    defaultValue={currentBudget}
-                                    displayProperty={(item) => `${lang === 'fr' ? item.nomFr : item.nomEn}`}
-                                    onSelect={handleBudgetSelect}
-                                />
-                            </div>
-
                             {/* Type de dépense */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -346,15 +374,18 @@ const Table = ({
                             <div className="flex-1 w-full">
                                 <div className="relative">
                                     <InputSearch 
-                                    hintText={t('recherche.rechercher') + t('recherche.depense')} 
-                                    value={""} 
-                                    onSubmit={(text) => console.log('Recherche:', text)} 
+                                        hintText={t('recherche.rechercher') + t('recherche.depense')} 
+                                        value={searchText} 
+                                        onSubmit={(text) => {
+                                            setIsSearch(true);
+                                            setSearchText(text);
+                                        }} 
                                     />
                                 </div>
                             </div>
 
                             {/* Bouton d'ajout */}
-                            {(roles.admin === userRole || roles.superAdmin === userRole) && (
+                            {(roles.admin === userRole || roles.superAdmin === userRole || roles.gestionnaire === userRole || roles.responsable === userRole) && (
                             <div className="w-full md:w-auto">
                                 <Button
                                     onClick={() => { 
@@ -387,7 +418,7 @@ const Table = ({
                             <div className="p-6">
                                 <Skeleton count={10} height={40} />
                             </div>
-                        ) : data?.length === 0 ? (
+                        ) : filteredData?.length === 0 ? (
                             <div className="p-12 text-center">
                                 <NoData />
                             </div>
@@ -395,7 +426,7 @@ const Table = ({
                             <div className="overflow-x-auto">
                                 <table className="w-full">
                                     <HeaderTable />
-                                    <BodyTable data={data} onEdit={onEdit} />
+                                    <BodyTable data={filteredData} onEdit={onEdit} />
                                 </table>
                             </div>
                         )}

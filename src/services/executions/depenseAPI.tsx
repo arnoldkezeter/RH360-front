@@ -2,12 +2,12 @@ import axios, { AxiosResponse } from 'axios';
 import { apiUrl, wstjqer } from '../../config.js';
 import { downloadDocument } from '../../fonctions/fonction.js';
 
-const api = `${apiUrl}/theme-formation/budget-formation/depenses`;
+const api = `${apiUrl}/theme-formation/depenses`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
-export async function createDepense({nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes, type}:Depense, budgetId:string, lang:string): Promise<ReponseApiPros> {
+export async function createDepense({nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes, type}:Depense, themeId:string, lang:string): Promise<ReponseApiPros> {
     try {
         // Extraire uniquement les IDs des taxes si taxes est un tableau d'objets
         const taxeIds = Array.isArray(taxes)
@@ -15,7 +15,7 @@ export async function createDepense({nomFr, nomEn, montantUnitairePrevu, montant
         : [];
        
         const response: AxiosResponse<any> = await axios.post(
-            `${api}/${budgetId}`,
+            `${api}/${themeId}`,
             {nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes:taxeIds, type},
             {
                 headers: {
@@ -33,15 +33,15 @@ export async function createDepense({nomFr, nomEn, montantUnitairePrevu, montant
     }
 }
 
-export async function updateDepense({_id, nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes, type}:Depense, budgetId:string,lang: string): Promise<ReponseApiPros> {
+export async function updateDepense({_id, nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes, type}:Depense, themeId:string,lang: string): Promise<ReponseApiPros> {
     try {
         // Extraire uniquement les IDs des taxes si taxes est un tableau d'objets
         const taxeIds = Array.isArray(taxes)
         ? taxes.map(t => (typeof t === 'string' ? t : t._id ? t._id : null)).filter(Boolean)
         : [];
         const response: AxiosResponse<any> = await axios.put(
-            `${api}/${budgetId}/depense/${_id}`,
-            { nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes:taxeIds, type },
+            `${api}/${_id}`,
+            { nomFr, nomEn, montantUnitairePrevu, montantUnitaireReel, quantite, taxes:taxeIds, type, themeId },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,11 +78,11 @@ export async function deleteDepense(depenseId:string,lang: string): Promise<Repo
     }
 }
 
-export async function getFilteredDepenses({page, lang, type, search, budgetId }: {page: number, lang:string, type?:string, search?:string, budgetId?:string }): Promise<DepenseReturnGetType> {
+export async function getFilteredDepenses({page, lang, type, search, themeId }: {page: number, lang:string, type?:string, search?:string, themeId?:string }): Promise<DepenseReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/filtre/${budgetId}`,
+            `${api}/filtre/${themeId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,11 +108,11 @@ export async function getFilteredDepenses({page, lang, type, search, budgetId }:
     }
 }
 
-export async function generateDepense({budgetId, userId, lang}:{budgetId:string, userId:string, lang: string}): Promise<boolean> {
+export async function generateDepense({themeId, userId, lang}:{themeId:string, userId:string, lang: string}): Promise<boolean> {
     console.log("generation")
     try {
     const response: AxiosResponse<Blob> = await axios.get(
-      `${api}/${budgetId}/${userId}/pdf`, 
+      `${api}/${themeId}/${userId}/pdf`, 
       {
         headers: {
           'Content-Type': 'application/json',

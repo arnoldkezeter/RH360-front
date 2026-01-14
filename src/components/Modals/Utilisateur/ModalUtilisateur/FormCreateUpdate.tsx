@@ -72,7 +72,6 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
             setDateNaissance(formatDateForInput(utilisateur.dateNaissance) || "");
             setLieuNaissance(utilisateur.lieuNaissance || "");
             const role = roles.find(role=>role.key === utilisateur.role);
-            console.log(role)
             setRole(role)
             setEmail(utilisateur.email);
             setMatricule(utilisateur?.matricule || "");

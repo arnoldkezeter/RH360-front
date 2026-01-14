@@ -13,10 +13,9 @@ import { SearchSelectComponent } from '../../../ui/SearchSelectComponent';
 
 
 function FormCreateUpdate(
-    { depense, onAdd, onUpdate }: 
-    { depense : Depense | null, onAdd: (depense: Depense) => void; onUpdate: (depense: Depense) => void; }) {
+    { depense,themeId, onAdd, onUpdate }: 
+    { depense : Depense | null,themeId:string, onAdd: (depense: Depense) => void; onUpdate: (depense: Depense) => void; }) {
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
-    const selectedBudget = useSelector((state: RootState) => state.budgetFormationSlice.selectedBugetFormation);
     const typesDepense = Object.values(TYPE_DEPENSE)
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -149,26 +148,14 @@ function FormCreateUpdate(
                 montantUnitairePrevu,
                 montantUnitaireReel,
                 taxes
-            }, selectedBudget?._id || "", lang
+            }, themeId, lang
             ).then((e: ReponseApiPros) => {
                 
                 if (e.success) {
                     createToast(e.message, '', 0);
                     onAdd(e.data); // Ajout local
                     dispatch(createDepenseSlice({
-
-                        depense: {
-                            _id: e.data._id,
-                            nomFr: e.data.nomFr,
-                            nomEn: e.data.nomEn,
-                            quantite:e.data.quantite,
-                            montantUnitairePrevu: e.data.montantUnitairePrevu,
-                            montantUnitaireReel:e.data.montantUnitairePrevu,
-                            type: e.data.type,
-                            taxes:e.data.taxe,
-                            budget:e.data.budget
-                        }
-
+                        depense: e.data
                     }));
 
                     closeModal();
@@ -196,23 +183,13 @@ function FormCreateUpdate(
                     montantUnitairePrevu,
                     montantUnitaireReel,
                     taxes
-                }, selectedBudget?._id||"", lang).then((e: ReponseApiPros) => {
+                }, themeId, lang).then((e: ReponseApiPros) => {
                     if (e.success) {
                         createToast(e.message, '', 0);
                         onUpdate(e.data); // Ajout local
                         dispatch(updateDepenseSlice({
                             id: e.data._id,
-                            depenseData: {
-                               _id: e.data._id,
-                                nomFr: e.data.nomFr,
-                                nomEn: e.data.nomEn,
-                                quantite:e.data.quantite,
-                                montantUnitairePrevu: e.data.montantUnitairePrevu,
-                                montantUnitaireReel:e.data.montantUnitairePrevu,
-                                type: e.data.type,
-                                taxes:e.data.taxe,
-                                budget:e.data.budget
-                            }
+                            depenseData: e.data
 
                         }));
 

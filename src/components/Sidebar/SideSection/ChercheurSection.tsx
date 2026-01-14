@@ -23,8 +23,8 @@ const ChercheurSidebarLink: React.FC<ChercheurSidebarLinkProps> = ({
 
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
-        {path: '/chercheurs/gestion-chercheur', label: t('sub_menu.gerer_chercheurs'), roles:["SUPER-ADMIN", "ADMIN"]},
-        {path: '/chercheurs/mandats', label: t('sub_menu.mandats'), roles:["SUPER-ADMIN", "ADMIN"]},
+        {path: '/chercheurs/gestion-chercheur', label: t('sub_menu.gerer_chercheurs'), roles:["SUPER-ADMIN", "ADMIN", "GESTIONNAIRE"]},
+        {path: '/chercheurs/mandats', label: t('sub_menu.mandats'), roles:["SUPER-ADMIN", "ADMIN", "GESTIONNAIRE"]},
         {path: '/chercheurs/rapports', label: t('sub_menu.rapports_mandats'), roles:["SUPER-ADMIN", "ADMIN"]},
     ];
 
@@ -110,7 +110,7 @@ const ChercheurSidebarLink: React.FC<ChercheurSidebarLinkProps> = ({
                             <div className="w-6">
                                 <HiOutlineLightBulb   className="text-[22px]" />
                             </div>
-                            {t('menu.etudiants')}
+                            {t('menu.chercheurs')}
                             <IoIosArrowDown className={`absolute right-2 top-1/2 -translate-y-1/2 fill-current ${open ? 'rotate-180' : ''}`} />
                         </NavLink>
                         <div className={`transform overflow-hidden ${!open ? 'hidden' : ''}`}>

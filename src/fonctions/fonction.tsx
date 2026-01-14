@@ -669,6 +669,10 @@ export function getTypeNoteService(type:string, sousType:string, t:any) {
             return t('label.mandat');
         case "convocation":
             return sousType==="participants"?t('label.convocation_participant'):t('label.convocation_formateur');
+        case "budget_formation":
+            return sousType==="reel"?t('label.budget_formation_reel'):t('label.budget_formation_previsionnel');
+        case "fiche_presence":
+            return t('label.fiche_presence');
         default:
             return "";
     }
@@ -682,6 +686,10 @@ export function getTitleElement(noteService:NoteService, lang:string) {
             return lang==='fr'?noteService.mandat?.nomFr:noteService.mandat?.nomEn;
         case "convocation":
             return lang==='fr'?noteService.theme?.titreFr:noteService.theme?.titreEn;
+        case "budget_formation":
+          return lang==='fr'?noteService.theme?.titreFr:noteService.theme?.titreEn;
+        case "fiche_presence":
+          return lang==='fr'?noteService.theme?.titreFr:noteService.theme?.titreEn;
         default:
             return "";
     }

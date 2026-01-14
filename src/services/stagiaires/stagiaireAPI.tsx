@@ -222,3 +222,41 @@ export async function getCurrentUserData({ userId }: { userId: string }): Promis
         throw error;
     }
 }
+
+export async function getStagiairesByEtablissements({
+    etablissementIds, 
+    annee, 
+    lang 
+}: {
+    etablissementIds: string[], 
+    annee?: number, 
+    lang: string 
+}): Promise<{
+    stagiairesByEtablissement: Record<string, {
+        etablissement: Etablissement;
+        stagiaires: Stagiaire[];
+    }>;
+    totalStagiaires: number;
+}> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/by-etablissements`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+                params: {
+                    etablissementIds: etablissementIds.join(','),
+                    annee: annee
+                }
+            },
+        );
+
+        return response.data.data;
+    } catch (error) {
+        console.error('Error getting stagiaires by etablissements:', error);
+        throw error;
+    }
+}

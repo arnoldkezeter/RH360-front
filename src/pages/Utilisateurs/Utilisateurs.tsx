@@ -19,6 +19,7 @@ import { getUtilisateursByFiltres } from "../../services/utilisateurs/utilisateu
 import { getServicesForDropDownByStructure } from "../../services/settings/serviceAPI";
 import FormCreateUpdate from "../../components/Modals/Utilisateur/ModalUtilisateur/FormCreateUpdate";
 import { ROLES } from "../../config";
+import FormRoles from "../../components/Modals/Utilisateur/ModalUtilisateur/RoleModal";
 
 const Utilisateurs = () => {
     const dispatch = useDispatch();
@@ -185,6 +186,7 @@ const Utilisateurs = () => {
             />
             <FormCreateUpdate utilisateur={selectedUtilisateur} />
             <FormDelete utilisateur={selectedUtilisateur} />
+            <FormRoles utilisateur={selectedUtilisateur} />
         </>
     );
 };

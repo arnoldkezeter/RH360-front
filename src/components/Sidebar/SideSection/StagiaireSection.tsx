@@ -24,8 +24,8 @@ const StagiaireSidebarLink: React.FC<StagiaireSidebarLinkProps> = ({
     // Liste des éléments de menu avec conditions de permission
     const menuItems = [
          
-        {path: '/stagiaires/gestion-stagiaire', label: t('sub_menu.gerer_stagiaires'), roles:["SUPER-ADMIN", "ADMIN", "SUPERVISEUR"] },
-        {path: '/stagiaires/stages', label: t('sub_menu.stages'), roles:["SUPER-ADMIN", "ADMIN"] },
+        {path: '/stagiaires/gestion-stagiaire', label: t('sub_menu.gerer_stagiaires'), roles:["SUPER-ADMIN", "ADMIN", "GESTIONNAIRE", "SUPERVISEUR"] },
+        {path: '/stagiaires/stages', label: t('sub_menu.stages'), roles:["SUPER-ADMIN", "ADMIN", "GESTIONNAIRE"] },
         {path: '/stagiaires/rapports', label: t('sub_menu.rapports_stages'), roles:["SUPER-ADMIN", "ADMIN"] },
 
     ];
@@ -109,7 +109,7 @@ const StagiaireSidebarLink: React.FC<StagiaireSidebarLinkProps> = ({
                             <div className="w-6">
                                 <FaUserGraduate  className="text-[22px]" />
                             </div>
-                            {t('menu.etudiants')}
+                            {t('menu.stagiaires')}
                             <IoIosArrowDown className={`absolute right-2 top-1/2 -translate-y-1/2 fill-current ${open ? 'rotate-180' : ''}`} />
                         </NavLink>
                         <div className={`transform overflow-hidden ${!open ? 'hidden' : ''}`}>

@@ -111,6 +111,8 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
     const handleChercheurSelect = (selected: Chercheur | string) => {
         if (typeof selected === "string") return
         setChercheur(selected)
+        setNomFr(`${selected.nom} ${selected.prenom||""}`)
+        setNomEn(`${selected.nom} ${selected.prenom||""}`)
     };
 
     const handleCreateStage = async () => {
@@ -200,57 +202,14 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
             <div className="bg-gradient-to-r from-[#eff6ff] to-[#eef2ff] dark:from-[#1f2937] dark:to-[#374151] rounded-lg p-6">
                 <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-2 flex items-center gap-2">
                     <User className="w-6 h-6 text-[#2563eb]" />
-                    {stageRechercheToEdit ? 'Modifier le Mandat' : 'Mandat de recherche'}
+                    {stageRechercheToEdit ? t('label.modifier_mandat') : t('label.cree_mandat')}
                 </h3>
                 <p className="text-[#4b5563] dark:text-[#d1d5db] text-sm">
-                    Gérez l'affectation d'un chercheur à des structure
+                    {t("page_description.mandat_recherche")}
                 </p>
             </div>
 
-            <div className="bg-white dark:bg-[#1f2937] rounded-xl p-6 border border-[#e5e7eb] dark:border-[#374151] shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                    <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
-                        <Info className="w-4 h-4 text-[#2563eb]" />
-                        Information sur le stage
-                    </label>
-                </div>
-
-                {pageIsLoading?<Skeleton height={100}/>:<div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* nom en français */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                {t('label.nom_chose_fr')}
-                            </label>
-                            <input 
-                                type="text" 
-                                value={nomFr}
-                                onChange={(e) => {setNomFr(e.target.value)}}
-                                className="w-full h-10 border border-[#e5e7eb] dark:border-[#4b5563] rounded-md px-3 text-sm
-                                        bg-white dark:bg-[#1f2937] text-[#111827] dark:text-white
-                                        focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent" 
-                            />
-                        </div>
-
-                        {/* nom en anglais */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                {t('label.nom_chose_en')}
-                            </label>
-                            <div className="flex gap-2">
-                                <input 
-                                    type="text" 
-                                    value={nomEn}
-                                    onChange={(e) => {setNomEn(e.target.value)}}
-                                    className="flex-1 h-10 border border-[#e5e7eb] dark:border-[#4b5563] rounded-md px-3 text-sm
-                                                bg-white dark:bg-[#1f2937] text-[#111827] dark:text-white
-                                                focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent" 
-                                />
-                            </div>
-                        </div>
-                    </div>    
-                </div>}
-            </div>
+            
 
             {/* Recherche chercheur */}
             {pageIsLoading?<Skeleton height={40} className='mt-5'/>:<div className="relative">
@@ -399,12 +358,12 @@ export const StageRechercheTab = ({ stageRechercheToEdit, onEditComplete, pageIs
                      {isCreating ? (
                         <>
                             <Spinner />
-                            {stageRechercheToEdit ? 'Modification en cours...' : 'Création en cours...'}
+                            {/* {stageRechercheToEdit ? 'Modification en cours...' : 'Création en cours...'} */}
                         </>
                     ) : (
                         <>
                             <UserPlus className="w-5 h-5" />
-                            {stageRechercheToEdit ? 'Modifier le stage' : 'Crée le stage'}
+                            {stageRechercheToEdit ? t("label.modifier_mandat") : t("label.cree_stage")}
                         </>
                     )}
                 </button>

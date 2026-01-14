@@ -68,7 +68,7 @@ const BodyTable = ({ data, onEdit}: { data: NoteService[], onEdit: (noteService:
                 {/* reference */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{item.reference||""}</h5>
+                        <h5>{item?.reference??""}</h5>
                     </div>
                 </td>
 
@@ -82,7 +82,7 @@ const BodyTable = ({ data, onEdit}: { data: NoteService[], onEdit: (noteService:
                 {/* prenom */}
                 <td className="border-b border-[#eee] py-0 lg:py-4 px-4 dark:border-strokedark bg-gray-2 dark:bg-black align-top">
                     <div className="min-h-[40px] flex items-center">
-                        <h5>{getTypeNoteService(item.typeNote,item.sousTypeConvocation||"",t)}</h5>
+                        <h5>{getTypeNoteService(item.typeNote,item.sousTypeNote||"",t)}</h5>
                     </div>
                 </td>
 

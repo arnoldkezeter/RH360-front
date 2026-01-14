@@ -5,7 +5,7 @@ import { RootState } from "../../_redux/store";
 import { useHeader } from "../../components/Context/HeaderConfig";
 import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescription";
 
-import { setShowModal } from "../../_redux/features/setting";
+import { setShowModal, setShowModalGenerateDoc } from "../../_redux/features/setting";
 
 import { useFetchDepensesData } from "../../hooks/useFetchSuiviBudgetData";
 import FormDelete from "../../components/Modals/Execution/ModalBudgetDepense/FormDelete";
@@ -18,6 +18,9 @@ import { setBudgetFormationLoading, setBudgetFormations, setBudgetFormationSelec
 import { TYPE_DEPENSE } from "../../config";
 import Table from "../../components/Tables/Execution/TableBudgetFormation/Table";
 import { generateDepense } from "../../services/executions/depenseAPI";
+import { getThemeFormationForDropDown } from "../../services/elaborations/themeFormationAPI";
+import { setErrorPageThemeFormation, setThemeFormations } from "../../_redux/features/elaborations/themeFormationSlice";
+import FormCreateUpdateNoteBudget from "../../components/Modals/Notes/ModalNoteService/FormCreateUpdateNoteBudget";
 
 const SuiviBudgetaires = () => {
   const dispatch = useDispatch();
@@ -25,17 +28,16 @@ const SuiviBudgetaires = () => {
   const fetchData = useFetchData();
   const lang = useSelector((state: RootState) => state.setting.language);
   const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
-  const { data: { budgetFormations } } = useSelector((state: RootState) => state.budgetFormationSlice);
   const { data: { programmeFormations } } = useSelector((state: RootState) => state.programmeFormationSlice);
   const { data: { formations } } = useSelector((state: RootState) => state.formationSlice);
+  const { data: { themeFormations } } = useSelector((state: RootState) => state.themeFormationSlice);
   const typesDepenses = Object.values(TYPE_DEPENSE)
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedDepense, setSelectedDepense] = useState<Depense | null>(null);
   const [currentProgrammeFormation, setCurrentProgrammeFormation] = useState<ProgrammeFormation | undefined>(undefined);
   const [currentFormation, setCurrentFormation] = useState<Formation | undefined>(undefined);
   const [isExporting, setIsExporting]=useState(false);
-//   const [currentTheme, setCurrentTheme] = useState<ThemeFormation | undefined>(undefined);
-  const [currentBudget, setCurrentBudget] = useState<BudgetFormation | undefined>(undefined);
+  const [currentTheme, setCurrentTheme] = useState<ThemeFormation | undefined>(undefined);
   const [currentType, setCurrentType] = useState<TypeDepense>();
 
 
@@ -66,7 +68,7 @@ const SuiviBudgetaires = () => {
     addDepense,
     updateDepense,
     deleteDepense
-  } = useFetchDepensesData({page:currentPage, lang:lang, budgetId:currentBudget?._id||undefined, formationId:currentFormation?._id, type:currentType?.key});
+  } = useFetchDepensesData({page:currentPage, lang:lang, themeId:currentTheme?._id||undefined, type:currentType?.key});
   
   
   // Charge les formations pour un programmeFormation spécifique
@@ -96,60 +98,35 @@ const SuiviBudgetaires = () => {
           });
   }, [fetchData, currentProgrammeFormation, lang, dispatch]);
 
-
-
-  // Charge les budget en fonction des filtres
-  useEffect(() => {          
-      // Cas où on ne filtre pas (pas de formation, pas de familleMetier, pas resetFilters)
-      if (
-          !currentFormation || formations.length === 0 
-      ) return;
-
-
-      fetchData({
-          apiFunction: getBudgetFormationForDropDown,
-          params: {
-              formationId: currentFormation?._id || "",
-              lang,
-          },
-          onSuccess: (data) => {
-              // Définir le premier theme formation comme formation courant
-              if (data.budgetFormations?.length > 0) {
-                  setCurrentBudget(data.budgetFormations[0]);
-                  dispatch(setBudgetFormationSelected(data.budgetFormations[0]))
-              } else {
-                  setCurrentBudget(undefined);
-              }
-              dispatch(setBudgetFormations(data || {
-                  budgetFormations: [],
-                  currentPage: 0,
-                  totalItems: 0,
-                  totalPages: 0,
-                  pageSize: 0,
-              }));
-          },
-          onError: () => {
-              dispatch(setErrorPageBudgetFormation(t('message.erreur')));
-          },
-          onLoading: (isLoading) => {
-              dispatch(setBudgetFormationLoading(isLoading));
-          },
-      });
-  }, [currentFormation, lang, dispatch]);
+  // Charge les themes pour une formation spécifique
+  useEffect(() => {
+          if (!currentFormation || !currentFormation._id) return;
   
-  
+          fetchData({
+              apiFunction: getThemeFormationForDropDown,
+              params: { 
+                lang, 
+                formation: currentFormation._id, 
+                userId:currentUser._id
+              },
+              onSuccess: (data) => {
+                  dispatch(setThemeFormations(data));
+                  // Définir le premier formation comme formation courant
+                  if (data.themeFormations?.length > 0) {
+                      setCurrentTheme(data.themeFormations[0]);
+                  } else {
+                      setCurrentTheme(undefined);
+                  }
+                  
+              },
+               onError: () => {
+                  dispatch(setErrorPageThemeFormation(t('message.erreur')));
+              },
+          });
+  }, [fetchData, currentFormation, lang, dispatch]);
   
   const handleExport = async () => {
-    if(currentBudget && currentBudget._id && currentUser && currentUser._id){
-      setIsExporting(true)
-      try{
-        await generateDepense({budgetId:currentBudget?._id,userId:currentUser._id, lang:lang })
-      }finally{
-        setIsExporting(false)
-      }
-    }else{
-
-    }
+    dispatch(setShowModalGenerateDoc());
   };
 
   const handleAddDepense = (depense: Depense) => {
@@ -172,11 +149,10 @@ const SuiviBudgetaires = () => {
       setCurrentFormation(formation);
   };
 
-
-  const handleBudgetChange = (budget: BudgetFormation) => {
-      setCurrentBudget(budget);
-      dispatch(setBudgetFormationSelected(budget))
+  const handleThemeFormationChange = (theme: ThemeFormation) => {
+      setCurrentTheme(theme);
   };
+
 
   const handleTypeChange = (type: TypeDepense) => {
       setCurrentType(type);
@@ -194,10 +170,10 @@ const SuiviBudgetaires = () => {
         typesDepenses={typesDepenses}
         programmeFormations={programmeFormations}
         formations={formations}
-        budgets={budgetFormations}
+        themes={themeFormations}
         currentFormation={currentFormation}
+        currentTheme={currentTheme}
         currentProgrammeFormation={currentProgrammeFormation}
-        currentBudget={currentBudget}
         currentType={currentType}
         data={depenses?.depenses || []}
         histogramme={histogramme|| []}
@@ -205,8 +181,8 @@ const SuiviBudgetaires = () => {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
         onFormationChange={handleFormationChange}
+        onThemeChange={handleThemeFormationChange}
         onProgrammeFormationChange={handleProgrammeFormationChange}
-        onBudgetChange={handleBudgetChange}
         onTypeChange={handleTypeChange}
         onCreate={() => setSelectedDepense(null)}
         onEdit={setSelectedDepense}
@@ -214,21 +190,18 @@ const SuiviBudgetaires = () => {
       />
       <FormCreateUpdate 
         depense={selectedDepense} 
+        themeId={currentTheme?._id!}
         onAdd={handleAddDepense} 
         onUpdate={handleUpdateDepense} 
       />
       <FormDelete 
         depense={selectedDepense} 
         onDelete={handleDeleteDepense} 
-        />
-        {isExporting && (
-        <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex flex-col items-center justify-center z-50">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 mb-4"></div>
-          <p className="text-white text-lg font-medium">
-            {t('telechargement_en_cours') || "Téléchargement en cours..."}
-          </p>
-        </div>
-      )}
+      />
+      <FormCreateUpdateNoteBudget 
+        note={undefined} 
+        themeId={currentTheme?._id!}
+      />
     </>
   );
 };

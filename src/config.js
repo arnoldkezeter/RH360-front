@@ -1,5 +1,6 @@
 export const config = {
-    roles: { superAdmin: 'SUPER-ADMIN', admin: 'ADMIN', responsable: 'RESPONSABLE-FORMATION', utilisateur: 'UTILISATEUR', formateur: 'FORMATEUR', stagiaire:'STAGIAIRE', chercheur:'CHERCHEUR' },
+    roles: { superAdmin: 'SUPER-ADMIN', admin: 'ADMIN', gestionnaire: 'GESTIONNAIRE', responsable: 'RESPONSABLE-FORMATION', utilisateur: 'UTILISATEUR', formateur: 'FORMATEUR', stagiaire:'STAGIAIRE', chercheur:'CHERCHEUR' },
+    manager_roles: { superAdmin: 'SUPER-ADMIN', admin: 'ADMIN', gestionnaire: 'GESTIONNAIRE', responsable: 'RESPONSABLE-FORMATION', utilisateur: 'UTILISATEUR'},
     nameApp: "RH360",
     copyRight: '2025',
     version: "0.0.1",
@@ -14,11 +15,17 @@ export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 Mo en octets
 export const ROLES = {
     SUPER_ADMIN: { nomFr: "Super Administrateur", nomEn: "Super Administrator", key: "SUPER-ADMIN" },
     ADMIN: { nomFr: "Administrateur", nomEn: "Administrator", key: "ADMIN" },
+    GESTIONNAIRE: { nomFr: "Gestionnaire", nomEn: "Manager", key: "GESTIONNAIRE" },
     RESPONSABLE_FORMATION: { nomFr: "Responsable Formation", nomEn: "Training Manager", key: "RESPONSABLE-FORMATION" },
     UTILISATEUR: { nomFr: "Utilisateur", nomEn: "User", key: "UTILISATEUR" },
     FORMATEUR: { nomFr: "Formateur", nomEn: "Trainer", key: "FORMATEUR" },
     STAGIAIRE: { nomFr: "Stagiaire", nomEn: "Trainee", key: "STAGIAIRE" },
     CHERCHEUR: { nomFr: "Chercheur", nomEn: "Researcher", key: "CHERCHEUR" },
+};
+
+export const TYPE_BUDGET = {
+    PREVU: { nomFr: "Prévisionnel", nomEn: "Estimated", key: "PREVU" },
+    REEL: { nomFr: "Réel", nomEn: "Actual", key: "REEL" },
 };
 
 export const METHODES_VALIDATIONS = {

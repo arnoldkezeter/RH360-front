@@ -124,10 +124,10 @@ export async function getBudgetFormationForDropDown({lang, formationId }: {lang:
 }
 
 
-export async function getHistogrammeDepense({formationId}:{formationId?:string}): Promise<any[]> {
+export async function getHistogrammeDepense({themeId}:{themeId?:string}): Promise<any[]> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/histogramme/${formationId}`,
+            `${api}/histogramme/${themeId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -144,10 +144,10 @@ export async function getHistogrammeDepense({formationId}:{formationId?:string})
     }
 }
 
-export async function getTotauxBudget ({formationId}:{formationId?:string}): Promise<any> {
+export async function getTotauxBudget ({themeId}:{themeId?:string}): Promise<any> {
     try {
         const response: AxiosResponse<any> = await axios.get(
-            `${api}/totaux/${formationId}`,
+            `${api}/totaux/${themeId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
