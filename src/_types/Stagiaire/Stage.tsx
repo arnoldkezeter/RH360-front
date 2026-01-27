@@ -5,15 +5,15 @@ interface AffectationFinale {
   dateDebut: string;        // ISO string
   dateFin: string;          // ISO string
   superviseur?: Utilisateur;     // _id du superviseur
-  service?: Service;         // _id du service (optionnel)
+  structure?: Structure;         // _id de la structure (optionnel)
   groupe?:Groupe;
 }
 
-// Rotation : affectation temporaire d'un stagiaire ou groupe à un service et superviseur pendant une période donnée
+// Rotation : affectation temporaire d'un stagiaire ou groupe à une structure et superviseur pendant une période donnée
 interface Rotation {
   _id?: string;
   stage: Stage;          // _id du stage (INDIVIDUEL ou GROUPE)
-  service: Service;        // _id du service
+  structure: Structure;        // _id de la structure
   superviseur?: Utilisateur;    // _id du superviseur
 
   // Soit stagiaire (stage individuel), soit groupe (stage groupe)
@@ -25,9 +25,9 @@ interface Rotation {
 }
 
 
-// Service final pour un groupe (période + superviseur + service)
-interface ServiceFinal {
-  service?: Service;          // _id du service
+// Structure final pour un groupe (période + superviseur + structure)
+interface StructureFinal {
+  structure?: Structure;          // _id de la structure
   superviseur?: Utilisateur;     // _id du superviseur
   dateDebut: string;        // ISO string
   dateFin: string;          // ISO string
@@ -39,7 +39,7 @@ interface Groupe {
   numero:number;
   stagiaires: Stagiaire[];     // Liste des _id des stagiaires dans ce groupe
   stage?: Stage;            // _id du stage parent
-  serviceFinal?: ServiceFinal;
+  structureFinal?: StructureFinal;
 }
 
 interface GroupeParams {
@@ -129,7 +129,7 @@ interface CreateStageInput {
   rotations?: Array<{
     groupe?: number;       // _id groupe (pour groupe)
     stagiaire?: string;    // _id stagiaire (pour individuel)
-    service: string;       // _id service
+    structure: string;       // _id structure
     superviseur?: string;   // _id superviseur
     dateDebut: string;     // ISO date string
     dateFin: string;       // ISO date string
@@ -137,7 +137,7 @@ interface CreateStageInput {
   affectationsFinales?: Array<{
     groupe?: number;
     stagiaire?: string;
-    service: string;
+    structure: string;
     superviseur?: string;
     dateDebut: string;
     dateFin: string;

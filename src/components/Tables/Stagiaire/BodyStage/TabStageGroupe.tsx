@@ -21,7 +21,7 @@ import { getStagiairesByFiltres, searchStagiaire } from '../../../../services/st
 import { searchUtilisateur } from '../../../../services/utilisateurs/utilisateurAPI';
 import { RootState } from '../../../../_redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchService } from '../../../../services/settings/serviceAPI';
+import { searchStructure } from '../../../../services/settings/structureAPI';
 import { createStage, updateStage } from '../../../../services/stagiaires/stageAPI';
 import createToast from '../../../../hooks/toastify';
 import { createStageSlice, updateStageSlice } from '../../../../_redux/features/stagiaire/stageSlice';
@@ -42,30 +42,30 @@ interface GroupData {
   stagiaireIds: string[];
 }
 
-interface ServiceConfig {
-  service: Service | undefined;
+interface StructureConfig {
+  structure: Structure | undefined;
   superviseur: Utilisateur | undefined;
-  serviceId: string;
+  structureId: string;
   superviseurId: string;
 }
 
 interface RotationData {
   groupe: number;
-  service: string;
+  structure: string;
   superviseur: string;
   dateDebut: string;
   dateFin: string;
-  serviceRef?: Service;
+  structureRef?: Structure;
   superviseurRef?: Utilisateur;
 }
 
 interface AffectationFinaleData {
   groupe: number;
-  service: string;
+  structure: string;
   superviseur: string;
   dateDebut: string;
   dateFin: string;
-  serviceRef?: Service;
+  structureRef?: Structure;
   superviseurRef?: Utilisateur;
 }
 
@@ -84,8 +84,8 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
     const [groupes, setGroupes] = useState<GroupData[]>([]);
     const [groupesGeneres, setGroupesGeneres] = useState<boolean>(false);
 
-    // Étape 2: Configuration des services et rotations
-    const [servicesConfig, setServicesConfig] = useState<ServiceConfig[]>([]);
+    // Étape 2: Configuration des structures et rotations
+    const [structuresConfig, setStructuresConfig] = useState<StructureConfig[]>([]);
     const [dateDebutStage, setDateDebutStage] = useState<string>("");
     const [dateFinStage, setDateFinStage] = useState<string>("");
     const [joursParRotation, setJoursParRotation] = useState<number>(7);
@@ -145,32 +145,32 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 // Reconstituer les rotations dans le format RotationData attendu
                 const rotationsFormatees: RotationData[] = stageToEdit.rotations.map(rotation => ({
                     groupe: rotation.groupe ? rotation.groupe.numero : 0, // number requis
-                    service: rotation.service._id||"",
+                    structure: rotation.structure._id||"",
                     superviseur: rotation?.superviseur?._id||"",
                     dateDebut: rotation.dateDebut.split('T')[0],
                     dateFin: rotation.dateFin.split('T')[0],
-                    serviceRef: rotation.service,
+                    structureRef: rotation.structure,
                     superviseurRef: rotation.superviseur
                 }));
                 
                 setRotations(rotationsFormatees);
                 setRotationsGenerees(true);
                 
-                // Extraire les services configurés des rotations
-                const servicesUtilises = new Map<string, ServiceConfig>();
+                // Extraire les structures configurés des rotations
+                const structuresUtilises = new Map<string, StructureConfig>();
                 stageToEdit.rotations.forEach(rotation => {
-                    const serviceId = rotation.service._id;
-                    if (!servicesUtilises.has(serviceId||"")) {
-                        servicesUtilises.set(serviceId||"", {
-                            serviceId: serviceId||"",
+                    const structureId = rotation.structure._id;
+                    if (!structuresUtilises.has(structureId||"")) {
+                        structuresUtilises.set(structureId||"", {
+                            structureId: structureId||"",
                             superviseurId: rotation.superviseur?._id||"",
-                            service: rotation.service,
+                            structure: rotation.structure,
                             superviseur: rotation.superviseur
                         });
                     }
                 });
                 
-                setServicesConfig(Array.from(servicesUtilises.values()));
+                setStructuresConfig(Array.from(structuresUtilises.values()));
                 
                 // Calculer les jours par rotation (prendre la première rotation comme référence)
                 if (stageToEdit.rotations.length > 0) {
@@ -186,11 +186,11 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
             if (stageToEdit.affectationsFinales && stageToEdit.affectationsFinales.length > 0) {
                 const affectationsFormatees: AffectationFinaleData[] = stageToEdit.affectationsFinales.map(affectation => ({
                     groupe: affectation.groupe ? affectation.groupe.numero : 0, // number requis
-                    service: affectation?.service?._id||"",
+                    structure: affectation?.structure?._id||"",
                     superviseur: affectation.superviseur ? affectation.superviseur._id||"" : "",
                     dateDebut: affectation.dateDebut.split('T')[0],
                     dateFin: affectation.dateFin.split('T')[0],
-                    serviceRef: affectation.service,
+                    structureRef: affectation.structure,
                     superviseurRef: affectation.superviseur || undefined
                 }));
                 
@@ -213,7 +213,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
         setStagiaireParGroupe(3);
         setGroupes([]);
         setGroupesGeneres(false);
-        setServicesConfig([]);
+        setStructuresConfig([]);
         setDateDebutStage("");
         setDateFinStage("");
         setJoursParRotation(5);
@@ -237,9 +237,9 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
         return data?.utilisateurs || [];
     };
 
-    const onSearchService = async (search: string) => {
-        const data = await searchService({ searchString: search, lang });
-        return data?.services || [];
+    const onSearchStructure = async (search: string) => {
+        const data = await searchStructure({ searchString: search, lang });
+        return data?.structures || [];
     };
 
     // ÉTAPE 1: Gestion des stagiaires et groupes
@@ -332,47 +332,47 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
 
 
 
-    // ÉTAPE 2: Gestion des services et rotations
-    const ajouterService = () => {
-        setServicesConfig([...servicesConfig, {
-            service: undefined,
+    // ÉTAPE 2: Gestion des structures et rotations
+    const ajouterStructure = () => {
+        setStructuresConfig([...structuresConfig, {
+            structure: undefined,
             superviseur: undefined,
-            serviceId: "",
+            structureId: "",
             superviseurId: ""
         }]);
     };
 
-    const supprimerService = (index: number) => {
-        setServicesConfig(servicesConfig.filter((_, i) => i !== index));
+    const supprimerStructure = (index: number) => {
+        setStructuresConfig(structuresConfig.filter((_, i) => i !== index));
     };
 
-    const handleServiceSelect = (selected: Service | string, index:number) => {
+    const handleStructureSelect = (selected: Structure | string, index:number) => {
         if (typeof selected === "string") return
-         const updatedServices = servicesConfig.map((service, i) =>
-            // i === index ? { ...service, [field]: value } : service
+         const updatedStructures = structuresConfig.map((structure, i) =>
+            // i === index ? { ...structure, [field]: value } : structure
 
             i === index ? { 
-                ...service, 
-                'serviceId': selected?._id || "",
-                'service': selected, // Conserver la référence pour l'affichage
-            } : service
+                ...structure, 
+                'structureId': selected?._id || "",
+                'structure': selected, // Conserver la référence pour l'affichage
+            } : structure
         );
-        setServicesConfig(updatedServices);
+        setStructuresConfig(updatedStructures);
     };
 
     const handleSuperviseurSelect = (selected: Utilisateur | string, index:number) => {
         if (typeof selected === "string") return
-         const updatedServices = servicesConfig.map((service, i) =>
-            // i === index ? { ...service, [field]: value } : service
+         const updatedStructures = structuresConfig.map((structure, i) =>
+            // i === index ? { ...structure, [field]: value } : structure
 
             i === index ? { 
-                ...service, 
+                ...structure, 
                 'superviseurId': selected?._id || "",
                 'superviseur': selected, // Conserver la référence pour l'affichage
-            } : service
+            } : structure
         );
-        console.log(updatedServices)
-        setServicesConfig(updatedServices);
+        console.log(updatedStructures)
+        setStructuresConfig(updatedStructures);
     };
     
     const genererRotationsAutomatiquement = (): void => {
@@ -381,14 +381,15 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
             return;
         }
 
-        if (servicesConfig.length === 0 || !dateDebutStage || !dateFinStage) {
-            createToast("Veuillez configurer les services et les dates", "", 2);
+        if (structuresConfig.length === 0 || !dateDebutStage || !dateFinStage) {
+            createToast("Veuillez configurer les structures et les dates", "", 2);
             return;
         }
 
-        const servicesValides: ServiceConfig[] = servicesConfig.filter((s: ServiceConfig) => s.serviceId && s.superviseurId);
-        if (servicesValides.length === 0) {
-            createToast("Veuillez configurer au moins un service avec superviseur", "", 2);
+        // ✅ MODIFICATION: Filtrer uniquement par structureId (pas besoin de superviseurId)
+        const structuresValides: StructureConfig[] = structuresConfig.filter((s: StructureConfig) => s.structureId);
+        if (structuresValides.length === 0) {
+            createToast("Veuillez configurer au moins une structure", "", 2);
             return;
         }
 
@@ -440,23 +441,23 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
         const dureeStageOuvrables: number = calculerJoursOuvrables(debut, fin);
         const nombrePeriodes: number = Math.floor(dureeStageOuvrables / joursParRotation);
         const nbGroupes = groupes.length;
-        const nbServices = servicesValides.length;
+        const nbStructures = structuresValides.length;
 
-        console.log(`Paramètres: ${nbGroupes} groupes, ${nbServices} services, ${nombrePeriodes} périodes`);
+        console.log(`Paramètres: ${nbGroupes} groupes, ${nbStructures} structures, ${nombrePeriodes} périodes`);
 
         // Vérifications de faisabilité
-        if (nombrePeriodes < nbServices) {
-            createToast(`Durée insuffisante: ${nombrePeriodes} périodes pour ${nbServices} services`, "", 2);
+        if (nombrePeriodes < nbStructures) {
+            createToast(`Durée insuffisante: ${nombrePeriodes} périodes pour ${nbStructures} structures`, "", 2);
             return;
         }
 
-        if (nbGroupes > nbServices) {
-            createToast(`Impossible: ${nbGroupes} groupes > ${nbServices} services`, "", 2);
+        if (nbGroupes > nbStructures) {
+            createToast(`Impossible: ${nbGroupes} groupes > ${nbStructures} structures`, "", 2);
             return;
         }
 
-        const rotationsNecessaires = nbGroupes * nbServices;
-        const creneauxDisponibles = nombrePeriodes * Math.min(nbGroupes, nbServices);
+        const rotationsNecessaires = nbGroupes * nbStructures;
+        const creneauxDisponibles = nombrePeriodes * Math.min(nbGroupes, nbStructures);
         
         if (rotationsNecessaires > creneauxDisponibles) {
             createToast(`Impossible: ${rotationsNecessaires} rotations > ${creneauxDisponibles} créneaux`, "", 2);
@@ -467,38 +468,38 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
         class EtatProbleme {
             solution: number[][];
             occupationPeriode: boolean[][];
-            occupationService: boolean[][];
+            occupationStructure: boolean[][];
 
             constructor() {
-                this.solution = Array(nbGroupes).fill(null).map(() => Array(nbServices).fill(-1));
+                this.solution = Array(nbGroupes).fill(null).map(() => Array(nbStructures).fill(-1));
                 this.occupationPeriode = Array(nombrePeriodes).fill(null).map(() => Array(nbGroupes).fill(false));
-                this.occupationService = Array(nbServices).fill(null).map(() => Array(nombrePeriodes).fill(false));
+                this.occupationStructure = Array(nbStructures).fill(null).map(() => Array(nombrePeriodes).fill(false));
             }
 
             clone(): EtatProbleme {
                 const nouvelEtat = new EtatProbleme();
                 nouvelEtat.solution = this.solution.map(row => [...row]);
                 nouvelEtat.occupationPeriode = this.occupationPeriode.map(row => [...row]);
-                nouvelEtat.occupationService = this.occupationService.map(row => [...row]);
+                nouvelEtat.occupationStructure = this.occupationStructure.map(row => [...row]);
                 return nouvelEtat;
             }
 
-            peutAssigner(groupe: number, service: number, periode: number): boolean {
-                return !this.occupationPeriode[periode][groupe] && !this.occupationService[service][periode];
+            peutAssigner(groupe: number, structure: number, periode: number): boolean {
+                return !this.occupationPeriode[periode][groupe] && !this.occupationStructure[structure][periode];
             }
 
-            assigner(groupe: number, service: number, periode: number): void {
-                this.solution[groupe][service] = periode;
+            assigner(groupe: number, structure: number, periode: number): void {
+                this.solution[groupe][structure] = periode;
                 this.occupationPeriode[periode][groupe] = true;
-                this.occupationService[service][periode] = true;
+                this.occupationStructure[structure][periode] = true;
             }
 
-            desassigner(groupe: number, service: number): void {
-                const periode = this.solution[groupe][service];
+            desassigner(groupe: number, structure: number): void {
+                const periode = this.solution[groupe][structure];
                 if (periode !== -1) {
-                    this.solution[groupe][service] = -1;
+                    this.solution[groupe][structure] = -1;
                     this.occupationPeriode[periode][groupe] = false;
-                    this.occupationService[service][periode] = false;
+                    this.occupationStructure[structure][periode] = false;
                 }
             }
 
@@ -524,18 +525,18 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 const decalage = Math.floor(nombrePeriodes / nbGroupes);
                 
                 for (let groupe = 0; groupe < nbGroupes; groupe++) {
-                    for (let service = 0; service < nbServices; service++) {
+                    for (let structure = 0; structure < nbStructures; structure++) {
                         // Calculer plusieurs candidats de période
                         const candidats = [
-                            (service + groupe * decalage) % nombrePeriodes,
-                            (service * nbGroupes + groupe) % nombrePeriodes,
-                            (groupe + service) % nombrePeriodes
+                            (structure + groupe * decalage) % nombrePeriodes,
+                            (structure * nbGroupes + groupe) % nombrePeriodes,
+                            (groupe + structure) % nombrePeriodes
                         ];
 
                         let assigne = false;
                         for (const periode of candidats) {
-                            if (etat.peutAssigner(groupe, service, periode)) {
-                                etat.assigner(groupe, service, periode);
+                            if (etat.peutAssigner(groupe, structure, periode)) {
+                                etat.assigner(groupe, structure, periode);
                                 assigne = true;
                                 break;
                             }
@@ -544,8 +545,8 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                         if (!assigne) {
                             // Chercher n'importe quelle période libre
                             for (let p = 0; p < nombrePeriodes; p++) {
-                                if (etat.peutAssigner(groupe, service, p)) {
-                                    etat.assigner(groupe, service, p);
+                                if (etat.peutAssigner(groupe, structure, p)) {
+                                    etat.assigner(groupe, structure, p);
                                     assigne = true;
                                     break;
                                 }
@@ -586,13 +587,13 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 const prochaine = this.choisirProchaineAssignation(etat);
                 if (!prochaine) return false;
 
-                const { groupe, service } = prochaine;
+                const { groupe, structure } = prochaine;
 
                 // Ordonner les périodes par nombre de contraintes (heuristique LCV - Least Constraining Value)
                 const periodesTortier = [];
                 for (let periode = 0; periode < nombrePeriodes; periode++) {
-                    if (etat.peutAssigner(groupe, service, periode)) {
-                        const contraintesAjoutees = this.compterContraintesAjoutees(etat, groupe, service, periode);
+                    if (etat.peutAssigner(groupe, structure, periode)) {
+                        const contraintesAjoutees = this.compterContraintesAjoutees(etat, groupe, structure, periode);
                         periodesTortier.push({ periode, contraintes: contraintesAjoutees });
                     }
                 }
@@ -600,28 +601,28 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 periodesTortier.sort((a, b) => a.contraintes - b.contraintes);
 
                 for (const { periode } of periodesTortier) {
-                    etat.assigner(groupe, service, periode);
+                    etat.assigner(groupe, structure, periode);
                     
                     if (this.backtrackAvecHeuristiques(etat, tentatives + 1, debut)) {
                         return true;
                     }
                     
-                    etat.desassigner(groupe, service);
+                    etat.desassigner(groupe, structure);
                 }
 
                 return false;
             }
 
-            private choisirProchaineAssignation(etat: EtatProbleme): { groupe: number, service: number } | null {
+            private choisirProchaineAssignation(etat: EtatProbleme): { groupe: number, structure: number } | null {
                 let meilleure = null;
                 let minOptions = Infinity;
 
                 for (let groupe = 0; groupe < nbGroupes; groupe++) {
-                    for (let service = 0; service < nbServices; service++) {
-                        if (etat.solution[groupe][service] === -1) {
+                    for (let structure = 0; structure < nbStructures; structure++) {
+                        if (etat.solution[groupe][structure] === -1) {
                             let options = 0;
                             for (let periode = 0; periode < nombrePeriodes; periode++) {
-                                if (etat.peutAssigner(groupe, service, periode)) {
+                                if (etat.peutAssigner(groupe, structure, periode)) {
                                     options++;
                                 }
                             }
@@ -632,7 +633,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                             
                             if (options < minOptions) {
                                 minOptions = options;
-                                meilleure = { groupe, service };
+                                meilleure = { groupe, structure };
                             }
                         }
                     }
@@ -641,7 +642,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 return meilleure;
             }
 
-            private compterContraintesAjoutees(etat: EtatProbleme, groupe: number, service: number, periode: number): number {
+            private compterContraintesAjoutees(etat: EtatProbleme, groupe: number, structure: number, periode: number): number {
                 let contraintes = 0;
                 
                 // Compter combien d'autres assignations deviennent impossibles
@@ -652,7 +653,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 }
                 
                 for (let p = 0; p < nombrePeriodes; p++) {
-                    if (p !== periode && !etat.occupationService[service][p]) {
+                    if (p !== periode && !etat.occupationStructure[structure][p]) {
                         contraintes++;
                     }
                 }
@@ -676,7 +677,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     if (this.ameliorerSolutionLocale(etatLocal, debut)) {
                         // Copier la solution trouvée
                         for (let g = 0; g < nbGroupes; g++) {
-                            for (let s = 0; s < nbServices; s++) {
+                            for (let s = 0; s < nbStructures; s++) {
                                 etat.solution[g][s] = etatLocal.solution[g][s];
                             }
                         }
@@ -690,8 +691,8 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
             private genererSolutionPartielleAleatoire(etat: EtatProbleme): void {
                 const assignations = [];
                 for (let g = 0; g < nbGroupes; g++) {
-                    for (let s = 0; s < nbServices; s++) {
-                        assignations.push({ groupe: g, service: s });
+                    for (let s = 0; s < nbStructures; s++) {
+                        assignations.push({ groupe: g, structure: s });
                     }
                 }
                 
@@ -702,17 +703,17 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 }
                 
                 // Assigner autant que possible
-                for (const { groupe, service } of assignations) {
+                for (const { groupe, structure } of assignations) {
                     const periodesLibres = [];
                     for (let p = 0; p < nombrePeriodes; p++) {
-                        if (etat.peutAssigner(groupe, service, p)) {
+                        if (etat.peutAssigner(groupe, structure, p)) {
                             periodesLibres.push(p);
                         }
                     }
                     
                     if (periodesLibres.length > 0) {
                         const periode = periodesLibres[Math.floor(Math.random() * periodesLibres.length)];
-                        etat.assigner(groupe, service, periode);
+                        etat.assigner(groupe, structure, periode);
                     }
                 }
             }
@@ -726,7 +727,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     
                     // Essayer des échanges et des réassignations
                     for (let g1 = 0; g1 < nbGroupes && !amelioration; g1++) {
-                        for (let s1 = 0; s1 < nbServices && !amelioration; s1++) {
+                        for (let s1 = 0; s1 < nbStructures && !amelioration; s1++) {
                             if (etat.solution[g1][s1] === -1) {
                                 // Essayer de libérer une place en déplaçant d'autres assignations
                                 for (let p = 0; p < nombrePeriodes && !amelioration; p++) {
@@ -792,9 +793,9 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
         const nouvellesRotations: RotationData[] = [];
         
         for (let groupe = 0; groupe < nbGroupes; groupe++) {
-            for (let service = 0; service < nbServices; service++) {
-                const periode = resultat.solution[groupe][service];
-                const serviceConfig = servicesValides[service];
+            for (let structure = 0; structure < nbStructures; structure++) {
+                const periode = resultat.solution[groupe][structure];
+                const structureConfig = structuresValides[structure];
                 const groupeObj = groupes[groupe];
                 
                 let dateDebutRotation = new Date(debut);
@@ -806,12 +807,12 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
 
                 nouvellesRotations.push({
                     groupe: groupeObj.numero,
-                    service: serviceConfig.serviceId,
-                    superviseur: serviceConfig.superviseurId,
+                    structure: structureConfig.structureId,
+                    superviseur: structureConfig.superviseurId, // ✅ Peut être vide maintenant
                     dateDebut: dateDebutRotation.toISOString().split('T')[0],
                     dateFin: dateFinRotation.toISOString().split('T')[0],
-                    serviceRef: serviceConfig.service,
-                    superviseurRef: serviceConfig.superviseur
+                    structureRef: structureConfig.structure,
+                    superviseurRef: structureConfig.superviseur
                 });
             }
         }
@@ -835,7 +836,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
     const ajouterAffectationFinale = () => {
         setAffectationsFinales([...affectationsFinales, {
             groupe: groupes[0]?.numero || 1,
-            service: "",
+            structure: "",
             superviseur: "",
             dateDebut: "",
             dateFin: "",
@@ -866,18 +867,19 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 stagiaires: groupe.stagiaireIds
             }));
             
+            // ✅ MODIFICATION: Filtrer les rotations avec superviseur vide
             const rotationsForApi = rotations.map(rot => ({
                 groupe: rot.groupe,
-                service: rot.service,
-                superviseur: rot.superviseur,
+                structure: rot.structure,
+                superviseur: rot.superviseur || undefined, // N'envoyer que si défini
                 dateDebut: rot.dateDebut,
                 dateFin: rot.dateFin,
             }));
 
             const affectationsForApi = affectationsFinales.map(aff => ({
                 groupe: aff.groupe,
-                service: aff.service,
-                superviseur: aff.superviseur,
+                structure: aff.structure,
+                superviseur: aff.superviseur || undefined, // ✅ Optionnel aussi
                 dateDebut: aff.dateDebut,
                 dateFin: aff.dateFin,
             }));
@@ -1185,7 +1187,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 </>}
             </div>
 
-            {/* ÉTAPE 2: Configuration des services et génération des rotations */}
+            {/* ÉTAPE 2: Configuration des structures et génération des rotations */}
             <div className="bg-white dark:bg-[#1f2937] rounded-xl p-6 border border-[#e5e7eb] dark:border-[#374151] shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
@@ -1193,49 +1195,54 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                         {t('label.etape_config_rotations')}
                     </label>
                     <button
-                        onClick={ajouterService}
+                        onClick={ajouterStructure}
                         className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[#e0f2fe] dark:bg-[#0c4a6e]
                                  text-[#0369a1] dark:text-[#7dd3fc] rounded-lg hover:bg-[#bae6fd] dark:hover:bg-[#075985]
                                  transition-colors"
                     >
                         <Plus className="w-4 h-4" />
-                        {t('label.ajout_service')}
+                        {t('label.ajout_structure')}
                     </button>
                 </div>
 
-                {/* Configuration des services */}
+                {/* ✅ MODIFICATION: Ajout d'un message informatif */}
+                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <p className="text-sm text-blue-800 dark:text-blue-200">
+                        💡 <strong>Note:</strong> Les superviseurs sont optionnels à la création. Vous pourrez les assigner plus tard.
+                    </p>
+                </div>
+
+                {/* Configuration des structures */}
                 <div className="space-y-4 mb-6">
-                    {servicesConfig.map((serviceConfig, index) => (
+                    {structuresConfig.map((structureConfig, index) => (
                         <div key={index} className="p-4 bg-[#fafafa] dark:bg-[#374151] rounded-lg border-l-4 border-[#0ea5e9]">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        {t('label.service')}
+                                        {t('label.structure')} <span className="text-red-500">*</span>
                                     </label>
                                     <FilterList
                                         items={[]}
-                                        placeholder={t('recherche.rechercher') + t('recherche.service')}
+                                        placeholder={t('recherche.rechercher') + t('recherche.structure')}
                                         displayProperty={(item) => `${lang === 'fr' ? item?.nomFr : item?.nomEn}`}
                                         onSelect={(selected) => {
                                             if (typeof selected !== "string") {
-                                                handleServiceSelect(selected, index)
-                                                // modifierServiceConfig(index, 'service', selected);
-                                                // modifierServiceConfig(index, 'serviceId', selected?._id);
+                                                handleStructureSelect(selected, index)
                                             }
                                         }}
                                         enableBackendSearch={true}
-                                        onSearch={onSearchService}
+                                        onSearch={onSearchStructure}
                                         searchDelay={300}
                                         minSearchLength={2}
-                                        defaultValue={serviceConfig.service}
-                                        noResultsMessage={t('label.aucun_service')}
-                                        loadingMessage={t('label.recherche_service')}
+                                        defaultValue={structureConfig.structure}
+                                        noResultsMessage={t('label.aucune_structure')}
+                                        loadingMessage={t('label.recherche_structure')}
                                     />
                                 </div>
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                       {t('label.superviseur')}
+                                       {t('label.superviseur')} <span className="text-gray-400">(optionnel)</span>
                                     </label>
                                     <div className="flex gap-2">
                                         <div className="flex-1">
@@ -1246,24 +1253,22 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                                 onSelect={(selected) => {
                                                     if (typeof selected !== "string") {
                                                         handleSuperviseurSelect(selected, index)
-                                                        // modifierServiceConfig(index, 'superviseur', selected);
-                                                        // modifierServiceConfig(index, 'superviseurId', selected?._id);
                                                     }
                                                 }}
                                                 enableBackendSearch={true}
                                                 onSearch={onSearchSuperviseur}
                                                 searchDelay={300}
                                                 minSearchLength={2}
-                                                defaultValue={serviceConfig.superviseur}
+                                                defaultValue={structureConfig.superviseur}
                                                 noResultsMessage={t('label.aucun_superviseur')}
                                                 loadingMessage={t('label.recherche_superviseur')}
                                             />
                                         </div>
-                                        {servicesConfig.length > 1 && (
+                                        {structuresConfig.length > 1 && (
                                             <button
-                                                onClick={() => supprimerService(index)}
+                                                onClick={() => supprimerStructure(index)}
                                                 className="p-2 text-[#ef4444] hover:text-[#dc2626] hover:bg-[#fef2f2] dark:hover:bg-[#7f1d1d]/20 rounded transition-colors self-start"
-                                                aria-label="Supprimer ce service"
+                                                aria-label="Supprimer cette structure"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
@@ -1324,7 +1329,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                 <div className="flex justify-end">
                     <button
                         onClick={genererRotationsAutomatiquement}
-                        disabled={!groupesGeneres || servicesConfig.length === 0 || !dateDebutStage || !dateFinStage}
+                        disabled={!groupesGeneres || structuresConfig.length === 0 || !dateDebutStage || !dateFinStage}
                         className="h-10 px-4 bg-gradient-to-r from-[#0ea5e9] to-[#0284c7]
                                  hover:from-[#0284c7] hover:to-[#0c4a6e] text-white font-medium rounded-md
                                  shadow-md hover:shadow-lg transform hover:-translate-y-0.5
@@ -1349,7 +1354,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                             {t('label.groupe')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-[#6b7280] dark:text-[#9ca3af] uppercase tracking-wider">
-                                            {t('label.service')}
+                                            {t('label.structure')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-[#6b7280] dark:text-[#9ca3af] uppercase tracking-wider">
                                             {t('label.superviseur')}
@@ -1366,10 +1371,14 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                                 {t('label.groupe')} {rotation.groupe}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-[#4b5563] dark:text-[#d1d5db]">
-                                                {lang === 'fr' ? rotation.serviceRef?.nomFr : rotation.serviceRef?.nomEn}
+                                                {lang === 'fr' ? rotation.structureRef?.nomFr : rotation.structureRef?.nomEn}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-[#4b5563] dark:text-[#d1d5db]">
-                                                {rotation.superviseurRef?.nom} {rotation.superviseurRef?.prenom}
+                                                {/* ✅ MODIFICATION: Afficher un message si pas de superviseur */}
+                                                {rotation.superviseurRef ? 
+                                                    `${rotation.superviseurRef?.nom} ${rotation.superviseurRef?.prenom}` : 
+                                                    <span className="italic text-gray-400">Non assigné</span>
+                                                }
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-[#4b5563] dark:text-[#d1d5db]">
                                                 {t('label.du')} {new Date(rotation.dateDebut).toLocaleDateString()} {t('label.au')} {new Date(rotation.dateFin).toLocaleDateString()}
@@ -1438,30 +1447,30 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        {t('label.service')}
+                                        {t('label.structure')}
                                     </label>
                                     <FilterList
                                         items={[]}
-                                        placeholder={t('recherche.rechercher') + t('recherche.service')}
+                                        placeholder={t('recherche.rechercher') + t('recherche.structure')}
                                         displayProperty={(item) => `${lang === 'fr' ? item.nomFr : item.nomEn}`}
                                         onSelect={(selected) => {
                                             if (typeof selected !== "string") {
-                                                modifierAffectationFinale(index, 'serviceRef', selected);
-                                                modifierAffectationFinale(index, 'service', selected._id);
+                                                modifierAffectationFinale(index, 'structureRef', selected);
+                                                modifierAffectationFinale(index, 'structure', selected._id);
                                             }
                                         }}
                                         enableBackendSearch={true}
-                                        onSearch={onSearchService}
+                                        onSearch={onSearchStructure}
                                         searchDelay={300}
                                         minSearchLength={2}
-                                        defaultValue={affectation.serviceRef}
-                                        noResultsMessage={t('label.aucun_service')}
-                                        loadingMessage={t('label.recherche_service')}
+                                        defaultValue={affectation.structureRef}
+                                        noResultsMessage={t('label.aucune_structure')}
+                                        loadingMessage={t('label.recherche_structure')}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        {t('label.superviseur')}
+                                        {t('label.superviseur')} <span className="text-gray-400">(optionnel)</span>
                                     </label>
                                     <FilterList
                                         items={[]}
@@ -1546,7 +1555,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                             ${(isCreating ) 
                                 ? 'opacity-75 cursor-not-allowed' 
                                 : 'hover:shadow-lg'}`}
-                    disabled={isCreating} // Désactiver aussi ce bouton pendant le chargement
+                    disabled={isCreating}
                 >
                     <RotateCcw className="w-5 h-5" />
                     {t('button.reinitialiser')}

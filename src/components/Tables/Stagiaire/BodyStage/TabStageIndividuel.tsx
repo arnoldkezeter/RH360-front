@@ -14,7 +14,7 @@ import { getStagiairesByFiltres, searchStagiaire } from '../../../../services/st
 import { searchUtilisateur } from '../../../../services/utilisateurs/utilisateurAPI';
 import { RootState } from '../../../../_redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchService } from '../../../../services/settings/serviceAPI';
+import { searchStructure } from '../../../../services/settings/structureAPI';
 import { createStage, updateStage } from '../../../../services/stagiaires/stageAPI';
 import createToast from '../../../../hooks/toastify';
 import { createStageSlice, updateStageSlice } from '../../../../_redux/features/stagiaire/stageSlice';
@@ -35,8 +35,8 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
     const [nomFr, setNomFr] = useState("")
     const [nomEn, setNomEn] = useState("")
     const [stagiaire, setStagiaire] = useState<Stagiaire>();
-    const [services, setServices] = React.useState<ServiceAssignment[]>([
-        { serviceId: "", superviseurId: "", dateDebut: "", dateFin: "" } // Au moins un élément par défaut
+    const [structures, setStructures] = React.useState<StructureAssignment[]>([
+        { structureId: "", superviseurId: "", dateDebut: "", dateFin: "" } // Au moins un élément par défaut
     ]);
     const [isCreating, setIsCreation] = useState<boolean>(false);
 
@@ -47,26 +47,26 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
             setNomFr(stageToEdit.nomFr || "");
             setNomEn(stageToEdit.nomEn || "");
             setStagiaire(stageToEdit.stagiaire);
-            
-            // Remplir les services avec les données des affectationsFinales
+            console.log(stageToEdit.affectationsFinales)
+            // Remplir les structures avec les données des affectationsFinales
             if (stageToEdit.affectationsFinales && stageToEdit.affectationsFinales.length > 0) {
-                const servicesFromAffectations = stageToEdit.affectationsFinales.map(affectation => ({
-                    serviceId: affectation.service?._id || "",
+                const structuresFromAffectations = stageToEdit.affectationsFinales.map(affectation => ({
+                    structureId: affectation.structure?._id || "",
                     superviseurId: affectation.superviseur?._id || "",
                     dateDebut: affectation.dateDebut ? new Date(affectation.dateDebut).toISOString().split('T')[0] : "",
                     dateFin: affectation.dateFin ? new Date(affectation.dateFin).toISOString().split('T')[0] : "",
                     // Conserver les références complètes pour l'affichage
-                    _serviceRef: affectation.service,
+                    _structureRef: affectation.structure,
                     _superviseurRef: affectation.superviseur
                 }));
-                setServices(servicesFromAffectations);
+                setStructures(structuresFromAffectations);
             }
         } else {
             // Réinitialiser le formulaire
             setNomFr("");
             setNomEn("");
             setStagiaire(undefined);
-            setServices([{ serviceId: "", superviseurId: "", dateDebut: "", dateFin: "" }]);
+            setStructures([{ structureId: "", superviseurId: "", dateDebut: "", dateFin: "" }]);
         }
     }, [stageToEdit]);
 
@@ -80,53 +80,53 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
         return data?.utilisateurs || [];
     };
 
-    const onSearchService = async (search: string) => {
-        const data = await searchService({searchString: search, lang});
-        return data?.services || [];
+    const onSearchStructure = async (search: string) => {
+        const data = await searchStructure({searchString: search, lang});
+        return data?.structures || [];
     };
 
-    const handleServiceSelect = (selected: Service | string, index:number) => {
+    const handleStructureSelect = (selected: Structure | string, index:number) => {
         if (typeof selected === "string") return
-        const updatedServices = services.map((service, i) => 
+        const updatedStructures = structures.map((structure, i) => 
             i === index ? { 
-                ...service, 
-                'serviceId': selected?._id || "",
-                '_serviceRef': selected // Conserver la référence pour l'affichage
-            } : service
+                ...structure, 
+                'structureId': selected?._id || "",
+                '_structureRef': selected // Conserver la référence pour l'affichage
+            } : structure
         );
-        setServices(updatedServices);
+        setStructures(updatedStructures);
     };
 
     const handleSuperviseurSelect = (selected: Utilisateur | string, index:number) => {
         if (typeof selected === "string") return
-        const updatedServices = services.map((service, i) => 
+        const updatedStructures = structures.map((structure, i) => 
             i === index ? { 
-                ...service, 
+                ...structure, 
                 'superviseurId': selected?._id || "",
                 '_superviseurRef': selected // Conserver la référence pour l'affichage
-            } : service
+            } : structure
         );
-        setServices(updatedServices);
+        setStructures(updatedStructures);
     };
 
-    const handleServiceAdd = () => {
-        setServices([...services, {
-            serviceId: "",
+    const handleStructureAdd = () => {
+        setStructures([...structures, {
+            structureId: "",
             superviseurId: "",
             dateDebut: "",
             dateFin: ""
         }]);
     };
     
-    const handleServiceRemove = (index: number) => {
-        setServices(services.filter((_, i) => i !== index));
+    const handleStructureRemove = (index: number) => {
+        setStructures(structures.filter((_, i) => i !== index));
     };
 
-    const handleServiceChange = (index: number, field: keyof ServiceAssignment, value: string) => {
-        const updatedServices = services.map((service, i) => 
-            i === index ? { ...service, [field]: value } : service
+    const handleStructureChange = (index: number, field: keyof StructureAssignment, value: string) => {
+        const updatedStructures = structures.map((structure, i) => 
+            i === index ? { ...structure, [field]: value } : structure
         );
-        setServices(updatedServices);
+        setStructures(updatedStructures);
     };
 
     const handleStagiaireSelect = (selected: Stagiaire | string) => {
@@ -139,31 +139,31 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
     const handleCreateStage = async () => {
         try {
             setIsCreation(true);
-            // Filtrer services valides
-            const validServices = services.filter(s => s.serviceId && s.dateDebut && s.dateFin);
-            if (validServices.length === 0) throw new Error("Au moins un service complet requis.");
+            // Filtrer structures valides
+            const validStructures = structures.filter(s => s.structureId && s.dateDebut && s.dateFin);
+            if (validStructures.length === 0) throw new Error("Au moins une structure complet requis.");
 
-            // Créer les rotations, une par service
-            const rotations = validServices.map(s => ({
+            // Créer les rotations, une par structure
+            const rotations = validStructures.map(s => ({
                 stagiaire: stagiaire?._id,
-                service: s.serviceId||"",
+                structure: s.structureId||"",
                 superviseur: s.superviseurId,
                 dateDebut: s.dateDebut||"",
                 dateFin: s.dateFin||"",
             }));
 
-            // Créer une affectation finale par service parcouru (correspondant à une rotation)
-            const affectationsFinales = validServices.map(s => ({
+            // Créer une affectation finale par structure parcouru (correspondant à une rotation)
+            const affectationsFinales = validStructures.map(s => ({
                 stagiaire: stagiaire?._id,
-                service: s.serviceId||"",
+                structure: s.structureId||"",
                 superviseur: s.superviseurId,
                 dateDebut: s.dateDebut||"",
                 dateFin: s.dateFin||"",
             }));
 
             // Déterminer dateDebut globale = plus tôt, dateFin globale = plus tard
-            const dateDebutGlobale = new Date(Math.min(...validServices.map(s => new Date(s.dateDebut||"").getTime()))).toISOString();
-            const dateFinGlobale = new Date(Math.max(...validServices.map(s => new Date(s.dateFin||"").getTime()))).toISOString();
+            const dateDebutGlobale = new Date(Math.min(...validStructures.map(s => new Date(s.dateDebut||"").getTime()))).toISOString();
+            const dateFinGlobale = new Date(Math.max(...validStructures.map(s => new Date(s.dateFin||"").getTime()))).toISOString();
 
             if(!stageToEdit){
                 await createStage({
@@ -275,15 +275,15 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                 />
             </div>}
 
-            {/* Services et superviseurs */}
+            {/* Structures et superviseurs */}
             <div className="bg-white dark:bg-[#1f2937] rounded-xl p-6 border border-[#e5e7eb] dark:border-[#374151] shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                     <label className="text-sm font-semibold text-[#374151] dark:text-[#d1d5db] flex items-center gap-2">
                         <Users className="w-4 h-4 text-[#2563eb]" />
-                        {t('label.service_superviseur')}
+                        {t('label.structure_superviseur')}
                     </label>
                     <button 
-                        onClick={handleServiceAdd}
+                        onClick={handleStructureAdd}
                         className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[#dbeafe] dark:bg-[#1e3a8a] 
                                 text-[#1d4ed8] dark:text-[#93c5fd] rounded-lg hover:bg-[#bfdbfe] dark:hover:bg-[#1e40af] 
                                 transition-colors"
@@ -294,31 +294,31 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                 </div>
 
                 {pageIsLoading?<Skeleton height={200}/>:<div className="space-y-4">
-                    {services && services.map((service, index) => (
+                    {structures && structures.map((structure, index) => (
                         <div 
                             key={index}
                             className="p-4 bg-[#f9fafb] dark:bg-[#374151] rounded-lg border-l-4 border-[#3b82f6] space-y-4"
                         >
-                            {/* Première ligne : Service et Superviseur */}
+                            {/* Première ligne : Structure et Superviseur */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Service */}
+                                {/* Structure */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-[#4b5563] dark:text-[#9ca3af] uppercase tracking-wide">
-                                        {t('label.service')}
+                                        {t('label.structure')}
                                     </label>
                                     <div className="relative">
                                         <FilterList
                                             items={[]}
-                                            placeholder={t('recherche.rechercher')+t('recherche.service')}
+                                            placeholder={t('recherche.rechercher')+t('recherche.structure')}
                                             displayProperty={(item) => `${lang==='fr'?item.nomFr:item.nomEn}`}
-                                            onSelect={(selected) => handleServiceSelect(selected, index)}
+                                            onSelect={(selected) => handleStructureSelect(selected, index)}
                                             enableBackendSearch={true}
-                                            onSearch={onSearchService}
+                                            onSearch={onSearchStructure}
                                             searchDelay={300}
                                             minSearchLength={2}
-                                            defaultValue={service._serviceRef}
-                                            noResultsMessage={t('label.aucun_service')}
-                                            loadingMessage={t('label.recherche_service')}
+                                            defaultValue={structure._structureRef}
+                                            noResultsMessage={t('label.aucune_structure')}
+                                            loadingMessage={t('label.recherche_structure')}
                                         />
                                     </div>
                                 </div>
@@ -338,7 +338,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                             onSearch={onSearchSuperviseur}
                                             searchDelay={300}
                                             minSearchLength={2}
-                                            defaultValue={service._superviseurRef}
+                                            defaultValue={structure._superviseurRef}
                                             noResultsMessage={t('label.aucun_superviseur')}
                                             loadingMessage={t('label.recherche_superviseur')}
                                         />
@@ -355,8 +355,8 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                     </label>
                                     <input 
                                         type="date" 
-                                        value={service?.dateDebut || ''}
-                                        onChange={(e) => handleServiceChange(index, 'dateDebut', e.target.value)}
+                                        value={structure?.dateDebut || ''}
+                                        onChange={(e) => handleStructureChange(index, 'dateDebut', e.target.value)}
                                         className="w-full h-10 border border-[#e5e7eb] dark:border-[#4b5563] rounded-md px-3 text-sm
                                                 bg-white dark:bg-[#1f2937] text-[#111827] dark:text-white
                                                 focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent" 
@@ -371,16 +371,16 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                     <div className="flex gap-2">
                                         <input 
                                             type="date" 
-                                            value={service?.dateFin || ''}
-                                            onChange={(e) => handleServiceChange(index, 'dateFin', e.target.value)}
+                                            value={structure?.dateFin || ''}
+                                            onChange={(e) => handleStructureChange(index, 'dateFin', e.target.value)}
                                             className="flex-1 h-10 border border-[#e5e7eb] dark:border-[#4b5563] rounded-md px-3 text-sm
                                                         bg-white dark:bg-[#1f2937] text-[#111827] dark:text-white
                                                         focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent" 
                                         />
-                                        {/* Afficher le bouton supprimer seulement s'il y a plus d'un service */}
-                                        {services.length > 1 && (
+                                        {/* Afficher le bouton supprimer seulement s'il y a plus d'une structure */}
+                                        {structures.length > 1 && (
                                             <button 
-                                                onClick={() => handleServiceRemove(index)}
+                                                onClick={() => handleStructureRemove(index)}
                                                 className="h-10 w-10 flex items-center justify-center text-[#ef4444] hover:text-[#dc2626] 
                                                         hover:bg-[#fef2f2] dark:hover:bg-[#7f1d1d]/20 rounded-md transition-colors"
                                             >
@@ -403,11 +403,11 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                                 hover:from-[#1d4ed8] hover:to-[#1e40af] text-white font-semibold rounded-xl
                                 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 
                                 transition-all duration-200 flex items-center justify-center gap-2
-                                 ${(isCreating || !stagiaire || !services) 
+                                 ${(isCreating || !stagiaire || !structures) 
                                 ? 'opacity-75 cursor-not-allowed' 
                                 : 'hover:shadow-lg'}`}
                                
-                    disabled={isCreating || !stagiaire || !services}
+                    disabled={isCreating || !stagiaire || !structures}
                 >
                     
                      {isCreating ? (

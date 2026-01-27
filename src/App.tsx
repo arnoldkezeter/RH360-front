@@ -22,7 +22,7 @@ import AccessDenied from './pages/CommonPage/AccesRefuse.js';
 import { HeaderProvider } from './components/Context/HeaderConfig.js';
 import { setUser } from './_redux/features/utilisateurs/utilisateurSlice.js';
 import { useSettingData } from './hooks/useSettingData.js';
-import { getCurrentUserData } from './services/utilisateurs/utilisateurAPI.js';
+import DashboardUser from './pages/TableauDeBord/DashboardUser.js';
 
 function App() {
 
@@ -115,6 +115,9 @@ function App() {
 
 
   const roles = config.roles;
+  const isAdmin = [roles.admin, roles.superAdmin].some(role =>
+    currentUser?.roles?.includes(role)
+  );
 
  
   return loading ? (
@@ -141,7 +144,9 @@ function App() {
                 {/*  Page de droites   */}
                 {/* page dashboard est celle selectionner par defaut */}
                 <Route index element={
-                   <DashBoardAmin /> 
+                  isAdmin?
+                   <DashBoardAmin /> :<DashboardUser
+                    />
 
                 } />
                 {/* autres pagges pour chaque type de compte */}

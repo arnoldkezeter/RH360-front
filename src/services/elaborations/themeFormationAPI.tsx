@@ -234,6 +234,82 @@ export async function getThemeById({themeId, lang }: {themeId: string, lang:stri
 }
 
 
+export async function getThemesEnCoursResponsable({userId, lang}: {userId: string; lang: string;}): Promise<ThemesEnCoursReturnType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/utilisateurs/${userId}/themes-responsable/en-cours`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+            },
+        );
+
+        const themesEnCours: ThemesEnCoursReturnType = response.data.data;
+        
+        return themesEnCours;
+    } catch (error) {
+        console.error('Error getting themes en cours responsable:', error);
+        throw error;
+    }
+}
+
+
+export async function getThemesEnCoursParticipant({userId,lang}: {userId: string; lang: string;}): Promise<ThemesEnCoursReturnType> {
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/utilisateurs/${userId}/themes-participant/en-cours`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+            },
+        );
+
+        const themesEnCours: ThemesEnCoursReturnType = response.data.data;
+        
+        return themesEnCours;
+    } catch (error) {
+        console.error('Error getting themes en cours participant:', error);
+        throw error;
+    }
+}
+
+
+export async function getFormationsUtilisateur({userId, page, limit, lang}: {userId: string; page?: number; limit?: number; lang: string;}): Promise<FormationsUtilisateurReturnType> {
+    const pageNum: number = page || 1;
+    const pageSize: number = limit || 10;
+
+    try {
+        const response: AxiosResponse<any> = await axios.get(
+            `${api}/utilisateurs/${userId}/formations`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept-language': lang,
+                    'authorization': token,
+                },
+                params: {
+                    page: pageNum,
+                    limit: pageSize,
+                },
+            },
+        );
+
+        const formationsUtilisateur: FormationsUtilisateurReturnType = response.data.data;
+        
+        return formationsUtilisateur;
+    } catch (error) {
+        console.error('Error getting formations utilisateur:', error);
+        throw error;
+    }
+}
+
+
 
 
 

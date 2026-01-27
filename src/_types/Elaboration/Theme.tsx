@@ -138,3 +138,38 @@ interface ThemeFormationReturnGetType {
     totalPages: number;
     pageSize: number;
 }
+
+interface ThemeEnCours {
+    _id: string;
+    titreFr: string;
+    titreEn: string;
+    dateDebut: string;
+    dateFin: string;
+    progression: number;
+}
+
+interface ThemesEnCoursReturnType {
+    themes: ThemeEnCours[];
+    totalItems: number;
+}
+
+interface FormationUtilisateur {
+    _id: string;
+    titreFr: string;
+    titreEn: string;
+    dateDebut: string | null;
+    dateFin: string | null;
+    progression: number;
+    role: string;
+    etat: string;
+}
+
+interface FormationsUtilisateurReturnType {
+    formations: FormationUtilisateur[];
+    pagination: {
+        totalItems: number;
+        currentPage: number;
+        totalPages: number;
+        pageSize: number;
+    };
+}
