@@ -248,7 +248,7 @@ export async function getThemesEnCoursResponsable({userId, lang}: {userId: strin
         );
 
         const themesEnCours: ThemesEnCoursReturnType = response.data.data;
-        
+        console.log(themesEnCours)
         return themesEnCours;
     } catch (error) {
         console.error('Error getting themes en cours responsable:', error);

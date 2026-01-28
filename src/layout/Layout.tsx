@@ -41,6 +41,7 @@ const Layout = ({ isMobileOrTablet, userPermissions, currentUser }: LayoutProps)
         '/chercheurs/rapports',
 
         '/notes-service/generer_notes',
+        '/notes-service/historiques',
         
         '/parametres/profile',
         '/parametres/besoins-formation/manage',

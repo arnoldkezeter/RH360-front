@@ -5,6 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import { useTranslation } from 'react-i18next';
 import { RootState } from '../../_redux/store';
 import { getFormationsUtilisateur, getThemesEnCoursParticipant, getThemesEnCoursResponsable } from '../../services/elaborations/themeFormationAPI';
+import { config } from '../../config';
 
 
 // Composant StatCard
@@ -29,13 +30,13 @@ const ThemeCard = ({ theme, lang, role }: { theme: ThemeEnCours; lang: string; r
   const dateFin = new Date(theme.dateFin).toLocaleDateString(lang);
   
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer">
+    <div className="bg-white rounded-lg border border-[#e5e7eb] p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer">
       <div className="flex items-start justify-between mb-3">
-        <h4 className="font-semibold text-gray-800 flex-1 line-clamp-2">{titre}</h4>
+        <h4 className="font-semibold text-[#1f2937] flex-1 line-clamp-2">{titre}</h4>
         <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2 ${
           role === 'responsable' 
-            ? 'bg-blue-100 text-blue-700' 
-            : 'bg-green-100 text-green-700'
+            ? 'bg-[#dbeafe] text-[#1d4ed8]' 
+            : 'bg-[#dcfce7] text-[#15803d]'
         }`}>
           {role === 'responsable' 
             ? (lang === 'fr' ? 'Responsable' : 'Manager') 
@@ -43,21 +44,21 @@ const ThemeCard = ({ theme, lang, role }: { theme: ThemeEnCours; lang: string; r
         </span>
       </div>
       
-      <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+      <div className="flex items-center gap-2 text-sm text-[#4b5563] mb-3">
         <Calendar className="w-4 h-4" />
         <span className="truncate">{dateDebut} - {dateFin}</span>
       </div>
       
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">
+          <span className="text-[#4b5563]">
             {lang === 'fr' ? 'Progression' : 'Progress'}
           </span>
-          <span className="font-semibold text-gray-800">{theme.progression}%</span>
+          <span className="font-semibold text-[#1f2937]">{theme.progression}%</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-[#e5e7eb] rounded-full h-2">
           <div 
-            className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-[#3b82f6] to-[#2563eb] h-2 rounded-full transition-all duration-300"
             style={{ width: `${theme.progression}%` }}
           />
         </div>
@@ -73,21 +74,21 @@ const FormationCard = ({ formation, lang }: { formation: FormationUtilisateur; l
   const dateFin = formation.dateFin ? new Date(formation.dateFin).toLocaleDateString(lang) : '-';
   
   const getEtatColor = (etat: string) => {
-    if (etat.includes('cours') || etat.includes('progress')) return 'text-green-600 bg-green-50';
-    if (etat.includes('terminé') || etat.includes('completed')) return 'text-gray-600 bg-gray-50';
-    return 'text-blue-600 bg-blue-50';
+    if (etat.includes('cours') || etat.includes('progress')) return 'text-[#16a34a] bg-[#f0fdf4]';
+    if (etat.includes('terminé') || etat.includes('completed')) return 'text-[#4b5563] bg-[#f9fafb]';
+    return 'text-[#2563eb] bg-[#eff6ff]';
   };
   
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer">
+    <div className="bg-white rounded-lg border border-[#e5e7eb] p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer">
       <div className="flex items-start justify-between mb-3">
-        <h4 className="font-semibold text-gray-800 flex-1 line-clamp-2">{titre}</h4>
+        <h4 className="font-semibold text-[#1f2937] flex-1 line-clamp-2">{titre}</h4>
         <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2 ${getEtatColor(formation.etat)}`}>
           {formation.etat}
         </span>
       </div>
       
-      <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+      <div className="flex items-center gap-2 text-sm text-[#4b5563] mb-3">
         <Calendar className="w-4 h-4" />
         <span className="truncate">{dateDebut} - {dateFin}</span>
       </div>
@@ -95,8 +96,8 @@ const FormationCard = ({ formation, lang }: { formation: FormationUtilisateur; l
       <div className="flex items-center justify-between">
         <span className={`text-xs px-2 py-1 rounded-full ${
           formation.role === 'responsable' 
-            ? 'bg-blue-100 text-blue-700' 
-            : 'bg-green-100 text-green-700'
+            ? 'bg-[#dbeafe] text-[#1d4ed8]' 
+            : 'bg-[#dcfce7] text-[#15803d]'
         }`}>
           {formation.role === 'responsable' 
             ? (lang === 'fr' ? 'Responsable' : 'Manager') 
@@ -104,8 +105,8 @@ const FormationCard = ({ formation, lang }: { formation: FormationUtilisateur; l
         </span>
         
         <div className="flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-semibold text-gray-700">{formation.progression}%</span>
+          <TrendingUp className="w-4 h-4 text-[#6b7280]" />
+          <span className="text-sm font-semibold text-[#374151]">{formation.progression}%</span>
         </div>
       </div>
     </div>
@@ -228,15 +229,15 @@ const DashboardUser = () => {
       </div>
 
       {/* Onglets */}
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-xl shadow-md border border-[#e5e7eb] overflow-hidden">
+        <div className="border-b border-[#e5e7eb]">
           <div className="flex">
             <button
               onClick={() => setActiveTab('themes')}
               className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
                 activeTab === 'themes'
-                  ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                  ? 'border-b-2 border-[#3b82f6] text-[#2563eb] bg-[#eff6ff]'
+                  : 'text-[#4b5563] hover:text-[#1f2937] hover:bg-[#f9fafb]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -248,8 +249,8 @@ const DashboardUser = () => {
               onClick={() => setActiveTab('formations')}
               className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
                 activeTab === 'formations'
-                  ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                  ? 'border-b-2 border-[#3b82f6] text-[#2563eb] bg-[#eff6ff]'
+                  : 'text-[#4b5563] hover:text-[#1f2937] hover:bg-[#f9fafb]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -270,13 +271,13 @@ const DashboardUser = () => {
               {/* Thèmes responsable */}
               {themesResponsable.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-blue-600" />
+                  <h3 className="text-lg font-semibold text-[#1f2937] mb-4 flex items-center gap-2">
+                    <Users className="w-5 h-5 text-[#2563eb]" />
                     {lang === 'fr' ? 'Mes thèmes en tant que responsable' : 'My themes as manager'}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {themesResponsable.map(theme => (
-                      <ThemeCard key={theme._id} theme={theme} lang={lang} role="responsable" />
+                      <ThemeCard key={theme._id} theme={theme} lang={lang} role={config.roles.responsable} />
                     ))}
                   </div>
                 </div>
@@ -285,8 +286,8 @@ const DashboardUser = () => {
               {/* Thèmes participant */}
               {themesParticipant.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
+                  <h3 className="text-lg font-semibold text-[#1f2937] mb-4 flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-[#16a34a]" />
                     {lang === 'fr' ? 'Mes thèmes en tant que participant' : 'My themes as participant'}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -299,8 +300,8 @@ const DashboardUser = () => {
 
               {themesResponsable.length === 0 && themesParticipant.length === 0 && (
                 <div className="text-center py-12">
-                  <Clock className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">
+                  <Clock className="w-16 h-16 text-[#d1d5db] mx-auto mb-4" />
+                  <p className="text-[#6b7280]">
                     {t('label.aucune_formation_en_cours')}
                   </p>
                 </div>
@@ -316,8 +317,8 @@ const DashboardUser = () => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">
+                  <BookOpen className="w-16 h-16 text-[#d1d5db] mx-auto mb-4" />
+                  <p className="text-[#6b7280]">
                     {t('label.aucune_formation_disponible')}
                   </p>
                 </div>

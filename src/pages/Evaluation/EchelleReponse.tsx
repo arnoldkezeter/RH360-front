@@ -41,9 +41,9 @@ const EchelleReponses = () => {
         setHeaderConfig({
             title: t('button.ajouter_echelle_reponse'),
             showAddButton: true,
-            exportOptions: ['PDF', 'Excel'],
+            exportOptions: [],
             onAdd: () => {setSelectedEchelleReponse(null);dispatch(setShowModal())},
-            onExport: handleExportUsers,
+            onExport: ()=>{},
         });
     }, [t]);
 
