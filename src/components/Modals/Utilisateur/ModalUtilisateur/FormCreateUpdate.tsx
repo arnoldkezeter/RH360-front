@@ -51,6 +51,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
     const [region, setRegion] = useState<Region>();
     const [departement, setDepartement] = useState<Departement>();
     const [commune, setCommune] = useState<Commune>();
+    const [abreviationNoteServie, setAbreviationNoteServie]=useState("");
     const [dateEntreeEnService, setDateEntreeEnService] = useState("");
 
     const [errorNom, setErrorNom] = useState("");
@@ -86,6 +87,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
             setDepartement(utilisateur?.commune?.departement || undefined);
             setCommune(utilisateur?.commune || undefined);
             setDateEntreeEnService(formatDateForInput(utilisateur.dateEntreeEnService) || "");
+            setAbreviationNoteServie(utilisateur.abreviationNoteServie??"")
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.utilisateur'));
             setNom("");
@@ -107,6 +109,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
             setDepartement(undefined);
             setCommune(undefined);
             setDateEntreeEnService("");
+            setAbreviationNoteServie("");
         }
 
 
@@ -430,6 +433,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     familleMetier,
                     posteDeTravail,
                     commune,
+                    abreviationNoteServie,
                     actif:true,
                 }, lang
             ).then((e: ReponseApiPros) => {
@@ -456,6 +460,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                             service: service,
                             commune: commune,
                             role: e.data.role,
+                            abreviationNoteServie:e.data.abreviationNoteServie,
                             actif: e.data.actif
                         }
 
@@ -496,6 +501,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     grade,
                     familleMetier,
                     commune,
+                    abreviationNoteServie,
                     actif:true,
                 }, lang).then((e: ReponseApiPros) => {
                     if (e.success) {
@@ -521,6 +527,7 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                                 grade:grade,
                                 familleMetier:familleMetier,
                                 role: e.data.role,
+                                abreviationNoteServie:e.data.abreviationNoteServie,
                                 actif: e.data.actif
                             }
 
@@ -648,7 +655,12 @@ function FormCreateUpdate({ utilisateur }: { utilisateur: Utilisateur | null }) 
                     ))}
                 </select>
                 {errorRole && <p className="text-red-500">{errorRole}</p>}
-
+                <label>{t('label.abreviation_note_service')}</label><input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="text"
+                    value={abreviationNoteServie}
+                    onChange={(e) => { setAbreviationNoteServie(e.target.value) }}
+                />
                 <label>{t('label.structure')}</label>
                 <select
                     value={structure ? (lang === 'fr' ? structure.nomFr : structure.nomEn) : t('select_par_defaut.selectionnez') + t('select_par_defaut.structure')}

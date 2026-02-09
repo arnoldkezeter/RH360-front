@@ -36,6 +36,7 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
     const count = useSelector((state: RootState) => state.stageSlice.data.totalItems);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
+    
 
     // Render page numbers
     const pageNumbers :number[]= [];

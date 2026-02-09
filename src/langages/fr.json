@@ -161,6 +161,7 @@
     "liste_alerte": "Liste des alertes recentes"
   },
   "label": {
+    "abreviation_note_service":"Abréviation sur votre note de service",
     "themes_actifs":"Thèmes actifs",
     "en_tant_que_responsable":"En tant que responsable",
     "en_tant_que_participant":"En tant que participant",
@@ -1142,6 +1143,7 @@
     "tache_stagiaire": "de la tâche"
   },
   "error": {
+    "structure_stage":"Au moins une structure complète est requise.",
     "message_vide" : "Veuillez renseigner l'objet et le contenu du message.",
     "famille_deja_ajoutee": "Cette famille de métier est déjà ajoutée",
     "poste_pas_dans_famille": "Ce poste n'appartient pas à cette famille de métier",

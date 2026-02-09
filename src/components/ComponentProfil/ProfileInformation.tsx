@@ -91,6 +91,7 @@ function ProfileInformation({currentUser}:{currentUser:Utilisateur}) {
         setGenre(currentUser.genre);
         setDateNaiss(formatDateForInput(currentUser.dateNaissance) || "");
         setLieuNaiss(currentUser.lieuNaissance || "");
+        setAbreviationNoteServie(currentUser.abreviationNoteServie||"");
         
         setEmail(currentUser.email);
         setMatricule(currentUser?.matricule || "");
@@ -118,6 +119,7 @@ function ProfileInformation({currentUser}:{currentUser:Utilisateur}) {
     const [genre, setGenre] = useState("");
     const [dateNaiss, setDateNaiss] = useState("");
     const [lieuNaiss, setLieuNaiss] = useState("");
+    const [abreviationNoteServie, setAbreviationNoteServie] = useState("");
      const [grade, setGrade] = useState<Grade>();
     const [categorie, setCategorie] = useState<CategorieProfessionnelle>();
     const [familleMetier, setFamilleMetier] = useState<FamilleMetier>();
@@ -422,6 +424,7 @@ function ProfileInformation({currentUser}:{currentUser:Utilisateur}) {
             telephone,
             dateNaissance:dateNaiss,
             lieuNaissance:lieuNaiss,
+            abreviationNoteServie:abreviationNoteServie,
             dateEntreeEnService:dateEntreeAdmin,
             photoDeProfil:"",
             service,
@@ -447,6 +450,7 @@ function ProfileInformation({currentUser}:{currentUser:Utilisateur}) {
                         prenom: e.data.prenom,
                         dateNaissance: e.data.dateNaissance,
                         lieuNaissance: e.data.lieuNaissance,
+                        abreviationNoteServie:e.data.abreviationNoteServie,
                         dateEntreeEnService: e.data.dateEntreeEnService,
                         categorieProfessionnelle: categorie,
                         posteDeTravail: posteDeTravail,
@@ -656,6 +660,19 @@ function ProfileInformation({currentUser}:{currentUser:Utilisateur}) {
                                                 type="text"
                                                 value={lieuNaiss}
                                                 onChange={(e) => { setLieuNaiss(e.target.value); }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="w-full sm:w-1/2">
+                                        <LabelInput title={t('label.abreviation_note_service')} />
+
+                                        <div className="relative">
+
+                                            <input
+                                                className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                                type="text"
+                                                value={abreviationNoteServie}
+                                                onChange={(e) => { setAbreviationNoteServie(e.target.value); }}
                                             />
                                         </div>
                                     </div>

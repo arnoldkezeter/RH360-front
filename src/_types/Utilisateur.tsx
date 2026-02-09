@@ -28,6 +28,7 @@ interface Utilisateur {
     categorieProfessionnelle?: CategorieProfessionnelle,
     posteDeTravail?: PosteDeTravail,
     commune?:Commune,
+    abreviationNoteServie?:string
     actif:boolean,
 
 }

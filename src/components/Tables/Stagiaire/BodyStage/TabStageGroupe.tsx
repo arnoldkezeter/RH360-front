@@ -916,7 +916,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     }
                 }).catch((e) => {
                     console.log(e);
-                    createToast(e.response?.data?.message || "Erreur lors de la création", '', 2);
+                    createToast(e.message || "Erreur lors de la création", '', 2);
                 });
             }else{
                 await updateStage({
@@ -951,7 +951,7 @@ export const GroupStageInterface = ({ stageToEdit, onEditComplete, pageIsLoading
                     }
                 }).catch((e) => {
                     console.log(e);
-                    createToast(e.response?.data?.message || "Erreur lors de la création", '', 2);
+                    createToast(e.message || "Erreur lors de la création", '', 2);
                 });
             }
         } catch (err: any) {

@@ -5,8 +5,7 @@ import CustomDialogModal from '../../CustomDialogModal';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import createToast from '../../../../hooks/toastify';
-import { createNoteService, createNoteServiceStage, updateNoteService } from '../../../../services/notes/noteServiceAPI';
-import { updateNoteServiceSlice } from '../../../../_redux/features/notes/noteServiceSlice';
+import { createNoteService, createNoteServiceStage } from '../../../../services/notes/noteServiceAPI';
 
 
 function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }: {note:NoteService|undefined, themeId?:string,  mandatId?:string, stageId?:string }) {
@@ -25,6 +24,8 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
     const [errorTitreFr, setErrorTitreFr] = useState("");
     const [errorTitreEn, setErrorTitreEn] = useState("");
     const [errorCopieA, setErrorCopieA] = useState("");
+    const [errorMiseEnOeuvre, setErrorMiseEnOeuvre] = useState("");
+    const [errorDesignation, setErrorDesignation] = useState("");
     
     const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -49,7 +50,7 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
             setTitreEn("");
             setCopieA("");
             setDesignationTuteur("");
-            setMiseEnOeuvre("")
+            setMiseEnOeuvre("Le Directeur des Affaires Générales")
             
         }
 
@@ -57,9 +58,9 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
         if (isFirstRender) {
             setErrorTitreFr("");
             setErrorTitreEn("");
-            setErrorCopieA("")
-           
-            
+            setErrorCopieA("");
+            setErrorMiseEnOeuvre("");
+            setErrorDesignation("");
             setIsFirstRender(false);
         }
     }, [note, isFirstRender, t]);
@@ -67,7 +68,9 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
     const closeModal = () => {
         setErrorTitreFr("");
         setErrorTitreEn("");
-         setErrorCopieA("");
+        setErrorCopieA("");
+        setErrorMiseEnOeuvre("");
+        setErrorDesignation("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -80,7 +83,7 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
 
 
     const handleCreateNoteService = async () => {
-        if (!titreFr || !titreEn || !copieA) {
+        if (note && (!titreFr || !titreEn)) {
             if (!titreFr) {
                 setErrorTitreFr(t('error.titre_fr'));
             }
@@ -88,16 +91,16 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
             if(!titreEn){
                 setErrorTitreEn(t("error.titre_en"))
             }
-
-            if(!copieA){
-                setErrorCopieA(t('error.copie_a'))
-            }
-
+            return;
+        }
+        if(!copieA){
+            setErrorCopieA(t('error.copie_a'))
             return;
         }
 
         // if (!note) {
-            setIsLoading(true)
+        setIsLoading(true)
+        try{
             if(mandatId){
                 await createNoteService(
                     {
@@ -129,77 +132,43 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
             }
 
             if(stageId){
-                await createNoteServiceStage(
-                {
-                    titreFr,
-                    titreEn,
-                    stage:stageId, 
-                    designationTuteur, 
-                    miseEnOeuvre,
-                    typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
-                    copieA, 
-                    creePar:userId, 
-                    valideParDG:false
-                },lang
-            ).then( (e: any) => {
-                
-                if (e) {
+                const result = await createNoteServiceStage(
+                    {
+                        titreFr,
+                        titreEn,
+                        stage:stageId, 
+                        designationTuteur, 
+                        miseEnOeuvre,
+                        typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
+                        copieA, 
+                        creePar:userId, 
+                        valideParDG:false
+                    },lang
+                );
+                if (result.success) {
+                    // createToast(
+                    //     t('success.note_stage_creee') || 'Note de service de stage créée avec succès',
+                    //     result.fileName || '',
+                    //     1 // Success
+                    // );
                     closeModal();
                 } else {
-                    createToast(e.message, '', 2);
-
+                    createToast(
+                        result.message || t('message.error'),
+                        '',
+                        2 // Error
+                    );
                 }
-            }).catch((e) => {
-                createToast(e.response.data.message, '', 2);
-            }).finally(()=>{
-                setIsLoading(false)
-            })
             }
-
-
-
-        // } else {
-        //     setIsLoading(true)
-        //     await updateNoteService(
-        //         {
-        //             _id: note._id||"",
-        //             titreFr,
-        //             titreEn,
-        //             theme:themeId, 
-        //             stage:stageId, 
-        //             mandat:mandatId, 
-        //             designationTuteur, 
-        //             miseEnOeuvre,
-        //             typeNote:themeId?"convocation":stageId?"acceptation_stage":"mandat", 
-        //             copieA, 
-        //             creePar:userId, 
-        //             valideParDG:false
-        //         },lang).then((e: ReponseApiPros) => {
-        //             if (e.success) {
-        //                 createToast(e.message, '', 0);
-        //                 dispatch(updateNoteServiceSlice({
-        //                     id: e.data._id,
-        //                     noteServiceData: {
-        //                         _id: e.data._id,
-        //                         titreFr: e.data.titreFr,
-        //                         titreEn: e.data.titreEn,
-        //                     }
-
-        //                 }));
-
-        //                 closeModal();
-
-        //             } else {
-        //                 createToast(e.message, '', 2);
-
-        //             }
-        //         }).catch((e) => {
-        //             console.log(e);
-        //             createToast(e.response.data.message, '', 2);
-        //         }).finally(()=>{
-        //             setIsLoading(false)
-        //         })
-        // }
+        } catch (error: any) {
+            createToast(
+                error.message || t('message.erreur') || 'Une erreur est survenue',
+                '',
+                2 // Error
+            );
+        } finally {
+            setIsLoading(false);
+        }
     }
 
 
@@ -215,23 +184,36 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
                 isLoading={isLoading}
             >
                 
-                <label>{t('label.titre_fr')}</label><label className="text-red-500"> *</label>
-                <input
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    type="text"
-                    value={titreFr}
-                    onChange={(e) => { setTitreFr(e.target.value); setErrorTitreFr("") }}
-                />
-                {errorTitreFr && <p className="text-red-500" >{errorTitreFr}</p>}
-                
-                <label>{t('label.titre_en')}</label><label className="text-red-500"> *</label>
-                <input
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    type="text"
-                    value={titreEn}
-                    onChange={(e) => { setTitreEn(e.target.value); setErrorTitreEn("") }}
-                />
-                {errorTitreEn && <p className="text-red-500" >{errorTitreEn}</p>}
+                {note && (
+                    <>
+                        <label>{t('label.titre_fr')}</label>
+                        <label className="text-red-500"> *</label>
+                        <input
+                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        type="text"
+                        value={titreFr}
+                        onChange={(e) => {
+                            setTitreFr(e.target.value);
+                            setErrorTitreFr("");
+                        }}
+                        />
+                        {errorTitreFr && <p className="text-red-500">{errorTitreFr}</p>}
+
+                        <label>{t('label.titre_en')}</label>
+                        <label className="text-red-500"> *</label>
+                        <input
+                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        type="text"
+                        value={titreEn}
+                        onChange={(e) => {
+                            setTitreEn(e.target.value);
+                            setErrorTitreEn("");
+                        }}
+                        />
+                        {errorTitreEn && <p className="text-red-500">{errorTitreEn}</p>}
+                    </>
+                    )}
+
                 <label>{t('label.copie_a')}</label><label className="text-red-500"> *</label>
                 <input
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"

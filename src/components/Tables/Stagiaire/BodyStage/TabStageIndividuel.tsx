@@ -47,7 +47,6 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
             setNomFr(stageToEdit.nomFr || "");
             setNomEn(stageToEdit.nomEn || "");
             setStagiaire(stageToEdit.stagiaire);
-            console.log(stageToEdit.affectationsFinales)
             // Remplir les structures avec les données des affectationsFinales
             if (stageToEdit.affectationsFinales && stageToEdit.affectationsFinales.length > 0) {
                 const structuresFromAffectations = stageToEdit.affectationsFinales.map(affectation => ({
@@ -141,7 +140,10 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
             setIsCreation(true);
             // Filtrer structures valides
             const validStructures = structures.filter(s => s.structureId && s.dateDebut && s.dateFin);
-            if (validStructures.length === 0) throw new Error("Au moins une structure complet requis.");
+            if (validStructures.length === 0) {
+                createToast(t('error.structure_stage'), "", 2);
+                return;
+            };
 
             // Créer les rotations, une par structure
             const rotations = validStructures.map(s => ({
@@ -196,8 +198,8 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                         createToast(e.message, '', 2);
                     }
                 }).catch((e) => {
-                    console.log(e);
-                    createToast(e.response.data.message, '', 2);
+                    console.log(`console result ${e.error}`);
+                    createToast(`${e.message} : ${e.error}`, '', 2);
                 })
             }else{
                 await updateStage({
@@ -232,7 +234,7 @@ export const IndividualStageTab = ({ stageToEdit, onEditComplete, pageIsLoading 
                     }
                 }).catch((e) => {
                     console.log(e);
-                    createToast(e.response.data.message, '', 2);
+                    createToast(e.message, '', 2);
                 })
             }
         } catch (err: any) {

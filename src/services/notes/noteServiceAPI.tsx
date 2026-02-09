@@ -56,7 +56,7 @@ export async function createNoteService(
 export async function createNoteServiceStage(
   { titreFr, titreEn, stage, designationTuteur, miseEnOeuvre, typeNote, copieA, creePar, valideParDG }: CreateNoteInput,
   lang: string
-): Promise<boolean> {
+): Promise<{ success: boolean; message?: string; fileName?: string }> {
   try {
     const response: AxiosResponse<Blob> = await axios.post(
       `${api}/note-service/stage`, 
@@ -71,19 +71,35 @@ export async function createNoteServiceStage(
       }
     );
 
-    // ✅ Créer une URL temporaire pour télécharger le fichier
+    // ✅ Vérifier si la réponse est un PDF ou un JSON d'erreur
+    const contentType = response.headers['content-type'];
+    
+    if (contentType && contentType.includes('application/json')) {
+      // C'est une erreur envoyée en JSON
+      const text = await response.data.text();
+      const errorData = JSON.parse(text);
+      return {
+        success: false,
+        message: errorData.message || 'Une erreur est survenue'
+      };
+    }
+
+
+    // ✅ Créer une URL temporaire pour télécharger le fichier PDF
     const blob = new Blob([response.data], { type: 'application/pdf' });
     const url = window.URL.createObjectURL(blob);
 
     const link = document.createElement('a');
     link.href = url;
 
-    // Nom de fichier depuis le header backend si dispo
+    // Nom de fichier depuis le header backend
     const disposition = response.headers['content-disposition'];
-    let fileName = 'note-service.pdf';
+    let fileName = 'note-service-stage.pdf';
     if (disposition) {
-      const match = disposition.match(/filename="(.+)"/);
-      if (match?.[1]) fileName = match[1];
+      const match = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+      if (match && match[1]) {
+        fileName = match[1].replace(/['"]/g, '');
+      }
     }
 
     link.setAttribute('download', fileName);
@@ -93,10 +109,40 @@ export async function createNoteServiceStage(
     // Nettoyer après téléchargement
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
-    return true;
-  } catch (error) {
-    console.error('Erreur lors de la création de la note de service:', error);
-    throw error;
+    return {
+      success: true,
+      fileName
+    };
+  } catch (error:any) {
+    console.error('Erreur lors de la création de la note de service stage:', error);
+    
+    // ✅ Gérer les erreurs HTTP avec message du backend
+    if (error.response) {
+      const contentType = error.response.headers['content-type'];
+      
+      // Si la réponse d'erreur est en JSON
+      if (contentType && contentType.includes('application/json')) {
+        if (error.response.data instanceof Blob) {
+          // Convertir le Blob en texte pour lire le message d'erreur
+          const text = await error.response.data.text();
+          const errorData = JSON.parse(text);
+          return {
+            success: false,
+            message: errorData.message || 'Une erreur est survenue lors de la génération'
+          };
+        } else {
+          return {
+            success: false,
+            message: error.response.data.message || 'Une erreur est survenue'
+          };
+        }
+      }
+    }
+    
+    return {
+      success: false,
+      message: error.message || 'Erreur de connexion au serveur'
+    };
   }
 }
 

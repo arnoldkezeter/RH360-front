@@ -160,6 +160,7 @@
     "liste_alerte": "List of recent alerts"
   },
   "label": {
+    "abreviation_note_service":"Abbreviation on your memo",
     "themes_actifs": "Active themes",
     "en_tant_que_responsable": "As a manager",
     "en_tant_que_participant": "As a participant",
@@ -1136,6 +1137,7 @@
     "tache_stagiaire": "the task"
   },
   "error": {
+    "structure_stage": "At least one complete structure is required.",
     "message_vide" : "Please provide the subject and the content of the message.",
     "famille_deja_ajoutee": "This job family has already been added",
     "poste_pas_dans_famille": "This position does not belong to this job family",
