@@ -12,27 +12,40 @@ import { createThemeFormationSlice, updateThemeFormationSlice } from '../../../.
 import { getFormationForDropDown } from '../../../../../services/elaborations/formationAPI';
 import { SearchSelectComponent } from '../../../../ui/MultipleSearchSelectedComponent';
 import { searchUtilisateur } from '../../../../../services/utilisateurs/utilisateurAPI';
-import { searchPosteDeTravailByFamille } from '../../../../../services/settings/posteDeTravailAPI';
+import { searchPosteDeTravail, searchPosteDeTravailByFamille } from '../../../../../services/settings/posteDeTravailAPI';
 import { searchStructureByPoste } from '../../../../../services/settings/structureAPI';
 import { searchServiceByStructure } from '../../../../../services/settings/serviceAPI';
 import { X, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { searchFamilleMetier } from '../../../../../services/elaborations/familleMetierAPI';
 
 interface PublicCibleUIState {
-    familleMetier: FamilleMetier;
+    familleMetier?: FamilleMetier; // ✅ Optionnel maintenant
+    modeDirectPoste: boolean; // ✅ NOUVEAU: true = saisie directe par poste
     postes: {
         poste: PosteDeTravail;
-        allStructures: boolean; // true = toutes les structures
+        allStructures: boolean;
         structures: {
             structure: Structure;
-            allServices: boolean; // true = tous les services
+            allServices: boolean;
             services: Service[];
         }[];
     }[];
-    allPostes: boolean; // true = toute la famille (pas de restriction)
+    allPostes: boolean;
 }
 
-function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: ThemeFormation | undefined |null, isParticipant:boolean }) {
+interface ConflitFamille {
+    poste: PosteDeTravail;
+    famillesDisponibles: FamilleMetier[];
+    famillesChoisies: FamilleMetier[]; // ✅ tableau au lieu d'une seule famille
+}
+
+interface FormCreateUpdateProps {
+    themeFormation: ThemeFormation | undefined | null;
+    isParticipant: boolean;
+    onSuccess?: () => void; // ✅ Ajout du callback
+}
+
+function FormCreateUpdate({ themeFormation, isParticipant, onSuccess }: FormCreateUpdateProps) {
     const lang = useSelector((state: RootState) => state.setting.language);
     const { data: { programmeFormations } } = useSelector((state: RootState) => state.programmeFormationSlice);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -44,6 +57,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     const [titreEn, setTitreEn] = useState("");
     const [dateDebut, setDateDebut] = useState("");
     const [dateFin, setDateFin] = useState("");
+    const [duree, setDuree] = useState<number|undefined>();
     const [responsable, setResponsable] = useState<Utilisateur>();
     const [programmeFormation, setProgrammeFormation] = useState<ProgrammeFormation>();
     const [formation, setFormation] = useState<Formation>();
@@ -56,15 +70,17 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     const [errorTitreEn, setErrorTitreEn] = useState("");
     const [errorProgrammeFormation, setErrorProgrammeFormation] = useState("");
     const [errorFormation, setErrorFormation] = useState("");
-    const [errorDateDebut, setErrorDateDebut] = useState("");
-    const [errorDateFin, setErrorDateFin] = useState("");
+    const [errorDuree, setErrorDuree] = useState("");
 
     const [isFirstRender, setIsFirstRender] = useState(true);
     const isModalOpen = useSelector((state: RootState) => state.setting.showModal.open);
     const [modalTitle, setModalTitle] = useState("");
-    const [currentFamilleId, setCurrentFamilleId] = useState<string>("");
-    const [currentPosteId, setCurrentPosteId] = useState<string>("");
-    const [currentStructureId, setCurrentStructureId] = useState<string>("");
+
+    const [modeAjout, setModeAjout] = useState<'famille' | 'poste'>('famille');
+    
+    const [conflitsFamilles, setConflitsFamilles] = useState<ConflitFamille[]>([]);
+    const [showConflitModal, setShowConflitModal] = useState(false);
+
 
     // ✅ Conversion des données backend vers l'UI
     const convertBackendToUI = (publicCible?: FamilleMetierRestriction[]): PublicCibleUIState[] => {
@@ -72,6 +88,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
 
         return publicCible.map(fam => ({
             familleMetier: fam.familleMetier,
+            modeDirectPoste: false,
             allPostes: !fam.postes || fam.postes.length === 0,
             postes: (fam.postes || []).map(pos => ({
                 poste: pos.poste,
@@ -87,18 +104,55 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
 
     // ✅ Conversion de l'UI vers le format backend
     const convertUIToBackend = (): FamilleMetierInput[] => {
-        return publicCibleList.map(fam => ({
-            familleMetier: fam.familleMetier._id!,
-            postes: fam.allPostes ? undefined : fam.postes.map(pos => ({
-                poste: pos.poste._id!,
-                structures: pos.allStructures ? undefined : pos.structures.map(str => ({
-                    structure: str.structure._id!,
-                    services: str.allServices ? undefined : str.services.map(srv => ({
-                        service: srv._id!
+        const result: FamilleMetierInput[] = [];
+
+        for (const item of publicCibleList) {
+            if (!item.modeDirectPoste && item.familleMetier) {
+                result.push({
+                    familleMetier: item.familleMetier._id!,
+                    postes: item.allPostes ? undefined : item.postes.map(pos => ({
+                        poste: pos.poste._id!,
+                        structures: pos.allStructures ? undefined : pos.structures.map(str => ({
+                            structure: str.structure._id!,
+                            services: str.allServices ? undefined : str.services.map(srv => ({
+                                service: srv._id!
+                            }))
+                        }))
                     }))
-                }))
-            }))
-        }));
+                });
+            } else {
+                // Mode direct : grouper par famille choisie (_familleChoisie)
+                for (const posteItem of item.postes) {
+                    const famille = (posteItem.poste as any)._familleChoisie as FamilleMetier;
+                    if (!famille) continue;
+
+                    let famEntry = result.find(r => r.familleMetier === famille._id);
+                    if (!famEntry) {
+                        famEntry = { familleMetier: famille._id!, postes: [] };
+                        result.push(famEntry);
+                    }
+
+                    famEntry.postes = famEntry.postes || [];
+                    famEntry.postes.push({
+                        poste: posteItem.poste._id!,
+                        structures: posteItem.allStructures ? undefined : posteItem.structures.map(str => ({
+                            structure: str.structure._id!,
+                            services: str.allServices ? undefined : str.services.map(srv => ({
+                                service: srv._id!
+                            }))
+                        }))
+                    });
+                }
+            }
+        }
+
+        return result;
+    };
+
+    const getFamItemKey = (famItem: PublicCibleUIState): string => {
+        return famItem.modeDirectPoste 
+            ? '__direct__' 
+            : famItem.familleMetier!._id!;
     };
 
     useEffect(() => {
@@ -111,7 +165,11 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
             setResponsable(themeFormation.responsable);
             setProgrammeFormation(themeFormation.formation.programmeFormation);
             setFormation(themeFormation.formation);
-            setPublicCibleList(convertBackendToUI(themeFormation.publicCible));
+            setDuree(themeFormation.duree);
+            const uiList = convertBackendToUI(themeFormation.publicCible);
+            setPublicCibleList(uiList);
+            const hasDirectPoste = uiList.some(f => f.modeDirectPoste);
+            setModeAjout(hasDirectPoste ? 'poste' : 'famille');
         } else {
             setModalTitle(t('form_save.enregistrer') + t('form_save.theme_formation'));
             setTitreFr("");
@@ -122,13 +180,14 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
             setFormation(undefined);
             setResponsable(undefined);
             setPublicCibleList([]);
+            setDuree(undefined);
+            setModeAjout('famille');
         }
 
         if (isFirstRender) {
             setErrorTitreFr("");
             setErrorTitreEn("");
-            setErrorDateDebut("");
-            setErrorDateFin("");
+            setErrorDuree("");
             setErrorProgrammeFormation("");
             setErrorFormation("");
             setIsFirstRender(false);
@@ -138,13 +197,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     const closeModal = () => {
         setErrorTitreFr("");
         setErrorTitreEn("");
-        setErrorDateDebut("");
-        setErrorDateFin("");
+        setErrorDuree("");
         setErrorProgrammeFormation("");
         setErrorFormation("");
-        setCurrentFamilleId("");
-        setCurrentPosteId("");
-        setCurrentStructureId("");
         setIsFirstRender(true);
         dispatch(setShowModal());
     };
@@ -212,20 +267,27 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         return data?.familleMetiers || [];
     };
 
-    const onSearchPoste = async (search: string) => {
-        const data = await searchPosteDeTravailByFamille({familleId:currentFamilleId, searchString: search, lang });
+    const onSearchPosteParFamille = async (search: string, familleId: string) => {
+        const data = await searchPosteDeTravailByFamille({ familleId, searchString: search, lang });
         return data?.posteDeTravails || [];
     };
 
-    const onSearchStructure = async (search: string) => {
-        const data = await searchStructureByPoste({posteId:currentPosteId, searchString: search, lang });
+    const onSearchStructureParPoste = async (search: string, posteId: string) => {
+        const data = await searchStructureByPoste({ posteId, searchString: search, lang });
         return data?.structures || [];
     };
 
-    const onSearchService = async (search: string) => {
-        const data = await searchServiceByStructure({structureId:currentStructureId, searchString: search, lang });
+    const onSearchServiceParStructure = async (search: string, structureId: string) => {
+        const data = await searchServiceByStructure({ structureId, searchString: search, lang });
         return data?.services || [];
     };
+    // Recherche de poste sans filtre famille
+    const onSearchPosteDirect = async (search: string) => {
+        const data = await searchPosteDeTravail({ searchString: search, lang });
+        return data?.posteDeTravails || [];
+    };
+
+   
 
     const onSearchResponsable = async (search: string) => {
         const data = await searchUtilisateur({ searchString: search, lang });
@@ -233,9 +295,11 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     // ✅ Gestion du public cible
-    const addFamilleMetier = (familles: FamilleMetier[]) => { // ✅ Accepter un tableau
+    const addFamilleMetier = (familles: FamilleMetier[]) => {
         const nouvellesFamilles = familles.filter(famille => {
-            const dejaAjoute = publicCibleList.some(f => f.familleMetier._id === famille._id);
+            const dejaAjoute = publicCibleList.some(
+                f => !f.modeDirectPoste && f.familleMetier?._id === famille._id
+            );
             if (dejaAjoute) {
                 createToast(t('error.famille_deja_ajoutee'), '', 1);
                 return false;
@@ -245,18 +309,15 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
 
         if (nouvellesFamilles.length === 0) return;
 
-        if (nouvellesFamilles.length > 0) {
-            setCurrentFamilleId(nouvellesFamilles[0]._id!);
-        }
-
-        const nouvellesEntrees = nouvellesFamilles.map(famille => ({
+        const nouvellesEntrees: PublicCibleUIState[] = nouvellesFamilles.map(famille => ({
             familleMetier: famille,
+            modeDirectPoste: false,
             allPostes: true,
             postes: []
         }));
 
         setPublicCibleList([...publicCibleList, ...nouvellesEntrees]);
-        
+
         setExpandedFamilles(prev => {
             const next = new Set(prev);
             nouvellesFamilles.forEach(f => next.add(f._id!));
@@ -265,7 +326,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const removeFamilleMetier = (familleId: string) => {
-        setPublicCibleList(publicCibleList.filter(f => f.familleMetier._id !== familleId));
+        setPublicCibleList(publicCibleList.filter(f => getFamItemKey(f) !== familleId));
         setExpandedFamilles(prev => {
             const next = new Set(prev);
             next.delete(familleId);
@@ -274,9 +335,8 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const toggleAllPostes = (familleId: string) => {
-        setCurrentFamilleId(familleId)
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     allPostes: !fam.allPostes,
@@ -287,48 +347,151 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         }));
     };
 
-    const addPosteToFamille = (familleId: string, postes: PosteDeTravail[]) => { // ✅ Accepter un tableau
+    const addPosteToFamille = (familleId: string, postes: PosteDeTravail[]) => {
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
-                // Filtrer les postes qui appartiennent à cette famille et qui ne sont pas déjà ajoutés
-                const nouveauxPostes = postes.filter(poste => {
-                    const appartient = poste.famillesMetier.some(fm => fm._id === familleId);
-                    const dejaAjoute = fam.postes.some(p => p.poste._id === poste._id);
-                    
+            // ✅ Ne traiter que la famille ciblée
+            if (getFamItemKey(fam) !== familleId) return fam;
+
+            const nouveauxPostes = postes.filter(poste => {
+                const dejaAjoute = fam.postes.some(p => p.poste._id === poste._id);
+                if (dejaAjoute) return false;
+
+                // Vérification famille uniquement en mode classique
+                if (!fam.modeDirectPoste) {
+                    const appartient = poste.famillesMetier.some(
+                        fm => fm._id?.toString() === familleId.toString()
+                    );
                     if (!appartient) {
                         createToast(t('error.poste_pas_dans_famille'), '', 2);
                         return false;
                     }
-                    
-                    return !dejaAjoute;
-                });
-
-                if (nouveauxPostes.length === 0) return fam;
-                
-                if (nouveauxPostes.length > 0) {
-                    setCurrentPosteId(nouveauxPostes[0]._id!);
                 }
 
-                return {
-                    ...fam,
-                    allPostes: false,
-                    postes: [
-                        ...fam.postes,
-                        ...nouveauxPostes.map(poste => ({
-                            poste,
-                            allStructures: true,
-                            structures: []
-                        }))
-                    ]
-                };
-            }
-            return fam;
+                return true;
+            });
+
+            if (nouveauxPostes.length === 0) return fam;
+
+            return {
+                ...fam,
+                allPostes: false,
+                postes: [
+                    ...fam.postes,
+                    ...nouveauxPostes.map(poste => ({
+                        poste,
+                        allStructures: true,
+                        structures: []
+                    }))
+                ]
+            };
         }));
+    };
+
+    // Ajouter des postes directement (sans famille sélectionnée d'abord)
+    const addPostesDirect = (postes: PosteDeTravail[]) => {
+        // ✅ Exclure les postes déjà présents dans le bloc direct
+        // pour ne traiter que les NOUVEAUX postes
+        const postesDejaAjoutes = publicCibleList
+            .flatMap(f => f.postes)
+            .map(p => p.poste._id);
+
+        const nouveauxPostes = postes.filter(p => !postesDejaAjoutes.includes(p._id));
+
+        // Si aucun nouveau poste, ne rien faire
+        if (nouveauxPostes.length === 0) return;
+
+        const postesAvecConflit: PosteDeTravail[] = [];
+        const postesSansConflit: PosteDeTravail[] = [];
+
+        nouveauxPostes.forEach(poste => {
+            if (poste.famillesMetier.length > 1) {
+                postesAvecConflit.push(poste);
+            } else {
+                postesSansConflit.push(poste);
+            }
+        });
+
+        if (postesSansConflit.length > 0) {
+            _doAddPostesDirect(postesSansConflit);
+        }
+
+        if (postesAvecConflit.length > 0) {
+            setConflitsFamilles(postesAvecConflit.map(poste => ({
+                poste,
+                famillesDisponibles: poste.famillesMetier,
+                famillesChoisies: []
+            })));
+            setShowConflitModal(true);
+        } else {
+            setShowConflitModal(false);
+            setConflitsFamilles([]);
+        }
+    };
+
+    // Fonction interne d'ajout effectif (extraite de l'ancienne addPostesDirect)
+    const _doAddPostesDirect = (postes: PosteDeTravail[], famillesOverride?: Map<string, FamilleMetier[]>) => {
+        const existingDirectIndex = publicCibleList.findIndex(f => f.modeDirectPoste);
+
+        const nouveauxPostes = postes.filter(poste => {
+            const dejaAjoute = publicCibleList
+                .flatMap(f => f.postes)
+                .some(p => p.poste._id === poste._id);
+            if (dejaAjoute) createToast(t('error.poste_deja_ajoute'), '', 1);
+            return !dejaAjoute;
+        });
+
+        if (nouveauxPostes.length === 0) return;
+        setConflitsFamilles([]);
+
+        // ✅ Un poste peut générer plusieurs entrées si plusieurs familles choisies
+        const postesAvecFamille: { poste: PosteDeTravail & { _familleChoisie: FamilleMetier }, allStructures: boolean, structures: any[] }[] = [];
+
+        for (const poste of nouveauxPostes) {
+            const familles = famillesOverride?.get(poste._id!) ?? [poste.famillesMetier[0]];
+            for (const famille of familles) {
+                postesAvecFamille.push({
+                    poste: { ...poste, _familleChoisie: famille },
+                    allStructures: true,
+                    structures: []
+                });
+            }
+        }
+
+        if (existingDirectIndex >= 0) {
+            setPublicCibleList(publicCibleList.map((item, idx) => {
+                if (idx !== existingDirectIndex) return item;
+                return { ...item, postes: [...item.postes, ...postesAvecFamille] };
+            }));
+        } else {
+            setPublicCibleList([...publicCibleList, {
+                familleMetier: undefined,
+                modeDirectPoste: true,
+                allPostes: false,
+                postes: postesAvecFamille
+            }]);
+        }
+    };
+
+    const resolveConflits = () => {
+        const nonResolus = conflitsFamilles.filter(c => c.famillesChoisies.length === 0);
+        if (nonResolus.length > 0) {
+            createToast(t('error.choisir_famille_pour_tous_postes'), '', 1);
+            return;
+        }
+
+        // ✅ Map posteId → tableau de familles choisies
+        const famillesOverride = new Map<string, FamilleMetier[]>(
+            conflitsFamilles.map(c => [c.poste._id!, c.famillesChoisies])
+        );
+
+        _doAddPostesDirect(conflitsFamilles.map(c => c.poste), famillesOverride);
+        setConflitsFamilles([]);
+        setShowConflitModal(false);
     };
 
     const removePosteFromFamille = (familleId: string, posteId: string) => {
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.filter(p => p.poste._id !== posteId)
@@ -339,10 +502,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const toggleAllStructures = (familleId: string, posteId: string) => {
-        setCurrentFamilleId(familleId);
-        setCurrentPosteId(posteId);
+        
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.map(pos => {
@@ -361,23 +523,18 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         }));
     };
 
-    const addStructureToPoste = (familleId: string, posteId: string, structures: Structure[]) => { // ✅ Accepter un tableau
+    const addStructureToPoste = (familleId: string, posteId: string, structures: Structure[]) => {
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.map(pos => {
                         if (pos.poste._id === posteId) {
-                            // Filtrer les structures qui ne sont pas déjà ajoutées
-                            const nouvellesStructures = structures.filter(structure => 
+                            const nouvellesStructures = structures.filter(structure =>
                                 !pos.structures.some(s => s.structure._id === structure._id)
                             );
 
                             if (nouvellesStructures.length === 0) return pos;
-                            
-                            if (nouvellesStructures.length > 0) {
-                                setCurrentStructureId(nouvellesStructures[0]._id!);
-                            }
 
                             return {
                                 ...pos,
@@ -402,7 +559,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
 
     const removeStructureFromPoste = (familleId: string, posteId: string, structureId: string) => {
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.map(pos => {
@@ -421,11 +578,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
     };
 
     const toggleAllServices = (familleId: string, posteId: string, structureId: string) => {
-        setCurrentFamilleId(familleId);
-        setCurrentPosteId(posteId);
-        setCurrentStructureId(structureId);
+       
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.map(pos => {
@@ -452,9 +607,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
         }));
     };
 
-    const addServiceToStructure = (familleId: string, posteId: string, structureId: string, services: Service[]) => { // ✅ Accepter un tableau
+    const addServiceToStructure = (familleId: string, posteId: string, structureId: string, services: Service[]) => {
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.map(pos => {
@@ -463,7 +618,6 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                 ...pos,
                                 structures: pos.structures.map(str => {
                                     if (str.structure._id === structureId) {
-                                        // Filtrer les services valides et non déjà ajoutés
                                         const nouveauxServices = services.filter(service => {
                                             if (service.structure._id !== structureId) {
                                                 createToast(t('error.service_pas_dans_structure'), '', 2);
@@ -494,7 +648,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
 
     const removeServiceFromStructure = (familleId: string, posteId: string, structureId: string, serviceId: string) => {
         setPublicCibleList(publicCibleList.map(fam => {
-            if (fam.familleMetier._id === familleId) {
+            if (getFamItemKey(fam) === familleId) {
                 return {
                     ...fam,
                     postes: fam.postes.map(pos => {
@@ -527,17 +681,21 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                 next.delete(familleId);
             } else {
                 next.add(familleId);
+                // ✅ Mettre à jour currentFamilleId quand on ouvre le panneau
+                // uniquement si ce n'est pas le bloc direct
+                // if (familleId !== '__direct__') {
+                //     setCurrentFamilleId(familleId);
+                // }
             }
             return next;
         });
     };
 
     const handleCreateThemeFormation = async () => {
-        if (!titreFr || !titreEn || !dateDebut || !dateFin || !programmeFormation || !formation) {
+        if (!titreFr || !titreEn || !duree || !programmeFormation || !formation) {
             if (!titreFr) setErrorTitreFr(t('error.titre_fr'));
             if (!titreEn) setErrorTitreEn(t("error.titre_en"));
-            if (!dateDebut) setErrorDateDebut(t('error.date_debut'));
-            if (!dateFin) setErrorDateFin(t('error.date_fin'));
+            if (!duree) setErrorDuree(t('error.duree'));
             if (!programmeFormation) setErrorProgrammeFormation(t('error.programme_formation'));
             if (!formation) setErrorFormation(t('error.formation'));
             return;
@@ -551,6 +709,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                 {
                     titreFr,
                     titreEn,
+                    duree,
                     dateDebut,
                     dateFin,
                     responsable: responsable?._id,
@@ -580,6 +739,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                     _id: themeFormation._id,
                     titreFr,
                     titreEn,
+                    duree,
                     dateDebut,
                     dateFin,
                     responsable: responsable?._id,
@@ -592,6 +752,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                         id: e.data._id,
                         themeFormationData: e.data
                     }));
+                    onSuccess?.();
                     closeModal();
                 } else {
                     createToast(e.message, '', 2);
@@ -640,27 +801,37 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                 </div>
 
                 <div>
-                    <label>{t('label.date_debut')}<span className="text-red-500"> *</span></label>
+                    <label>{t('label.duree')}<span className="text-red-500"> *</span></label>
+                    <input
+                        className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        type="number"
+                        disabled={isParticipant}
+                        value={duree}
+                        onChange={(e) => { setDuree(parseInt(e.target.value)); setErrorDuree(""); }}
+                    />
+                    {errorDuree && <p className="text-red-500 text-sm mt-1">{errorDuree}</p>}
+                </div>
+
+                <div>
+                    <label>{t('label.date_debut')}</label>
                     <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="date"
                         disabled={isParticipant}
                         value={dateDebut}
-                        onChange={(e) => { setDateDebut(e.target.value); setErrorDateDebut(""); }}
+                        onChange={(e) => { setDateDebut(e.target.value); }}
                     />
-                    {errorDateDebut && <p className="text-red-500 text-sm mt-1">{errorDateDebut}</p>}
                 </div>
 
                 <div>
-                    <label>{t('label.date_fin')}<span className="text-red-500"> *</span></label>
+                    <label>{t('label.date_fin')}</label>
                     <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-4 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="date"
                         value={dateFin}
                         disabled={isParticipant}
-                        onChange={(e) => { setDateFin(e.target.value); setErrorDateFin(""); }}
+                        onChange={(e) => { setDateFin(e.target.value); }}
                     />
-                    {errorDateFin && <p className="text-red-500 text-sm mt-1">{errorDateFin}</p>}
                 </div>
 
                 <div>
@@ -719,46 +890,100 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                 {/* ✅ NOUVEAU: Section Public Cible Hiérarchique */}
                 <div className="border-t pt-4">
                     <label className="font-semibold text-lg mb-2 block">{t('label.public_cible')}</label>
-                    
-                    {/* Recherche de famille de métier */}
-                    <SearchSelectComponent<FamilleMetier>
-                        onSearch={onSearchFamilleMetier}
-                        selectedItems={publicCibleList.map(f => f.familleMetier)}
-                        onSelectionChange={(items) => {
-                            // items.forEach(famille => {
-                                addFamilleMetier(items);
-                            // });
-                        }}
-                        placeholder={t('recherche.ajouter_famille_metier')}
-                        displayField={lang === 'fr' ? "nomFr" : "nomEn"}
-                        searchDelay={300}
-                        minSearchLength={2}
-                        noResultsMessage={t('label.aucune_famille')}
-                        loadingMessage={t('label.recherche_famille')}
-                        textDebutCaractere={t('label.tapez_car_deb')}
-                        textFinCaractere={t('label.tapez_car_fin')}
-                    />
+
+                    {/* ✅ NOUVEAU: Choix du mode d'ajout */}
+                    <div className="flex gap-2 mb-3">
+                        <button
+                            type="button"
+                            onClick={() => setModeAjout('famille')}
+                            className={`px-4 py-2 rounded text-sm font-medium border transition-colors ${
+                                modeAjout === 'famille'
+                                    ? 'bg-[#2563EB] text-[#FFFFFF] border-[#2563EB]'
+                                    : 'bg-[#FFFFFF] text-[#4B5563] border-[#D1D5DB] hover:border-[#60A5FA]'
+                            }`}
+                        >
+                            {t('label.par_famille_metier')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setModeAjout('poste')}
+                            className={`px-4 py-2 rounded text-sm font-medium border transition-colors ${
+                                modeAjout === 'poste'
+                                    ? 'bg-[#2563EB] text-[#FFFFFF] border-[#2563EB]'
+                                    : 'bg-[#FFFFFF] text-[#4B5563] border-[#D1D5DB] hover:border-[#60A5FA]'
+                            }`}
+                        >
+                            {t('label.par_poste_direct')}
+                        </button>
+                    </div>
+
+                    {/* Mode famille (existant) */}
+                    {modeAjout === 'famille' && (
+                        <SearchSelectComponent<FamilleMetier>
+                            onSearch={onSearchFamilleMetier}
+                            selectedItems={publicCibleList.filter(f => !f.modeDirectPoste).map(f => f.familleMetier!)}
+                            onSelectionChange={(items) => addFamilleMetier(items)}
+                            placeholder={t('recherche.ajouter_famille_metier')}
+                            displayField={lang === 'fr' ? "nomFr" : "nomEn"}
+                            searchDelay={300}
+                            minSearchLength={2}
+                            noResultsMessage={t('label.aucune_famille')}
+                            loadingMessage={t('label.recherche_famille')}
+                            textDebutCaractere={t('label.tapez_car_deb')}
+                            textFinCaractere={t('label.tapez_car_fin')}
+                        />
+                    )}
+
+                    {/* ✅ NOUVEAU: Mode poste direct */}
+                    {modeAjout === 'poste' && (
+                        <div>
+                            <SearchSelectComponent<PosteDeTravail>
+                                onSearch={onSearchPosteDirect}
+                                selectedItems={
+                                    publicCibleList.find(f => f.modeDirectPoste)?.postes.map(p => p.poste) || []
+                                }
+                                onSelectionChange={(items) => addPostesDirect(items)}
+                                placeholder={t('recherche.ajouter_poste')}
+                                displayField={lang === 'fr' ? "nomFr" : "nomEn"}
+                                searchDelay={300}
+                                minSearchLength={2}
+                                noResultsMessage={t('label.aucun_poste')}
+                                loadingMessage={t('label.recherche_poste')}
+                                textDebutCaractere={t('label.tapez_car_deb')}
+                                textFinCaractere={t('label.tapez_car_fin')}
+                            />
+                            {/* Info famille déduite */}
+                            {(publicCibleList.find(f => f.modeDirectPoste)?.postes.length ?? 0) > 0 && (
+                                <p className="text-xs text-gray-500 mt-1 italic">
+                                    {t('label.famille_deduite_automatiquement')}
+                                </p>
+                            )}
+                        </div>
+                    )}
 
                     {/* Liste des familles sélectionnées */}
                     <div className="mt-4 space-y-3">
                         {publicCibleList.map((famItem) => (
-                            <div key={famItem.familleMetier._id} className="border rounded-lg p-4 bg-[#eff6ff]">
+                            <div key={getFamItemKey(famItem)} className="border rounded-lg p-4 bg-[#eff6ff]">
                                 {/* En-tête de la famille */}
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
                                         <button
                                             type="button"
-                                            onClick={() => toggleFamilleExpanded(famItem.familleMetier._id!)}
+                                            onClick={() => toggleFamilleExpanded(getFamItemKey(famItem))}
                                             className="text-[#4b5563] hover:text-[#1f2937]"
                                         >
-                                            {expandedFamilles.has(famItem.familleMetier._id!) ? (
+                                            {expandedFamilles.has(getFamItemKey(famItem)) ? (
                                                 <ChevronUp className="w-5 h-5" />
                                             ) : (
                                                 <ChevronDown className="w-5 h-5" />
                                             )}
                                         </button>
                                         <span className="font-semibold text-[#1e40af]">
-                                            {lang === 'fr' ? famItem.familleMetier.nomFr : famItem.familleMetier.nomEn}
+                                            {famItem.modeDirectPoste
+                                                ? t('label.postes_selectionnes_direct')
+                                                : (lang === 'fr' ? famItem.familleMetier?.nomFr : famItem.familleMetier?.nomEn)
+                                            }
                                         </span>
                                         {famItem.allPostes && (
                                             <span className="text-xs bg-[#a7f3d0] text-[#166534] px-2 py-1 rounded">
@@ -768,7 +993,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                     </div>
                                     <button
                                         type="button"
-                                        onClick={() => removeFamilleMetier(famItem.familleMetier._id!)}
+                                        onClick={() => removeFamilleMetier(getFamItemKey(famItem))}
                                         className="text-[#dc2626] hover:text-[#991b1b]"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -776,39 +1001,40 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                 </div>
 
                                 {/* Toggle toute la famille */}
-                                <div className="mb-3">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={famItem.allPostes}
-                                            onChange={() => toggleAllPostes(famItem.familleMetier._id!)}
-                                            className="w-4 h-4"
-                                        />
-                                        <span className="text-sm">{t('label.cibler_toute_famille')}</span>
-                                    </label>
-                                </div>
+                               {/* Toggle toute la famille — masqué en mode direct */}
+                                {!famItem.modeDirectPoste && (
+                                    <div className="mb-3">
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={famItem.allPostes}
+                                                onChange={() => toggleAllPostes(getFamItemKey(famItem))}
+                                                className="w-4 h-4"
+                                            />
+                                            <span className="text-sm">{t('label.cibler_toute_famille')}</span>
+                                        </label>
+                                    </div>
+                                )}
 
                                 {/* Détails étendus */}
-                                {expandedFamilles.has(famItem.familleMetier._id!) && !famItem.allPostes && (
+                                {expandedFamilles.has(getFamItemKey(famItem)) && !famItem.allPostes && (
                                     <div className="ml-4 space-y-3 border-l-2 border-[#93c5fd] pl-4">
                                         {/* Recherche de poste */}
-                                        <SearchSelectComponent<PosteDeTravail>
-                                            onSearch={onSearchPoste}
-                                            selectedItems={famItem.postes.map(p => p.poste)}
-                                            onSelectionChange={(items) => {
-                                                // items.forEach(poste => {
-                                                    addPosteToFamille(famItem.familleMetier._id!, items);
-                                                // });
-                                            }}
-                                            placeholder={t('recherche.ajouter_poste')}
-                                            displayField={lang === 'fr' ? "nomFr" : "nomEn"}
-                                            searchDelay={300}
-                                            minSearchLength={2}
-                                            noResultsMessage={t('label.aucun_poste')}
-                                            loadingMessage={t('label.recherche_poste')}
-                                            textDebutCaractere={t('label.tapez_car_deb')}
-                                            textFinCaractere={t('label.tapez_car_fin')}
-                                        />
+                                        {!famItem.modeDirectPoste && (
+                                            <SearchSelectComponent<PosteDeTravail>
+                                                onSearch={(search) => onSearchPosteParFamille(search, getFamItemKey(famItem))}
+                                                selectedItems={famItem.postes.map(p => p.poste)}
+                                                onSelectionChange={(items) => addPosteToFamille(getFamItemKey(famItem), items)}
+                                                placeholder={t('recherche.ajouter_poste')}
+                                                displayField={lang === 'fr' ? "nomFr" : "nomEn"}
+                                                searchDelay={300}
+                                                minSearchLength={2}
+                                                noResultsMessage={t('label.aucun_poste')}
+                                                loadingMessage={t('label.recherche_poste')}
+                                                textDebutCaractere={t('label.tapez_car_deb')}
+                                                textFinCaractere={t('label.tapez_car_fin')}
+                                            />
+                                        )}
 
                                         {/* Liste des postes */}
                                         {famItem.postes.map((posteItem) => (
@@ -827,7 +1053,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                     </div>
                                                     <button
                                                         type="button"
-                                                        onClick={() => removePosteFromFamille(famItem.familleMetier._id!, posteItem.poste._id!)}
+                                                        onClick={() => removePosteFromFamille(getFamItemKey(famItem), posteItem.poste._id!)}
                                                         className="text-[#dc2626] hover:text-[#991b1b]"
                                                     >
                                                         <X className="w-4 h-4" />
@@ -840,7 +1066,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                         <input
                                                             type="checkbox"
                                                             checked={posteItem.allStructures}
-                                                            onChange={() => toggleAllStructures(famItem.familleMetier._id!, posteItem.poste._id!)}
+                                                            onChange={() => toggleAllStructures(getFamItemKey(famItem), posteItem.poste._id!)}
                                                             className="w-4 h-4"
                                                         />
                                                         <span className="text-sm">{t('label.toutes_structures_poste')}</span>
@@ -852,13 +1078,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                     <div className="ml-4 space-y-2 border-l-2 border-[#fcd34d] pl-3">
                                                         {/* Recherche de structure */}
                                                         <SearchSelectComponent<Structure>
-                                                            onSearch={onSearchStructure}
+                                                            onSearch={(search) => onSearchStructureParPoste(search, posteItem.poste._id!)}
                                                             selectedItems={posteItem.structures.map(s => s.structure)}
-                                                            onSelectionChange={(items) => {
-                                                                // items.forEach(structure => {
-                                                                    addStructureToPoste(famItem.familleMetier._id!, posteItem.poste._id!, items);
-                                                                // });
-                                                            }}
+                                                            onSelectionChange={(items) => addStructureToPoste(getFamItemKey(famItem), posteItem.poste._id!, items)}
                                                             placeholder={t('recherche.ajouter_structure')}
                                                             displayField={lang === 'fr' ? "nomFr" : "nomEn"}
                                                             searchDelay={300}
@@ -886,7 +1108,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                                     </div>
                                                                     <button
                                                                         type="button"
-                                                                        onClick={() => removeStructureFromPoste(famItem.familleMetier._id!, posteItem.poste._id!, structureItem.structure._id!)}
+                                                                        onClick={() => removeStructureFromPoste(getFamItemKey(famItem), posteItem.poste._id!, structureItem.structure._id!)}
                                                                         className="text-[#dc2626] hover:text-[#991b1b]"
                                                                     >
                                                                         <X className="w-3 h-3" />
@@ -899,7 +1121,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                                         <input
                                                                             type="checkbox"
                                                                             checked={structureItem.allServices}
-                                                                            onChange={() => toggleAllServices(famItem.familleMetier._id!, posteItem.poste._id!, structureItem.structure._id!)}
+                                                                            onChange={() => toggleAllServices(getFamItemKey(famItem), posteItem.poste._id!, structureItem.structure._id!)}
                                                                             className="w-4 h-4"
                                                                         />
                                                                         <span className="text-xs">{t('label.tous_services_structure')}</span>
@@ -911,13 +1133,9 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                                     <div className="ml-4 space-y-2">
                                                                         {/* Recherche de service */}
                                                                         <SearchSelectComponent<Service>
-                                                                            onSearch={onSearchService}
+                                                                            onSearch={(search) => onSearchServiceParStructure(search, structureItem.structure._id!)}
                                                                             selectedItems={structureItem.services}
-                                                                            onSelectionChange={(items) => {
-                                                                                // items.forEach(service => {
-                                                                                    addServiceToStructure(famItem.familleMetier._id!, posteItem.poste._id!, structureItem.structure._id!, items);
-                                                                                // });
-                                                                            }}
+                                                                            onSelectionChange={(items) => addServiceToStructure(getFamItemKey(famItem), posteItem.poste._id!, structureItem.structure._id!, items)}
                                                                             placeholder={t('recherche.ajouter_service')}
                                                                             displayField={lang === 'fr' ? "nomFr" : "nomEn"}
                                                                             searchDelay={300}
@@ -938,7 +1156,7 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                                                                     <span>{lang === 'fr' ? service.nomFr : service.nomEn}</span>
                                                                                     <button
                                                                                         type="button"
-                                                                                        onClick={() => removeServiceFromStructure(famItem.familleMetier._id!, posteItem.poste._id!, structureItem.structure._id!, service._id!)}
+                                                                                        onClick={() => removeServiceFromStructure(getFamItemKey(famItem), posteItem.poste._id!, structureItem.structure._id!, service._id!)}
                                                                                         className="ml-2 text-[#dc2626] hover:text-[#991b1b]"
                                                                                     >
                                                                                         <X className="w-3 h-3" />
@@ -965,7 +1183,10 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                         <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
                             <strong>{t('label.resume_public_cible')}: </strong>
                             {publicCibleList.map((fam, idx) => {
-                                const famNom = lang === 'fr' ? fam.familleMetier.nomFr : fam.familleMetier.nomEn;
+                                const famNom = fam.modeDirectPoste
+                                    ? t('label.postes_selectionnes_direct')
+                                    : (lang === 'fr' ? fam.familleMetier?.nomFr : fam.familleMetier?.nomEn) ?? '';
+
                                 if (fam.allPostes) {
                                     return (
                                         <span key={idx}>
@@ -982,6 +1203,70 @@ function FormCreateUpdate({ themeFormation, isParticipant }: { themeFormation: T
                                     </span>
                                 );
                             })}
+                        </div>
+                    )}
+
+                    {showConflitModal && (
+                        <div className="fixed inset-0 bg-[#00000080] flex items-center justify-center z-50">
+                            <div className="bg-[#FFFFFF] rounded-lg p-6 max-w-md w-full shadow-xl">
+                                <h3 className="font-semibold text-lg mb-4">
+                                    {t('label.choisir_famille_poste')}
+                                </h3>
+                                <p className="text-sm text-[#6B7280] mb-4">
+                                    {t('label.postes_multi_familles_info')}
+                                </p>
+
+                                <div className="space-y-4">
+                                    {conflitsFamilles.map((conflit, idx) => (
+                                        <div key={conflit.poste._id} className="border border-[#E5E7EB] rounded p-3">
+                                            <p className="font-medium text-sm mb-2">
+                                                {lang === 'fr' ? conflit.poste.nomFr : conflit.poste.nomEn}
+                                            </p>
+                                            <div className="flex flex-col gap-1">
+                                                {conflit.famillesDisponibles.map(famille => (
+                                                    <label key={famille._id} className="flex items-center gap-2 cursor-pointer text-sm">
+                                                        {/* ✅ checkbox au lieu de radio → plusieurs familles possibles */}
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={conflit.famillesChoisies.some(f => f._id === famille._id)}
+                                                            onChange={(e) => {
+                                                                setConflitsFamilles(prev => prev.map((c, i) => {
+                                                                    if (i !== idx) return c;
+                                                                    const already = c.famillesChoisies.some(f => f._id === famille._id);
+                                                                    return {
+                                                                        ...c,
+                                                                        famillesChoisies: already
+                                                                            ? c.famillesChoisies.filter(f => f._id !== famille._id)
+                                                                            : [...c.famillesChoisies, famille]
+                                                                    };
+                                                                }));
+                                                            }}
+                                                        />
+                                                        {lang === 'fr' ? famille.nomFr : famille.nomEn}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="flex justify-end gap-2 mt-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setShowConflitModal(false); setConflitsFamilles([]); }}
+                                        className="px-4 py-2 text-sm border border-[#D1D5DB] rounded text-[#4B5563] hover:bg-[#F9FAFB]"
+                                    >
+                                        {t('button.annuler')}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={resolveConflits}
+                                        className="px-4 py-2 text-sm bg-[#2563EB] text-[#FFFFFF] rounded hover:bg-[#1D4ED8]"
+                                    >
+                                        {t('button.confirmer')}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

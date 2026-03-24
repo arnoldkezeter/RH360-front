@@ -24,7 +24,7 @@ const ParticipantsTheme = () => {
 
     const lang = useSelector((state: RootState) => state.setting.language);
     const { data: { utilisateurs } } = useSelector((state: RootState) => state.utilisateurSlice);
-
+    const [refreshKey, setRefreshKey] = useState<number>(0); 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [selectedTheme, setSelectedTheme]=useState<ThemeFormation|null>(null)
     const themeId = getQueryParam("themeId");
@@ -94,10 +94,12 @@ const ParticipantsTheme = () => {
                 },
             });
         }
-    }, [currentPage, selectedTheme?._id, lang, dispatch, fetchData]);
+    }, [currentPage, selectedTheme?._id, lang, dispatch, fetchData, refreshKey]);
 
 
-
+    const refreshUsers = () => {
+        setRefreshKey(prev => prev + 1);
+    };
     // Handlers pour les filtres
     const handlePageChange = (page: number) => setCurrentPage(page);
 
@@ -114,7 +116,7 @@ const ParticipantsTheme = () => {
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
             />
-           <FormCreateUpdate themeFormation={selectedTheme} isParticipant={true} />
+           <FormCreateUpdate themeFormation={selectedTheme} isParticipant={true} onSuccess={refreshUsers}/>
         </>
     );
 };

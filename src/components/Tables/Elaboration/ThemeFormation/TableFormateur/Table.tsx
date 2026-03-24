@@ -134,7 +134,7 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableF
                             {/* InputSearch pour mobile */}
                             <div className="w-full">
                                 <InputSearch 
-                                    hintText={t('recherche.rechercher')+t('recherche.lieu_formation')} 
+                                    hintText={t('recherche.rechercher')+t('recherche.formateur')} 
                                     value={searchText} 
                                     onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
                                 />
@@ -147,7 +147,7 @@ const Table = ({ data, selectedTheme, currentPage, onPageChange, onEdit}: TableF
                 <div className="hidden lg:block">
                     <div className="w-full mb-4 mt-4">
                         <InputSearch 
-                            hintText={t('recherche.rechercher')+t('recherche.lieu_formation')} 
+                            hintText={t('recherche.rechercher')+t('recherche.formateur')} 
                             value={searchText} 
                             onSubmit={(text) => {setIsSearch(true); setSearchText(text)}} 
                         />

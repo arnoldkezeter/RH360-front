@@ -26,7 +26,7 @@ const ExecutionSidebarLink: React.FC<ExecutionSidebarLinkProps> = ({
     const menuItems = [
             
         {path: '/execution-programme/calendrier-formation', label: t('sub_menu.calendrier_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
-        {path: '/execution-programme/tache-executee', label: t('sub_menu.tache_executee'), roles:["SUPER-ADMIN", "ADMIN",] },
+        // {path: '/execution-programme/tache-executee', label: t('sub_menu.tache_executee'), roles:["SUPER-ADMIN", "ADMIN",] },
         {path: '/execution-programme/suivi-budgetaire', label: t('sub_menu.suivi_budgetaire'), roles:["SUPER-ADMIN", "ADMIN"] },
         {path: '/execution-programme/supports-formation', label: t('sub_menu.support_formation'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"] },
         {path: '/execution-programme/rapports-formation', label: t('sub_menu.rapport_formation'), roles:["SUPER-ADMIN", "ADMIN"] }

@@ -69,6 +69,7 @@ interface ThemeFormationInput {
     titreEn: string;
     publicCible?: FamilleMetierInput[]; // ✅ Structure hiérarchique
     lieux?: string[]; // IDs des lieux si nécessaire
+    duree?:number;
     dateDebut: string;
     dateFin: string;
     formateurs?: { formateur: string; interne: boolean }[]; // IDs

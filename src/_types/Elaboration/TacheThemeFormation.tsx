@@ -23,6 +23,8 @@ interface TacheThemeFormationInitialData {
     };
     pageIsLoading: boolean;
     pageError: string | null;
+    progressionExecutee: number;  
+    progressionEnAttente: number; 
 }
 
 interface CreateTacheThemeFormationPayload {
@@ -32,6 +34,11 @@ interface CreateTacheThemeFormationPayload {
 interface UpdateTacheThemeFormationPayload {
     id: string; // ID de l'événement à mettre à jour
     tacheThemeFormationData: Partial<TacheThemeFormation>; // Données mises à jour de l'événement
+}
+
+interface ProgressionTacheThemeFormationPayload{
+    progressionExecutee:number;
+    progressionEnAttente:number;
 }
 interface DeleteTacheThemeFormationPayload {
     id: string; // ID de l'événement à supprimer

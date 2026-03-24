@@ -134,9 +134,8 @@ export async function searchPosteDeTravail({ searchString, lang }: { lang:string
                 }
             },
         );
-        const PosteDeTravails: PosteDeTravailReturnGetType = response.data.data;
-
-        return PosteDeTravails;
+        const posteDeTravails: PosteDeTravailReturnGetType = response.data.data;
+        return posteDeTravails;
     } catch (error) {
         // console.error('Error getting all settings:', error);
         throw error;

@@ -5,11 +5,11 @@ const api = `${apiUrl}/themes-formations`;
 
 const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
-export async function createThemeFormation({titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation}: ThemeFormationInput, lang:string): Promise<ReponseApiPros> {
+export async function createThemeFormation({titreFr, titreEn, publicCible, duree, dateDebut, dateFin, formateurs, responsable, formation}: ThemeFormationInput, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation},
+            {titreFr, titreEn, publicCible, duree, dateDebut, dateFin, formateurs, responsable, formation},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ export async function createThemeFormation({titreFr, titreEn, publicCible, dateD
     }
 }
 
-export async function updateThemeFormation({ _id, titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation }: ThemeFormationInput, lang:string): Promise<ReponseApiPros> {
+export async function updateThemeFormation({ _id, titreFr, titreEn, publicCible, duree, dateDebut, dateFin, formateurs, responsable, formation }: ThemeFormationInput, lang:string): Promise<ReponseApiPros> {
     try {
         const response: AxiosResponse<any> = await axios.put(
             `${api}/${_id}`,
-            {titreFr, titreEn, publicCible, dateDebut, dateFin, formateurs, responsable, formation},
+            {titreFr, titreEn, publicCible, duree, dateDebut, dateFin, formateurs, responsable, formation},
             {
                 headers: {
                     'Content-Type': 'application/json',

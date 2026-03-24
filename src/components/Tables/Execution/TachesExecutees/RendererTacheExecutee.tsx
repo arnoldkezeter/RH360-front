@@ -29,8 +29,6 @@ interface RendererTacheExecuteeProps {
     currentFormation?:Formation;
     currentTheme?:ThemeFormation;
     currentEtat?:EtatTache; 
-    progressionExecuter:number;
-    progressionEnAttente:number;
     onPageChange: (page: number) => void;
     onFormationChange:(formation:Formation)=>void;
     onProgrammeFormationChange:(programmeFormation:ProgrammeFormation)=>void;
@@ -39,10 +37,12 @@ interface RendererTacheExecuteeProps {
     onEdit: (tacheThemeFormation : TacheThemeFormation) => void;
 }
 
-const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, etats, progressionExecuter, progressionEnAttente, currentPage, currentFormation, currentProgrammeFormation, currentTheme, currentEtat, onPageChange, onFormationChange, onProgrammeFormationChange, onThemeChange, onEtatTacheChange, onEdit}: RendererTacheExecuteeProps) => {
+const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, etats, currentPage, currentFormation, currentProgrammeFormation, currentTheme, currentEtat, onPageChange, onFormationChange, onProgrammeFormationChange, onThemeChange, onEtatTacheChange, onEdit}: RendererTacheExecuteeProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const progressionExecuter = useSelector((state: RootState) => state.tacheThemeFormationSlice.progressionExecutee);
+    const progressionEnAttente = useSelector((state: RootState) => state.tacheThemeFormationSlice.progressionEnAttente);
     const typeTaches = Object.values(TYPE_TACHE);
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const pageIsLoading = useSelector((state: RootState) => state.tacheThemeFormationSlice.pageIsLoading);
@@ -115,43 +115,44 @@ const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, 
     const [filteredData, setFilteredData] = useState<TacheThemeFormation[]>(data);
    
     const latestQueryTacheThemeFormation = useRef('');
+    const tachesFromStore = useSelector(
+        (state: RootState) => state.tacheThemeFormationSlice.data.tachesThemeFormation
+    );
     useEffect(() => {
-        dispatch(setTacheThemeFormationLoading(true));
-        latestQueryTacheThemeFormation.current = searchText;
-        
-        try{
-            
-            const filterTacheThemeFormationByContent = async () => {
-                if (searchText === '') {                        
-                    const result: TacheThemeFormation[] = data;
-                    setFilteredData(result); 
-                        
-                }else{
-                    let tacheThemeFormationsResult : TacheThemeFormation[] = [];
-                    
-                    await getFilteredTacheThemeFormations({page:1, search:searchText, lang, themeId:currentTheme?._id}).then(result=>{
-                        if (latestQueryTacheThemeFormation.current === searchText) {
-                            if(result){
-                                tacheThemeFormationsResult = result.tachesThemeFormation;
-                                setFilteredData(tacheThemeFormationsResult);
-                            }
-                            }
-                        
-                    })
-                }
-        
-                
-            };
-            
-            filterTacheThemeFormationByContent();
-        }catch(e){
-            dispatch(setErrorPageTacheThemeFormation(t('message.erreur')));
-        }finally{
-            if (latestQueryTacheThemeFormation.current === searchText) {
-                dispatch(setTacheThemeFormationLoading(false)); // Définissez le loading à false après le chargement
+    dispatch(setTacheThemeFormationLoading(true));
+    latestQueryTacheThemeFormation.current = searchText;
+
+    try {
+        const filterTacheThemeFormationByContent = async () => {
+            if (searchText === '') {
+                // ✅ Utiliser tachesFromStore au lieu de data
+                setFilteredData(tachesFromStore);
+            } else {
+                await getFilteredTacheThemeFormations({
+                    page: 1,
+                    search: searchText,
+                    lang,
+                    themeId: currentTheme?._id
+                }).then(result => {
+                    if (latestQueryTacheThemeFormation.current === searchText) {
+                        if (result) {
+                            setFilteredData(result.tachesThemeFormation);
+                        }
+                    }
+                });
             }
+        };
+
+        filterTacheThemeFormationByContent();
+    } catch (e) {
+        dispatch(setErrorPageTacheThemeFormation(t('message.erreur')));
+    } finally {
+        if (latestQueryTacheThemeFormation.current === searchText) {
+            dispatch(setTacheThemeFormationLoading(false));
         }
-    }, [searchText, isSearch, data]);
+    }
+// ✅ Dépendre de tachesFromStore au lieu de data
+}, [searchText, isSearch, tachesFromStore]);
 
     
     return (
@@ -286,6 +287,7 @@ const RendererTacheExecutee = ({ data, programmeFormations, formations, themes, 
                             <div className="grid gap-4">
                                 {filteredData.map(t => (
                                     <TacheCard 
+                                        key={t._id}
                                         tache={t} 
                                         typeTaches={typeTaches} 
                                         lang={lang} 

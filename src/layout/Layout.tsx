@@ -59,6 +59,7 @@ const Layout = ({ isMobileOrTablet, userPermissions, currentUser }: LayoutProps)
         '/parametres/regions',
         '/parametres/departements',
         '/parametres/communes',
+        '/parametres/importer-fichier-personnel',
         '/parametres/permissions',
         '/user/permissions'
     ];

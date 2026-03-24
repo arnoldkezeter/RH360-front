@@ -4,7 +4,7 @@ import { RootState } from '../../_redux/store';
 import { useTranslation } from 'react-i18next';
 import { useFetchData } from '../../hooks/fechDataOptions';
 import { getFilteredTacheThemeFormations, getTacheProgressionByTheme } from '../../services/elaborations/tacheThemeFormationAPI';
-import { setErrorPageTacheThemeFormation, setTacheThemeFormationLoading, setTacheThemeFormations } from '../../_redux/features/elaborations/tacheThemeFormationSlice';
+import { setErrorPageTacheThemeFormation, setProgression, setTacheThemeFormationLoading, setTacheThemeFormations } from '../../_redux/features/elaborations/tacheThemeFormationSlice';
 import { ETAT_TACHE, NIVEAUX_EXECUTION } from '../../config';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
 import { useHeader } from '../../components/Context/HeaderConfig';
@@ -15,8 +15,7 @@ import RendererTaches from '../../components/Tables/MesFormations/Taches/Rendere
 const Taches = () => {
   
   
-  const [progressionExecuter, setProgressionExecuter] = useState<number>(0);
-  const [progressionEnAttente, setProgressionEnAttente] = useState<number>(0);
+  
   const dispatch = useDispatch();
   const fetchData = useFetchData();
   const { t } = useTranslation();
@@ -58,11 +57,16 @@ const Taches = () => {
               onSuccess: (data) => {
                   // console.log(data)
                   if(data.length===0){
-                    setProgressionExecuter(0)
-                    setProgressionEnAttente(0)
+                    dispatch(setProgression({
+                      progressionEnAttente:0,
+                      progressionExecutee:0
+                    }));
                   }else{
-                    setProgressionExecuter(data.progressionExecutee)
-                    setProgressionEnAttente(data.progressionEnAttente)
+                    dispatch(setProgression({
+                      progressionEnAttente:data.progressionEnAttente,
+                      progressionExecutee:data.progressionExecutee
+                    }));
+                    
                   }
               },
               onError: () => {
@@ -152,8 +156,6 @@ const Taches = () => {
         etats={etats}
         currentEtat={currentEtatTache}
         currentNiveau={currentNiveau}
-        progressionExecuter={progressionExecuter}
-        progressionEnAttente={progressionEnAttente}
         onEdit={handleTacheSelect} 
         niveaux={niveaux} 
         onNiveauChange={handleNiveauSelect}  

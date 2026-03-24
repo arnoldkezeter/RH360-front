@@ -57,6 +57,7 @@ import NoteServices from '../pages/NotesDeService/NotesService';
 import MesThemeDeFormations from '../pages/MesFormations/MesThemeDeFormations';
 import Taches from '../pages/MesFormations/Taches';
 import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
+import ImportPersonnel from '../pages/Parametres/import';
 
 
 
@@ -399,6 +400,12 @@ const coreRoutes = [
     path: '/parametres/services',
     title: 'Services',
     component: Services,
+  },
+
+  {
+    path: '/parametres/importer-fichier-personnel',
+    title: 'Importer le fichier du personnel',
+    component: ImportPersonnel,
   },
 
 

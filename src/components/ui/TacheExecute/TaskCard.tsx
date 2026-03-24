@@ -12,13 +12,14 @@ import FormUploadFile from '../../Modals/Execution/ExecutionTache/FormUploadFile
 import FormGenerateFile from '../../Modals/Execution/ExecutionTache/FormGenerateFile';
 import FormSendMessage from '../../Modals/Execution/ExecutionTache/FormEmailTask';
 import createToast from '../../../hooks/toastify';
-import { executerTacheTheme, marquerExecuteTacheThemeFormation } from '../../../services/elaborations/tacheThemeFormationAPI';
-import { updateTacheThemeFormationSlice } from '../../../_redux/features/elaborations/tacheThemeFormationSlice';
+import { executerTacheTheme, getTacheProgressionByTheme, marquerExecuteTacheThemeFormation } from '../../../services/elaborations/tacheThemeFormationAPI';
+import { setErrorPageTacheThemeFormation, setProgression, setTacheThemeFormationLoading, updateTacheThemeFormationSlice } from '../../../_redux/features/elaborations/tacheThemeFormationSlice';
 import { formatDateWithLang, getQueryParam } from '../../../fonctions/fonction';
 import FormCreateUpdateConvocationFormateur from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteConvocationFormateur';
 import FormCreateUpdateConvocationParticipant from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteConvocationParticipants';
 import FormCreateUpdateFichePresence from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteFichesPresence';
 import FormCreateUpdateFichePresenceFormateur from '../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteFichesPresenceFormateur';
+import { useFetchData } from '../../../hooks/fechDataOptions';
 
 const StatusIcon = ({ statut }: { statut: string }) => {
 const iconClasses = "w-5 h-5";
@@ -77,6 +78,43 @@ const TacheCard: React.FC<TacheCardProps> = ({
   const currentUser = useSelector((state: RootState) => state.utilisateurSlice.utilisateur);
   const isParticipant=getQueryParam("participant") === "true";
   const modalsState = useSelector((state: RootState) => state.setting.showModal);
+  const fetchData = useFetchData();
+  const refreshProgression = async (themeId: string) => {
+      try {
+          fetchData({
+              apiFunction: getTacheProgressionByTheme,
+              params: {
+                  themeId:themeId||"",
+                  lang,
+              },
+              onSuccess: (data) => {
+                  // console.log(data)
+                  if(data.length===0){
+                    dispatch(setProgression({
+                      progressionEnAttente:0,
+                      progressionExecutee:0
+                    }));
+                  }else{
+                    dispatch(setProgression({
+                      progressionEnAttente:data.progressionEnAttente,
+                      progressionExecutee:data.progressionExecutee
+                    }));
+                    
+                  }
+              },
+              onError: () => {
+                  dispatch(setErrorPageTacheThemeFormation(t('message.erreur')));
+              },
+              onLoading: (isLoading) => {
+                  dispatch(setTacheThemeFormationLoading(isLoading));
+              },
+          });
+            
+          
+      } catch (e) {
+          // silencieux — la progression sera rechargée au prochain chargement de page
+      }
+  };
 
   useEffect(() => {
     const allModalsClosed = 
@@ -139,6 +177,8 @@ const TacheCard: React.FC<TacheCardProps> = ({
                   id: selected.tache._id||"",
                   tacheThemeFormationData: e.data,
                 }));
+                await refreshProgression(selected.theme?._id || "");
+                
             } else {
                 createToast(e.message, '', 2);
             }
@@ -161,6 +201,9 @@ const TacheCard: React.FC<TacheCardProps> = ({
                     id: e.data.tache._id,
                     tacheThemeFormationData: e.data,  
                   }));
+                  
+                  await refreshProgression(selected.theme?._id || "");
+                
               } else {
                   createToast(e.message, '', 2);
               }

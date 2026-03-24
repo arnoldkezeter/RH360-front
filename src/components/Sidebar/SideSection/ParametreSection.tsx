@@ -41,6 +41,7 @@ const ParametreSidebarLink = ({
     const hasRegionPermission = true;
     const hasDepartmentPermission = true;
     const hasCommunePermission = true;
+    const hasImportPermission = true;
 
     const menuItems = [
         { permission: hasProfilePermission, path: '/parametres/profile', label: t('sub_menu.profil'), roles:["SUPER-ADMIN", "ADMIN", "UTILISATEUR"]},
@@ -57,6 +58,8 @@ const ParametreSidebarLink = ({
         { permission: hasRegionPermission, path: '/parametres/regions', label: t('sub_menu.regions') , roles:["SUPER-ADMIN", "ADMIN"] },
         { permission: hasDepartmentPermission, path: '/parametres/departements', label: t('sub_menu.departements') , roles:["SUPER-ADMIN", "ADMIN"] },
         { permission: hasCommunePermission, path: '/parametres/communes', label: t('sub_menu.communes') , roles:["SUPER-ADMIN", "ADMIN"] },
+        { permission: hasCommunePermission, path: '/parametres/importer-fichier-personnel', label: t('sub_menu.importer_fichier_personnel') , roles:["SUPER-ADMIN", "ADMIN"] },
+
         // { permission: hasPermissionPermission, path: '/parametres/permissions', label: t('sub_menu.permission') }
     ];
 

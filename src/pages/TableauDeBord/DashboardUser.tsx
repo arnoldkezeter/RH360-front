@@ -72,7 +72,7 @@ const FormationCard = ({ formation, lang }: { formation: FormationUtilisateur; l
   const titre = lang === 'fr' ? formation.titreFr : formation.titreEn;
   const dateDebut = formation.dateDebut ? new Date(formation.dateDebut).toLocaleDateString(lang) : '-';
   const dateFin = formation.dateFin ? new Date(formation.dateFin).toLocaleDateString(lang) : '-';
-  
+ 
   const getEtatColor = (etat: string) => {
     if (etat.includes('cours') || etat.includes('progress')) return 'text-[#16a34a] bg-[#f0fdf4]';
     if (etat.includes('terminé') || etat.includes('completed')) return 'text-[#4b5563] bg-[#f9fafb]';
@@ -138,7 +138,7 @@ const DashboardUser = () => {
           getThemesEnCoursParticipant({ userId, lang }),
           getFormationsUtilisateur({ userId, lang, page: 1, limit: 100 })
         ]);
-        
+        console.log(formationsData)
         setThemesResponsable(responsableData.themes || []);
         setThemesParticipant(participantData.themes || []);
         setFormations(formationsData.formations || []);

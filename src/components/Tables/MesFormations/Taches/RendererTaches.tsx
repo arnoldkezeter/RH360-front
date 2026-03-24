@@ -26,15 +26,13 @@ interface RendererTacheExecuteeProps {
     currentPage: number;
     currentEtat?:EtatTache; 
     currentNiveau?:NiveauExecution; 
-    progressionExecuter:number;
-    progressionEnAttente:number;
     onPageChange: (page: number) => void;
     onEtatTacheChange:(tache:EtatTache)=>void;
     onNiveauChange:(niveau:NiveauExecution)=>void;
     onEdit: (tacheThemeFormation : TacheThemeFormation) => void;
 }
 
-const RendererTacheExecutee = ({ data,themeId, etats,niveaux, progressionExecuter, progressionEnAttente, currentPage, currentEtat, currentNiveau, onPageChange, onEtatTacheChange,onNiveauChange, onEdit}: RendererTacheExecuteeProps) => {
+const RendererTacheExecutee = ({ data,themeId, etats,niveaux, currentPage, currentEtat, currentNiveau, onPageChange, onEtatTacheChange,onNiveauChange, onEdit}: RendererTacheExecuteeProps) => {
     const {t}=useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -42,6 +40,8 @@ const RendererTacheExecutee = ({ data,themeId, etats,niveaux, progressionExecute
     const lang = useSelector((state: RootState) => state.setting.language); // fr ou en
     const pageIsLoading = useSelector((state: RootState) => state.tacheThemeFormationSlice.pageIsLoading);
     const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+    const progressionExecuter = useSelector((state: RootState) => state.tacheThemeFormationSlice.progressionExecutee);
+    const progressionEnAttente = useSelector((state: RootState) => state.tacheThemeFormationSlice.progressionEnAttente);
     const toggleFilters = () => {
         setIsFiltersVisible(!isFiltersVisible);
     }; 

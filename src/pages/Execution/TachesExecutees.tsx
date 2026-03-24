@@ -7,7 +7,7 @@ import { getFormationForDropDown } from '../../services/elaborations/formationAP
 import { setErrorPageFormation, setFormations } from '../../_redux/features/elaborations/formationSlice';
 import { getThemeFormationForDropDown } from '../../services/elaborations/themeFormationAPI';
 import { setErrorPageThemeFormation, setThemeFormations } from '../../_redux/features/elaborations/themeFormationSlice';
-import { getFilteredTacheThemeFormations, getTacheProgressionByTheme } from '../../services/elaborations/tacheThemeFormationAPI';
+import { getFilteredTacheThemeFormations } from '../../services/elaborations/tacheThemeFormationAPI';
 import { setErrorPageTacheThemeFormation, setTacheThemeFormationLoading, setTacheThemeFormations } from '../../_redux/features/elaborations/tacheThemeFormationSlice';
 import { ETAT_TACHE } from '../../config';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
@@ -18,8 +18,7 @@ import { useHeader } from '../../components/Context/HeaderConfig';
 const TachesExecutees = () => {
   
   
-  const [progressionExecuter, setProgressionExecuter] = useState<number>(0);
-  const [progressionEnAttente, setProgressionEnAttente] = useState<number>(0);
+  
   const dispatch = useDispatch();
   const fetchData = useFetchData();
   const { t } = useTranslation();
@@ -107,38 +106,7 @@ const TachesExecutees = () => {
     });
   }, [currentFormation, lang, dispatch]);
 
-  useEffect(() => {
-          // Cas : filtre sur formation demandé explicitement mais formation = undefined
-          // => on vide la liste sans appel API
-         if(!currentTheme) return;
-         
-          // Cas où on ne filtre pas (pas de formation, pas de etatTache, pas resetFilters)  
-  
-          fetchData({
-              apiFunction: getTacheProgressionByTheme,
-              params: {
-                  themeId:currentTheme?._id||"",
-                  lang,
-              },
-              onSuccess: (data) => {
-                  // console.log(data)
-                  if(data.length===0){
-                    setProgressionExecuter(0)
-                    setProgressionEnAttente(0)
-                  }else{
-                    setProgressionExecuter(data.progressionExecutee)
-                    setProgressionEnAttente(data.progressionEnAttente)
-                  }
-              },
-              onError: () => {
-                  dispatch(setErrorPageTacheThemeFormation(t('message.erreur')));
-              },
-              onLoading: (isLoading) => {
-                  dispatch(setTacheThemeFormationLoading(isLoading));
-              },
-          });
-  }, [currentTheme, lang, dispatch]);
-
+ 
   // Charge les Taches en fonction des filtres
   useEffect(() => {
           // Cas : filtre sur formation demandé explicitement mais formation = undefined
@@ -226,9 +194,7 @@ const TachesExecutees = () => {
         currentProgrammeFormation={currentProgrammeFormation} 
         currentFormation={currentFormation} 
         currentTheme={currentTheme} 
-        currentEtat={currentEtatTache} 
-        progressionExecuter={progressionExecuter}  
-        progressionEnAttente={progressionEnAttente}      
+        currentEtat={currentEtatTache}     
       />
       
   </>
