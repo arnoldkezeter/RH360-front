@@ -58,6 +58,7 @@ import MesThemeDeFormations from '../pages/MesFormations/MesThemeDeFormations';
 import Taches from '../pages/MesFormations/Taches';
 import ParticipantsTheme from '../pages/Elaboration/ThemeFormation/ParticipantFormation';
 import ImportPersonnel from '../pages/Parametres/import';
+import GenerateurTDR from '../pages/Elaboration/ThemeFormation/GenerateurTDR';
 
 
 
@@ -159,7 +160,11 @@ const coreRoutes = [
     component: BudgetFormations,
   },
 
-  
+  {
+    path:'/elaboration-programme/formation/tdr',
+    title: 'Termes de référence',
+    component:GenerateurTDR
+  },
 
   {
     path: '/elaboration-programme/besoins-formation/exprimer',

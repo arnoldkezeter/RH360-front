@@ -68,11 +68,11 @@ const ThemeFormations = () => {
             onSuccess: (data) => {
                 dispatch(setFormations(data));
                 // Définir le premier formation comme formation courant
-                if (data.formations?.length > 0) {
-                    setCurrentFormation(data.formations[0]);
-                } else {
-                    setCurrentFormation(undefined);
-                }
+                // if (data.formations?.length > 0) {
+                //     setCurrentFormation(data.formations[0]);
+                // } else {
+                //     setCurrentFormation(undefined);
+                // }
                 
             },
              onError: () => {
@@ -87,7 +87,7 @@ const ThemeFormations = () => {
         // Cas : filtre sur formation demandé explicitement mais formation = undefined
         // => on vide la liste sans appel API
        
-        if (!resetFilters && !endDate && !startDate && !currentFamilleMetier && currentFormation === undefined) {
+        if (!resetFilters && !endDate && !startDate && !currentFamilleMetier && currentProgrammeFormation==undefined && currentFormation === undefined ) {
             dispatch(setThemeFormations({
                 themeFormations: [],
                 currentPage: 0,
@@ -99,7 +99,7 @@ const ThemeFormations = () => {
         }
         // Cas où on ne filtre pas (pas de formation, pas de familleMetier, pas resetFilters)
         if (
-            (!currentFormation && (!endDate && !startDate) && !currentFamilleMetier && !resetFilters) ||
+            (!currentProgrammeFormation && !currentFormation && (!endDate && !startDate) && !currentFamilleMetier && !resetFilters) ||
             (formations.length === 0 && familleMetiers.length === 0 && !resetFilters)
         ) return;
 
@@ -108,6 +108,7 @@ const ThemeFormations = () => {
             apiFunction: getFilteredThemeFormations,
             params: {
                 page: currentPage,
+                programmeFormation:currentProgrammeFormation?._id,
                 formation: currentFormation?._id,
                 familleMetier:currentFamilleMetier?._id,
                 dateDebut:startDate?.toString(),
@@ -131,7 +132,7 @@ const ThemeFormations = () => {
                 dispatch(setThemeFormationLoading(isLoading));
             },
         });
-    }, [currentPage, currentFormation, currentFamilleMetier, startDate, endDate, resetFilters, lang, dispatch]);
+    }, [currentPage, currentProgrammeFormation, currentFormation, currentFamilleMetier, startDate, endDate, resetFilters, lang, dispatch]);
 
 
 
@@ -154,6 +155,7 @@ const ThemeFormations = () => {
         setStartDate(null);
         setEndDate(null)
         setResetFilters(false);
+        
     };
 
     const handleFormationChange = (formation: Formation) => {

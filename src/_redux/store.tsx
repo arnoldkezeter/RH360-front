@@ -46,6 +46,8 @@ import evaluationAChaudReponseReducer from "./features/evaluations/evaluationCha
 import typeEchelleReponseReducer from "./features/evaluations/typeEchelleResponseSlice.tsx"
 import importPersonnelReducer from "./features/import.tsx";
 
+import tdrReducer from "./features/elaborations/tdrSlice.tsx";
+
 
 const store = configureStore({
   reducer: {
@@ -94,7 +96,8 @@ const store = configureStore({
     evaluationChaudSlice:evaluationChaudReducer,
     evaluationAChaudReponseSlice:evaluationAChaudReponseReducer,
     typeEchelleReponseSlice:typeEchelleReponseReducer,
-    importPersonnelSlice:importPersonnelReducer
+    importPersonnelSlice:importPersonnelReducer,
+    tdrSlice:tdrReducer
   }
 });
 

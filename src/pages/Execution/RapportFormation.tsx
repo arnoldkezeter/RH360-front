@@ -7,16 +7,9 @@ import BreadcrumbPageDescription from "../../components/BreadcrumbPageDescriptio
 
 import { setShowModal } from "../../_redux/features/setting";
 
-import { useFetchDepensesData } from "../../hooks/useFetchSuiviBudgetData";
-import FormDelete from "../../components/Modals/Execution/ModalBudgetDepense/FormDelete";
-import FormCreateUpdate from "../../components/Modals/Execution/ModalBudgetDepense/FormCreateUpdate";
 import { useFetchData } from "../../hooks/fechDataOptions";
 import { getFormationForDropDown } from "../../services/elaborations/formationAPI";
 import { setErrorPageFormation, setFormations } from "../../_redux/features/elaborations/formationSlice";
-import { getFilteredThemeFormations, getThemeFormationForDropDown } from "../../services/elaborations/themeFormationAPI";
-import { setErrorPageThemeFormation, setThemeFormationLoading, setThemeFormations } from "../../_redux/features/elaborations/themeFormationSlice";
-import { getBudgetFormationForDropDown } from "../../services/elaborations/budgetFormationAPI";
-import { setBudgetFormationLoading, setBudgetFormations, setBudgetFormationSelected, setErrorPageBudgetFormation } from "../../_redux/features/elaborations/budgetFormationSlice";
 import { TYPE_DEPENSE } from "../../config";
 import RapportBody from "../../components/Tables/Execution/Rapport/RapportBody";
 import { useFetchRapportFormationData } from "../../hooks/useRapportFormationData";

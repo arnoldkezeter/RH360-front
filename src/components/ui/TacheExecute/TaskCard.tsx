@@ -264,6 +264,10 @@ const TacheCard: React.FC<TacheCardProps> = ({
             dispatch(setThemeFormationSelected(selected.theme))
             navigate(`/elaboration-programme/formation/theme-formation/lieux-formation`)
           break;
+          case 'elaboration_tdr':
+            dispatch(setThemeFormationSelected(selected.theme))
+            navigate(`/elaboration-programme/formation/tdr?themeId=${selected.theme?._id}`)
+          break;
           
         }
         break;

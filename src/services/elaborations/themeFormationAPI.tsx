@@ -67,7 +67,7 @@ export async function deleteThemeFormation(themeformationId: string, lang:string
     }
 }
 
-export async function getFilteredThemeFormations({page, lang, familleMetier, formation, dateDebut, dateFin, search, filterType, userId }: {page?: number, lang:string, familleMetier?:string, formation?:string, dateDebut?:string, dateFin?:string, search?:string, filterType?:string, userId?:string }): Promise<ThemeFormationReturnGetType> {
+export async function getFilteredThemeFormations({page, lang, familleMetier, programmeFormation, formation, dateDebut, dateFin, search, filterType, userId }: {page?: number, lang:string, familleMetier?:string, programmeFormation?:string, formation?:string, dateDebut?:string, dateFin?:string, search?:string, filterType?:string, userId?:string }): Promise<ThemeFormationReturnGetType> {
     const pageSize: number = 10;
     try {
         const response: AxiosResponse<any> = await axios.get(
@@ -82,6 +82,7 @@ export async function getFilteredThemeFormations({page, lang, familleMetier, for
                     page: page,
                     limit: pageSize,
                     familleMetier, 
+                    programmeFormation,
                     formation,
                     debut:dateDebut, 
                     fin:dateFin, 
