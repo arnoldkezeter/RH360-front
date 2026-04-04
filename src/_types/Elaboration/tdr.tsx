@@ -33,21 +33,26 @@ interface LieuResume {
 }
 
 interface Module {
-    id: string;         // uuid local pour clé React
+    id: string;
     texte: string;
-    termePrefere: 'module' | 'activite'; // choix utilisateur
+    termePrefere: 'module' | 'activite';
 }
 
 interface Plage {
     id: string;
-    horaire: string;    // ex: "09h00 - 12h30"
+    horaire: string;       // ex: "09h00 - 12h30"
     modules: Module[];
-    pauseApres?: string; // ex: "12h30 - 13h30" — pause APRÈS cette plage
+    pauseApres?: string;   // pause APRÈS cette plage, avant la suivante
+}
+
+interface Jour {
+    id: string;
+    label: string;         // ex: "Jour 1", "Lundi 05 janvier", ou saisi librement
+    plages: Plage[];
 }
 
 interface DecoupageHoraire {
-    horaireGlobal: string;   // ex: "09h00 - 15h00"
-    plages: Plage[];
+    jours: Jour[];         // ← remplace horaireGlobal + plages à plat
 }
 
 interface TDRPrefill {

@@ -40,7 +40,7 @@ function CustomDropDown2<T>({
         } else {
             setSearchText("");
         }
-    }, [selectedItem, displayProperty]);
+    }, [selectedItem]);
 
     const filteredItems = items && items.filter((item) =>
         displayProperty(item).toLowerCase().includes(searchText.toLowerCase())

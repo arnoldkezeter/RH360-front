@@ -23,7 +23,7 @@ const emptyPrefill: TDRPrefill = {
     nomPartieExterne: "",
     resultatsAttendus: "",
     methodologie: "",
-    decoupageHoraire: { horaireGlobal: "", plages: [] },
+    decoupageHoraire: { jours:[] },
     organisationGroupes: "",
 };
 
@@ -98,58 +98,94 @@ const tdrSlice = createSlice({
             state.isDirty = true;
         },
 
-        // Horaire global
-        setHoraireGlobal(state, action: PayloadAction<string>) {
-            state.decoupageHoraire.horaireGlobal = action.payload;
-            state.isDirty = true;
-        },
-
-        // Plages
-        addPlage(state) {
-            state.decoupageHoraire.plages.push({
+        addJour(state) {
+            const num = state.decoupageHoraire.jours.length + 1;
+            state.decoupageHoraire.jours.push({
                 id: Date.now().toString(),
-                horaire: "",
-                modules: [],
+                label: `Jour ${num}`,
+                plages: [],
             });
             state.isDirty = true;
         },
-        updatePlage(state, action: PayloadAction<{ id: string; horaire: string }>) {
-            const plage = state.decoupageHoraire.plages.find(p => p.id === action.payload.id);
-            if (plage) { plage.horaire = action.payload.horaire; state.isDirty = true; }
+        updateJourLabel(state, action: PayloadAction<{ id: string; label: string }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.id);
+            if (jour) { jour.label = action.payload.label; state.isDirty = true; }
         },
-        removePlage(state, action: PayloadAction<string>) {
-            state.decoupageHoraire.plages = state.decoupageHoraire.plages.filter(p => p.id !== action.payload);
+        removeJour(state, action: PayloadAction<string>) {
+            state.decoupageHoraire.jours = state.decoupageHoraire.jours.filter(j => j.id !== action.payload);
             state.isDirty = true;
         },
-        setPlausePause(state, action: PayloadAction<{ plageId: string; pause: string }>) {
-            const plage = state.decoupageHoraire.plages.find(p => p.id === action.payload.plageId);
-            if (plage) { plage.pauseApres = action.payload.pause; state.isDirty = true; }
-        },
 
-        // Modules/Activités dans une plage
-        addModuleToPlage(state, action: PayloadAction<{ plageId: string }>) {
-            const plage = state.decoupageHoraire.plages.find(p => p.id === action.payload.plageId);
-            if (plage) {
-                plage.modules.push({ id: Date.now().toString(), texte: "", termePrefere: "module" });
+        // ── Plages (dans un jour) ────────────────────────────────────
+        addPlage(state, action: PayloadAction<{ jourId: string }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.jourId);
+            if (jour) {
+                jour.plages.push({
+                    id: Date.now().toString(),
+                    horaire: "",
+                    modules: [],
+                });
                 state.isDirty = true;
             }
         },
-        updateModuleDansPlage(state, action: PayloadAction<{ plageId: string; moduleId: string; texte?: string; termePrefere?: 'module' | 'activite' }>) {
-            const plage = state.decoupageHoraire.plages.find(p => p.id === action.payload.plageId);
-            if (plage) {
-                const mod = plage.modules.find(m => m.id === action.payload.moduleId);
-                if (mod) {
-                    if (action.payload.texte !== undefined) mod.texte = action.payload.texte;
-                    if (action.payload.termePrefere !== undefined) mod.termePrefere = action.payload.termePrefere;
+        updatePlage(state, action: PayloadAction<{ jourId: string; plageId: string; horaire: string }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.jourId);
+            if (jour) {
+                const plage = jour.plages.find(p => p.id === action.payload.plageId);
+                if (plage) { plage.horaire = action.payload.horaire; state.isDirty = true; }
+            }
+        },
+        removePlage(state, action: PayloadAction<{ jourId: string; plageId: string }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.jourId);
+            if (jour) {
+                jour.plages = jour.plages.filter(p => p.id !== action.payload.plageId);
+                state.isDirty = true;
+            }
+        },
+        setPausePlage(state, action: PayloadAction<{ jourId: string; plageId: string; pause: string }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.jourId);
+            if (jour) {
+                const plage = jour.plages.find(p => p.id === action.payload.plageId);
+                if (plage) { plage.pauseApres = action.payload.pause; state.isDirty = true; }
+            }
+        },
+
+        // ── Modules/Activités (dans une plage d'un jour) ─────────────
+        addModuleToPlage(state, action: PayloadAction<{ jourId: string; plageId: string }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.jourId);
+            if (jour) {
+                const plage = jour.plages.find(p => p.id === action.payload.plageId);
+                if (plage) {
+                    plage.modules.push({ id: Date.now().toString(), texte: "", termePrefere: "module" });
                     state.isDirty = true;
                 }
             }
         },
-        removeModuleDansPlage(state, action: PayloadAction<{ plageId: string; moduleId: string }>) {
-            const plage = state.decoupageHoraire.plages.find(p => p.id === action.payload.plageId);
-            if (plage) {
-                plage.modules = plage.modules.filter(m => m.id !== action.payload.moduleId);
-                state.isDirty = true;
+        updateModuleDansPlage(state, action: PayloadAction<{
+            jourId: string; plageId: string; moduleId: string;
+            texte?: string; termePrefere?: 'module' | 'activite'
+        }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.jourId);
+            if (jour) {
+                const plage = jour.plages.find(p => p.id === action.payload.plageId);
+                if (plage) {
+                    const mod = plage.modules.find(m => m.id === action.payload.moduleId);
+                    if (mod) {
+                        if (action.payload.texte !== undefined) mod.texte = action.payload.texte;
+                        if (action.payload.termePrefere !== undefined) mod.termePrefere = action.payload.termePrefere;
+                        state.isDirty = true;
+                    }
+                }
+            }
+        },
+        removeModuleDansPlage(state, action: PayloadAction<{ jourId: string; plageId: string; moduleId: string }>) {
+            const jour = state.decoupageHoraire.jours.find(j => j.id === action.payload.jourId);
+            if (jour) {
+                const plage = jour.plages.find(p => p.id === action.payload.plageId);
+                if (plage) {
+                    plage.modules = plage.modules.filter(m => m.id !== action.payload.moduleId);
+                    state.isDirty = true;
+                }
             }
         },
     },
@@ -169,14 +205,16 @@ export const {
     updateObjectif,
     removeObjectif,
     setFormateurs,
-    setHoraireGlobal, 
     addPlage, 
     updatePlage, 
     removePlage, 
-    setPlausePause, 
     addModuleToPlage, 
     updateModuleDansPlage, 
-    removeModuleDansPlage
+    removeModuleDansPlage,
+    updateJourLabel,
+    removeJour,
+    setPausePlage,
+    addJour
 } = tdrSlice.actions;
 
 export default tdrSlice.reducer;

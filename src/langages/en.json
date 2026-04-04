@@ -1402,7 +1402,7 @@
     "titre_en_placeholder": "Title in English...",
     "date_debut": "Start date",
     "date_fin": "End date",
-    "duree_heures": "Duration (hours)",
+    "duree_heures": "Duration (days)",
     "lieu": "Venue",
     "lieu_placeholder": "City, room...",
     "responsable": "Training manager",
@@ -1474,7 +1474,13 @@
     "prix_ht": "Unit price excl. tax (FCFA)",
     "taxes": "Taxes",
     "montant_ttc": "Total incl. tax (FCFA)",
-    "total_general": "GRAND TOTAL"
+    "total_general": "GRAND TOTAL",
+    "ajouter_jour": "Add a training day",
+    "jour": "Day",
+    "jour_label_placeholder": "e.g. Day 1, Monday 5 January...",
+    "duree_calculee": "Automatically calculated from dates (editable)",
+    "module_placeholder_court": "e.g. Taxpayer registration",
+    "modules_numerotation_auto": "Numbering (Module 1, Module 2…) is added automatically in the document."
   }
 
 

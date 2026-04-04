@@ -15,14 +15,16 @@ import {
     setTDRPrefill, updateTDRField, addModule, updateModule,
     removeModule, addObjectif, updateObjectif, removeObjectif,
     resetTDR,
-    setHoraireGlobal,
     updatePlage,
     removePlage,
     updateModuleDansPlage,
     removeModuleDansPlage,
     addModuleToPlage,
-    setPlausePause,
     addPlage,
+    updateJourLabel,
+    removeJour,
+    addJour,
+    setPausePlage,
 } from "../../../_redux/features/elaborations/tdrSlice";
 import { getTDRPrefill, genererTDR, downloadPDFBlob } from "../../../services/elaborations/tdrAPI";
 import BreadcrumbPageDescription from "../../../components/BreadcrumbPageDescription";
@@ -433,71 +435,86 @@ const GenerateurTDR = () => {
     }, [dispatch]);
 
     const serializerDecoupage = (d: DecoupageHoraire): string => {
-        if (!d.horaireGlobal && d.plages.length === 0) return "";
-
+        if (!d.jours || d.jours.length === 0) return "";
         const lignes: string[] = [];
-        if (d.horaireGlobal) lignes.push(`HORAIRE: ${d.horaireGlobal}`);
 
-        d.plages.forEach((plage, i) => {
-            if (plage.horaire) lignes.push(`PERIODE: ${plage.horaire}`);
-            plage.modules.forEach(mod => {
-                // Préfixe différencié : MODULE vs ACTIVITE
-                const prefixe = mod.termePrefere === 'activite' ? 'ACTIVITE' : 'MODULE';
-                if (mod.texte) lignes.push(`${prefixe}: ${mod.texte}`);
+        d.jours.forEach(jour => {
+            lignes.push(`JOUR: ${jour.label}`);
+            jour.plages.forEach((plage, i) => {
+                if (plage.horaire) lignes.push(`PERIODE: ${plage.horaire}`);
+                plage.modules.forEach(mod => {
+                    const prefixe = mod.termePrefere === 'activite' ? 'ACTIVITE' : 'MODULE';
+                    if (mod.texte) lignes.push(`${prefixe}: ${mod.texte}`);
+                });
+                if (plage.pauseApres && i < jour.plages.length - 1) {
+                    lignes.push(`PAUSE: ${plage.pauseApres}`);
+                }
             });
-            // Pause après la plage (sauf la dernière)
-            if (plage.pauseApres && i < d.plages.length - 1) {
-                lignes.push(`PAUSE: ${plage.pauseApres}`);
-            }
         });
 
         return lignes.join('\n');
     };
 
     const deserializerDecoupage = (raw: string): DecoupageHoraire => {
-        if (!raw) return { horaireGlobal: "", plages: [] };
-
-        const result: DecoupageHoraire = { horaireGlobal: "", plages: [] };
+        if (!raw) return { jours: [] };
+        const result: DecoupageHoraire = { jours: [] };
+        let currentJour: Jour | null = null;
         let currentPlage: Plage | null = null;
 
-        raw.split('n').forEach(ligne => {
+        raw.split('\n').forEach(ligne => {
             ligne = ligne.trim();
             if (!ligne) return;
+            const upper = ligne.toUpperCase();
 
-            if (ligne.toUpperCase().startsWith('HORAIRE:')) {
-                result.horaireGlobal = ligne.replace(/^horaire:/i, '').trim();
+            if (upper.startsWith('JOUR:')) {
+                currentJour = {
+                    id: Date.now().toString() + Math.random(),
+                    label: ligne.replace(/^jour:/i, '').trim(),
+                    plages: [],
+                };
+                currentPlage = null;
+                result.jours.push(currentJour);
 
-            } else if (ligne.toUpperCase().startsWith('PERIODE:') || ligne.toUpperCase().startsWith('PÉRIODE:')) {
+            } else if (upper.startsWith('PERIODE:') || upper.startsWith('PÉRIODE:')) {
                 currentPlage = {
                     id: Date.now().toString() + Math.random(),
                     horaire: ligne.replace(/^p[eé]riode:/i, '').trim(),
                     modules: [],
                 };
-                result.plages.push(currentPlage);
+                if (currentJour) currentJour.plages.push(currentPlage);
 
-            } else if (ligne.toUpperCase().startsWith('MODULE:')) {
+            } else if (upper.startsWith('MODULE:')) {
                 const texte = ligne.replace(/^module:/i, '').trim();
                 if (currentPlage) {
-                    currentPlage.modules.push({ id: Date.now().toString() + Math.random(), texte, termePrefere: 'module' });
+                    currentPlage.modules.push({
+                        id: Date.now().toString() + Math.random(),
+                        texte, termePrefere: 'module'
+                    });
                 }
 
-            } else if (ligne.toUpperCase().startsWith('ACTIVITE:')) {
+            } else if (upper.startsWith('ACTIVITE:')) {
                 const texte = ligne.replace(/^activite:/i, '').trim();
                 if (currentPlage) {
-                    currentPlage.modules.push({ id: Date.now().toString() + Math.random(), texte, termePrefere: 'activite' });
+                    currentPlage.modules.push({
+                        id: Date.now().toString() + Math.random(),
+                        texte, termePrefere: 'activite'
+                    });
                 }
 
-            } else if (ligne.toUpperCase().startsWith('PAUSE:')) {
-                const textePause = ligne.replace(/^pause:/i, '').trim();
-                // Attacher la pause à la plage précédente
-                if (currentPlage) {
-                    currentPlage.pauseApres = textePause;
-                }
+            } else if (upper.startsWith('PAUSE:')) {
+                if (currentPlage) currentPlage.pauseApres = ligne.replace(/^pause:/i, '').trim();
             }
         });
 
         return result;
     };
+
+    const dureeCalculee = (!tdr.duree && tdr.dateDebut && tdr.dateFin)
+    ? Math.ceil(
+        (new Date(tdr.dateFin).getTime() - new Date(tdr.dateDebut).getTime())
+        / (1000 * 60 * 60 * 24)
+      )
+    : tdr.duree;
 
     // Génération du PDF
     const handleGenerate = async () => {
@@ -698,10 +715,10 @@ const GenerateurTDR = () => {
                                 prefilled={!!tdr.dateFin}
                             />
                         </Field>
-                        <Field label={t("tdr.duree_heures")} isPrefilled={!!tdr.duree}>
+                        <Field label={t("tdr.duree_heures")} isPrefilled={!!tdr.duree} hint={!tdr.duree && tdr.dateDebut && tdr.dateFin ? t("tdr.duree_calculee") : undefined}>
                             <StyledInput
                                 type="number"
-                                value={tdr.duree ?? ""}
+                                value={dureeCalculee ?? ""}
                                 onChange={v => upd("duree", v ? Number(v) : null)}
                                 prefilled={!!tdr.duree}
                                 placeholder="ex: 6"
@@ -993,63 +1010,39 @@ const GenerateurTDR = () => {
                             </span>
                         </label>
 
-                        {/* Horaire global — unique */}
-                        <div style={{
-                            padding: "12px 16px",
-                            background: "#f0f4ff",
-                            border: `1.5px solid ${COLORS.primary}`,
-                            borderRadius: "8px",
-                            marginBottom: "12px",
-                        }}>
-                            <label style={{ fontSize: "12px", fontWeight: 700, color: COLORS.primary, display: "block", marginBottom: "6px" }}>
-                                ⏰ {t("tdr.horaire_global")}
-                            </label>
-                            <input
-                                value={tdr.decoupageHoraire.horaireGlobal}
-                                onChange={e => dispatch(setHoraireGlobal(e.target.value))}
-                                placeholder={t("tdr.horaire_global_placeholder")}
-                                style={{
-                                    width: "100%", padding: "8px 12px",
-                                    border: `1px solid ${COLORS.primary}40`,
-                                    borderRadius: "6px", fontSize: "13px",
-                                    background: COLORS.white,
-                                }}
-                            />
-                        </div>
+                        {tdr.decoupageHoraire.jours.map((jour, jourIndex) => (
+                            <div key={jour.id} style={{ marginBottom: "14px" }}>
 
-                        {/* Plages */}
-                        {tdr.decoupageHoraire.plages.map((plage, plageIndex) => (
-                            <div key={plage.id} style={{ marginBottom: "10px" }}>
-
-                                {/* Bloc plage */}
+                                {/* ── Bloc Jour ── */}
                                 <div style={{
-                                    padding: "12px 14px",
-                                    background: "#f9fafb",
-                                    border: `1px solid ${COLORS.gray200}`,
-                                    borderLeft: `3px solid ${COLORS.accent}`,
-                                    borderRadius: "0 8px 8px 0",
-                                    marginLeft: "16px",
+                                    padding: "10px 14px",
+                                    background: "#1e3a8a08",
+                                    border: `1.5px solid ${COLORS.primary}`,
+                                    borderRadius: "8px",
                                 }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                                    {/* Header Jour */}
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
                                         <span style={{
-                                            fontSize: "11px", fontWeight: 700,
-                                            color: COLORS.accent, whiteSpace: "nowrap",
+                                            background: COLORS.primary, color: COLORS.white,
+                                            borderRadius: "6px", padding: "3px 10px",
+                                            fontSize: "12px", fontWeight: 700, flexShrink: 0,
                                         }}>
-                                            ▸ {t("tdr.plage")} {plageIndex + 1}
+                                            {t("tdr.jour")} {jourIndex + 1}
                                         </span>
                                         <input
-                                            value={plage.horaire}
-                                            onChange={e => dispatch(updatePlage({ id: plage.id, horaire: e.target.value }))}
-                                            placeholder={t("tdr.plage_horaire_placeholder")}
+                                            value={jour.label}
+                                            onChange={e => dispatch(updateJourLabel({ id: jour.id, label: e.target.value }))}
+                                            placeholder={t("tdr.jour_label_placeholder")}
                                             style={{
                                                 flex: 1, padding: "7px 10px",
                                                 border: `1px solid ${COLORS.gray300}`,
                                                 borderRadius: "5px", fontSize: "13px",
+                                                background: COLORS.white,
                                             }}
                                         />
                                         <button
                                             type="button"
-                                            onClick={() => dispatch(removePlage(plage.id))}
+                                            onClick={() => dispatch(removeJour(jour.id))}
                                             style={{
                                                 padding: "6px", background: COLORS.dangerLight,
                                                 border: `1px solid ${COLORS.dangerLight}`,
@@ -1060,126 +1053,184 @@ const GenerateurTDR = () => {
                                         </button>
                                     </div>
 
-                                    {/* Modules/Activités de cette plage */}
-                                    {plage.modules.map((mod) => (
-                                        <div key={mod.id} style={{
-                                            display: "flex", gap: "6px", alignItems: "center",
-                                            marginBottom: "6px", marginLeft: "20px",
-                                        }}>
-                                            {/* Sélecteur Module / Activité */}
-                                            <select
-                                                value={mod.termePrefere}
-                                                onChange={e => dispatch(updateModuleDansPlage({
-                                                    plageId: plage.id,
-                                                    moduleId: mod.id,
-                                                    termePrefere: e.target.value as 'module' | 'activite',
-                                                }))}
-                                                style={{
-                                                    padding: "6px 4px", fontSize: "11px",
-                                                    border: `1px solid ${COLORS.gray300}`,
-                                                    borderRadius: "5px", background: COLORS.white,
-                                                    color: COLORS.gray600, flexShrink: 0,
-                                                    cursor: "pointer",
-                                                }}
-                                            >
-                                                <option value="module">{t("tdr.module")}</option>
-                                                <option value="activite">{t("tdr.activite")}</option>
-                                            </select>
+                                    {/* Plages du jour */}
+                                    {jour.plages.map((plage, plageIndex) => (
+                                        <div key={plage.id} style={{ marginBottom: "8px" }}>
 
-                                            <input
-                                                value={mod.texte}
-                                                onChange={e => dispatch(updateModuleDansPlage({
-                                                    plageId: plage.id,
-                                                    moduleId: mod.id,
-                                                    texte: e.target.value,
-                                                }))}
-                                                placeholder={
-                                                    mod.termePrefere === 'module'
-                                                        ? t("tdr.module_placeholder")
-                                                        : t("tdr.activite_placeholder")
-                                                }
-                                                style={{
-                                                    flex: 1, padding: "7px 10px",
-                                                    border: `1px solid ${COLORS.gray300}`,
-                                                    borderRadius: "5px", fontSize: "13px",
-                                                }}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => dispatch(removeModuleDansPlage({ plageId: plage.id, moduleId: mod.id }))}
-                                                style={{
-                                                    padding: "5px", background: COLORS.dangerLight,
-                                                    border: "none", borderRadius: "4px",
-                                                    color: COLORS.danger, cursor: "pointer",
-                                                }}
-                                            >
-                                                <FiTrash2 size={12} />
-                                            </button>
+                                            {/* Bloc Plage */}
+                                            <div style={{
+                                                padding: "10px 12px",
+                                                background: COLORS.white,
+                                                border: `1px solid ${COLORS.gray200}`,
+                                                borderLeft: `3px solid ${COLORS.accent}`,
+                                                borderRadius: "0 6px 6px 0",
+                                                marginLeft: "16px",
+                                            }}>
+                                                {/* Header Plage */}
+                                                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                                                    <span style={{ fontSize: "11px", fontWeight: 700, color: COLORS.accent, whiteSpace: "nowrap" }}>
+                                                        ▸ {t("tdr.plage")} {plageIndex + 1}
+                                                    </span>
+                                                    <input
+                                                        value={plage.horaire}
+                                                        onChange={e => dispatch(updatePlage({ jourId: jour.id, plageId: plage.id, horaire: e.target.value }))}
+                                                        placeholder={t("tdr.plage_horaire_placeholder")}
+                                                        style={{
+                                                            flex: 1, padding: "6px 10px",
+                                                            border: `1px solid ${COLORS.gray300}`,
+                                                            borderRadius: "5px", fontSize: "13px",
+                                                        }}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => dispatch(removePlage({ jourId: jour.id, plageId: plage.id }))}
+                                                        style={{
+                                                            padding: "5px", background: COLORS.dangerLight,
+                                                            border: `1px solid ${COLORS.dangerLight}`,
+                                                            borderRadius: "4px", color: COLORS.danger, cursor: "pointer",
+                                                        }}
+                                                    >
+                                                        <FiTrash2 size={12} />
+                                                    </button>
+                                                </div>
+
+                                                {/* Modules/Activités */}
+                                                {plage.modules.map((mod, modIndex) => (
+                                                    <div key={mod.id} style={{
+                                                        display: "flex", gap: "6px", alignItems: "center",
+                                                        marginBottom: "5px", marginLeft: "18px",
+                                                    }}>
+                                                        {/* Badge numéro + type */}
+                                                        <span style={{
+                                                            fontSize: "10px", fontWeight: 700, flexShrink: 0,
+                                                            color: mod.termePrefere === 'activite' ? COLORS.accent : COLORS.primary,
+                                                            minWidth: "14px",
+                                                        }}>
+                                                            {modIndex + 1}.
+                                                        </span>
+                                                        <select
+                                                            value={mod.termePrefere}
+                                                            onChange={e => dispatch(updateModuleDansPlage({
+                                                                jourId: jour.id, plageId: plage.id, moduleId: mod.id,
+                                                                termePrefere: e.target.value as 'module' | 'activite',
+                                                            }))}
+                                                            style={{
+                                                                padding: "5px 4px", fontSize: "11px",
+                                                                border: `1px solid ${COLORS.gray300}`,
+                                                                borderRadius: "4px", background: COLORS.white,
+                                                                color: COLORS.gray600, flexShrink: 0, cursor: "pointer",
+                                                            }}
+                                                        >
+                                                            <option value="module">{t("tdr.module")}</option>
+                                                            <option value="activite">{t("tdr.activite")}</option>
+                                                        </select>
+                                                        <input
+                                                            value={mod.texte}
+                                                            onChange={e => dispatch(updateModuleDansPlage({
+                                                                jourId: jour.id, plageId: plage.id, moduleId: mod.id,
+                                                                texte: e.target.value,
+                                                            }))}
+                                                            placeholder={
+                                                                mod.termePrefere === 'module'
+                                                                    ? t("tdr.module_placeholder_court")
+                                                                    : t("tdr.activite_placeholder")
+                                                            }
+                                                            style={{
+                                                                flex: 1, padding: "6px 10px",
+                                                                border: `1px solid ${COLORS.gray300}`,
+                                                                borderRadius: "4px", fontSize: "13px",
+                                                            }}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => dispatch(removeModuleDansPlage({ jourId: jour.id, plageId: plage.id, moduleId: mod.id }))}
+                                                            style={{
+                                                                padding: "4px", background: COLORS.dangerLight,
+                                                                border: "none", borderRadius: "4px",
+                                                                color: COLORS.danger, cursor: "pointer",
+                                                            }}
+                                                        >
+                                                            <FiTrash2 size={11} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+
+                                                {/* Ajouter module/activité */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => dispatch(addModuleToPlage({ jourId: jour.id, plageId: plage.id }))}
+                                                    style={{
+                                                        display: "flex", alignItems: "center", gap: "4px",
+                                                        marginLeft: "18px", marginTop: "4px",
+                                                        padding: "4px 10px",
+                                                        border: `1px dashed ${COLORS.accent}`,
+                                                        borderRadius: "4px", background: "#f0f9ff",
+                                                        color: COLORS.accent, cursor: "pointer", fontSize: "11px",
+                                                    }}
+                                                >
+                                                    <FiPlus size={11} /> {t("tdr.ajouter_module_activite")}
+                                                </button>
+                                            </div>
+
+                                            {/* Pause après cette plage */}
+                                            {plageIndex < jour.plages.length - 1 && (
+                                                <div style={{
+                                                    display: "flex", alignItems: "center", gap: "8px",
+                                                    marginLeft: "16px", marginTop: "5px", marginBottom: "5px",
+                                                }}>
+                                                    <span style={{ fontSize: "11px", color: COLORS.gray500, whiteSpace: "nowrap", fontStyle: "italic" }}>
+                                                        ☕ {t("tdr.pause_apres")}
+                                                    </span>
+                                                    <input
+                                                        value={plage.pauseApres || ""}
+                                                        onChange={e => dispatch(setPausePlage({ jourId: jour.id, plageId: plage.id, pause: e.target.value }))}
+                                                        placeholder={t("tdr.pause_placeholder")}
+                                                        style={{
+                                                            flex: 1, padding: "5px 10px",
+                                                            border: `1px dashed ${COLORS.gray300}`,
+                                                            borderRadius: "4px", fontSize: "12px",
+                                                            background: "#fffef0", fontStyle: "italic",
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
 
-                                    {/* Ajouter module/activité */}
+                                    {/* Ajouter une plage */}
                                     <button
                                         type="button"
-                                        onClick={() => dispatch(addModuleToPlage({ plageId: plage.id }))}
+                                        onClick={() => dispatch(addPlage({ jourId: jour.id }))}
                                         style={{
                                             display: "flex", alignItems: "center", gap: "5px",
-                                            marginLeft: "20px", marginTop: "4px",
-                                            padding: "5px 10px",
+                                            marginLeft: "16px", marginTop: "6px",
+                                            padding: "6px 12px",
                                             border: `1px dashed ${COLORS.accent}`,
                                             borderRadius: "5px", background: "#f0f9ff",
-                                            color: COLORS.accent, cursor: "pointer",
-                                            fontSize: "12px",
+                                            color: COLORS.accent, cursor: "pointer", fontSize: "12px",
                                         }}
                                     >
-                                        <FiPlus size={12} /> {t("tdr.ajouter_module_activite")}
+                                        <FiPlus size={12} /> {t("tdr.ajouter_plage")}
                                     </button>
                                 </div>
-
-                                {/* Pause APRÈS cette plage (sauf après la dernière) */}
-                                {plageIndex < tdr.decoupageHoraire.plages.length - 1 && (
-                                    <div style={{
-                                        display: "flex", alignItems: "center", gap: "8px",
-                                        marginLeft: "16px", marginTop: "6px", marginBottom: "6px",
-                                    }}>
-                                        <span style={{
-                                            fontSize: "11px", color: COLORS.gray500,
-                                            whiteSpace: "nowrap", fontStyle: "italic",
-                                        }}>
-                                            ☕ {t("tdr.pause_apres")}
-                                        </span>
-                                        <input
-                                            value={plage.pauseApres || ""}
-                                            onChange={e => dispatch(setPlausePause({ plageId: plage.id, pause: e.target.value }))}
-                                            placeholder={t("tdr.pause_placeholder")}
-                                            style={{
-                                                flex: 1, padding: "6px 10px",
-                                                border: `1px dashed ${COLORS.gray300}`,
-                                                borderRadius: "5px", fontSize: "12px",
-                                                background: "#fffef0",
-                                                fontStyle: "italic",
-                                            }}
-                                        />
-                                    </div>
-                                )}
                             </div>
                         ))}
 
-                        {/* Ajouter une plage */}
+                        {/* Ajouter un jour */}
                         <button
                             type="button"
-                            onClick={() => dispatch(addPlage())}
+                            onClick={() => dispatch(addJour())}
                             style={{
                                 display: "flex", alignItems: "center", gap: "6px",
-                                marginLeft: "16px", marginTop: "4px",
-                                padding: "8px 14px",
+                                marginTop: "6px",
+                                padding: "8px 16px",
                                 border: `1px dashed ${COLORS.primaryLight}`,
                                 borderRadius: "6px", background: COLORS.primaryFaded,
                                 color: COLORS.primaryLight, cursor: "pointer",
                                 fontSize: "13px", fontWeight: 500,
                             }}
                         >
-                            <FiPlus size={14} /> {t("tdr.ajouter_plage")}
+                            <FiPlus size={14} /> {t("tdr.ajouter_jour")}
                         </button>
                     </div>
                 </Section>

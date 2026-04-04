@@ -11,7 +11,6 @@ import {
 import { CardStat } from "../../../ui/Card";
 import { Target, TrendingUp, Banknote, Filter, ChevronUp, ChevronDown } from "lucide-react";
 import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
 import { NoData } from "../../../NoData";
 import CustomDropDown2 from "../../../DropDown/CustomDropDown2";
 import InputSearch from "../../common/SearchTable";

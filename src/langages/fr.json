@@ -1409,7 +1409,7 @@
     "titre_en_placeholder": "Title in English...",
     "date_debut": "Date de début",
     "date_fin": "Date de fin",
-    "duree_heures": "Durée (heures)",
+    "duree_heures": "Durée (jours)",
     "lieu": "Lieu",
     "lieu_placeholder": "Ville, salle...",
     "responsable": "Responsable de la formation",
@@ -1481,6 +1481,12 @@
     "prix_ht": "Prix unit. HT (FCFA)",
     "taxes": "Taxes",
     "montant_ttc": "Montant TTC (FCFA)",
-    "total_general": "TOTAL GÉNÉRAL"
+    "total_general": "TOTAL GÉNÉRAL",
+    "ajouter_jour": "Ajouter un jour de formation",
+    "jour": "Jour",
+    "jour_label_placeholder": "ex: Jour 1, Lundi 05 janvier...",
+    "duree_calculee": "Calculé automatiquement depuis les dates (modifiable)",
+    "module_placeholder_court": "ex: Immatriculation des contribuables",
+    "modules_numerotation_auto": "La numérotation (Module 1, Module 2…) est ajoutée automatiquement dans le document."
   }
 }
