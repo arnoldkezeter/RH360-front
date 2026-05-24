@@ -1,296 +1,93 @@
+// services/evaluations/evaluationChaudReponseAPI.ts
 import axios, { AxiosResponse } from 'axios';
 import { apiUrl, wstjqer } from '../../config';
 
+const api   = `${apiUrl}/evaluations-a-chaud-reponses`;
+const token = () => `Bearer ${localStorage.getItem(wstjqer)}`;
 
-// Configuration de base
-const api = `${apiUrl}/evaluations-a-chaud-reponses`; // Adapter selon votre config
-const token = `Bearer ${localStorage.getItem(wstjqer)}`;
+const headers = (lang: string) => ({
+    'Content-Type':    'application/json',
+    'accept-language': lang,
+    'authorization':   token(),
+});
 
-// Service pour sauvegarder un brouillon
-export async function saveDraftEvaluationAChaudReponse(reponseData: Omit<EvaluationAChaudReponse, '_id' | 'statut' | 'dateFinition' | 'createdAt' | 'updatedAt'>, lang: string): Promise<ReponseApiPros> {
-    try {
-        const response: AxiosResponse<any> = await axios.post(
-            `${api}/draft`,
-            reponseData,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
+// ═══════════════════════════════════════════════════════════════════════════════
+// SOUMISSION
+// ═══════════════════════════════════════════════════════════════════════════════
 
-        return response.data;
-    } catch (error) {
-        console.error('Error saving draft evaluation:', error);
-        throw error;
-    }
+/**
+ * Sauvegarde un brouillon (peut être appelé plusieurs fois).
+ * CORRECTION : URL /brouillon (anciennement /draft)
+ */
+export async function saveDraftEvaluationAChaudReponse(
+    reponseData: EvaluationReponsePayload,
+    lang: string
+): Promise<ReponseApiPros> {
+    const response: AxiosResponse = await axios.post(`${api}/brouillon`, reponseData, { headers: headers(lang) });
+    return response.data;
 }
 
-// Service pour récupérer un brouillon
-export async function getDraftEvaluationAChaudReponse(utilisateur: string,modele: string,lang: string): Promise<ReponseApiPros> {
-    try {
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/brouillon/${utilisateur}/${modele}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        console.error('Error getting draft evaluation:', error);
-        throw error;
-    }
+/**
+ * Soumet une réponse définitive (irréversible).
+ * CORRECTION : URL /soumettre (anciennement /)
+ */
+export async function submitEvaluationAChaudReponse(
+    reponseData: EvaluationReponsePayload,
+    lang: string
+): Promise<ReponseApiPros> {
+    const response: AxiosResponse = await axios.post(`${api}/soumettre`, reponseData, { headers: headers(lang) });
+    return response.data;
 }
 
-// Service pour lister les brouillons d'un utilisateur
-export async function getUserDrafts(utilisateur: string, lang: string): Promise<ReponseApiPros> {
-    try {
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/drafts/${utilisateur}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
+// ═══════════════════════════════════════════════════════════════════════════════
+// LECTURE
+// ═══════════════════════════════════════════════════════════════════════════════
 
-        return response.data;
-    } catch (error) {
-        console.error('Error getting user drafts:', error);
-        throw error;
-    }
+/**
+ * Réponse d'un utilisateur pour une évaluation précise (brouillon ou soumis).
+ * CORRECTION : URL /:utilisateurId/:modeleId (anciennement /brouillon/:u/:m)
+ */
+export async function getReponseUtilisateur(
+    utilisateurId: string,
+    modeleId: string,
+    lang: string
+): Promise<ReponseApiPros> {
+    const response: AxiosResponse = await axios.get(
+        `${api}/${utilisateurId}/${modeleId}`,
+        { headers: headers(lang) }
+    );
+    return response.data;
 }
 
-export async function getUserEvaluations({page, lang, search, userId }: {page: number, lang: string, search?: string, userId:string }): Promise<EvaluationChaudReturnGetType> {
-    const pageSize: number = 10;
-    try {
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/utilisateur/${userId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-                params: {
-                    page: page,
-                    limit: pageSize,
-                    search: search
-                },
-            },
-        );
-        console.log(response.data)
-        return response.data.data;
-    } catch (error) {
-        console.error('Error getting filtered evaluations:', error);
-        throw error;
-    }
-}
-// 1. Soumettre une réponse à une évaluation
-export async function submitEvaluationAChaudReponse(reponseData: Omit<EvaluationAChaudReponse, '_id' | 'statut' | 'dateFinition' | 'createdAt' | 'updatedAt'>, lang: string): Promise<ReponseApiPros> {
-    console.log(reponseData)
-    try {
-        const response: AxiosResponse<any> = await axios.post(
-            `${api}`,
-            reponseData,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        console.error('Error submitting final evaluation:', error);
-        throw error;
-    }
+/**
+ * Toutes les réponses d'un utilisateur (liste paginée).
+ * URL inchangée : /utilisateur/:utilisateurId
+ */
+export async function getUserEvaluationReponses({
+    page, lang, userId,
+}: {
+    page: number; lang: string; userId: string;
+}): Promise<{ reponses: EvaluationAChaudReponse[]; totalItems: number; currentPage: number; totalPages: number; pageSize: number }> {
+    const response: AxiosResponse = await axios.get(`${api}/utilisateur/${userId}`, {
+        headers: headers(lang),
+        params: { page, limit: 10 },
+    });
+    return response.data.data;
 }
 
-// 2. Obtenir le tableau de bord des évaluations
-export async function getDashboardEvaluations(lang: string, periode?: number, themeId?: string): Promise<ReponseApiPros> {
-    try {
-        const params = new URLSearchParams();
-        if (periode) params.append('periode', periode.toString());
-        if (themeId) params.append('themeId', themeId);
-
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/dashboard?${params.toString()}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        console.error('Error getting dashboard evaluations:', error);
-        throw error;
-    }
+/**
+ * Toutes les réponses pour une évaluation (vue admin).
+ * URL : /evaluation/:evaluationId
+ */
+export async function getReponsesParEvaluation({
+    evaluationId, page, lang,
+}: {
+    evaluationId: string; page: number; lang: string;
+}): Promise<{ reponses: EvaluationAChaudReponse[]; totalItems: number; currentPage: number; totalPages: number; pageSize: number }> {
+    const response: AxiosResponse = await axios.get(`${api}/evaluation/${evaluationId}`, {
+        headers: headers(lang),
+        params: { page, limit: 10 },
+    });
+    return response.data.data;
 }
 
-// 3. Obtenir les statistiques d'une évaluation
-export async function getEvaluationStats(evaluationId: string, lang: string): Promise<ReponseApiPros> {
-    try {
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/${evaluationId}/stats`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
-        return response.data.data;
-    } catch (error) {
-        console.error('Error getting evaluation stats:', error);
-        throw error;
-    }
-}
-
-// 4. Obtenir les résultats par rubrique
-export async function getResultatsByRubrique(evaluationId: string, lang: string): Promise<ReponseApiPros> {
-    try {
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/${evaluationId}/rubriques`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
-        
-        return response.data.data;
-    } catch (error) {
-        console.error('Error getting results by rubrique:', error);
-        throw error;
-    }
-}
-
-// 5. Obtenir les détails d'une question spécifique
-export async function getQuestionDetails(evaluationId: string, questionId: string, lang: string): Promise<ReponseApiPros> {
-    try {
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/${evaluationId}/questions/${questionId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        console.error('Error getting question details:', error);
-        throw error;
-    }
-}
-
-// 6. Obtenir les commentaires d'une évaluation
-export async function getCommentaires(evaluationId: string, lang: string, limit?: number): Promise<ReponseApiPros> {
-    try {       
-
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/${evaluationId}/commentaires`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-                params:{
-                    limit
-                }
-            }
-        );
-
-        return response.data.data;
-    } catch (error) {
-        console.error('Error getting commentaires:', error);
-        throw error;
-    }
-}
-
-// 7. Obtenir la comparaison avec d'autres évaluations
-export async function getComparaisonEvaluations(evaluationId: string, lang: string, themeId?: string, periode?: number): Promise<ReponseApiPros> {
-    try {
-        const params = new URLSearchParams();
-        if (themeId) params.append('themeId', themeId);
-        if (periode) params.append('periode', periode.toString());
-
-        const response: AxiosResponse<any> = await axios.get(
-            `${api}/${evaluationId}/comparaison?${params.toString()}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        console.error('Error getting comparaison evaluations:', error);
-        throw error;
-    }
-}
-
-// 8. Exporter les données d'une évaluation
-export async function exportEvaluationData(evaluationId: string, lang: string, format: 'json' | 'csv' | 'excel' = 'json'): Promise<Blob> {
-    try {
-        const params = new URLSearchParams();
-        params.append('format', format);
-
-        const response: AxiosResponse<Blob> = await axios.get(
-            `${api}/${evaluationId}/export?${params.toString()}`,
-            {
-                headers: {
-                    'accept-language': lang,
-                    'authorization': token,
-                },
-                responseType: 'blob'
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        console.error('Error exporting evaluation data:', error);
-        throw error;
-    }
-}
-
-// 9. Fonction utilitaire pour télécharger le fichier exporté
-export function downloadExportedFile(blob: Blob, evaluationId: string, format: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    
-    const date = new Date().toISOString().split('T')[0];
-    const extension = format === 'excel' ? 'xlsx' : format;
-    link.download = `evaluation_${evaluationId}_${date}.${extension}`;
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-}

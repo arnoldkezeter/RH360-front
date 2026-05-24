@@ -50,7 +50,7 @@ function FormCreateUpdateNoteStageIndiviuel({note, themeId, mandatId, stageId }:
             setTitreEn("");
             setCopieA("");
             setDesignationTuteur("");
-            setMiseEnOeuvre("Le Directeur des Affaires Générales")
+            setMiseEnOeuvre("La Directrice des Affaires Générales")
             
         }
 

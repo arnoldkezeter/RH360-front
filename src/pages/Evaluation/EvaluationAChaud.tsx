@@ -4,7 +4,7 @@ import { RootState } from '../../_redux/store';
 import { useTranslation } from 'react-i18next';
 import { useFetchData } from '../../hooks/fechDataOptions';
 import { setErrorPageEvaluationAChaudReponse, setEvaluationAChaudReponseLoading, setEvaluationAChaudReponses, setEvaluationSelected } from '../../_redux/features/evaluations/evaluationChaudReponseSlice';
-import { getUserEvaluations } from '../../services/evaluations/evaluationChaudReponseAPI';
+import { getUserEvaluations } from '../../services/evaluations/evaluationChaudAPI';
 import BreadcrumbPageDescription from '../../components/BreadcrumbPageDescription';
 import { FaFilter, FaSort } from 'react-icons/fa';
 import InputSearch from '../../components/Tables/common/SearchTable';

@@ -98,7 +98,7 @@ export async function getFilteredObjectifThemes({page, lang, search, themeId }: 
     }
 }
 
-export async function getObjectifThemeForDropDown({lang, themeId }: {lang:string, themeId:string }): Promise<ObjectifThemeReturnGetType> {
+export async function getObjectifThemeForDropDown({lang, themeId }: {lang:string, themeId:string }): Promise<ObjectifTheme[]> {
     try {
         const response: AxiosResponse<any> = await axios.get(
             `${api}/dropdown/all/${themeId}`,
@@ -112,9 +112,8 @@ export async function getObjectifThemeForDropDown({lang, themeId }: {lang:string
         );
 
         // Extraction de tous les objets de paramètres de la réponse
-        const programmesFormations: ObjectifThemeReturnGetType = response.data.data;
-        
-        return programmesFormations;
+        const objectifs: ObjectifTheme[] = response.data.data;
+        return objectifs;
     } catch (error) {
         console.error('Error getting all settings:', error);
         throw error;

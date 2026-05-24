@@ -47,6 +47,8 @@ import typeEchelleReponseReducer from "./features/evaluations/typeEchelleRespons
 import importPersonnelReducer from "./features/import.tsx";
 
 import tdrReducer from "./features/elaborations/tdrSlice.tsx";
+import rubriqueStatiqueReducer from "./features/evaluations/rubriqueStatiqueSlice.tsx";  // ✅ NOUVEAU
+import templateConfigReducer from "./features/evaluations/templateConfigSlice.tsx"; 
 
 
 const store = configureStore({
@@ -97,7 +99,9 @@ const store = configureStore({
     evaluationAChaudReponseSlice:evaluationAChaudReponseReducer,
     typeEchelleReponseSlice:typeEchelleReponseReducer,
     importPersonnelSlice:importPersonnelReducer,
-    tdrSlice:tdrReducer
+    tdrSlice:tdrReducer,
+    rubriqueStatiqueSlice: rubriqueStatiqueReducer,
+    templateConfigSlice: templateConfigReducer,
   }
 });
 
