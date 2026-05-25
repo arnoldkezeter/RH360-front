@@ -13,6 +13,7 @@ import Skeleton from 'react-loading-skeleton';
 import { setShowModal } from '../../../../_redux/features/setting';
 import FormCreateUpdateNoteStageIndiviuel from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteStageIndividuel';
 import FormCreateUpdateNoteStageGroupe from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteStageGroupe';
+import FormCreateUpdateNoteStageBatch from '../../../Modals/Notes/ModalNoteService/FormCreateUpdateNoteStageBatch';
 
 interface StageTabProps {
   onEditStage?: (stage: Stage) => void;
@@ -285,12 +286,13 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                     <div className="lg:w-48">
                     <select
                         value={filterType}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value)}
+                        onChange={(e) => setFilterType(e.target.value)}
                         className="w-full px-3 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
                     >
                         <option value="ALL">{t('label.tous_les_types')}</option>
                         <option value="GROUPE">{t('label.groupe')}</option>
                         <option value="INDIVIDUEL">{t('label.individuel')}</option>
+                        <option value="BATCH">{t('label.stage_batch') || 'Établissement'}</option>
                     </select>
                     </div>
 
@@ -401,8 +403,24 @@ const StageTab = ({ onEditStage }: StageTabProps) => {
                 />}
             </div>
         </div>
-        {selectedStage && selectedStage.type==='INDIVIDUEL' && <FormCreateUpdateNoteStageIndiviuel note={selectedStage.noteService} stageId={selectedStage?._id}/>}
-        {selectedStage && selectedStage.type==='GROUPE' && <FormCreateUpdateNoteStageGroupe note={selectedStage.noteService} stageId={selectedStage?._id}/>}
+        {selectedStage && selectedStage.type === 'INDIVIDUEL' && (
+            <FormCreateUpdateNoteStageIndiviuel
+                note={selectedStage.noteService}
+                stageId={selectedStage?._id}
+            />
+        )}
+        {selectedStage && selectedStage.type === 'BATCH' && (
+            <FormCreateUpdateNoteStageBatch
+                note={selectedStage.noteService}
+                stageId={selectedStage?._id}
+            />
+        )}
+        {selectedStage && selectedStage.type === 'GROUPE' && (
+            <FormCreateUpdateNoteStageGroupe
+                note={selectedStage.noteService}
+                stageId={selectedStage?._id}
+            />
+        )}
     </>
   );
 };

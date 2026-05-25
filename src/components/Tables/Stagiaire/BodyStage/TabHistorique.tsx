@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Calendar, Users, Clock, MoreVertical, Edit, Eye, Download, Trash2, Filter, Search, Plus, Pencil } from 'lucide-react';
+import { Calendar, Users, Clock, MoreVertical, Edit, Eye, Download, Trash2, Filter, Search, Plus, Pencil, Building2 } from 'lucide-react';
 import { formatDate } from '../../../../fonctions/fonction';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../_redux/store';
@@ -152,18 +152,42 @@ const HistoriqueStages = ({ onEditStage }: HistoriqueStagesTabProps) => {
     );
   };
 
-  const getTypeBadge = (type: Stage['type']): JSX.Element => {
-    return type === 'GROUPE' ? (
-      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#EDE9FE] text-[#5B21B6]">
-        <Users className="w-3 h-3 mr-1" />
-        {t('label.groupe')}
-      </span>
-    ) : (
-      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#DBEAFE] text-[#1E40AF]">
-        {t('label.individuel')}
-      </span>
+  // 1. Mettre à jour getTypeBadge pour inclure BATCH
+const getTypeBadge = (type: Stage['type']): JSX.Element => {
+    if (type === 'GROUPE') {
+        return (
+            <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#EDE9FE] text-[#5B21B6]">
+                <Users className="w-3 h-3 mr-1" />
+                {t('label.groupe')}
+            </span>
+        );
+    }
+    if (type === 'BATCH') {
+        return (
+            <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#DCFCE7] text-[#166534]">
+                <Building2 className="w-3 h-3 mr-1" />
+                {t('label.stage_batch') || 'Établissement'}
+            </span>
+        );
+    }
+    return (
+        <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#DBEAFE] text-[#1E40AF]">
+            {t('label.individuel')}
+        </span>
     );
-  };
+};
+
+// 2. Mettre à jour le select de filtre par type
+<select
+    value={filterType}
+    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value)}
+    className="w-full px-3 py-2 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
+>
+    <option value="ALL">{t('label.tous_les_types')}</option>
+    <option value="GROUPE">{t('label.groupe')}</option>
+    <option value="INDIVIDUEL">{t('label.individuel')}</option>
+    <option value="BATCH">{t('label.stage_batch') || 'Établissement'}</option>
+</select>
 
   
 

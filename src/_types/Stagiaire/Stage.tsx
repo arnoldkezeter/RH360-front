@@ -63,6 +63,8 @@ interface Stage {
   groupes?: Groupe[];                        // uniquement pour GROUPE
   rotations?:Rotation[];
   stagiaire?:Stagiaire;
+  etablissement?:Etablissement;
+  stagiaires?:Stagiaire[];
   dateDebut:string,
   dateFin:string,
   anneeStage:number,
@@ -134,6 +136,8 @@ interface CreateStageInput {
     dateDebut: string;     // ISO date string
     dateFin: string;       // ISO date string
   }>;
+  stagiaires?:string[], 
+  etablissement?:string,
   affectationsFinales?: Array<{
     groupe?: number;
     stagiaire?: string;

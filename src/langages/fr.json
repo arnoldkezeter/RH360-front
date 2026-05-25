@@ -109,6 +109,7 @@
     "cohorte_utilisateur":"Ajoutez ou supprimez des membres de la cohorte",
     "calendrier_formation":"Consultez le calendrier des formations",
     "stage_individuel": "Gérez l'affectation d'un stagiaire à des services",
+    "stage_batch":"Gérez l'affectiation en lot des stagiaires dans différents services",
     "mandat_recherche":"Gérez l'affectation d'un chercheur à des structure",
     "groupe_stage": "Gestion automatisée des groupes, rotations et affectations de stage",
     "historique_affectations": "Gérez et suivez tous vos stages de formation",
@@ -162,6 +163,12 @@
     "liste_alerte": "Liste des alertes recentes"
   },
   "label": {
+    "stage_batch":"Stage Batch",
+    "appliquer_memes_dates":"Appliquer les mêmes dates à tous les stagiaires",
+    "ajouter_manuellement_stage":"Ajouter un stagiaire manuellement",
+    "conseil_stage_batch":"Sélectionnez l'établissement pour charger automatiquement ses stagiaires. Vous pouvez ensuite ajuster les affectations individuellement, ou utiliser « Appliquer à tous » pour définir les mêmes dates en un clic.",
+    "stagiaire_deja_ajoute":"Stagiaire déjà ajouté",
+    "affectation_stagiaire":"Affectations des stagiaires",
     "par_famille_metier": "Par famille métier",
     "par_poste_direct": "Par poste de travail",
     "famille_deduite_automatiquement": "La famille métier sera déduite automatiquement selon le poste sélectionné",
@@ -529,6 +536,7 @@
     "aucun_superviseur": "Aucun superviseur trouvé",
     "aucun_service": "Aucun service",
     "aucun_chercheur": "Aucun chercheur trouvé",
+    "aucun_stage_trouve":"Aucun stagiaire trouvé pour cet établissement",
     "recherche_theme_formation": "Recherche des formations...",
     "recherche_responsable": "Recherche des responsables...",
     "recherche_utilisateur": "Recherche des utilisateurs...",
@@ -899,6 +907,8 @@
     "pas_de_resultats": "Aucun résultat"
   },
   "button": {
+    "appliquer_tous":"Appliquer à tous",
+    "cree_stage_batch":"Créer le stage BATCH",
     "valider_selection":"Valider la sélection",
     "d_accord":"D'accord",
     "reinitialiser": "Réinitialiser",
@@ -1153,6 +1163,10 @@
     "tache_stagiaire": "de la tâche"
   },
   "error": {
+    "stagiaires_sans_structure":"stagiaire(s) sans structure ou dates",
+    "erreur_chargement":"Erreur lors du chargement",
+    "bacth_min_2_stagiaires":"Un stage BATCH nécessite au moins 2 stagiaires",
+    "renseigner_date":"Veuillez renseigner les deux dates",
     "structure_stage":"Au moins une structure complète est requise.",
     "message_vide" : "Veuillez renseigner l'objet et le contenu du message.",
     "famille_deja_ajoutee": "Cette famille de métier est déjà ajoutée",
@@ -1237,6 +1251,8 @@
     "copie_a": "Le champ Copie A est obligatoire."
   },
   "message": {
+    "selection_etablissement":"Veuillez sélectionner un établissement",
+    "date_appliquee":"Dates appliquées à tous les stagiaires",
     "verifier": "Vérifier",
     "non_autoriser": "Non autorisé",
     "utilisateur_ajoute_cohorte":"Utilisateur ajouté à la cohorte",

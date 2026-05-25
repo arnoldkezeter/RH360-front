@@ -108,6 +108,7 @@
     "cohorte_utilisateur":"Add or remove cohort members",
     "calendrier_formation":"View the training calendar",
     "stage_individuel": "Manage intern assignment to services",
+    "stage_batch": "Manage bulk assignment of trainees to different departments",
     "groupe_stage": "Automated management of groups, rotations and internship assignments",
     "historique_affectations": "Manage and track all your training internships",
     "participant_formation": "Training participant management",
@@ -161,6 +162,12 @@
     "liste_alerte": "List of recent alerts"
   },
   "label": {
+    "stage_batch":"Batch Internship",
+    "appliquer_memes_dates":"Apply same dates to all interns",
+    "ajouter_manuellement_stage":"Add an intern manually",
+    "conseil_stage_batch":"Select the institution to automatically load its interns. You can then adjust assignments individually, or use 'Apply to all' to set the same dates in one click.",
+    "stagiaire_deja_ajoute":"Intern already added",
+    "affectation_stagiaire":"Intern assignments",
     "par_famille_metier": "By job family",
     "par_poste_direct": "By job position",
     "famille_deduite_automatiquement": "The job family will be automatically deduced from the selected position",
@@ -178,6 +185,7 @@
     "toutes_mes_formations": "All my trainings",
     "aucune_formation_en_cours": "No ongoing training at the moment",
     "aucune_formation_disponible": "No training available",
+    "aucun_stage_trouve":"No intern found for this institution",
     "selection_etablissement":"Selection by institution",
     "uploader_fichier": "Upload a file",
     "acceptation_stage": "Internship Acceptance",
@@ -894,6 +902,8 @@
     "pas_de_resultats": "No results"
   },
   "button": {
+    "appliquer_tous":"Apply to all",
+    "cree_stage_batch":"Create BATCH internship",
     "valider_selection":"Confirm selection",
     "d_accord":"All right",
     "reinitialiser": "Reset",
@@ -1147,6 +1157,10 @@
     "tache_stagiaire": "the task"
   },
   "error": {
+    "stagiaires_sans_structure":"intern(s) missing structure or dates",
+    "bacth_min_2_stagiaires":"A BATCH internship requires at least 2 interns",
+    "erreur_chargement":"Loading error",
+    "renseigner_date":"Please fill both dates",
     "structure_stage": "At least one complete structure is required.",
     "message_vide" : "Please provide the subject and the content of the message.",
     "famille_deja_ajoutee": "This job family has already been added",
@@ -1230,6 +1244,8 @@
     "copie_a": "Copy To field is required."
   },
   "message": {
+    "selection_etablissement":"Please select an institution",
+    "date_appliquee":"Dates applied to all interns",
     "verifier": "Check",
     "utilisateur_ajoute_cohorte": "User added to cohort",
     "utilisateur_retire_cohorte": "User removed from cohort",

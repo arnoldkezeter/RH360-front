@@ -7,11 +7,11 @@ const token = `Bearer ${localStorage.getItem(wstjqer)}`;
 
 
 
-export async function createStage({ nomFr,nomEn,type,stagiaire, groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut}:CreateStageInput, lang:string): Promise<ReponseApiPros> {
+export async function createStage({ nomFr,nomEn,type,stagiaire, groupes, rotations, stagiaires, etablissement, affectationsFinales, dateDebut, dateFin, anneeStage, statut}:CreateStageInput, lang:string): Promise<ReponseApiPros> {
   try {
     const response: AxiosResponse<any> = await axios.post(
             `${api}/`,
-            {nomFr,nomEn,type,stagiaire,groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut},
+            {nomFr,nomEn,type,stagiaire,groupes, rotations, stagiaires, etablissement, affectationsFinales, dateDebut, dateFin, anneeStage, statut},
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,11 +32,11 @@ export async function createStage({ nomFr,nomEn,type,stagiaire, groupes, rotatio
   }
 }
 
-export async function updateStage({ nomFr,nomEn,type,stagiaire,groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut}:CreateStageInput,id:string, lang:string): Promise<ReponseApiPros> {
+export async function updateStage({ nomFr,nomEn,type,stagiaire,groupes, rotations, stagiaires, etablissement, affectationsFinales, dateDebut, dateFin, anneeStage, statut}:CreateStageInput,id:string, lang:string): Promise<ReponseApiPros> {
   try {
     const response: AxiosResponse<any> = await axios.put(
             `${api}/${id}`,
-            {nomFr,nomEn,type,stagiaire,groupes, rotations, affectationsFinales, dateDebut, dateFin, anneeStage, statut},
+            {nomFr,nomEn,type,stagiaire,groupes, rotations, stagiaires, etablissement, affectationsFinales, dateDebut, dateFin, anneeStage, statut},
             {
                 headers: {
                     'Content-Type': 'application/json',
