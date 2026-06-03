@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from '../../_redux/store';
 import { getFormationsUtilisateur, getThemesEnCoursParticipant, getThemesEnCoursResponsable } from '../../services/elaborations/themeFormationAPI';
 import { config } from '../../config';
+import { useNavigate } from 'react-router-dom';
 
 
 // Composant StatCard
@@ -28,17 +29,21 @@ const ThemeCard = ({ theme, lang, role }: { theme: ThemeEnCours; lang: string; r
   const titre = lang === 'fr' ? theme.titreFr : theme.titreEn;
   const dateDebut = new Date(theme.dateDebut).toLocaleDateString(lang);
   const dateFin = new Date(theme.dateFin).toLocaleDateString(lang);
+  const navigate = useNavigate();
   
   return (
-    <div className="bg-white rounded-lg border border-[#e5e7eb] p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer">
+    <div 
+      onClick={() => navigate(`/mes-formations/taches?participant=${role!==config.roles.responsable}&themeId=${theme._id}`)}
+      className="bg-white rounded-lg border border-[#e5e7eb] p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer"
+    >
       <div className="flex items-start justify-between mb-3">
         <h4 className="font-semibold text-[#1f2937] flex-1 line-clamp-2">{titre}</h4>
         <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2 ${
-          role === 'responsable' 
+          role === config.roles.responsable 
             ? 'bg-[#dbeafe] text-[#1d4ed8]' 
             : 'bg-[#dcfce7] text-[#15803d]'
         }`}>
-          {role === 'responsable' 
+          {role === config.roles.responsable 
             ? (lang === 'fr' ? 'Responsable' : 'Manager') 
             : (lang === 'fr' ? 'Participant' : 'Participant')}
         </span>
@@ -72,7 +77,8 @@ const FormationCard = ({ formation, lang }: { formation: FormationUtilisateur; l
   const titre = lang === 'fr' ? formation.titreFr : formation.titreEn;
   const dateDebut = formation.dateDebut ? new Date(formation.dateDebut).toLocaleDateString(lang) : '-';
   const dateFin = formation.dateFin ? new Date(formation.dateFin).toLocaleDateString(lang) : '-';
- 
+  const navigate = useNavigate();
+
   const getEtatColor = (etat: string) => {
     if (etat.includes('cours') || etat.includes('progress')) return 'text-[#16a34a] bg-[#f0fdf4]';
     if (etat.includes('terminé') || etat.includes('completed')) return 'text-[#4b5563] bg-[#f9fafb]';
@@ -80,7 +86,10 @@ const FormationCard = ({ formation, lang }: { formation: FormationUtilisateur; l
   };
   
   return (
-    <div className="bg-white rounded-lg border border-[#e5e7eb] p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer">
+    <div
+      onClick={() => navigate(`/mes-formations/taches?participant=${formation.role!==config.roles.responsable}&themeId=${formation._id}`)}
+      className="bg-white rounded-lg border border-[#e5e7eb] p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer"
+    >
       <div className="flex items-start justify-between mb-3">
         <h4 className="font-semibold text-[#1f2937] flex-1 line-clamp-2">{titre}</h4>
         <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2 ${getEtatColor(formation.etat)}`}>
@@ -95,11 +104,11 @@ const FormationCard = ({ formation, lang }: { formation: FormationUtilisateur; l
       
       <div className="flex items-center justify-between">
         <span className={`text-xs px-2 py-1 rounded-full ${
-          formation.role === 'responsable' 
+          formation.role === config.roles.responsable 
             ? 'bg-[#dbeafe] text-[#1d4ed8]' 
             : 'bg-[#dcfce7] text-[#15803d]'
         }`}>
-          {formation.role === 'responsable' 
+          {formation.role === config.roles.responsable 
             ? (lang === 'fr' ? 'Responsable' : 'Manager') 
             : (lang === 'fr' ? 'Participant' : 'Participant')}
         </span>

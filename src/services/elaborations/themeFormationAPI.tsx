@@ -202,7 +202,7 @@ export async function getTargetedUsers({
 
         // Extraction des données de la réponse
         const targetedUsers: UtilisateurReturnGetType = response.data.data;
-        
+        console.log(targetedUsers);
         return targetedUsers;
     } catch (error) {
         console.error('Error getting targeted users:', error);
